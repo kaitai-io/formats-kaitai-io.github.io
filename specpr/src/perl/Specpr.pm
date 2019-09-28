@@ -635,22 +635,22 @@ sub _read {
 
     $self->{icflag} = Specpr::Icflag->new($self->{_io}, $self, $self->{_root});
     my $_on = $self->icflag()->type();
-    if ($_on == $RECORD_TYPE_DATA_INITIAL) {
+    if ($_on == $Specpr::RECORD_TYPE_DATA_INITIAL) {
         $self->{_raw_content} = $self->{_io}->read_bytes((1536 - 4));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = Specpr::DataInitial->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $RECORD_TYPE_DATA_CONTINUATION) {
+    elsif ($_on == $Specpr::RECORD_TYPE_DATA_CONTINUATION) {
         $self->{_raw_content} = $self->{_io}->read_bytes((1536 - 4));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = Specpr::DataContinuation->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $RECORD_TYPE_TEXT_CONTINUATION) {
+    elsif ($_on == $Specpr::RECORD_TYPE_TEXT_CONTINUATION) {
         $self->{_raw_content} = $self->{_io}->read_bytes((1536 - 4));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = Specpr::TextContinuation->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $RECORD_TYPE_TEXT_INITIAL) {
+    elsif ($_on == $Specpr::RECORD_TYPE_TEXT_INITIAL) {
         $self->{_raw_content} = $self->{_io}->read_bytes((1536 - 4));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = Specpr::TextInitial->new($io__raw_content, $self, $self->{_root});

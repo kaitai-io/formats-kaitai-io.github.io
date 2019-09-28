@@ -41,11 +41,11 @@ public class GenmidiOp2 extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.ensureFixedContents(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 });
-        instruments = new ArrayList<InstrumentEntry>((int) (175));
+        instruments = new ArrayList<InstrumentEntry>(((Number) (175)).intValue());
         for (int i = 0; i < 175; i++) {
             this.instruments.add(new InstrumentEntry(this._io, this, _root));
         }
-        instrumentNames = new ArrayList<String>((int) (175));
+        instrumentNames = new ArrayList<String>(((Number) (175)).intValue());
         for (int i = 0; i < 175; i++) {
             this.instrumentNames.add(new String(KaitaiStream.bytesTerminate(KaitaiStream.bytesStripRight(this._io.readBytes(32), (byte) 0), (byte) 0, false), Charset.forName("ASCII")));
         }
@@ -73,7 +73,7 @@ public class GenmidiOp2 extends KaitaiStruct {
             this.flags = this._io.readU2le();
             this.finetune = this._io.readU1();
             this.note = this._io.readU1();
-            instruments = new ArrayList<Instrument>((int) (2));
+            instruments = new ArrayList<Instrument>(((Number) (2)).intValue());
             for (int i = 0; i < 2; i++) {
                 this.instruments.add(new Instrument(this._io, this, _root));
             }

@@ -8,7 +8,7 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-from exif import Exif
+import exif
 class Jpeg(KaitaiStruct):
 
     class ComponentId(Enum):
@@ -75,28 +75,28 @@ class Jpeg(KaitaiStruct):
 
         def _read(self):
             self.magic = self._io.ensure_fixed_contents(b"\xFF")
-            self.marker = self._root.Segment.MarkerEnum(self._io.read_u1())
+            self.marker = KaitaiStream.resolve_enum(self._root.Segment.MarkerEnum, self._io.read_u1())
             if  ((self.marker != self._root.Segment.MarkerEnum.soi) and (self.marker != self._root.Segment.MarkerEnum.eoi)) :
                 self.length = self._io.read_u2be()
 
             if  ((self.marker != self._root.Segment.MarkerEnum.soi) and (self.marker != self._root.Segment.MarkerEnum.eoi)) :
                 _on = self.marker
-                if _on == self._root.Segment.MarkerEnum.sos:
+                if _on == self._root.Segment.MarkerEnum.app1:
                     self._raw_data = self._io.read_bytes((self.length - 2))
-                    io = KaitaiStream(BytesIO(self._raw_data))
-                    self.data = self._root.SegmentSos(io, self, self._root)
-                elif _on == self._root.Segment.MarkerEnum.app1:
-                    self._raw_data = self._io.read_bytes((self.length - 2))
-                    io = KaitaiStream(BytesIO(self._raw_data))
-                    self.data = self._root.SegmentApp1(io, self, self._root)
-                elif _on == self._root.Segment.MarkerEnum.sof0:
-                    self._raw_data = self._io.read_bytes((self.length - 2))
-                    io = KaitaiStream(BytesIO(self._raw_data))
-                    self.data = self._root.SegmentSof0(io, self, self._root)
+                    _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                    self.data = self._root.SegmentApp1(_io__raw_data, self, self._root)
                 elif _on == self._root.Segment.MarkerEnum.app0:
                     self._raw_data = self._io.read_bytes((self.length - 2))
-                    io = KaitaiStream(BytesIO(self._raw_data))
-                    self.data = self._root.SegmentApp0(io, self, self._root)
+                    _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                    self.data = self._root.SegmentApp0(_io__raw_data, self, self._root)
+                elif _on == self._root.Segment.MarkerEnum.sof0:
+                    self._raw_data = self._io.read_bytes((self.length - 2))
+                    _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                    self.data = self._root.SegmentSof0(_io__raw_data, self, self._root)
+                elif _on == self._root.Segment.MarkerEnum.sos:
+                    self._raw_data = self._io.read_bytes((self.length - 2))
+                    _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                    self.data = self._root.SegmentSos(_io__raw_data, self, self._root)
                 else:
                     self.data = self._io.read_bytes((self.length - 2))
 
@@ -130,7 +130,7 @@ class Jpeg(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.id = self._root.ComponentId(self._io.read_u1())
+                self.id = KaitaiStream.resolve_enum(self._root.ComponentId, self._io.read_u1())
                 self.huffman_table = self._io.read_u1()
 
 
@@ -174,7 +174,7 @@ class Jpeg(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.id = self._root.ComponentId(self._io.read_u1())
+                self.id = KaitaiStream.resolve_enum(self._root.ComponentId, self._io.read_u1())
                 self.sampling_factors = self._io.read_u1()
                 self.quantization_table_id = self._io.read_u1()
 
@@ -206,8 +206,8 @@ class Jpeg(KaitaiStruct):
         def _read(self):
             self.extra_zero = self._io.ensure_fixed_contents(b"\x00")
             self._raw_data = self._io.read_bytes_full()
-            io = KaitaiStream(BytesIO(self._raw_data))
-            self.data = Exif(io)
+            _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+            self.data = exif.Exif(_io__raw_data)
 
 
     class SegmentApp0(KaitaiStruct):
@@ -226,7 +226,7 @@ class Jpeg(KaitaiStruct):
             self.magic = (self._io.read_bytes(5)).decode(u"ASCII")
             self.version_major = self._io.read_u1()
             self.version_minor = self._io.read_u1()
-            self.density_units = self._root.SegmentApp0.DensityUnit(self._io.read_u1())
+            self.density_units = KaitaiStream.resolve_enum(self._root.SegmentApp0.DensityUnit, self._io.read_u1())
             self.density_x = self._io.read_u2be()
             self.density_y = self._io.read_u2be()
             self.thumbnail_x = self._io.read_u1()

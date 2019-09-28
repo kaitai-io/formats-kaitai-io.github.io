@@ -581,44 +581,44 @@ class RecordContents extends \Kaitai\Struct\Struct {
         $this->_m_shapeType = $this->_io->readS4le();
         if ($this->shapeType() != \ShapefileMain\ShapeType::NULL_SHAPE) {
             switch ($this->shapeType()) {
-                case \ShapefileMain\ShapeType::POINT_M:
-                    $this->_m_shapeParameters = new \ShapefileMain\PointM($this->_io, $this, $this->_root);
-                    break;
-                case \ShapefileMain\ShapeType::POLYGON_Z:
-                    $this->_m_shapeParameters = new \ShapefileMain\PolygonZ($this->_io, $this, $this->_root);
-                    break;
-                case \ShapefileMain\ShapeType::MULTI_POINT_M:
-                    $this->_m_shapeParameters = new \ShapefileMain\MultiPointM($this->_io, $this, $this->_root);
-                    break;
                 case \ShapefileMain\ShapeType::POLY_LINE_Z:
                     $this->_m_shapeParameters = new \ShapefileMain\PolyLineZ($this->_io, $this, $this->_root);
                     break;
-                case \ShapefileMain\ShapeType::MULTI_POINT_Z:
-                    $this->_m_shapeParameters = new \ShapefileMain\MultiPointZ($this->_io, $this, $this->_root);
-                    break;
-                case \ShapefileMain\ShapeType::MULTI_POINT:
-                    $this->_m_shapeParameters = new \ShapefileMain\MultiPoint($this->_io, $this, $this->_root);
-                    break;
-                case \ShapefileMain\ShapeType::POLYGON_M:
-                    $this->_m_shapeParameters = new \ShapefileMain\PolygonM($this->_io, $this, $this->_root);
-                    break;
-                case \ShapefileMain\ShapeType::POLYGON:
-                    $this->_m_shapeParameters = new \ShapefileMain\Polygon($this->_io, $this, $this->_root);
-                    break;
-                case \ShapefileMain\ShapeType::POINT:
-                    $this->_m_shapeParameters = new \ShapefileMain\Point($this->_io, $this, $this->_root);
+                case \ShapefileMain\ShapeType::MULTI_PATCH:
+                    $this->_m_shapeParameters = new \ShapefileMain\MultiPatch($this->_io, $this, $this->_root);
                     break;
                 case \ShapefileMain\ShapeType::POLY_LINE_M:
                     $this->_m_shapeParameters = new \ShapefileMain\PolyLineM($this->_io, $this, $this->_root);
                     break;
-                case \ShapefileMain\ShapeType::POLY_LINE:
-                    $this->_m_shapeParameters = new \ShapefileMain\PolyLine($this->_io, $this, $this->_root);
+                case \ShapefileMain\ShapeType::POLYGON:
+                    $this->_m_shapeParameters = new \ShapefileMain\Polygon($this->_io, $this, $this->_root);
+                    break;
+                case \ShapefileMain\ShapeType::POLYGON_Z:
+                    $this->_m_shapeParameters = new \ShapefileMain\PolygonZ($this->_io, $this, $this->_root);
                     break;
                 case \ShapefileMain\ShapeType::POINT_Z:
                     $this->_m_shapeParameters = new \ShapefileMain\PointZ($this->_io, $this, $this->_root);
                     break;
-                case \ShapefileMain\ShapeType::MULTI_PATCH:
-                    $this->_m_shapeParameters = new \ShapefileMain\MultiPatch($this->_io, $this, $this->_root);
+                case \ShapefileMain\ShapeType::POLY_LINE:
+                    $this->_m_shapeParameters = new \ShapefileMain\PolyLine($this->_io, $this, $this->_root);
+                    break;
+                case \ShapefileMain\ShapeType::POINT_M:
+                    $this->_m_shapeParameters = new \ShapefileMain\PointM($this->_io, $this, $this->_root);
+                    break;
+                case \ShapefileMain\ShapeType::POLYGON_M:
+                    $this->_m_shapeParameters = new \ShapefileMain\PolygonM($this->_io, $this, $this->_root);
+                    break;
+                case \ShapefileMain\ShapeType::MULTI_POINT:
+                    $this->_m_shapeParameters = new \ShapefileMain\MultiPoint($this->_io, $this, $this->_root);
+                    break;
+                case \ShapefileMain\ShapeType::POINT:
+                    $this->_m_shapeParameters = new \ShapefileMain\Point($this->_io, $this, $this->_root);
+                    break;
+                case \ShapefileMain\ShapeType::MULTI_POINT_M:
+                    $this->_m_shapeParameters = new \ShapefileMain\MultiPointM($this->_io, $this, $this->_root);
+                    break;
+                case \ShapefileMain\ShapeType::MULTI_POINT_Z:
+                    $this->_m_shapeParameters = new \ShapefileMain\MultiPointZ($this->_io, $this, $this->_root);
                     break;
             }
         }

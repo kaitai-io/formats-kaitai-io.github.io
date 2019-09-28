@@ -1796,28 +1796,28 @@ namespace Kaitai
                         io.Seek(OfsBody);
                         if (m_isLe == true) {
                             switch (Type) {
-                            case Elf.ShType.Dynamic: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
                             case Elf.ShType.Strtab: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
                                 _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
-                            case Elf.ShType.Dynstr: {
+                            case Elf.ShType.Dynamic: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
                             case Elf.ShType.Dynsym: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
                                 _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Dynstr: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
                             default: {
@@ -1827,28 +1827,28 @@ namespace Kaitai
                             }
                         } else {
                             switch (Type) {
-                            case Elf.ShType.Dynamic: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
                             case Elf.ShType.Strtab: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
                                 _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
-                            case Elf.ShType.Dynstr: {
+                            case Elf.ShType.Dynamic: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
                             case Elf.ShType.Dynsym: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
                                 _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Dynstr: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
                             default: {

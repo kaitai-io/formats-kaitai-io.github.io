@@ -62,7 +62,7 @@ class TrDosImage(KaitaiStruct):
             self.unused = self._io.read_bytes(224)
             self.first_free_sector_sector = self._io.read_u1()
             self.first_free_sector_track = self._io.read_u1()
-            self.disk_type = self._root.DiskType(self._io.read_u1())
+            self.disk_type = KaitaiStream.resolve_enum(self._root.DiskType, self._io.read_u1())
             self.num_files = self._io.read_u1()
             self.num_free_sectors = self._io.read_u2le()
             self.tr_dos_id = self._io.ensure_fixed_contents(b"\x10")
@@ -170,8 +170,8 @@ class TrDosImage(KaitaiStruct):
 
         def _read(self):
             self._raw_name = self._io.read_bytes(8)
-            io = KaitaiStream(BytesIO(self._raw_name))
-            self.name = self._root.Filename(io, self, self._root)
+            _io__raw_name = KaitaiStream(BytesIO(self._raw_name))
+            self.name = self._root.Filename(_io__raw_name, self, self._root)
             self.extension = self._io.read_u1()
             _on = self.extension
             if _on == 66:

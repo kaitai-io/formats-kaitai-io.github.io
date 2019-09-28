@@ -40,8 +40,8 @@ class Hccap < Kaitai::Struct::Struct
       @nonce_station = @_io.read_bytes(32)
       @nonce_ap = @_io.read_bytes(32)
       @_raw_eapol_buffer = @_io.read_bytes(256)
-      io = Kaitai::Struct::Stream.new(@_raw_eapol_buffer)
-      @eapol_buffer = EapolDummy.new(io, self, @_root)
+      _io__raw_eapol_buffer = Kaitai::Struct::Stream.new(@_raw_eapol_buffer)
+      @eapol_buffer = EapolDummy.new(_io__raw_eapol_buffer, self, @_root)
       @len_eapol = @_io.read_u4le
       @keyver = @_io.read_u4le
       @keymic = @_io.read_bytes(16)

@@ -59,7 +59,7 @@ class Websocket < Kaitai::Struct::Struct
     def _read
       @finished = @_io.read_bits_int(1) != 0
       @reserved = @_io.read_bits_int(3)
-      @opcode = Kaitai::Struct::Stream::resolve_enum(OPCODE, @_io.read_bits_int(4))
+      @opcode = Kaitai::Struct::Stream::resolve_enum(Websocket::OPCODE, @_io.read_bits_int(4))
       @is_masked = @_io.read_bits_int(1) != 0
       @len_payload_primary = @_io.read_bits_int(7)
       @_io.align_to_byte

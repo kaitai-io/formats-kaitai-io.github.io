@@ -449,29 +449,23 @@ class EncodedValue extends \Kaitai\Struct\Struct {
         $this->_m_valueType = $this->_io->readBitsInt(5);
         $this->_io->alignToByte();
         switch ($this->valueType()) {
-            case \Dex\EncodedValue\ValueTypeEnum::DOUBLE:
-                $this->_m_value = $this->_io->readF8le();
+            case \Dex\EncodedValue\ValueTypeEnum::INT:
+                $this->_m_value = $this->_io->readS4le();
                 break;
             case \Dex\EncodedValue\ValueTypeEnum::ANNOTATION:
                 $this->_m_value = new \Dex\EncodedAnnotation($this->_io, $this, $this->_root);
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::TYPE:
-                $this->_m_value = $this->_io->readU4le();
-                break;
-            case \Dex\EncodedValue\ValueTypeEnum::CHAR:
-                $this->_m_value = $this->_io->readU2le();
+            case \Dex\EncodedValue\ValueTypeEnum::LONG:
+                $this->_m_value = $this->_io->readS8le();
                 break;
             case \Dex\EncodedValue\ValueTypeEnum::METHOD_HANDLE:
                 $this->_m_value = $this->_io->readU4le();
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::ARRAY:
-                $this->_m_value = new \Dex\EncodedArray($this->_io, $this, $this->_root);
-                break;
             case \Dex\EncodedValue\ValueTypeEnum::BYTE:
                 $this->_m_value = $this->_io->readS1();
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::METHOD:
-                $this->_m_value = $this->_io->readU4le();
+            case \Dex\EncodedValue\ValueTypeEnum::ARRAY:
+                $this->_m_value = new \Dex\EncodedArray($this->_io, $this, $this->_root);
                 break;
             case \Dex\EncodedValue\ValueTypeEnum::METHOD_TYPE:
                 $this->_m_value = $this->_io->readU4le();
@@ -479,23 +473,29 @@ class EncodedValue extends \Kaitai\Struct\Struct {
             case \Dex\EncodedValue\ValueTypeEnum::SHORT:
                 $this->_m_value = $this->_io->readS2le();
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::STRING:
+            case \Dex\EncodedValue\ValueTypeEnum::METHOD:
                 $this->_m_value = $this->_io->readU4le();
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::INT:
-                $this->_m_value = $this->_io->readS4le();
-                break;
-            case \Dex\EncodedValue\ValueTypeEnum::FIELD:
-                $this->_m_value = $this->_io->readU4le();
-                break;
-            case \Dex\EncodedValue\ValueTypeEnum::LONG:
-                $this->_m_value = $this->_io->readS8le();
+            case \Dex\EncodedValue\ValueTypeEnum::DOUBLE:
+                $this->_m_value = $this->_io->readF8le();
                 break;
             case \Dex\EncodedValue\ValueTypeEnum::FLOAT:
                 $this->_m_value = $this->_io->readF4le();
                 break;
+            case \Dex\EncodedValue\ValueTypeEnum::TYPE:
+                $this->_m_value = $this->_io->readU4le();
+                break;
             case \Dex\EncodedValue\ValueTypeEnum::ENUM:
                 $this->_m_value = $this->_io->readU4le();
+                break;
+            case \Dex\EncodedValue\ValueTypeEnum::FIELD:
+                $this->_m_value = $this->_io->readU4le();
+                break;
+            case \Dex\EncodedValue\ValueTypeEnum::STRING:
+                $this->_m_value = $this->_io->readU4le();
+                break;
+            case \Dex\EncodedValue\ValueTypeEnum::CHAR:
+                $this->_m_value = $this->_io->readU2le();
                 break;
         }
     }

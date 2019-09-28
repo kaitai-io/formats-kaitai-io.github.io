@@ -61,7 +61,7 @@ class TrDosImage < Kaitai::Struct::Struct
       @unused = @_io.read_bytes(224)
       @first_free_sector_sector = @_io.read_u1
       @first_free_sector_track = @_io.read_u1
-      @disk_type = Kaitai::Struct::Stream::resolve_enum(DISK_TYPE, @_io.read_u1)
+      @disk_type = Kaitai::Struct::Stream::resolve_enum(TrDosImage::DISK_TYPE, @_io.read_u1)
       @num_files = @_io.read_u1
       @num_free_sectors = @_io.read_u2le
       @tr_dos_id = @_io.ensure_fixed_contents([16].pack('C*'))
@@ -196,8 +196,8 @@ class TrDosImage < Kaitai::Struct::Struct
 
     def _read
       @_raw_name = @_io.read_bytes(8)
-      io = Kaitai::Struct::Stream.new(@_raw_name)
-      @name = Filename.new(io, self, @_root)
+      _io__raw_name = Kaitai::Struct::Stream.new(@_raw_name)
+      @name = Filename.new(_io__raw_name, self, @_root)
       @extension = @_io.read_u1
       case extension
       when 66

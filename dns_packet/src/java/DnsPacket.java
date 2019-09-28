@@ -85,11 +85,11 @@ public class DnsPacket extends KaitaiStruct {
         this.ancount = this._io.readU2be();
         this.nscount = this._io.readU2be();
         this.arcount = this._io.readU2be();
-        queries = new ArrayList<Query>((int) (qdcount()));
+        queries = new ArrayList<Query>(((Number) (qdcount())).intValue());
         for (int i = 0; i < qdcount(); i++) {
             this.queries.add(new Query(this._io, this, _root));
         }
-        answers = new ArrayList<Answer>((int) (ancount()));
+        answers = new ArrayList<Answer>(((Number) (ancount())).intValue());
         for (int i = 0; i < ancount(); i++) {
             this.answers.add(new Answer(this._io, this, _root));
         }
@@ -290,7 +290,7 @@ public class DnsPacket extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            ip = new ArrayList<Integer>((int) (4));
+            ip = new ArrayList<Integer>(((Number) (4)).intValue());
             for (int i = 0; i < 4; i++) {
                 this.ip.add(this._io.readU1());
             }

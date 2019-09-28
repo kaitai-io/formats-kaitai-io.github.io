@@ -73,13 +73,27 @@ namespace Kaitai
                 {
                     _vertices.Add(new Vec3d(m_io, this, m_root));
                 }
+                _abr = m_io.ReadU2le();
             }
             private Vec3d _normal;
             private List<Vec3d> _vertices;
+            private ushort _abr;
             private Stl m_root;
             private Stl m_parent;
             public Vec3d Normal { get { return _normal; } }
             public List<Vec3d> Vertices { get { return _vertices; } }
+
+            /// <summary>
+            /// In theory (per standard), it's &quot;attribute byte count&quot; with
+            /// no other details given on what &quot;attribute&quot; is and what
+            /// should be stored in this field.
+            /// 
+            /// In practice, software dealing with STL either expected to
+            /// see 0 here, or uses this 16-bit field per se to store
+            /// additional attributes (such as RGB color of a vertex or
+            /// color index).
+            /// </summary>
+            public ushort Abr { get { return _abr; } }
             public Stl M_Root { get { return m_root; } }
             public Stl M_Parent { get { return m_parent; } }
         }
@@ -101,29 +115,15 @@ namespace Kaitai
                 _x = m_io.ReadF4le();
                 _y = m_io.ReadF4le();
                 _z = m_io.ReadF4le();
-                _abr = m_io.ReadU2le();
             }
             private float _x;
             private float _y;
             private float _z;
-            private ushort _abr;
             private Stl m_root;
             private Stl.Triangle m_parent;
             public float X { get { return _x; } }
             public float Y { get { return _y; } }
             public float Z { get { return _z; } }
-
-            /// <summary>
-            /// In theory (per standard), it's &quot;attribute byte count&quot; with
-            /// no other details given on what &quot;attribute&quot; is and what
-            /// should be stored in this field.
-            /// 
-            /// In practice, software dealing with STL either expected to
-            /// see 0 here, or uses this 16-bit field per se to store
-            /// additional attributes (such as RGB color of a vertex or
-            /// color index).
-            /// </summary>
-            public ushort Abr { get { return _abr; } }
             public Stl M_Root { get { return m_root; } }
             public Stl.Triangle M_Parent { get { return m_parent; } }
         }

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Serialized PHP value: Python parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Serialized PHP value</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Serialized PHP value:
+            
+            Python parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A serialized PHP value, in the format used by PHP's built-in <code>serialize</code> and
+<code>unserialize</code> functions. This format closely mirrors PHP's data model:
+it supports all of PHP's scalar types (<code>NULL</code>, booleans, numbers, strings),
+associative arrays, objects, and recursive data structures using references.
+The only PHP values not supported by this format are <em>resources</em>,
+which usually correspond to native file or connection handles and cannot be
+meaningfully serialized.</p>
+<p>There is no official documentation for this data format;
+this spec was created based on the PHP source code and the behavior of
+<code>serialize</code>/<code>unserialize</code>. PHP makes no guarantees about compatibility of
+serialized data between PHP versions, but in practice, the format has
+remained fully backwards-compatible - values serialized by an older
+PHP version can be unserialized on any newer PHP version.
+This spec supports serialized values from PHP 7.3 or any earlier version.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        PHP
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Serialized PHP value
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Serialized PHP value parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Serialized PHP value parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Serialized PHP value parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Serialized PHP value parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Serialized PHP value parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Serialized PHP value parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Serialized PHP value parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Serialized PHP value parsing PHP library">PHP</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="python.html" title="Serialized PHP value parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Serialized PHP value parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = PhpSerializedValue.from_file("path/to/local/file.Serialized PHP value")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
+
+raw = b"\x00\x01\x02..."
+data = PhpSerializedValue(KaitaiStream(BytesIO(raw)))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.type # => A single-character code indicating the type of the serialized value.</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Python source code to parse Serialized PHP value
+            
+        </h2>
+
+        
+
+        <h3>php_serialized_value.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/php_serialized_value.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+from pkg_resources import parse_version
+from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+from enum import Enum
+
+
+if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
+    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
+
+class PhpSerializedValue(KaitaiStruct):
+    &quot;&quot;&quot;A serialized PHP value, in the format used by PHP&#39;s built-in `serialize` and
+    `unserialize` functions. This format closely mirrors PHP&#39;s data model:
+    it supports all of PHP&#39;s scalar types (`NULL`, booleans, numbers, strings),
+    associative arrays, objects, and recursive data structures using references.
+    The only PHP values not supported by this format are *resources*,
+    which usually correspond to native file or connection handles and cannot be
+    meaningfully serialized.
+    
+    There is no official documentation for this data format;
+    this spec was created based on the PHP source code and the behavior of
+    `serialize`/`unserialize`. PHP makes no guarantees about compatibility of
+    serialized data between PHP versions, but in practice, the format has
+    remained fully backwards-compatible - values serialized by an older
+    PHP version can be unserialized on any newer PHP version.
+    This spec supports serialized values from PHP 7.3 or any earlier version.
+    
+    .. seealso::
+       Source - https://www.php.net/manual/en/function.serialize.php
+    
+    
+    .. seealso::
+       Source - https://www.php.net/manual/en/function.serialize.php#66147
+    
+    
+    .. seealso::
+       Source - https://www.php.net/manual/en/function.unserialize.php
+    
+    
+    .. seealso::
+       Source - https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var_unserializer.re
+    
+    
+    .. seealso::
+       Source - https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var.c#L822
+    &quot;&quot;&quot;
+
+    class ValueType(Enum):
+        custom_serialized_object = 67
+        null = 78
+        object = 79
+        variable_reference = 82
+        php_6_string = 83
+        array = 97
+        bool = 98
+        float = 100
+        int = 105
+        php_3_object = 111
+        object_reference = 114
+        string = 115
+
+    class BoolValue(Enum):
+        false = 48
+        true = 49
+    def __init__(self, _io, _parent=None, _root=None):
+        self._io = _io
+        self._parent = _parent
+        self._root = _root if _root else self
+        self._read()
+
+    def _read(self):
+        self.type = KaitaiStream.resolve_enum(self._root.ValueType, self._io.read_u1())
+        _on = self.type
+        if _on == self._root.ValueType.custom_serialized_object:
+            self.contents = self._root.CustomSerializedObjectContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.php_3_object:
+            self.contents = self._root.Php3ObjectContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.object:
+            self.contents = self._root.ObjectContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.variable_reference:
+            self.contents = self._root.IntContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.php_6_string:
+            self.contents = self._root.StringContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.float:
+            self.contents = self._root.FloatContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.object_reference:
+            self.contents = self._root.IntContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.null:
+            self.contents = self._root.NullContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.bool:
+            self.contents = self._root.BoolContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.int:
+            self.contents = self._root.IntContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.array:
+            self.contents = self._root.ArrayContents(self._io, self, self._root)
+        elif _on == self._root.ValueType.string:
+            self.contents = self._root.StringContents(self._io, self, self._root)
+
+    class CountPrefixedMapping(KaitaiStruct):
+        &quot;&quot;&quot;A mapping (a sequence of key-value pairs) prefixed with its size.&quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.num_entries_dec = (self._io.read_bytes_term(58, False, True, True)).decode(u&quot;ASCII&quot;)
+            self.opening_brace = self._io.ensure_fixed_contents(b&quot;\x7B&quot;)
+            self.entries = [None] * (self.num_entries)
+            for i in range(self.num_entries):
+                self.entries[i] = self._root.MappingEntry(self._io, self, self._root)
+
+            self.closing_brace = self._io.ensure_fixed_contents(b&quot;\x7D&quot;)
+
+        @property
+        def num_entries(self):
+            &quot;&quot;&quot;The number of key-value pairs in the mapping, parsed as an integer.
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_num_entries&#39;):
+                return self._m_num_entries if hasattr(self, &#39;_m_num_entries&#39;) else None
+
+            self._m_num_entries = int(self.num_entries_dec)
+            return self._m_num_entries if hasattr(self, &#39;_m_num_entries&#39;) else None
+
+
+    class FloatContents(KaitaiStruct):
+        &quot;&quot;&quot;The contents of a floating-point value.&quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.colon = self._io.ensure_fixed_contents(b&quot;\x3A&quot;)
+            self.value_dec = (self._io.read_bytes_term(59, False, True, True)).decode(u&quot;ASCII&quot;)
+
+
+    class LengthPrefixedQuotedString(KaitaiStruct):
+        &quot;&quot;&quot;A quoted string prefixed with its length.
+        
+        Despite the quotes surrounding the string data, it can contain
+        arbitrary bytes, which are never escaped in any way.
+        This does not cause any ambiguities when parsing - the bounds of
+        the string are determined only by the length field, not by the quotes.
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.len_data_dec = (self._io.read_bytes_term(58, False, True, True)).decode(u&quot;ASCII&quot;)
+            self.opening_quote = self._io.ensure_fixed_contents(b&quot;\x22&quot;)
+            self.data = self._io.read_bytes(self.len_data)
+            self.closing_quote = self._io.ensure_fixed_contents(b&quot;\x22&quot;)
+
+        @property
+        def len_data(self):
+            &quot;&quot;&quot;The length of the string&#39;s contents in bytes, parsed as an integer.
+            The quotes are not counted in this size number.
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_len_data&#39;):
+                return self._m_len_data if hasattr(self, &#39;_m_len_data&#39;) else None
+
+            self._m_len_data = int(self.len_data_dec)
+            return self._m_len_data if hasattr(self, &#39;_m_len_data&#39;) else None
+
+
+    class ObjectContents(KaitaiStruct):
+        &quot;&quot;&quot;The contents of an object value serialized in the default format.
+        Unlike its PHP 3 counterpart, it contains a class name.
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.colon1 = self._io.ensure_fixed_contents(b&quot;\x3A&quot;)
+            self.class_name = self._root.LengthPrefixedQuotedString(self._io, self, self._root)
+            self.colon2 = self._io.ensure_fixed_contents(b&quot;\x3A&quot;)
+            self.properties = self._root.CountPrefixedMapping(self._io, self, self._root)
+
+
+    class ArrayContents(KaitaiStruct):
+        &quot;&quot;&quot;The contents of an array value.&quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.colon = self._io.ensure_fixed_contents(b&quot;\x3A&quot;)
+            self.elements = self._root.CountPrefixedMapping(self._io, self, self._root)
+
+
+    class CustomSerializedObjectContents(KaitaiStruct):
+        &quot;&quot;&quot;The contents of an object value that implements a custom
+        serialized format using `Serializable`.
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.colon1 = self._io.ensure_fixed_contents(b&quot;\x3A&quot;)
+            self.class_name = self._root.LengthPrefixedQuotedString(self._io, self, self._root)
+            self.colon2 = self._io.ensure_fixed_contents(b&quot;\x3A&quot;)
+            self.len_data_dec = (self._io.read_bytes_term(58, False, True, True)).decode(u&quot;ASCII&quot;)
+            self.opening_brace = self._io.ensure_fixed_contents(b&quot;\x7B&quot;)
+            self.data = self._io.read_bytes(self.len_data)
+            self.closing_quote = self._io.ensure_fixed_contents(b&quot;\x7D&quot;)
+
+        @property
+        def len_data(self):
+            &quot;&quot;&quot;The length of the serialized data in bytes, parsed as an integer.
+            The braces are not counted in this length number.
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_len_data&#39;):
+                return self._m_len_data if hasattr(self, &#39;_m_len_data&#39;) else None
+
+            self._m_len_data = int(self.len_data_dec)
+            return self._m_len_data if hasattr(self, &#39;_m_len_data&#39;) else None
+
+
+    class NullContents(KaitaiStruct):
+        &quot;&quot;&quot;The contents of a null value (`value_type::null`). This structure
+        contains no actual data, since there is only a single `NULL` value.
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.semicolon = self._io.ensure_fixed_contents(b&quot;\x3B&quot;)
+
+
+    class Php3ObjectContents(KaitaiStruct):
+        &quot;&quot;&quot;The contents of a PHP 3 object value. Unlike its counterpart in PHP 4
+        and above, it does not contain a class name.
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.colon = self._io.ensure_fixed_contents(b&quot;\x3A&quot;)
+            self.properties = self._root.CountPrefixedMapping(self._io, self, self._root)
+
+
+    class BoolContents(KaitaiStruct):
+        &quot;&quot;&quot;The contents of a boolean value (`value_type::bool`).&quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.colon = self._io.ensure_fixed_contents(b&quot;\x3A&quot;)
+            self.value_dec = KaitaiStream.resolve_enum(self._root.BoolValue, self._io.read_u1())
+            self.semicolon = self._io.ensure_fixed_contents(b&quot;\x3B&quot;)
+
+        @property
+        def value(self):
+            &quot;&quot;&quot;The value of the `bool`, parsed as a boolean.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_value&#39;):
+                return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+            self._m_value = self.value_dec == self._root.BoolValue.true
+            return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+
+    class StringContents(KaitaiStruct):
+        &quot;&quot;&quot;The contents of a string value.
+        
+        Note: PHP strings can contain arbitrary byte sequences.
+        They are not necessarily valid text in any specific encoding.
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.colon = self._io.ensure_fixed_contents(b&quot;\x3A&quot;)
+            self.string = self._root.LengthPrefixedQuotedString(self._io, self, self._root)
+            self.semicolon = self._io.ensure_fixed_contents(b&quot;\x3B&quot;)
+
+        @property
+        def value(self):
+            &quot;&quot;&quot;The value of the string, as a byte array.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_value&#39;):
+                return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+            self._m_value = self.string.data
+            return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+
+    class IntContents(KaitaiStruct):
+        &quot;&quot;&quot;The contents of an integer-like value:
+        either an actual integer (`value_type::int`) or a reference
+        (`value_type::variable_reference`, `value_type::object_reference`).
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.colon = self._io.ensure_fixed_contents(b&quot;\x3A&quot;)
+            self.value_dec = (self._io.read_bytes_term(59, False, True, True)).decode(u&quot;ASCII&quot;)
+
+        @property
+        def value(self):
+            &quot;&quot;&quot;The value of the `int`, parsed as an integer.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_value&#39;):
+                return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+            self._m_value = int(self.value_dec)
+            return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+
+    class MappingEntry(KaitaiStruct):
+        &quot;&quot;&quot;A mapping entry consisting of a key and a value.&quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.key = PhpSerializedValue(self._io)
+            self.value = PhpSerializedValue(self._io)
+
+
+
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

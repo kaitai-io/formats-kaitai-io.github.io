@@ -43,7 +43,7 @@ class SudoersTs(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.TsType(self._io.read_u2le())
+            self.type = KaitaiStream.resolve_enum(self._root.TsType, self._io.read_u2le())
             self.flags = self._root.TsFlag(self._io, self, self._root)
             self.auth_uid = self._io.read_u4le()
             self.sid = self._io.read_u4le()
@@ -79,7 +79,7 @@ class SudoersTs(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.TsType(self._io.read_u2le())
+            self.type = KaitaiStream.resolve_enum(self._root.TsType, self._io.read_u2le())
             self.flags = self._root.TsFlag(self._io, self, self._root)
             self.auth_uid = self._io.read_u4le()
             self.sid = self._io.read_u4le()
@@ -117,12 +117,12 @@ class SudoersTs(KaitaiStruct):
             _on = self.version
             if _on == 1:
                 self._raw_payload = self._io.read_bytes((self.len_record - 4))
-                io = KaitaiStream(BytesIO(self._raw_payload))
-                self.payload = self._root.RecordV1(io, self, self._root)
+                _io__raw_payload = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.RecordV1(_io__raw_payload, self, self._root)
             elif _on == 2:
                 self._raw_payload = self._io.read_bytes((self.len_record - 4))
-                io = KaitaiStream(BytesIO(self._raw_payload))
-                self.payload = self._root.RecordV2(io, self, self._root)
+                _io__raw_payload = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.RecordV2(_io__raw_payload, self, self._root)
             else:
                 self.payload = self._io.read_bytes((self.len_record - 4))
 

@@ -381,7 +381,7 @@ public class Regf extends KaitaiStruct {
             }
             private void _read() {
                 this.count = this._io.readU2le();
-                items = new ArrayList<Item>((int) (count()));
+                items = new ArrayList<Item>(((Number) (count())).intValue());
                 for (int i = 0; i < count(); i++) {
                     this.items.add(new Item(this._io, this, _root));
                 }
@@ -486,7 +486,7 @@ public class Regf extends KaitaiStruct {
             }
             private void _read() {
                 this.count = this._io.readU2le();
-                items = new ArrayList<Item>((int) (count()));
+                items = new ArrayList<Item>(((Number) (count())).intValue());
                 for (int i = 0; i < count(); i++) {
                     this.items.add(new Item(this._io, this, _root));
                 }
@@ -661,7 +661,7 @@ public class Regf extends KaitaiStruct {
             }
             private void _read() {
                 this.count = this._io.readU2le();
-                items = new ArrayList<Item>((int) (count()));
+                items = new ArrayList<Item>(((Number) (count())).intValue());
                 for (int i = 0; i < count(); i++) {
                     this.items.add(new Item(this._io, this, _root));
                 }

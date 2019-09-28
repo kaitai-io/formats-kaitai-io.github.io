@@ -13,8 +13,8 @@ class AndesFirmware extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_imageHeader = $this->_io->readBytes(32);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_imageHeader);
-        $this->_m_imageHeader = new \AndesFirmware\ImageHeader($io, $this, $this->_root);
+        $_io__raw_imageHeader = new \Kaitai\Struct\Stream($this->_m__raw_imageHeader);
+        $this->_m_imageHeader = new \AndesFirmware\ImageHeader($_io__raw_imageHeader, $this, $this->_root);
         $this->_m_ilm = $this->_io->readBytes($this->imageHeader()->ilmLen());
         $this->_m_dlm = $this->_io->readBytes($this->imageHeader()->dlmLen());
     }

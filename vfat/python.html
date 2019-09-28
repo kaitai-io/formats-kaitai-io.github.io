@@ -139,11 +139,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="vfat parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="vfat parsing C# library">C#</a></li>
                 
                 
@@ -468,8 +463,8 @@ class Vfat(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.boot_sector.pos_root_dir)
         self._raw__m_root_dir = self._io.read_bytes(self.boot_sector.size_root_dir)
-        io = KaitaiStream(BytesIO(self._raw__m_root_dir))
-        self._m_root_dir = self._root.RootDirectory(io, self, self._root)
+        _io__raw__m_root_dir = KaitaiStream(BytesIO(self._raw__m_root_dir))
+        self._m_root_dir = self._root.RootDirectory(_io__raw__m_root_dir, self, self._root)
         self._io.seek(_pos)
         return self._m_root_dir if hasattr(self, &#39;_m_root_dir&#39;) else None
 

@@ -72,8 +72,8 @@ class QuakePak(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.ofs_index)
         self._raw__m_index = self._io.read_bytes(self.len_index)
-        io = KaitaiStream(BytesIO(self._raw__m_index))
-        self._m_index = self._root.IndexStruct(io, self, self._root)
+        _io__raw__m_index = KaitaiStream(BytesIO(self._raw__m_index))
+        self._m_index = self._root.IndexStruct(_io__raw__m_index, self, self._root)
         self._io.seek(_pos)
         return self._m_index if hasattr(self, '_m_index') else None
 

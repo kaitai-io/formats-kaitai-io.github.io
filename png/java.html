@@ -176,11 +176,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="PNG (Portable Network Graphics) file parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="PNG (Portable Network Graphics) file parsing C# library">C#</a></li>
                 
                 
@@ -959,27 +954,32 @@ public class Png extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            switch (_root.ihdr().colorType()) {
-            case GREYSCALE_ALPHA: {
-                this.bkgd = new BkgdGreyscale(this._io, this, _root);
-                break;
-            }
-            case INDEXED: {
-                this.bkgd = new BkgdIndexed(this._io, this, _root);
-                break;
-            }
-            case GREYSCALE: {
-                this.bkgd = new BkgdGreyscale(this._io, this, _root);
-                break;
-            }
-            case TRUECOLOR_ALPHA: {
-                this.bkgd = new BkgdTruecolor(this._io, this, _root);
-                break;
-            }
-            case TRUECOLOR: {
-                this.bkgd = new BkgdTruecolor(this._io, this, _root);
-                break;
-            }
+            {
+                ColorType on = _root.ihdr().colorType();
+                if (on != null) {
+                    switch (_root.ihdr().colorType()) {
+                    case INDEXED: {
+                        this.bkgd = new BkgdIndexed(this._io, this, _root);
+                        break;
+                    }
+                    case TRUECOLOR_ALPHA: {
+                        this.bkgd = new BkgdTruecolor(this._io, this, _root);
+                        break;
+                    }
+                    case GREYSCALE_ALPHA: {
+                        this.bkgd = new BkgdGreyscale(this._io, this, _root);
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        this.bkgd = new BkgdTruecolor(this._io, this, _root);
+                        break;
+                    }
+                    case GREYSCALE: {
+                        this.bkgd = new BkgdGreyscale(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
             }
         }
         private KaitaiStruct bkgd;

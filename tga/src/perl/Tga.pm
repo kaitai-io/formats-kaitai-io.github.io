@@ -59,7 +59,7 @@ sub _read {
     $self->{image_depth} = $self->{_io}->read_u1();
     $self->{img_descriptor} = $self->{_io}->read_u1();
     $self->{image_id} = $self->{_io}->read_bytes($self->image_id_len());
-    if ($self->color_map_type() == $COLOR_MAP_ENUM_HAS_COLOR_MAP) {
+    if ($self->color_map_type() == $Tga::COLOR_MAP_ENUM_HAS_COLOR_MAP) {
         $self->{color_map} = ();
         my $n_color_map = $self->num_color_map();
         for (my $i = 0; $i < $n_color_map; $i++) {

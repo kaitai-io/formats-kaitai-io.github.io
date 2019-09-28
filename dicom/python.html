@@ -155,11 +155,6 @@ subtypes to force parsing in particular transfer syntax.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Digital Imaging and Communications in Medicine (DICOM) file format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Digital Imaging and Communications in Medicine (DICOM) file format parsing C# library">C#</a></li>
                 
                 
@@ -4407,7 +4402,7 @@ class Dicom(KaitaiStruct):
             if hasattr(self, &#39;_m_tag&#39;):
                 return self._m_tag if hasattr(self, &#39;_m_tag&#39;) else None
 
-            self._m_tag = self._root.Tags(((self.tag_group &lt;&lt; 16) | self.tag_elem))
+            self._m_tag = KaitaiStream.resolve_enum(self._root.Tags, ((self.tag_group &lt;&lt; 16) | self.tag_elem))
             return self._m_tag if hasattr(self, &#39;_m_tag&#39;) else None
 
 
@@ -4463,7 +4458,7 @@ class Dicom(KaitaiStruct):
             if hasattr(self, &#39;_m_tag&#39;):
                 return self._m_tag if hasattr(self, &#39;_m_tag&#39;) else None
 
-            self._m_tag = self._root.Tags(((self.tag_group &lt;&lt; 16) | self.tag_elem))
+            self._m_tag = KaitaiStream.resolve_enum(self._root.Tags, ((self.tag_group &lt;&lt; 16) | self.tag_elem))
             return self._m_tag if hasattr(self, &#39;_m_tag&#39;) else None
 
         @property

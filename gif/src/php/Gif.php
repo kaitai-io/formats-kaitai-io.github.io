@@ -32,8 +32,8 @@ class Gif extends \Kaitai\Struct\Struct {
         $this->_m_logicalScreenDescriptor = new \Gif\LogicalScreenDescriptorStruct($this->_io, $this, $this->_root);
         if ($this->logicalScreenDescriptor()->hasColorTable()) {
             $this->_m__raw_globalColorTable = $this->_io->readBytes(($this->logicalScreenDescriptor()->colorTableSize() * 3));
-            $io = new \Kaitai\Struct\Stream($this->_m__raw_globalColorTable);
-            $this->_m_globalColorTable = new \Gif\ColorTable($io, $this, $this->_root);
+            $_io__raw_globalColorTable = new \Kaitai\Struct\Stream($this->_m__raw_globalColorTable);
+            $this->_m_globalColorTable = new \Gif\ColorTable($_io__raw_globalColorTable, $this, $this->_root);
         }
         $this->_m_blocks = [];
         $i = 0;
@@ -151,8 +151,8 @@ class LocalImageDescriptor extends \Kaitai\Struct\Struct {
         $this->_m_flags = $this->_io->readU1();
         if ($this->hasColorTable()) {
             $this->_m__raw_localColorTable = $this->_io->readBytes(($this->colorTableSize() * 3));
-            $io = new \Kaitai\Struct\Stream($this->_m__raw_localColorTable);
-            $this->_m_localColorTable = new \Gif\ColorTable($io, $this, $this->_root);
+            $_io__raw_localColorTable = new \Kaitai\Struct\Stream($this->_m__raw_localColorTable);
+            $this->_m_localColorTable = new \Gif\ColorTable($_io__raw_localColorTable, $this, $this->_root);
         }
         $this->_m_imageData = new \Gif\ImageData($this->_io, $this, $this->_root);
     }

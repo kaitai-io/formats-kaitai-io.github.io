@@ -425,7 +425,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_xyz_type
             @tag_data = XyzType.new(@_io, self, @_root)
@@ -442,7 +442,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_localized_unicode_type
             @tag_data = MultiLocalizedUnicodeType.new(@_io, self, @_root)
@@ -522,7 +522,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_viewing_conditions_type
             @tag_data = ViewingConditionsType.new(@_io, self, @_root)
@@ -539,7 +539,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_curve_type
             @tag_data = CurveType.new(@_io, self, @_root)
@@ -606,7 +606,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_signature_type
             @tag_data = SignatureType.new(@_io, self, @_root)
@@ -677,7 +677,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_function_table_with_one_byte_precision_type
             @tag_data = Lut8Type.new(@_io, self, @_root)
@@ -728,7 +728,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_function_table_with_one_byte_precision_type
             @tag_data = Lut8Type.new(@_io, self, @_root)
@@ -749,7 +749,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_xyz_type
             @tag_data = XyzType.new(@_io, self, @_root)
@@ -801,7 +801,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_signature_type
             @tag_data = SignatureType.new(@_io, self, @_root)
@@ -837,7 +837,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_colorant_table_type
             @tag_data = ColorantTableType.new(@_io, self, @_root)
@@ -854,7 +854,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_measurement_type
             @tag_data = MeasurementType.new(@_io, self, @_root)
@@ -871,7 +871,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_profile_sequence_desc_type
             @tag_data = ProfileSequenceDescType.new(@_io, self, @_root)
@@ -888,7 +888,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_signature_type
             @tag_data = SignatureType.new(@_io, self, @_root)
@@ -905,7 +905,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_function_table_with_one_byte_precision_type
             @tag_data = Lut8Type.new(@_io, self, @_root)
@@ -926,7 +926,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
@@ -943,7 +943,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_response_curve_set_16_type
             @tag_data = ResponseCurveSet16Type.new(@_io, self, @_root)
@@ -960,7 +960,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_xyz_type
             @tag_data = XyzType.new(@_io, self, @_root)
@@ -977,7 +977,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_localized_unicode_type
             @tag_data = MultiLocalizedUnicodeType.new(@_io, self, @_root)
@@ -994,7 +994,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_function_table_with_one_byte_precision_type
             @tag_data = Lut8Type.new(@_io, self, @_root)
@@ -1015,7 +1015,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_curve_type
             @tag_data = CurveType.new(@_io, self, @_root)
@@ -1034,7 +1034,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
@@ -1051,7 +1051,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
@@ -1068,7 +1068,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_function_table_with_one_byte_precision_type
             @tag_data = Lut8Type.new(@_io, self, @_root)
@@ -1102,16 +1102,16 @@ class Icc4 < Kaitai::Struct::Struct
           @function_type = Kaitai::Struct::Stream::resolve_enum(PARAMETRIC_CURVE_TYPE_FUNCTIONS, @_io.read_u2be)
           @reserved_2 = @_io.ensure_fixed_contents([0, 0].pack('C*'))
           case function_type
-          when :parametric_curve_type_functions_y_equals_x_to_power_of_g
-            @parameters = ParamsYEqualsXToPowerOfG.new(@_io, self, @_root)
           when :parametric_curve_type_functions_cie_122_1996
             @parameters = ParamsCie1221996.new(@_io, self, @_root)
+          when :parametric_curve_type_functions_iec_61966_3
+            @parameters = ParamsIec619663.new(@_io, self, @_root)
           when :parametric_curve_type_functions_iec_61966_2_1
             @parameters = ParamsIec6196621.new(@_io, self, @_root)
           when :parametric_curve_type_functions_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c
             @parameters = ParamsYEqualsObAxPlusBCbToPowerOfGPlusC.new(@_io, self, @_root)
-          when :parametric_curve_type_functions_iec_61966_3
-            @parameters = ParamsIec619663.new(@_io, self, @_root)
+          when :parametric_curve_type_functions_y_equals_x_to_power_of_g
+            @parameters = ParamsYEqualsXToPowerOfG.new(@_io, self, @_root)
           end
           self
         end
@@ -1217,7 +1217,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_chromaticity_type
             @tag_data = ChromaticityType.new(@_io, self, @_root)
@@ -1234,7 +1234,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_s_15_fixed_16_array_type
             @tag_data = S15Fixed16ArrayType.new(@_io, self, @_root)
@@ -1397,7 +1397,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_localized_unicode_type
             @tag_data = MultiLocalizedUnicodeType.new(@_io, self, @_root)
@@ -1414,7 +1414,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_function_table_with_one_byte_precision_type
             @tag_data = Lut8Type.new(@_io, self, @_root)
@@ -1451,7 +1451,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
@@ -1468,7 +1468,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_function_table_with_one_byte_precision_type
             @tag_data = Lut8Type.new(@_io, self, @_root)
@@ -1489,7 +1489,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_localized_unicode_type
             @tag_data = MultiLocalizedUnicodeType.new(@_io, self, @_root)
@@ -1550,7 +1550,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_colorant_order_type
             @tag_data = ColorantOrderType.new(@_io, self, @_root)
@@ -1629,7 +1629,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_xyz_type
             @tag_data = XyzType.new(@_io, self, @_root)
@@ -1712,7 +1712,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_function_table_with_one_byte_precision_type
             @tag_data = Lut8Type.new(@_io, self, @_root)
@@ -1733,7 +1733,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_function_table_with_one_byte_precision_type
             @tag_data = Lut8Type.new(@_io, self, @_root)
@@ -1754,7 +1754,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_signature_type
             @tag_data = SignatureType.new(@_io, self, @_root)
@@ -1771,7 +1771,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_text_type
             @tag_data = TextType.new(@_io, self, @_root)
@@ -1788,7 +1788,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_colorant_table_type
             @tag_data = ColorantTableType.new(@_io, self, @_root)
@@ -1805,7 +1805,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_date_time_type
             @tag_data = DateTimeType.new(@_io, self, @_root)
@@ -1822,7 +1822,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_named_color_2_type
             @tag_data = NamedColor2Type.new(@_io, self, @_root)
@@ -1839,7 +1839,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_localized_unicode_type
             @tag_data = MultiLocalizedUnicodeType.new(@_io, self, @_root)
@@ -1856,7 +1856,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
@@ -1914,7 +1914,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_profile_sequence_identifier_type
             @tag_data = ProfileSequenceIdentifierType.new(@_io, self, @_root)
@@ -1931,7 +1931,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
@@ -1967,7 +1967,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
@@ -1984,7 +1984,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_curve_type
             @tag_data = CurveType.new(@_io, self, @_root)
@@ -2051,7 +2051,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_curve_type
             @tag_data = CurveType.new(@_io, self, @_root)
@@ -2089,7 +2089,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_function_table_with_one_byte_precision_type
             @tag_data = Lut8Type.new(@_io, self, @_root)
@@ -2129,7 +2129,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_xyz_type
             @tag_data = XyzType.new(@_io, self, @_root)
@@ -2165,7 +2165,7 @@ class Icc4 < Kaitai::Struct::Struct
         end
 
         def _read
-          @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
+          @tag_type = Kaitai::Struct::Stream::resolve_enum(Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
@@ -2180,202 +2180,202 @@ class Icc4 < Kaitai::Struct::Struct
         _pos = @_io.pos
         @_io.seek(offset_to_data_element)
         case tag_signature
-        when :tag_signatures_profile_sequence_identifier
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ProfileSequenceIdentifierTag.new(io, self, @_root)
-        when :tag_signatures_colorimetric_intent_image_state
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ColorimetricIntentImageStateTag.new(io, self, @_root)
-        when :tag_signatures_red_trc
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = RedTrcTag.new(io, self, @_root)
-        when :tag_signatures_preview_0
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = Preview0Tag.new(io, self, @_root)
-        when :tag_signatures_green_trc
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = GreenTrcTag.new(io, self, @_root)
-        when :tag_signatures_b_to_d_0
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = BToD0Tag.new(io, self, @_root)
-        when :tag_signatures_colorant_table_out
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ColorantTableOutTag.new(io, self, @_root)
-        when :tag_signatures_b_to_a_2
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = BToA2Tag.new(io, self, @_root)
-        when :tag_signatures_calibration_date_time
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = CalibrationDateTimeTag.new(io, self, @_root)
-        when :tag_signatures_chromatic_adaptation
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ChromaticAdaptationTag.new(io, self, @_root)
-        when :tag_signatures_colorant_table
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ColorantTableTag.new(io, self, @_root)
-        when :tag_signatures_a_to_b_2
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = AToB2Tag.new(io, self, @_root)
-        when :tag_signatures_d_to_b_1
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = DToB1Tag.new(io, self, @_root)
-        when :tag_signatures_chromaticity
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ChromaticityTag.new(io, self, @_root)
-        when :tag_signatures_blue_matrix_column
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = BlueMatrixColumnTag.new(io, self, @_root)
-        when :tag_signatures_a_to_b_0
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = AToB0Tag.new(io, self, @_root)
-        when :tag_signatures_b_to_d_2
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = BToD2Tag.new(io, self, @_root)
-        when :tag_signatures_b_to_a_1
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = BToA1Tag.new(io, self, @_root)
-        when :tag_signatures_media_white_point
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = MediaWhitePointTag.new(io, self, @_root)
-        when :tag_signatures_d_to_b_0
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = DToB0Tag.new(io, self, @_root)
-        when :tag_signatures_named_color_2
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = NamedColor2Tag.new(io, self, @_root)
-        when :tag_signatures_d_to_b_2
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = DToB2Tag.new(io, self, @_root)
-        when :tag_signatures_red_matrix_column
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = RedMatrixColumnTag.new(io, self, @_root)
-        when :tag_signatures_viewing_conditions
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ViewingConditionsTag.new(io, self, @_root)
-        when :tag_signatures_a_to_b_1
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = AToB1Tag.new(io, self, @_root)
-        when :tag_signatures_preview_1
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = Preview1Tag.new(io, self, @_root)
-        when :tag_signatures_gray_trc
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = GrayTrcTag.new(io, self, @_root)
-        when :tag_signatures_device_mfg_desc
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = DeviceMfgDescTag.new(io, self, @_root)
-        when :tag_signatures_b_to_d_1
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = BToD1Tag.new(io, self, @_root)
         when :tag_signatures_colorant_order
           @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ColorantOrderTag.new(io, self, @_root)
-        when :tag_signatures_copyright
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ColorantOrderTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_b_to_a_2
           @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = CopyrightTag.new(io, self, @_root)
-        when :tag_signatures_gamut
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = BToA2Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_media_white_point
           @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = GamutTag.new(io, self, @_root)
-        when :tag_signatures_char_target
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = CharTargetTag.new(io, self, @_root)
-        when :tag_signatures_output_response
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = OutputResponseTag.new(io, self, @_root)
-        when :tag_signatures_technology
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = TechnologyTag.new(io, self, @_root)
-        when :tag_signatures_viewing_cond_desc
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ViewingCondDescTag.new(io, self, @_root)
-        when :tag_signatures_profile_description
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ProfileDescriptionTag.new(io, self, @_root)
-        when :tag_signatures_luminance
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = LuminanceTag.new(io, self, @_root)
-        when :tag_signatures_d_to_b_3
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = DToB3Tag.new(io, self, @_root)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = MediaWhitePointTag.new(_io__raw_tag_data_element, self, @_root)
         when :tag_signatures_b_to_d_3
           @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = BToD3Tag.new(io, self, @_root)
-        when :tag_signatures_b_to_a_0
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = BToD3Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_colorimetric_intent_image_state
           @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = BToA0Tag.new(io, self, @_root)
-        when :tag_signatures_preview_2
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ColorimetricIntentImageStateTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_viewing_cond_desc
           @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = Preview2Tag.new(io, self, @_root)
-        when :tag_signatures_green_matrix_column
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ViewingCondDescTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_preview_1
           @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = GreenMatrixColumnTag.new(io, self, @_root)
-        when :tag_signatures_profile_sequence
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = ProfileSequenceTag.new(io, self, @_root)
-        when :tag_signatures_saturation_rendering_intent_gamut
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = SaturationRenderingIntentGamutTag.new(io, self, @_root)
-        when :tag_signatures_perceptual_rendering_intent_gamut
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = PerceptualRenderingIntentGamutTag.new(io, self, @_root)
-        when :tag_signatures_blue_trc
-          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = BlueTrcTag.new(io, self, @_root)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = Preview1Tag.new(_io__raw_tag_data_element, self, @_root)
         when :tag_signatures_device_model_desc
           @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = DeviceModelDescTag.new(io, self, @_root)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = DeviceModelDescTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_chromaticity
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ChromaticityTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_preview_0
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = Preview0Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_d_to_b_1
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = DToB1Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_saturation_rendering_intent_gamut
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = SaturationRenderingIntentGamutTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_b_to_a_0
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = BToA0Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_green_matrix_column
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = GreenMatrixColumnTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_copyright
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = CopyrightTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_blue_matrix_column
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = BlueMatrixColumnTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_chromatic_adaptation
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ChromaticAdaptationTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_a_to_b_1
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = AToB1Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_output_response
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = OutputResponseTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_profile_sequence
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ProfileSequenceTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_char_target
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = CharTargetTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_red_trc
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = RedTrcTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_gamut
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = GamutTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_device_mfg_desc
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = DeviceMfgDescTag.new(_io__raw_tag_data_element, self, @_root)
         when :tag_signatures_measurement
           @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
-          io = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
-          @tag_data_element = MeasurementTag.new(io, self, @_root)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = MeasurementTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_green_trc
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = GreenTrcTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_d_to_b_3
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = DToB3Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_colorant_table
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ColorantTableTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_d_to_b_2
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = DToB2Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_profile_description
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ProfileDescriptionTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_profile_sequence_identifier
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ProfileSequenceIdentifierTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_gray_trc
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = GrayTrcTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_perceptual_rendering_intent_gamut
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = PerceptualRenderingIntentGamutTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_blue_trc
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = BlueTrcTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_d_to_b_0
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = DToB0Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_a_to_b_2
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = AToB2Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_calibration_date_time
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = CalibrationDateTimeTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_colorant_table_out
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ColorantTableOutTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_red_matrix_column
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = RedMatrixColumnTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_preview_2
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = Preview2Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_a_to_b_0
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = AToB0Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_luminance
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = LuminanceTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_named_color_2
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = NamedColor2Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_b_to_d_2
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = BToD2Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_b_to_d_0
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = BToD0Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_b_to_a_1
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = BToA1Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_b_to_d_1
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = BToD1Tag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_viewing_conditions
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = ViewingConditionsTag.new(_io__raw_tag_data_element, self, @_root)
+        when :tag_signatures_technology
+          @_raw_tag_data_element = @_io.read_bytes(size_of_data_element)
+          _io__raw_tag_data_element = Kaitai::Struct::Stream.new(@_raw_tag_data_element)
+          @tag_data_element = TechnologyTag.new(_io__raw_tag_data_element, self, @_root)
         else
           @tag_data_element = @_io.read_bytes(size_of_data_element)
         end

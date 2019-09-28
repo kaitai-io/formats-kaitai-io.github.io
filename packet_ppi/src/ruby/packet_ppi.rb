@@ -142,17 +142,17 @@ class PacketPpi < Kaitai::Struct::Struct
   def _read
     @header = PacketPpiHeader.new(@_io, self, @_root)
     @_raw_fields = @_io.read_bytes((header.pph_len - 8))
-    io = Kaitai::Struct::Stream.new(@_raw_fields)
-    @fields = PacketPpiFields.new(io, self, @_root)
+    _io__raw_fields = Kaitai::Struct::Stream.new(@_raw_fields)
+    @fields = PacketPpiFields.new(_io__raw_fields, self, @_root)
     case header.pph_dlt
     when :linktype_ppi
       @_raw_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = PacketPpi.new(io)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = PacketPpi.new(_io__raw_body)
     when :linktype_ethernet
       @_raw_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = EthernetFrame.new(io)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = EthernetFrame.new(_io__raw_body)
     else
       @body = @_io.read_bytes_full
     end
@@ -259,7 +259,7 @@ class PacketPpi < Kaitai::Struct::Struct
       @pph_version = @_io.read_u1
       @pph_flags = @_io.read_u1
       @pph_len = @_io.read_u2le
-      @pph_dlt = Kaitai::Struct::Stream::resolve_enum(LINKTYPE, @_io.read_u4le)
+      @pph_dlt = Kaitai::Struct::Stream::resolve_enum(PacketPpi::LINKTYPE, @_io.read_u4le)
       self
     end
     attr_reader :pph_version
@@ -308,21 +308,21 @@ class PacketPpi < Kaitai::Struct::Struct
     end
 
     def _read
-      @pfh_type = Kaitai::Struct::Stream::resolve_enum(PFH_TYPE, @_io.read_u2le)
+      @pfh_type = Kaitai::Struct::Stream::resolve_enum(PacketPpi::PFH_TYPE, @_io.read_u2le)
       @pfh_datalen = @_io.read_u2le
       case pfh_type
       when :pfh_type_radio_802_11_common
         @_raw_body = @_io.read_bytes(pfh_datalen)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211CommonBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Radio80211CommonBody.new(_io__raw_body, self, @_root)
       when :pfh_type_radio_802_11n_mac_ext
         @_raw_body = @_io.read_bytes(pfh_datalen)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211nMacExtBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Radio80211nMacExtBody.new(_io__raw_body, self, @_root)
       when :pfh_type_radio_802_11n_mac_phy_ext
         @_raw_body = @_io.read_bytes(pfh_datalen)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211nMacPhyExtBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Radio80211nMacPhyExtBody.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes(pfh_datalen)
       end

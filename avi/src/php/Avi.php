@@ -12,8 +12,8 @@ class Avi extends \Kaitai\Struct\Struct {
         $this->_m_fileSize = $this->_io->readU4le();
         $this->_m_magic2 = $this->_io->ensureFixedContents("\x41\x56\x49\x20");
         $this->_m__raw_data = $this->_io->readBytes(($this->fileSize() - 4));
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-        $this->_m_data = new \Avi\Blocks($io, $this, $this->_root);
+        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+        $this->_m_data = new \Avi\Blocks($_io__raw_data, $this, $this->_root);
     }
     protected $_m_magic1;
     protected $_m_fileSize;
@@ -152,18 +152,18 @@ class Block extends \Kaitai\Struct\Struct {
         switch ($this->fourCc()) {
             case \Avi\ChunkType::LIST:
                 $this->_m__raw_data = $this->_io->readBytes($this->blockSize());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Avi\ListBody($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Avi\ListBody($_io__raw_data, $this, $this->_root);
                 break;
             case \Avi\ChunkType::AVIH:
                 $this->_m__raw_data = $this->_io->readBytes($this->blockSize());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Avi\AvihBody($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Avi\AvihBody($_io__raw_data, $this, $this->_root);
                 break;
             case \Avi\ChunkType::STRH:
                 $this->_m__raw_data = $this->_io->readBytes($this->blockSize());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Avi\StrhBody($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Avi\StrhBody($_io__raw_data, $this, $this->_root);
                 break;
             default:
                 $this->_m_data = $this->_io->readBytes($this->blockSize());

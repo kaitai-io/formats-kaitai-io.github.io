@@ -59,7 +59,7 @@ public class SystemdJournal extends KaitaiStruct {
         this._raw_header = this._io.readBytes(lenHeader());
         KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
         this.header = new Header(_io__raw_header, this, _root);
-        objects = new ArrayList<JournalObject>((int) (header().numObjects()));
+        objects = new ArrayList<JournalObject>(((Number) (header().numObjects())).intValue());
         for (int i = 0; i < header().numObjects(); i++) {
             this.objects.add(new JournalObject(this._io, this, _root));
         }
@@ -232,17 +232,24 @@ public class SystemdJournal extends KaitaiStruct {
             this.flags = this._io.readU1();
             this.reserved = this._io.readBytes(6);
             this.lenObject = this._io.readU8le();
-            switch (objectType()) {
-            case DATA: {
-                this._raw_payload = this._io.readBytes((lenObject() - 16));
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new DataObject(_io__raw_payload, this, _root);
-                break;
-            }
-            default: {
-                this.payload = this._io.readBytes((lenObject() - 16));
-                break;
-            }
+            {
+                ObjectTypes on = objectType();
+                if (on != null) {
+                    switch (objectType()) {
+                    case DATA: {
+                        this._raw_payload = this._io.readBytes((lenObject() - 16));
+                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
+                        this.payload = new DataObject(_io__raw_payload, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.payload = this._io.readBytes((lenObject() - 16));
+                        break;
+                    }
+                    }
+                } else {
+                    this.payload = this._io.readBytes((lenObject() - 16));
+                }
             }
         }
         private byte[] padding;

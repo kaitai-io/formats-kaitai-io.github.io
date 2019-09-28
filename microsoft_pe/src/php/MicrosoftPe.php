@@ -319,8 +319,8 @@ class CoffSymbol extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_nameAnnoying = $this->_io->readBytes(8);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_nameAnnoying);
-        $this->_m_nameAnnoying = new \MicrosoftPe\Annoyingstring($io, $this, $this->_root);
+        $_io__raw_nameAnnoying = new \Kaitai\Struct\Stream($this->_m__raw_nameAnnoying);
+        $this->_m_nameAnnoying = new \MicrosoftPe\Annoyingstring($_io__raw_nameAnnoying, $this, $this->_root);
         $this->_m_value = $this->_io->readU4le();
         $this->_m_sectionNumber = $this->_io->readU2le();
         $this->_m_type = $this->_io->readU2le();
@@ -372,8 +372,8 @@ class PeHeader extends \Kaitai\Struct\Struct {
         $this->_m_peSignature = $this->_io->ensureFixedContents("\x50\x45\x00\x00");
         $this->_m_coffHdr = new \MicrosoftPe\CoffHeader($this->_io, $this, $this->_root);
         $this->_m__raw_optionalHdr = $this->_io->readBytes($this->coffHdr()->sizeOfOptionalHeader());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_optionalHdr);
-        $this->_m_optionalHdr = new \MicrosoftPe\OptionalHeader($io, $this, $this->_root);
+        $_io__raw_optionalHdr = new \Kaitai\Struct\Stream($this->_m__raw_optionalHdr);
+        $this->_m_optionalHdr = new \MicrosoftPe\OptionalHeader($_io__raw_optionalHdr, $this, $this->_root);
         $this->_m_sections = [];
         $n = $this->coffHdr()->numberOfSections();
         for ($i = 0; $i < $n; $i++) {
@@ -388,8 +388,8 @@ class PeHeader extends \Kaitai\Struct\Struct {
             $_pos = $this->_io->pos();
             $this->_io->seek($this->optionalHdr()->dataDirs()->certificateTable()->virtualAddress());
             $this->_m__raw_certificateTable = $this->_io->readBytes($this->optionalHdr()->dataDirs()->certificateTable()->size());
-            $io = new \Kaitai\Struct\Stream($this->_m__raw_certificateTable);
-            $this->_m_certificateTable = new \MicrosoftPe\CertificateTable($io, $this, $this->_root);
+            $_io__raw_certificateTable = new \Kaitai\Struct\Stream($this->_m__raw_certificateTable);
+            $this->_m_certificateTable = new \MicrosoftPe\CertificateTable($_io__raw_certificateTable, $this, $this->_root);
             $this->_io->seek($_pos);
         }
         return $this->_m_certificateTable;

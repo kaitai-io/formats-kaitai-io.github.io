@@ -256,8 +256,8 @@ class CellIndexLeaf extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_lenPayload = new \VlqBase128Be($this->_io);
         $this->_m__raw_payload = $this->_io->readBytes($this->lenPayload()->value());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
-        $this->_m_payload = new \Sqlite3\CellPayload($io, $this, $this->_root);
+        $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+        $this->_m_payload = new \Sqlite3\CellPayload($_io__raw_payload, $this, $this->_root);
     }
     protected $_m_lenPayload;
     protected $_m_payload;
@@ -299,8 +299,8 @@ class CellTableLeaf extends \Kaitai\Struct\Struct {
         $this->_m_lenPayload = new \VlqBase128Be($this->_io);
         $this->_m_rowId = new \VlqBase128Be($this->_io);
         $this->_m__raw_payload = $this->_io->readBytes($this->lenPayload()->value());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
-        $this->_m_payload = new \Sqlite3\CellPayload($io, $this, $this->_root);
+        $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+        $this->_m_payload = new \Sqlite3\CellPayload($_io__raw_payload, $this, $this->_root);
     }
     protected $_m_lenPayload;
     protected $_m_rowId;
@@ -323,8 +323,8 @@ class CellPayload extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_lenHeaderAndLen = new \VlqBase128Be($this->_io);
         $this->_m__raw_columnSerials = $this->_io->readBytes(($this->lenHeaderAndLen()->value() - 1));
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_columnSerials);
-        $this->_m_columnSerials = new \Sqlite3\Serials($io, $this, $this->_root);
+        $_io__raw_columnSerials = new \Kaitai\Struct\Stream($this->_m__raw_columnSerials);
+        $this->_m_columnSerials = new \Sqlite3\Serials($_io__raw_columnSerials, $this, $this->_root);
         $this->_m_columnContents = [];
         $n = count($this->columnSerials()->entries());
         for ($i = 0; $i < $n; $i++) {
@@ -371,8 +371,8 @@ class CellIndexInterior extends \Kaitai\Struct\Struct {
         $this->_m_leftChildPage = $this->_io->readU4be();
         $this->_m_lenPayload = new \VlqBase128Be($this->_io);
         $this->_m__raw_payload = $this->_io->readBytes($this->lenPayload()->value());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
-        $this->_m_payload = new \Sqlite3\CellPayload($io, $this, $this->_root);
+        $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+        $this->_m_payload = new \Sqlite3\CellPayload($_io__raw_payload, $this, $this->_root);
     }
     protected $_m_leftChildPage;
     protected $_m_lenPayload;

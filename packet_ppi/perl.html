@@ -144,11 +144,6 @@ radio information, but can be used for other purposes as well.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="packet_ppi parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="packet_ppi parsing C# library">C#</a></li>
                 
                 
@@ -373,12 +368,12 @@ sub _read {
     my $io__raw_fields = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_fields});
     $self-&gt;{fields} = PacketPpi::PacketPpiFields-&gt;new($io__raw_fields, $self, $self-&gt;{_root});
     my $_on = $self-&gt;header()-&gt;pph_dlt();
-    if ($_on == $LINKTYPE_PPI) {
+    if ($_on == $PacketPpi::LINKTYPE_PPI) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = PacketPpi-&gt;new($io__raw_body);
     }
-    elsif ($_on == $LINKTYPE_ETHERNET) {
+    elsif ($_on == $PacketPpi::LINKTYPE_ETHERNET) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = EthernetFrame-&gt;new($io__raw_body);
@@ -772,17 +767,17 @@ sub _read {
     $self-&gt;{pfh_type} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{pfh_datalen} = $self-&gt;{_io}-&gt;read_u2le();
     my $_on = $self-&gt;pfh_type();
-    if ($_on == $PFH_TYPE_RADIO_802_11_COMMON) {
+    if ($_on == $PacketPpi::PFH_TYPE_RADIO_802_11_COMMON) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;pfh_datalen());
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = PacketPpi::Radio80211CommonBody-&gt;new($io__raw_body, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $PFH_TYPE_RADIO_802_11N_MAC_EXT) {
+    elsif ($_on == $PacketPpi::PFH_TYPE_RADIO_802_11N_MAC_EXT) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;pfh_datalen());
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = PacketPpi::Radio80211nMacExtBody-&gt;new($io__raw_body, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT) {
+    elsif ($_on == $PacketPpi::PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;pfh_datalen());
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = PacketPpi::Radio80211nMacPhyExtBody-&gt;new($io__raw_body, $self, $self-&gt;{_root});

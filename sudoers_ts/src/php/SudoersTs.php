@@ -241,13 +241,13 @@ class Record extends \Kaitai\Struct\Struct {
         switch ($this->version()) {
             case 1:
                 $this->_m__raw_payload = $this->_io->readBytes(($this->lenRecord() - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
-                $this->_m_payload = new \SudoersTs\RecordV1($io, $this, $this->_root);
+                $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \SudoersTs\RecordV1($_io__raw_payload, $this, $this->_root);
                 break;
             case 2:
                 $this->_m__raw_payload = $this->_io->readBytes(($this->lenRecord() - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
-                $this->_m_payload = new \SudoersTs\RecordV2($io, $this, $this->_root);
+                $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \SudoersTs\RecordV2($_io__raw_payload, $this, $this->_root);
                 break;
             default:
                 $this->_m_payload = $this->_io->readBytes(($this->lenRecord() - 4));

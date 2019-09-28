@@ -56,27 +56,11 @@ class Stl < Kaitai::Struct::Struct
       (3).times { |i|
         @vertices[i] = Vec3d.new(@_io, self, @_root)
       }
+      @abr = @_io.read_u2le
       self
     end
     attr_reader :normal
     attr_reader :vertices
-  end
-  class Vec3d < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @x = @_io.read_f4le
-      @y = @_io.read_f4le
-      @z = @_io.read_f4le
-      @abr = @_io.read_u2le
-      self
-    end
-    attr_reader :x
-    attr_reader :y
-    attr_reader :z
 
     ##
     # In theory (per standard), it's "attribute byte count" with
@@ -88,6 +72,22 @@ class Stl < Kaitai::Struct::Struct
     # additional attributes (such as RGB color of a vertex or
     # color index).
     attr_reader :abr
+  end
+  class Vec3d < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = @_io.read_f4le
+      @y = @_io.read_f4le
+      @z = @_io.read_f4le
+      self
+    end
+    attr_reader :x
+    attr_reader :y
+    attr_reader :z
   end
   attr_reader :header
   attr_reader :num_triangles

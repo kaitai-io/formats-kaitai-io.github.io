@@ -190,11 +190,6 @@ describes binary version.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".stl file format of 3D Systems Stereolithography parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".stl file format of 3D Systems Stereolithography parsing C# library">C#</a></li>
                 
                 
@@ -336,7 +331,7 @@ public class Stl extends KaitaiStruct {
     private void _read() {
         this.header = this._io.readBytes(80);
         this.numTriangles = this._io.readU4le();
-        triangles = new ArrayList&lt;Triangle&gt;((int) (numTriangles()));
+        triangles = new ArrayList&lt;Triangle&gt;(((Number) (numTriangles())).intValue());
         for (int i = 0; i &lt; numTriangles(); i++) {
             this.triangles.add(new Triangle(this._io, this, _root));
         }
@@ -368,17 +363,31 @@ public class Stl extends KaitaiStruct {
         }
         private void _read() {
             this.normal = new Vec3d(this._io, this, _root);
-            vertices = new ArrayList&lt;Vec3d&gt;((int) (3));
+            vertices = new ArrayList&lt;Vec3d&gt;(((Number) (3)).intValue());
             for (int i = 0; i &lt; 3; i++) {
                 this.vertices.add(new Vec3d(this._io, this, _root));
             }
+            this.abr = this._io.readU2le();
         }
         private Vec3d normal;
         private ArrayList&lt;Vec3d&gt; vertices;
+        private int abr;
         private Stl _root;
         private Stl _parent;
         public Vec3d normal() { return normal; }
         public ArrayList&lt;Vec3d&gt; vertices() { return vertices; }
+
+        /**
+         * In theory (per standard), it&#39;s &quot;attribute byte count&quot; with
+         * no other details given on what &quot;attribute&quot; is and what
+         * should be stored in this field.
+         * 
+         * In practice, software dealing with STL either expected to
+         * see 0 here, or uses this 16-bit field per se to store
+         * additional attributes (such as RGB color of a vertex or
+         * color index).
+         */
+        public int abr() { return abr; }
         public Stl _root() { return _root; }
         public Stl _parent() { return _parent; }
     }
@@ -405,29 +414,15 @@ public class Stl extends KaitaiStruct {
             this.x = this._io.readF4le();
             this.y = this._io.readF4le();
             this.z = this._io.readF4le();
-            this.abr = this._io.readU2le();
         }
         private float x;
         private float y;
         private float z;
-        private int abr;
         private Stl _root;
         private Stl.Triangle _parent;
         public float x() { return x; }
         public float y() { return y; }
         public float z() { return z; }
-
-        /**
-         * In theory (per standard), it&#39;s &quot;attribute byte count&quot; with
-         * no other details given on what &quot;attribute&quot; is and what
-         * should be stored in this field.
-         * 
-         * In practice, software dealing with STL either expected to
-         * see 0 here, or uses this 16-bit field per se to store
-         * additional attributes (such as RGB color of a vertex or
-         * color index).
-         */
-        public int abr() { return abr; }
         public Stl _root() { return _root; }
         public Stl.Triangle _parent() { return _parent; }
     }

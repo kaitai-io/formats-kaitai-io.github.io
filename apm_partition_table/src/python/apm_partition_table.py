@@ -111,8 +111,8 @@ class ApmPartitionTable(KaitaiStruct):
         _pos = io.pos()
         io.seek(self._root.sector_size)
         self._raw__m_partition_lookup = io.read_bytes(self.sector_size)
-        io = KaitaiStream(BytesIO(self._raw__m_partition_lookup))
-        self._m_partition_lookup = self._root.PartitionEntry(io, self, self._root)
+        _io__raw__m_partition_lookup = KaitaiStream(BytesIO(self._raw__m_partition_lookup))
+        self._m_partition_lookup = self._root.PartitionEntry(_io__raw__m_partition_lookup, self, self._root)
         io.seek(_pos)
         return self._m_partition_lookup if hasattr(self, '_m_partition_lookup') else None
 
@@ -128,8 +128,8 @@ class ApmPartitionTable(KaitaiStruct):
         self._m_partition_entries = [None] * (self._root.partition_lookup.number_of_partitions)
         for i in range(self._root.partition_lookup.number_of_partitions):
             self._raw__m_partition_entries[i] = io.read_bytes(self.sector_size)
-            io = KaitaiStream(BytesIO(self._raw__m_partition_entries[i]))
-            self._m_partition_entries[i] = self._root.PartitionEntry(io, self, self._root)
+            _io__raw__m_partition_entries = KaitaiStream(BytesIO(self._raw__m_partition_entries[i]))
+            self._m_partition_entries[i] = self._root.PartitionEntry(_io__raw__m_partition_entries, self, self._root)
 
         io.seek(_pos)
         return self._m_partition_entries if hasattr(self, '_m_partition_entries') else None

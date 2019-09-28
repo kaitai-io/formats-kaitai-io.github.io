@@ -112,23 +112,28 @@ public class GoogleProtobuf extends KaitaiStruct {
         }
         private void _read() {
             this.key = new VlqBase128Le(this._io);
-            switch (wireType()) {
-            case VARINT: {
-                this.value = new VlqBase128Le(this._io);
-                break;
-            }
-            case LEN_DELIMITED: {
-                this.value = new DelimitedBytes(this._io, this, _root);
-                break;
-            }
-            case BIT_64: {
-                this.value = (Object) (this._io.readU8le());
-                break;
-            }
-            case BIT_32: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
+            {
+                WireTypes on = wireType();
+                if (on != null) {
+                    switch (wireType()) {
+                    case VARINT: {
+                        this.value = new VlqBase128Le(this._io);
+                        break;
+                    }
+                    case LEN_DELIMITED: {
+                        this.value = new DelimitedBytes(this._io, this, _root);
+                        break;
+                    }
+                    case BIT_64: {
+                        this.value = (Object) (this._io.readU8le());
+                        break;
+                    }
+                    case BIT_32: {
+                        this.value = (Object) (this._io.readU4le());
+                        break;
+                    }
+                    }
+                }
             }
         }
         private WireTypes wireType;

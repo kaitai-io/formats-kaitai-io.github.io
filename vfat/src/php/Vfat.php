@@ -31,8 +31,8 @@ class Vfat extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->bootSector()->posRootDir());
         $this->_m__raw_rootDir = $this->_io->readBytes($this->bootSector()->sizeRootDir());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_rootDir);
-        $this->_m_rootDir = new \Vfat\RootDirectory($io, $this, $this->_root);
+        $_io__raw_rootDir = new \Kaitai\Struct\Stream($this->_m__raw_rootDir);
+        $this->_m_rootDir = new \Vfat\RootDirectory($_io__raw_rootDir, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_rootDir;
     }

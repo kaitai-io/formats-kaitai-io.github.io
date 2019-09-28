@@ -146,11 +146,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Gran Turismo File System (GTFS) parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Gran Turismo File System (GTFS) parsing C# library">C#</a></li>
                 
                 
@@ -276,7 +271,7 @@ public class GranTurismoVol extends KaitaiStruct {
         this.numFiles = this._io.readU2le();
         this.numEntries = this._io.readU2le();
         this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-        offsets = new ArrayList&lt;Long&gt;((int) (numFiles()));
+        offsets = new ArrayList&lt;Long&gt;(((Number) (numFiles())).intValue());
         for (int i = 0; i &lt; numFiles(); i++) {
             this.offsets.add(this._io.readU4le());
         }
@@ -369,7 +364,7 @@ public class GranTurismoVol extends KaitaiStruct {
             return this.files;
         long _pos = this._io.pos();
         this._io.seek((ofsDir() &amp; 4294965248L));
-        files = new ArrayList&lt;FileInfo&gt;((int) (_root.numEntries()));
+        files = new ArrayList&lt;FileInfo&gt;(((Number) (_root.numEntries())).intValue());
         for (int i = 0; i &lt; _root.numEntries(); i++) {
             this.files.add(new FileInfo(this._io, this, _root));
         }

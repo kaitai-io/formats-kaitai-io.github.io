@@ -247,13 +247,13 @@ class Extension extends \Kaitai\Struct\Struct {
         switch ($this->type()) {
             case 0:
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \TlsClientHello\Sni($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \TlsClientHello\Sni($_io__raw_body, $this, $this->_root);
                 break;
             case 16:
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \TlsClientHello\Alpn($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \TlsClientHello\Alpn($_io__raw_body, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->len());

@@ -258,6 +258,12 @@ namespace Kaitai
             {
                 _recordHeader = new RecordHeader(m_io, this, m_root);
                 switch (RecordHeader.TagType) {
+                case Swf.TagType.DefineSound: {
+                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
+                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
+                    _tagBody = new DefineSoundBody(io___raw_tagBody, this, m_root);
+                    break;
+                }
                 case Swf.TagType.SetBackgroundColor: {
                     __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
                     var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
@@ -270,10 +276,10 @@ namespace Kaitai
                     _tagBody = new ScriptLimitsBody(io___raw_tagBody, this, m_root);
                     break;
                 }
-                case Swf.TagType.DefineSound: {
+                case Swf.TagType.DoAbc: {
                     __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
                     var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new DefineSoundBody(io___raw_tagBody, this, m_root);
+                    _tagBody = new DoAbcBody(io___raw_tagBody, this, m_root);
                     break;
                 }
                 case Swf.TagType.ExportAssets: {
@@ -286,12 +292,6 @@ namespace Kaitai
                     __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
                     var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
                     _tagBody = new SymbolClassBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.DoAbc: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new DoAbcBody(io___raw_tagBody, this, m_root);
                     break;
                 }
                 default: {
@@ -540,8 +540,8 @@ namespace Kaitai
         private Swf m_root;
         private KaitaiStruct m_parent;
         private byte[] __raw_plainBody;
-        private byte[] __raw__raw_zlibBody;
         private byte[] __raw_zlibBody;
+        private byte[] __raw__raw_zlibBody;
         public Compressions Compression { get { return _compression; } }
         public byte[] Signature { get { return _signature; } }
         public byte Version { get { return _version; } }
@@ -551,7 +551,7 @@ namespace Kaitai
         public Swf M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
         public byte[] M_RawPlainBody { get { return __raw_plainBody; } }
-        public byte[] M_RawM_RawZlibBody { get { return __raw__raw_zlibBody; } }
         public byte[] M_RawZlibBody { get { return __raw_zlibBody; } }
+        public byte[] M_RawM_RawZlibBody { get { return __raw__raw_zlibBody; } }
     }
 }

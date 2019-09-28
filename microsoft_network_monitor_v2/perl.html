@@ -164,11 +164,6 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C# library">C#</a></li>
                 
                 
@@ -244,8 +239,8 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
-use WindowsSystemtime;
 use EthernetFrame;
+use WindowsSystemtime;
 
 ########################################################################
 package MicrosoftNetworkMonitorV2;
@@ -627,7 +622,7 @@ sub _read {
     $self-&gt;{orig_len} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{inc_len} = $self-&gt;{_io}-&gt;read_u4le();
     my $_on = $self-&gt;_root()-&gt;mac_type();
-    if ($_on == $LINKTYPE_ETHERNET) {
+    if ($_on == $MicrosoftNetworkMonitorV2::LINKTYPE_ETHERNET) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;inc_len());
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = EthernetFrame-&gt;new($io__raw_body);

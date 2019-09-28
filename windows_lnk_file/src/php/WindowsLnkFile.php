@@ -67,8 +67,8 @@ class LinkTargetIdList extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_lenIdList = $this->_io->readU2le();
         $this->_m__raw_idList = $this->_io->readBytes($this->lenIdList());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_idList);
-        $this->_m_idList = new \WindowsShellItems($io);
+        $_io__raw_idList = new \Kaitai\Struct\Stream($this->_m__raw_idList);
+        $this->_m_idList = new \WindowsShellItems($_io__raw_idList);
     }
     protected $_m_lenIdList;
     protected $_m_idList;
@@ -107,8 +107,8 @@ class LinkInfo extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_lenAll = $this->_io->readU4le();
         $this->_m__raw_all = $this->_io->readBytes(($this->lenAll() - 4));
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_all);
-        $this->_m_all = new \WindowsLnkFile\LinkInfo\All($io, $this, $this->_root);
+        $_io__raw_all = new \Kaitai\Struct\Stream($this->_m__raw_all);
+        $this->_m_all = new \WindowsLnkFile\LinkInfo\All($_io__raw_all, $this, $this->_root);
     }
     protected $_m_lenAll;
     protected $_m_all;
@@ -174,8 +174,8 @@ class All extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_lenHeader = $this->_io->readU4le();
         $this->_m__raw_header = $this->_io->readBytes(($this->lenHeader() - 8));
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_header);
-        $this->_m_header = new \WindowsLnkFile\LinkInfo\Header($io, $this, $this->_root);
+        $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+        $this->_m_header = new \WindowsLnkFile\LinkInfo\Header($_io__raw_header, $this, $this->_root);
     }
     protected $_m_volumeId;
     public function volumeId() {
@@ -220,8 +220,8 @@ class VolumeIdSpec extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_lenAll = $this->_io->readU4le();
         $this->_m__raw_body = $this->_io->readBytes(($this->lenAll() - 4));
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-        $this->_m_body = new \WindowsLnkFile\LinkInfo\VolumeIdBody($io, $this, $this->_root);
+        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+        $this->_m_body = new \WindowsLnkFile\LinkInfo\VolumeIdBody($_io__raw_body, $this, $this->_root);
     }
     protected $_m_lenAll;
     protected $_m_body;
@@ -352,8 +352,8 @@ class FileHeader extends \Kaitai\Struct\Struct {
         $this->_m_lenHeader = $this->_io->ensureFixedContents("\x4C\x00\x00\x00");
         $this->_m_linkClsid = $this->_io->ensureFixedContents("\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00\x46");
         $this->_m__raw_flags = $this->_io->readBytes(4);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_flags);
-        $this->_m_flags = new \WindowsLnkFile\LinkFlags($io, $this, $this->_root);
+        $_io__raw_flags = new \Kaitai\Struct\Stream($this->_m__raw_flags);
+        $this->_m_flags = new \WindowsLnkFile\LinkFlags($_io__raw_flags, $this, $this->_root);
         $this->_m_fileAttrs = $this->_io->readU4le();
         $this->_m_timeCreation = $this->_io->readU8le();
         $this->_m_timeAccess = $this->_io->readU8le();

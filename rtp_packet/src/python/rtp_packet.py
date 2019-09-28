@@ -64,7 +64,7 @@ class RtpPacket(KaitaiStruct):
         self.has_extension = self._io.read_bits_int(1) != 0
         self.csrc_count = self._io.read_bits_int(4)
         self.marker = self._io.read_bits_int(1) != 0
-        self.payload_type = self._root.PayloadTypeEnum(self._io.read_bits_int(7))
+        self.payload_type = KaitaiStream.resolve_enum(self._root.PayloadTypeEnum, self._io.read_bits_int(7))
         self._io.align_to_byte()
         self.sequence_number = self._io.read_u2be()
         self.timestamp = self._io.read_u4be()

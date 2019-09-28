@@ -7,7 +7,7 @@ from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, 
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-from pcx import Pcx
+import pcx
 class PcxDcx(KaitaiStruct):
     """DCX is a simple extension of PCX image format allowing to bundle
     many PCX images (typically, pages of a document) in one file. It saw
@@ -49,7 +49,7 @@ class PcxDcx(KaitaiStruct):
             if self.ofs_body != 0:
                 _pos = self._io.pos()
                 self._io.seek(self.ofs_body)
-                self._m_body = Pcx(self._io)
+                self._m_body = pcx.Pcx(self._io)
                 self._io.seek(_pos)
 
             return self._m_body if hasattr(self, '_m_body') else None

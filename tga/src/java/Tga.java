@@ -84,7 +84,7 @@ public class Tga extends KaitaiStruct {
         this.imgDescriptor = this._io.readU1();
         this.imageId = this._io.readBytes(imageIdLen());
         if (colorMapType() == ColorMapEnum.HAS_COLOR_MAP) {
-            colorMap = new ArrayList<byte[]>((int) (numColorMap()));
+            colorMap = new ArrayList<byte[]>(((Number) (numColorMap())).intValue());
             for (int i = 0; i < numColorMap(); i++) {
                 this.colorMap.add(this._io.readBytes(((colorMapDepth() + 7) / 8)));
             }
@@ -175,7 +175,7 @@ public class Tga extends KaitaiStruct {
         private void _read() {
             this.extAreaSize = this._io.readU2le();
             this.authorName = new String(this._io.readBytes(41), Charset.forName("ASCII"));
-            comments = new ArrayList<String>((int) (4));
+            comments = new ArrayList<String>(((Number) (4)).intValue());
             for (int i = 0; i < 4; i++) {
                 this.comments.add(new String(this._io.readBytes(81), Charset.forName("ASCII")));
             }

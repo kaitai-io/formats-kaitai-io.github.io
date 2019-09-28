@@ -10,8 +10,8 @@ class Dbf extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_header1 = new \Dbf\Header1($this->_io, $this, $this->_root);
         $this->_m__raw_header2 = $this->_io->readBytes(($this->header1()->lenHeader() - 12));
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_header2);
-        $this->_m_header2 = new \Dbf\Header2($io, $this, $this->_root);
+        $_io__raw_header2 = new \Kaitai\Struct\Stream($this->_m__raw_header2);
+        $this->_m_header2 = new \Dbf\Header2($_io__raw_header2, $this, $this->_root);
         $this->_m_records = [];
         $n = $this->header1()->numRecords();
         for ($i = 0; $i < $n; $i++) {

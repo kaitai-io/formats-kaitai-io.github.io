@@ -635,94 +635,10 @@ namespace Kaitai
                 _len = new LenSubpacket(m_io, this, m_root);
                 _subpacketType = ((OpenpgpMessage.SubpacketTypes) m_io.ReadU1());
                 switch (SubpacketType) {
-                case OpenpgpMessage.SubpacketTypes.ExportableCertification: {
+                case OpenpgpMessage.SubpacketTypes.PreferredKeyServer: {
                     __raw_content = m_io.ReadBytes((Len.Len - 1));
                     var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new ExportableCertification(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.PreferredHashAlgorithms: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new PreferredHashAlgorithms(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.EmbeddedSignature: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new EmbeddedSignature(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.TrustSignature: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new TrustSignature(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.ReasonForRevocation: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new ReasonForRevocation(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.Features: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new Features(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.SignatureExpirationTime: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new SignatureExpirationTime(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.PreferredCompressionAlgorithms: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new PreferredCompressionAlgorithms(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.Revocable: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new Revocable(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.RegularExpression: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new RegularExpression(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.NotationData: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new NotationData(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.KeyExpirationTime: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new KeyExpirationTime(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.SignatureCreationTime: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new SignatureCreationTime(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.RevocationKey: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new RevocationKey(io___raw_content, this, m_root);
-                    break;
-                }
-                case OpenpgpMessage.SubpacketTypes.KeyFlags: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new KeyFlags(io___raw_content, this, m_root);
+                    _content = new PreferredKeyServer(io___raw_content, this, m_root);
                     break;
                 }
                 case OpenpgpMessage.SubpacketTypes.Issuer: {
@@ -731,10 +647,34 @@ namespace Kaitai
                     _content = new Issuer(io___raw_content, this, m_root);
                     break;
                 }
+                case OpenpgpMessage.SubpacketTypes.Revocable: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new Revocable(io___raw_content, this, m_root);
+                    break;
+                }
                 case OpenpgpMessage.SubpacketTypes.SignatureTarget: {
                     __raw_content = m_io.ReadBytes((Len.Len - 1));
                     var io___raw_content = new KaitaiStream(__raw_content);
                     _content = new SignatureTarget(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.RegularExpression: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new RegularExpression(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.ExportableCertification: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new ExportableCertification(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.ReasonForRevocation: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new ReasonForRevocation(io___raw_content, this, m_root);
                     break;
                 }
                 case OpenpgpMessage.SubpacketTypes.KeyServerPreferences: {
@@ -743,10 +683,70 @@ namespace Kaitai
                     _content = new KeyServerPreferences(io___raw_content, this, m_root);
                     break;
                 }
+                case OpenpgpMessage.SubpacketTypes.SignatureCreationTime: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new SignatureCreationTime(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.PreferredHashAlgorithms: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new PreferredHashAlgorithms(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.TrustSignature: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new TrustSignature(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.KeyExpirationTime: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new KeyExpirationTime(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.KeyFlags: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new KeyFlags(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.SignatureExpirationTime: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new SignatureExpirationTime(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.Features: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new Features(io___raw_content, this, m_root);
+                    break;
+                }
                 case OpenpgpMessage.SubpacketTypes.SignersUserId: {
                     __raw_content = m_io.ReadBytes((Len.Len - 1));
                     var io___raw_content = new KaitaiStream(__raw_content);
                     _content = new SignersUserId(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.NotationData: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new NotationData(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.RevocationKey: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new RevocationKey(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.PreferredCompressionAlgorithms: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new PreferredCompressionAlgorithms(io___raw_content, this, m_root);
                     break;
                 }
                 case OpenpgpMessage.SubpacketTypes.PolicyUri: {
@@ -755,16 +755,16 @@ namespace Kaitai
                     _content = new PolicyUri(io___raw_content, this, m_root);
                     break;
                 }
-                case OpenpgpMessage.SubpacketTypes.PreferredKeyServer: {
-                    __raw_content = m_io.ReadBytes((Len.Len - 1));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new PreferredKeyServer(io___raw_content, this, m_root);
-                    break;
-                }
                 case OpenpgpMessage.SubpacketTypes.PrimaryUserId: {
                     __raw_content = m_io.ReadBytes((Len.Len - 1));
                     var io___raw_content = new KaitaiStream(__raw_content);
                     _content = new PrimaryUserId(io___raw_content, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.SubpacketTypes.EmbeddedSignature: {
+                    __raw_content = m_io.ReadBytes((Len.Len - 1));
+                    var io___raw_content = new KaitaiStream(__raw_content);
+                    _content = new EmbeddedSignature(io___raw_content, this, m_root);
                     break;
                 }
                 default: {
@@ -822,7 +822,7 @@ namespace Kaitai
                     _body = new PublicKeyPacket(io___raw_body, this, m_root);
                     break;
                 }
-                case OpenpgpMessage.PacketTags.SecretSubkeyPacket: {
+                case OpenpgpMessage.PacketTags.PublicSubkeyPacket: {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new PublicKeyPacket(io___raw_body, this, m_root);
@@ -834,22 +834,22 @@ namespace Kaitai
                     _body = new UserIdPacket(io___raw_body, this, m_root);
                     break;
                 }
-                case OpenpgpMessage.PacketTags.SecretKeyPacket: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SecretKeyPacket(io___raw_body, this, m_root);
-                    break;
-                }
                 case OpenpgpMessage.PacketTags.SignaturePacket: {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new SignaturePacket(io___raw_body, this, m_root);
                     break;
                 }
-                case OpenpgpMessage.PacketTags.PublicSubkeyPacket: {
+                case OpenpgpMessage.PacketTags.SecretSubkeyPacket: {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new PublicKeyPacket(io___raw_body, this, m_root);
+                    break;
+                }
+                case OpenpgpMessage.PacketTags.SecretKeyPacket: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SecretKeyPacket(io___raw_body, this, m_root);
                     break;
                 }
                 default: {

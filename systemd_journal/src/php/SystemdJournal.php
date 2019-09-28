@@ -20,8 +20,8 @@ class SystemdJournal extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_header = $this->_io->readBytes($this->lenHeader());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_header);
-        $this->_m_header = new \SystemdJournal\Header($io, $this, $this->_root);
+        $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+        $this->_m_header = new \SystemdJournal\Header($_io__raw_header, $this, $this->_root);
         $this->_m_objects = [];
         $n = $this->header()->numObjects();
         for ($i = 0; $i < $n; $i++) {
@@ -192,8 +192,8 @@ class JournalObject extends \Kaitai\Struct\Struct {
         switch ($this->objectType()) {
             case \SystemdJournal\JournalObject\ObjectTypes::DATA:
                 $this->_m__raw_payload = $this->_io->readBytes(($this->lenObject() - 16));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_payload);
-                $this->_m_payload = new \SystemdJournal\DataObject($io, $this, $this->_root);
+                $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
+                $this->_m_payload = new \SystemdJournal\DataObject($_io__raw_payload, $this, $this->_root);
                 break;
             default:
                 $this->_m_payload = $this->_io->readBytes(($this->lenObject() - 16));

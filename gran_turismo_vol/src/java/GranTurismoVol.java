@@ -31,7 +31,7 @@ public class GranTurismoVol extends KaitaiStruct {
         this.numFiles = this._io.readU2le();
         this.numEntries = this._io.readU2le();
         this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
-        offsets = new ArrayList<Long>((int) (numFiles()));
+        offsets = new ArrayList<Long>(((Number) (numFiles())).intValue());
         for (int i = 0; i < numFiles(); i++) {
             this.offsets.add(this._io.readU4le());
         }
@@ -124,7 +124,7 @@ public class GranTurismoVol extends KaitaiStruct {
             return this.files;
         long _pos = this._io.pos();
         this._io.seek((ofsDir() & 4294965248L));
-        files = new ArrayList<FileInfo>((int) (_root.numEntries()));
+        files = new ArrayList<FileInfo>(((Number) (_root.numEntries())).intValue());
         for (int i = 0; i < _root.numEntries(); i++) {
             this.files.add(new FileInfo(this._io, this, _root));
         }

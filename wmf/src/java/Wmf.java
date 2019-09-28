@@ -368,7 +368,7 @@ public class Wmf extends KaitaiStruct {
         }
         private void _read() {
             this.numPoints = this._io.readS2le();
-            points = new ArrayList<PointS>((int) (numPoints()));
+            points = new ArrayList<PointS>(((Number) (numPoints())).intValue());
             for (int i = 0; i < numPoints(); i++) {
                 this.points.add(new PointS(this._io, this, _root));
             }
@@ -569,7 +569,7 @@ public class Wmf extends KaitaiStruct {
         }
         private void _read() {
             this.numPoints = this._io.readS2le();
-            points = new ArrayList<PointS>((int) (numPoints()));
+            points = new ArrayList<PointS>(((Number) (numPoints())).intValue());
             for (int i = 0; i < numPoints(); i++) {
                 this.points.add(new PointS(this._io, this, _root));
             }
@@ -658,59 +658,66 @@ public class Wmf extends KaitaiStruct {
         private void _read() {
             this.size = this._io.readU4le();
             this.function = Wmf.Func.byId(this._io.readU2le());
-            switch (function()) {
-            case SETBKMODE: {
-                this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                this.params = new ParamsSetbkmode(_io__raw_params, this, _root);
-                break;
-            }
-            case SETBKCOLOR: {
-                this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                this.params = new ColorRef(_io__raw_params, this, _root);
-                break;
-            }
-            case SETROP2: {
-                this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                this.params = new ParamsSetrop2(_io__raw_params, this, _root);
-                break;
-            }
-            case POLYLINE: {
-                this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                this.params = new ParamsPolyline(_io__raw_params, this, _root);
-                break;
-            }
-            case SETWINDOWORG: {
-                this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                this.params = new ParamsSetwindoworg(_io__raw_params, this, _root);
-                break;
-            }
-            case POLYGON: {
-                this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                this.params = new ParamsPolygon(_io__raw_params, this, _root);
-                break;
-            }
-            case SETWINDOWEXT: {
-                this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                this.params = new ParamsSetwindowext(_io__raw_params, this, _root);
-                break;
-            }
-            case SETPOLYFILLMODE: {
-                this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                this.params = new ParamsSetpolyfillmode(_io__raw_params, this, _root);
-                break;
-            }
-            default: {
-                this.params = this._io.readBytes(((size() - 3) * 2));
-                break;
-            }
+            {
+                Func on = function();
+                if (on != null) {
+                    switch (function()) {
+                    case SETBKMODE: {
+                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                        this.params = new ParamsSetbkmode(_io__raw_params, this, _root);
+                        break;
+                    }
+                    case POLYGON: {
+                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                        this.params = new ParamsPolygon(_io__raw_params, this, _root);
+                        break;
+                    }
+                    case SETBKCOLOR: {
+                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                        this.params = new ColorRef(_io__raw_params, this, _root);
+                        break;
+                    }
+                    case SETPOLYFILLMODE: {
+                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                        this.params = new ParamsSetpolyfillmode(_io__raw_params, this, _root);
+                        break;
+                    }
+                    case SETWINDOWORG: {
+                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                        this.params = new ParamsSetwindoworg(_io__raw_params, this, _root);
+                        break;
+                    }
+                    case SETROP2: {
+                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                        this.params = new ParamsSetrop2(_io__raw_params, this, _root);
+                        break;
+                    }
+                    case SETWINDOWEXT: {
+                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                        this.params = new ParamsSetwindowext(_io__raw_params, this, _root);
+                        break;
+                    }
+                    case POLYLINE: {
+                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                        this.params = new ParamsPolyline(_io__raw_params, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.params = this._io.readBytes(((size() - 3) * 2));
+                        break;
+                    }
+                    }
+                } else {
+                    this.params = this._io.readBytes(((size() - 3) * 2));
+                }
             }
         }
         private long size;

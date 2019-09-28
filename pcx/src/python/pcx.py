@@ -27,8 +27,8 @@ class Pcx(KaitaiStruct):
 
     def _read(self):
         self._raw_hdr = self._io.read_bytes(128)
-        io = KaitaiStream(BytesIO(self._raw_hdr))
-        self.hdr = self._root.Header(io, self, self._root)
+        _io__raw_hdr = KaitaiStream(BytesIO(self._raw_hdr))
+        self.hdr = self._root.Header(_io__raw_hdr, self, self._root)
 
     class Header(KaitaiStruct):
         """
@@ -43,8 +43,8 @@ class Pcx(KaitaiStruct):
 
         def _read(self):
             self.magic = self._io.ensure_fixed_contents(b"\x0A")
-            self.version = self._root.Versions(self._io.read_u1())
-            self.encoding = self._root.Encodings(self._io.read_u1())
+            self.version = KaitaiStream.resolve_enum(self._root.Versions, self._io.read_u1())
+            self.encoding = KaitaiStream.resolve_enum(self._root.Encodings, self._io.read_u1())
             self.bits_per_pixel = self._io.read_u1()
             self.img_x_min = self._io.read_u2le()
             self.img_y_min = self._io.read_u2le()

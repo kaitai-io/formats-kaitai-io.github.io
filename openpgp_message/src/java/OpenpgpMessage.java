@@ -798,143 +798,150 @@ public class OpenpgpMessage extends KaitaiStruct {
         private void _read() {
             this.len = new LenSubpacket(this._io, this, _root);
             this.subpacketType = OpenpgpMessage.SubpacketTypes.byId(this._io.readU1());
-            switch (subpacketType()) {
-            case EXPORTABLE_CERTIFICATION: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new ExportableCertification(_io__raw_content, this, _root);
-                break;
-            }
-            case PREFERRED_HASH_ALGORITHMS: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new PreferredHashAlgorithms(_io__raw_content, this, _root);
-                break;
-            }
-            case EMBEDDED_SIGNATURE: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new EmbeddedSignature(_io__raw_content, this, _root);
-                break;
-            }
-            case TRUST_SIGNATURE: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new TrustSignature(_io__raw_content, this, _root);
-                break;
-            }
-            case REASON_FOR_REVOCATION: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new ReasonForRevocation(_io__raw_content, this, _root);
-                break;
-            }
-            case FEATURES: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new Features(_io__raw_content, this, _root);
-                break;
-            }
-            case SIGNATURE_EXPIRATION_TIME: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new SignatureExpirationTime(_io__raw_content, this, _root);
-                break;
-            }
-            case PREFERRED_COMPRESSION_ALGORITHMS: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new PreferredCompressionAlgorithms(_io__raw_content, this, _root);
-                break;
-            }
-            case REVOCABLE: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new Revocable(_io__raw_content, this, _root);
-                break;
-            }
-            case REGULAR_EXPRESSION: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new RegularExpression(_io__raw_content, this, _root);
-                break;
-            }
-            case NOTATION_DATA: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new NotationData(_io__raw_content, this, _root);
-                break;
-            }
-            case KEY_EXPIRATION_TIME: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new KeyExpirationTime(_io__raw_content, this, _root);
-                break;
-            }
-            case SIGNATURE_CREATION_TIME: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new SignatureCreationTime(_io__raw_content, this, _root);
-                break;
-            }
-            case REVOCATION_KEY: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new RevocationKey(_io__raw_content, this, _root);
-                break;
-            }
-            case KEY_FLAGS: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new KeyFlags(_io__raw_content, this, _root);
-                break;
-            }
-            case ISSUER: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new Issuer(_io__raw_content, this, _root);
-                break;
-            }
-            case SIGNATURE_TARGET: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new SignatureTarget(_io__raw_content, this, _root);
-                break;
-            }
-            case KEY_SERVER_PREFERENCES: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new KeyServerPreferences(_io__raw_content, this, _root);
-                break;
-            }
-            case SIGNERS_USER_ID: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new SignersUserId(_io__raw_content, this, _root);
-                break;
-            }
-            case POLICY_URI: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new PolicyUri(_io__raw_content, this, _root);
-                break;
-            }
-            case PREFERRED_KEY_SERVER: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new PreferredKeyServer(_io__raw_content, this, _root);
-                break;
-            }
-            case PRIMARY_USER_ID: {
-                this._raw_content = this._io.readBytes((len().len() - 1));
-                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                this.content = new PrimaryUserId(_io__raw_content, this, _root);
-                break;
-            }
-            default: {
-                this.content = this._io.readBytes((len().len() - 1));
-                break;
-            }
+            {
+                SubpacketTypes on = subpacketType();
+                if (on != null) {
+                    switch (subpacketType()) {
+                    case PREFERRED_KEY_SERVER: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new PreferredKeyServer(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case ISSUER: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new Issuer(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case REVOCABLE: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new Revocable(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case SIGNATURE_TARGET: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new SignatureTarget(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case REGULAR_EXPRESSION: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new RegularExpression(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case EXPORTABLE_CERTIFICATION: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new ExportableCertification(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case REASON_FOR_REVOCATION: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new ReasonForRevocation(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case KEY_SERVER_PREFERENCES: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new KeyServerPreferences(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case SIGNATURE_CREATION_TIME: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new SignatureCreationTime(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case PREFERRED_HASH_ALGORITHMS: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new PreferredHashAlgorithms(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case TRUST_SIGNATURE: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new TrustSignature(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case KEY_EXPIRATION_TIME: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new KeyExpirationTime(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case KEY_FLAGS: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new KeyFlags(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case SIGNATURE_EXPIRATION_TIME: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new SignatureExpirationTime(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case FEATURES: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new Features(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case SIGNERS_USER_ID: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new SignersUserId(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case NOTATION_DATA: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new NotationData(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case REVOCATION_KEY: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new RevocationKey(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case PREFERRED_COMPRESSION_ALGORITHMS: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new PreferredCompressionAlgorithms(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case POLICY_URI: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new PolicyUri(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case PRIMARY_USER_ID: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new PrimaryUserId(_io__raw_content, this, _root);
+                        break;
+                    }
+                    case EMBEDDED_SIGNATURE: {
+                        this._raw_content = this._io.readBytes((len().len() - 1));
+                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                        this.content = new EmbeddedSignature(_io__raw_content, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.content = this._io.readBytes((len().len() - 1));
+                        break;
+                    }
+                    }
+                } else {
+                    this.content = this._io.readBytes((len().len() - 1));
+                }
             }
         }
         private LenSubpacket len;
@@ -984,47 +991,54 @@ public class OpenpgpMessage extends KaitaiStruct {
                 break;
             }
             }
-            switch (_parent().packetTypeOld()) {
-            case PUBLIC_KEY_PACKET: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new PublicKeyPacket(_io__raw_body, this, _root);
-                break;
-            }
-            case SECRET_SUBKEY_PACKET: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new PublicKeyPacket(_io__raw_body, this, _root);
-                break;
-            }
-            case USER_ID_PACKET: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new UserIdPacket(_io__raw_body, this, _root);
-                break;
-            }
-            case SECRET_KEY_PACKET: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SecretKeyPacket(_io__raw_body, this, _root);
-                break;
-            }
-            case SIGNATURE_PACKET: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SignaturePacket(_io__raw_body, this, _root);
-                break;
-            }
-            case PUBLIC_SUBKEY_PACKET: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new PublicKeyPacket(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(len());
-                break;
-            }
+            {
+                PacketTags on = _parent().packetTypeOld();
+                if (on != null) {
+                    switch (_parent().packetTypeOld()) {
+                    case PUBLIC_KEY_PACKET: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new PublicKeyPacket(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case PUBLIC_SUBKEY_PACKET: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new PublicKeyPacket(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case USER_ID_PACKET: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new UserIdPacket(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SIGNATURE_PACKET: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SignaturePacket(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SECRET_SUBKEY_PACKET: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new PublicKeyPacket(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SECRET_KEY_PACKET: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SecretKeyPacket(_io__raw_body, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes(len());
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes(len());
+                }
             }
         }
         private Long len;

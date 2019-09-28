@@ -126,7 +126,7 @@ class CreativeVoiceFile(KaitaiStruct):
             self.sample_rate = self._io.read_u4le()
             self.bits_per_sample = self._io.read_u1()
             self.num_channels = self._io.read_u1()
-            self.codec = self._root.Codecs(self._io.read_u2le())
+            self.codec = KaitaiStream.resolve_enum(self._root.Codecs, self._io.read_u2le())
             self.reserved = self._io.read_bytes(4)
             self.wave = self._io.read_bytes_full()
 
@@ -139,7 +139,7 @@ class CreativeVoiceFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.block_type = self._root.BlockTypes(self._io.read_u1())
+            self.block_type = KaitaiStream.resolve_enum(self._root.BlockTypes, self._io.read_u1())
             if self.block_type != self._root.BlockTypes.terminator:
                 self.body_size1 = self._io.read_u2le()
 
@@ -148,30 +148,30 @@ class CreativeVoiceFile(KaitaiStruct):
 
             if self.block_type != self._root.BlockTypes.terminator:
                 _on = self.block_type
-                if _on == self._root.BlockTypes.silence:
+                if _on == self._root.BlockTypes.sound_data_new:
                     self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockSilence(io, self, self._root)
-                elif _on == self._root.BlockTypes.sound_data:
-                    self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockSoundData(io, self, self._root)
-                elif _on == self._root.BlockTypes.marker:
-                    self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockMarker(io, self, self._root)
-                elif _on == self._root.BlockTypes.sound_data_new:
-                    self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockSoundDataNew(io, self, self._root)
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = self._root.BlockSoundDataNew(_io__raw_body, self, self._root)
                 elif _on == self._root.BlockTypes.repeat_start:
                     self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockRepeatStart(io, self, self._root)
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = self._root.BlockRepeatStart(_io__raw_body, self, self._root)
+                elif _on == self._root.BlockTypes.marker:
+                    self._raw_body = self._io.read_bytes(self.body_size)
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = self._root.BlockMarker(_io__raw_body, self, self._root)
+                elif _on == self._root.BlockTypes.sound_data:
+                    self._raw_body = self._io.read_bytes(self.body_size)
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = self._root.BlockSoundData(_io__raw_body, self, self._root)
                 elif _on == self._root.BlockTypes.extra_info:
                     self._raw_body = self._io.read_bytes(self.body_size)
-                    io = KaitaiStream(BytesIO(self._raw_body))
-                    self.body = self._root.BlockExtraInfo(io, self, self._root)
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = self._root.BlockExtraInfo(_io__raw_body, self, self._root)
+                elif _on == self._root.BlockTypes.silence:
+                    self._raw_body = self._io.read_bytes(self.body_size)
+                    _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                    self.body = self._root.BlockSilence(_io__raw_body, self, self._root)
                 else:
                     self.body = self._io.read_bytes(self.body_size)
 
@@ -219,7 +219,7 @@ class CreativeVoiceFile(KaitaiStruct):
 
         def _read(self):
             self.freq_div = self._io.read_u1()
-            self.codec = self._root.Codecs(self._io.read_u1())
+            self.codec = KaitaiStream.resolve_enum(self._root.Codecs, self._io.read_u1())
             self.wave = self._io.read_bytes_full()
 
         @property
@@ -244,7 +244,7 @@ class CreativeVoiceFile(KaitaiStruct):
 
         def _read(self):
             self.freq_div = self._io.read_u2le()
-            self.codec = self._root.Codecs(self._io.read_u1())
+            self.codec = KaitaiStream.resolve_enum(self._root.Codecs, self._io.read_u1())
             self.num_channels_1 = self._io.read_u1()
 
         @property

@@ -56,7 +56,7 @@ public class Bcd extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        digits = new ArrayList<Integer>((int) (numDigits()));
+        digits = new ArrayList<Integer>(((Number) (numDigits())).intValue());
         for (int i = 0; i < numDigits(); i++) {
             switch (bitsPerDigit()) {
             case 4: {

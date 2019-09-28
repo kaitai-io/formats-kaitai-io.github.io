@@ -246,7 +246,7 @@ class Edid(KaitaiStruct):
 
         def _read(self):
             self.horiz_active_pixels_mod = self._io.read_u1()
-            self.aspect_ratio = self._root.StdTiming.AspectRatios(self._io.read_bits_int(2))
+            self.aspect_ratio = KaitaiStream.resolve_enum(self._root.StdTiming.AspectRatios, self._io.read_bits_int(2))
             self.refresh_rate_mod = self._io.read_bits_int(5)
 
         @property

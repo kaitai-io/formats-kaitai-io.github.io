@@ -188,11 +188,6 @@ describes binary version.</p>
                 <a href="index.html" title=".stl file format of 3D Systems Stereolithography parsing Overview library">Overview</a></li>
                 
                 
-                <li>
-                
-                <a href="cpp_stl.html" title=".stl file format of 3D Systems Stereolithography parsing C++/STL library">C++/STL</a></li>
-                
-                
                 <li class="active">
                 
                 <a href="csharp.html" title=".stl file format of 3D Systems Stereolithography parsing C# library">C#</a></li>
@@ -362,13 +357,27 @@ namespace Kaitai
                 {
                     _vertices.Add(new Vec3d(m_io, this, m_root));
                 }
+                _abr = m_io.ReadU2le();
             }
             private Vec3d _normal;
             private List&lt;Vec3d&gt; _vertices;
+            private ushort _abr;
             private Stl m_root;
             private Stl m_parent;
             public Vec3d Normal { get { return _normal; } }
             public List&lt;Vec3d&gt; Vertices { get { return _vertices; } }
+
+            /// &lt;summary&gt;
+            /// In theory (per standard), it&#39;s &amp;quot;attribute byte count&amp;quot; with
+            /// no other details given on what &amp;quot;attribute&amp;quot; is and what
+            /// should be stored in this field.
+            /// 
+            /// In practice, software dealing with STL either expected to
+            /// see 0 here, or uses this 16-bit field per se to store
+            /// additional attributes (such as RGB color of a vertex or
+            /// color index).
+            /// &lt;/summary&gt;
+            public ushort Abr { get { return _abr; } }
             public Stl M_Root { get { return m_root; } }
             public Stl M_Parent { get { return m_parent; } }
         }
@@ -390,29 +399,15 @@ namespace Kaitai
                 _x = m_io.ReadF4le();
                 _y = m_io.ReadF4le();
                 _z = m_io.ReadF4le();
-                _abr = m_io.ReadU2le();
             }
             private float _x;
             private float _y;
             private float _z;
-            private ushort _abr;
             private Stl m_root;
             private Stl.Triangle m_parent;
             public float X { get { return _x; } }
             public float Y { get { return _y; } }
             public float Z { get { return _z; } }
-
-            /// &lt;summary&gt;
-            /// In theory (per standard), it&#39;s &amp;quot;attribute byte count&amp;quot; with
-            /// no other details given on what &amp;quot;attribute&amp;quot; is and what
-            /// should be stored in this field.
-            /// 
-            /// In practice, software dealing with STL either expected to
-            /// see 0 here, or uses this 16-bit field per se to store
-            /// additional attributes (such as RGB color of a vertex or
-            /// color index).
-            /// &lt;/summary&gt;
-            public ushort Abr { get { return _abr; } }
             public Stl M_Root { get { return m_root; } }
             public Stl.Triangle M_Parent { get { return m_parent; } }
         }

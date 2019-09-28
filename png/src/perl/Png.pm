@@ -783,20 +783,20 @@ sub _read {
     my ($self) = @_;
 
     my $_on = $self->_root()->ihdr()->color_type();
-    if ($_on == $COLOR_TYPE_GREYSCALE_ALPHA) {
-        $self->{bkgd} = Png::BkgdGreyscale->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $COLOR_TYPE_INDEXED) {
+    if ($_on == $Png::COLOR_TYPE_INDEXED) {
         $self->{bkgd} = Png::BkgdIndexed->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $COLOR_TYPE_GREYSCALE) {
+    elsif ($_on == $Png::COLOR_TYPE_TRUECOLOR_ALPHA) {
+        $self->{bkgd} = Png::BkgdTruecolor->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Png::COLOR_TYPE_GREYSCALE_ALPHA) {
         $self->{bkgd} = Png::BkgdGreyscale->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $COLOR_TYPE_TRUECOLOR_ALPHA) {
+    elsif ($_on == $Png::COLOR_TYPE_TRUECOLOR) {
         $self->{bkgd} = Png::BkgdTruecolor->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $COLOR_TYPE_TRUECOLOR) {
-        $self->{bkgd} = Png::BkgdTruecolor->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $Png::COLOR_TYPE_GREYSCALE) {
+        $self->{bkgd} = Png::BkgdGreyscale->new($self->{_io}, $self, $self->{_root});
     }
 }
 

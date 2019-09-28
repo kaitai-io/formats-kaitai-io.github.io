@@ -284,43 +284,43 @@ sub _read {
     my ($self) = @_;
 
     $self->{block_type} = $self->{_io}->read_u1();
-    if ($self->block_type() != $BLOCK_TYPES_TERMINATOR) {
+    if ($self->block_type() != $CreativeVoiceFile::BLOCK_TYPES_TERMINATOR) {
         $self->{body_size1} = $self->{_io}->read_u2le();
     }
-    if ($self->block_type() != $BLOCK_TYPES_TERMINATOR) {
+    if ($self->block_type() != $CreativeVoiceFile::BLOCK_TYPES_TERMINATOR) {
         $self->{body_size2} = $self->{_io}->read_u1();
     }
-    if ($self->block_type() != $BLOCK_TYPES_TERMINATOR) {
+    if ($self->block_type() != $CreativeVoiceFile::BLOCK_TYPES_TERMINATOR) {
         my $_on = $self->block_type();
-        if ($_on == $BLOCK_TYPES_SILENCE) {
-            $self->{_raw_body} = $self->{_io}->read_bytes($self->body_size());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = CreativeVoiceFile::BlockSilence->new($io__raw_body, $self, $self->{_root});
-        }
-        elsif ($_on == $BLOCK_TYPES_SOUND_DATA) {
-            $self->{_raw_body} = $self->{_io}->read_bytes($self->body_size());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = CreativeVoiceFile::BlockSoundData->new($io__raw_body, $self, $self->{_root});
-        }
-        elsif ($_on == $BLOCK_TYPES_MARKER) {
-            $self->{_raw_body} = $self->{_io}->read_bytes($self->body_size());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = CreativeVoiceFile::BlockMarker->new($io__raw_body, $self, $self->{_root});
-        }
-        elsif ($_on == $BLOCK_TYPES_SOUND_DATA_NEW) {
+        if ($_on == $CreativeVoiceFile::BLOCK_TYPES_SOUND_DATA_NEW) {
             $self->{_raw_body} = $self->{_io}->read_bytes($self->body_size());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = CreativeVoiceFile::BlockSoundDataNew->new($io__raw_body, $self, $self->{_root});
         }
-        elsif ($_on == $BLOCK_TYPES_REPEAT_START) {
+        elsif ($_on == $CreativeVoiceFile::BLOCK_TYPES_REPEAT_START) {
             $self->{_raw_body} = $self->{_io}->read_bytes($self->body_size());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = CreativeVoiceFile::BlockRepeatStart->new($io__raw_body, $self, $self->{_root});
         }
-        elsif ($_on == $BLOCK_TYPES_EXTRA_INFO) {
+        elsif ($_on == $CreativeVoiceFile::BLOCK_TYPES_MARKER) {
+            $self->{_raw_body} = $self->{_io}->read_bytes($self->body_size());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = CreativeVoiceFile::BlockMarker->new($io__raw_body, $self, $self->{_root});
+        }
+        elsif ($_on == $CreativeVoiceFile::BLOCK_TYPES_SOUND_DATA) {
+            $self->{_raw_body} = $self->{_io}->read_bytes($self->body_size());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = CreativeVoiceFile::BlockSoundData->new($io__raw_body, $self, $self->{_root});
+        }
+        elsif ($_on == $CreativeVoiceFile::BLOCK_TYPES_EXTRA_INFO) {
             $self->{_raw_body} = $self->{_io}->read_bytes($self->body_size());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = CreativeVoiceFile::BlockExtraInfo->new($io__raw_body, $self, $self->{_root});
+        }
+        elsif ($_on == $CreativeVoiceFile::BLOCK_TYPES_SILENCE) {
+            $self->{_raw_body} = $self->{_io}->read_bytes($self->body_size());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = CreativeVoiceFile::BlockSilence->new($io__raw_body, $self, $self->{_root});
         }
         else {
             $self->{body} = $self->{_io}->read_bytes($self->body_size());
@@ -331,7 +331,7 @@ sub _read {
 sub body_size {
     my ($self) = @_;
     return $self->{body_size} if ($self->{body_size});
-    if ($self->block_type() != $BLOCK_TYPES_TERMINATOR) {
+    if ($self->block_type() != $CreativeVoiceFile::BLOCK_TYPES_TERMINATOR) {
         $self->{body_size} = ($self->body_size1() + ($self->body_size2() << 16));
     }
     return $self->{body_size};

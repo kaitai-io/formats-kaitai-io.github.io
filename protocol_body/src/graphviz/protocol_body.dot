@@ -15,13 +15,13 @@ digraph {
 		</TABLE>>];
 protocol_body__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:protocol_enum_tcp</TD><TD PORT="case0">TcpSegment</TD></TR>
-	<TR><TD>:protocol_enum_ipv6_nonxt</TD><TD PORT="case1">NoNextHeader</TD></TR>
-	<TR><TD>:protocol_enum_icmp</TD><TD PORT="case2">IcmpPacket</TD></TR>
-	<TR><TD>:protocol_enum_udp</TD><TD PORT="case3">UdpDatagram</TD></TR>
+	<TR><TD>:protocol_enum_ipv6_nonxt</TD><TD PORT="case0">NoNextHeader</TD></TR>
+	<TR><TD>:protocol_enum_ipv4</TD><TD PORT="case1">Ipv4Packet</TD></TR>
+	<TR><TD>:protocol_enum_udp</TD><TD PORT="case2">UdpDatagram</TD></TR>
+	<TR><TD>:protocol_enum_icmp</TD><TD PORT="case3">IcmpPacket</TD></TR>
 	<TR><TD>:protocol_enum_hopopt</TD><TD PORT="case4">OptionHopByHop</TD></TR>
 	<TR><TD>:protocol_enum_ipv6</TD><TD PORT="case5">Ipv6Packet</TD></TR>
-	<TR><TD>:protocol_enum_ipv4</TD><TD PORT="case6">Ipv4Packet</TD></TR>
+	<TR><TD>:protocol_enum_tcp</TD><TD PORT="case6">TcpSegment</TD></TR>
 </TABLE>>];
 		subgraph cluster__no_next_header {
 			label="ProtocolBody::NoNextHeader";
@@ -45,13 +45,13 @@ protocol_body__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 		}
 	}
 	protocol_body__seq:body_type -> protocol_body__seq_body_switch [style=bold];
-	protocol_body__seq_body_switch:case0 -> tcp_segment__seq [style=bold];
-	protocol_body__seq_body_switch:case1 -> no_next_header__seq [style=bold];
-	protocol_body__seq_body_switch:case2 -> icmp_packet__seq [style=bold];
-	protocol_body__seq_body_switch:case3 -> udp_datagram__seq [style=bold];
+	protocol_body__seq_body_switch:case0 -> no_next_header__seq [style=bold];
+	protocol_body__seq_body_switch:case1 -> ipv4_packet__seq [style=bold];
+	protocol_body__seq_body_switch:case2 -> udp_datagram__seq [style=bold];
+	protocol_body__seq_body_switch:case3 -> icmp_packet__seq [style=bold];
 	protocol_body__seq_body_switch:case4 -> option_hop_by_hop__seq [style=bold];
 	protocol_body__seq_body_switch:case5 -> ipv6_packet__seq [style=bold];
-	protocol_body__seq_body_switch:case6 -> ipv4_packet__seq [style=bold];
+	protocol_body__seq_body_switch:case6 -> tcp_segment__seq [style=bold];
 	protocol_body__inst__protocol:protocol_type -> protocol_body__seq:body_type [color="#404040"];
 	protocol_body__params:protocol_num_type -> protocol_body__inst__protocol [color="#404040"];
 	option_hop_by_hop__seq:hdr_ext_len_type -> option_hop_by_hop__seq:body_size [color="#404040"];

@@ -52,7 +52,7 @@ public class ExifBe extends KaitaiStruct {
         }
         private void _read() {
             this.numFields = this._io.readU2be();
-            fields = new ArrayList<IfdField>((int) (numFields()));
+            fields = new ArrayList<IfdField>(((Number) (numFields())).intValue());
             for (int i = 0; i < numFields(); i++) {
                 this.fields.add(new IfdField(this._io, this, _root));
             }

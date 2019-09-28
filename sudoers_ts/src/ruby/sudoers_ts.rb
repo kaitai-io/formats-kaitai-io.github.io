@@ -41,7 +41,7 @@ class SudoersTs < Kaitai::Struct::Struct
     end
 
     def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(TS_TYPE, @_io.read_u2le)
+      @type = Kaitai::Struct::Stream::resolve_enum(SudoersTs::TS_TYPE, @_io.read_u2le)
       @flags = TsFlag.new(@_io, self, @_root)
       @auth_uid = @_io.read_u4le
       @sid = @_io.read_u4le
@@ -125,7 +125,7 @@ class SudoersTs < Kaitai::Struct::Struct
     end
 
     def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(TS_TYPE, @_io.read_u2le)
+      @type = Kaitai::Struct::Stream::resolve_enum(SudoersTs::TS_TYPE, @_io.read_u2le)
       @flags = TsFlag.new(@_io, self, @_root)
       @auth_uid = @_io.read_u4le
       @sid = @_io.read_u4le
@@ -199,12 +199,12 @@ class SudoersTs < Kaitai::Struct::Struct
       case version
       when 1
         @_raw_payload = @_io.read_bytes((len_record - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = RecordV1.new(io, self, @_root)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = RecordV1.new(_io__raw_payload, self, @_root)
       when 2
         @_raw_payload = @_io.read_bytes((len_record - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = RecordV2.new(io, self, @_root)
+        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
+        @payload = RecordV2.new(_io__raw_payload, self, @_root)
       else
         @payload = @_io.read_bytes((len_record - 4))
       end

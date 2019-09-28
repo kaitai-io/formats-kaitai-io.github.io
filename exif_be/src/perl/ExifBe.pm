@@ -631,7 +631,7 @@ sub _read {
 sub type_byte_length {
     my ($self) = @_;
     return $self->{type_byte_length} if ($self->{type_byte_length});
-    $self->{type_byte_length} = ($self->field_type() == $FIELD_TYPE_ENUM_WORD ? 2 : ($self->field_type() == $FIELD_TYPE_ENUM_DWORD ? 4 : 1));
+    $self->{type_byte_length} = ($self->field_type() == $ExifBe::IfdField::FIELD_TYPE_ENUM_WORD ? 2 : ($self->field_type() == $ExifBe::IfdField::FIELD_TYPE_ENUM_DWORD ? 4 : 1));
     return $self->{type_byte_length};
 }
 

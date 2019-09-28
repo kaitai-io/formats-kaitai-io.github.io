@@ -8,8 +8,8 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-from ipv4_packet import Ipv4Packet
-from ipv6_packet import Ipv6Packet
+import ipv4_packet
+import ipv6_packet
 class EthernetFrame(KaitaiStruct):
     """Ethernet frame is a OSI data link layer (layer 2) protocol data unit
     for Ethernet networks. In practice, many other networks and/or
@@ -37,16 +37,16 @@ class EthernetFrame(KaitaiStruct):
     def _read(self):
         self.dst_mac = self._io.read_bytes(6)
         self.src_mac = self._io.read_bytes(6)
-        self.ether_type = self._root.EtherTypeEnum(self._io.read_u2be())
+        self.ether_type = KaitaiStream.resolve_enum(self._root.EtherTypeEnum, self._io.read_u2be())
         _on = self.ether_type
         if _on == self._root.EtherTypeEnum.ipv4:
             self._raw_body = self._io.read_bytes_full()
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = Ipv4Packet(io)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = ipv4_packet.Ipv4Packet(_io__raw_body)
         elif _on == self._root.EtherTypeEnum.ipv6:
             self._raw_body = self._io.read_bytes_full()
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = Ipv6Packet(io)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = ipv6_packet.Ipv6Packet(_io__raw_body)
         else:
             self.body = self._io.read_bytes_full()
 

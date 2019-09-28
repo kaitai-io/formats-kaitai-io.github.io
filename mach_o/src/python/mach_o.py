@@ -111,7 +111,7 @@ class MachO(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._root.MagicType(self._io.read_u4be())
+        self.magic = KaitaiStream.resolve_enum(self._root.MagicType, self._io.read_u4be())
         self.header = self._root.MachHeader(self._io, self, self._root)
         self.load_commands = [None] * (self.header.ncmds)
         for i in range(self.header.ncmds):
@@ -204,37 +204,37 @@ class MachO(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._root.CsBlob.CsMagic(self._io.read_u4be())
+            self.magic = KaitaiStream.resolve_enum(self._root.CsBlob.CsMagic, self._io.read_u4be())
             self.length = self._io.read_u4be()
             _on = self.magic
-            if _on == self._root.CsBlob.CsMagic.detached_signature:
+            if _on == self._root.CsBlob.CsMagic.requirement:
                 self._raw_body = self._io.read_bytes((self.length - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CsBlob.SuperBlob(io, self, self._root)
-            elif _on == self._root.CsBlob.CsMagic.embedded_signature:
-                self._raw_body = self._io.read_bytes((self.length - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CsBlob.SuperBlob(io, self, self._root)
-            elif _on == self._root.CsBlob.CsMagic.entitlement:
-                self._raw_body = self._io.read_bytes((self.length - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CsBlob.Entitlement(io, self, self._root)
-            elif _on == self._root.CsBlob.CsMagic.blob_wrapper:
-                self._raw_body = self._io.read_bytes((self.length - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CsBlob.BlobWrapper(io, self, self._root)
-            elif _on == self._root.CsBlob.CsMagic.requirement:
-                self._raw_body = self._io.read_bytes((self.length - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CsBlob.Requirement(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.CsBlob.Requirement(_io__raw_body, self, self._root)
             elif _on == self._root.CsBlob.CsMagic.code_directory:
                 self._raw_body = self._io.read_bytes((self.length - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CsBlob.CodeDirectory(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.CsBlob.CodeDirectory(_io__raw_body, self, self._root)
+            elif _on == self._root.CsBlob.CsMagic.entitlement:
+                self._raw_body = self._io.read_bytes((self.length - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.CsBlob.Entitlement(_io__raw_body, self, self._root)
             elif _on == self._root.CsBlob.CsMagic.requirements:
                 self._raw_body = self._io.read_bytes((self.length - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CsBlob.Requirements(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.CsBlob.Requirements(_io__raw_body, self, self._root)
+            elif _on == self._root.CsBlob.CsMagic.blob_wrapper:
+                self._raw_body = self._io.read_bytes((self.length - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.CsBlob.BlobWrapper(_io__raw_body, self, self._root)
+            elif _on == self._root.CsBlob.CsMagic.embedded_signature:
+                self._raw_body = self._io.read_bytes((self.length - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.CsBlob.SuperBlob(_io__raw_body, self, self._root)
+            elif _on == self._root.CsBlob.CsMagic.detached_signature:
+                self._raw_body = self._io.read_bytes((self.length - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.CsBlob.SuperBlob(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes((self.length - 8))
 
@@ -372,34 +372,34 @@ class MachO(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.op = self._root.CsBlob.Expr.OpEnum(self._io.read_u4be())
+                self.op = KaitaiStream.resolve_enum(self._root.CsBlob.Expr.OpEnum, self._io.read_u4be())
                 _on = self.op
-                if _on == self._root.CsBlob.Expr.OpEnum.cert_generic:
-                    self.data = self._root.CsBlob.Expr.CertGenericExpr(self._io, self, self._root)
-                elif _on == self._root.CsBlob.Expr.OpEnum.apple_generic_anchor:
-                    self.data = self._root.CsBlob.Expr.AppleGenericAnchorExpr(self._io, self, self._root)
-                elif _on == self._root.CsBlob.Expr.OpEnum.info_key_field:
-                    self.data = self._root.CsBlob.Expr.InfoKeyFieldExpr(self._io, self, self._root)
-                elif _on == self._root.CsBlob.Expr.OpEnum.and_op:
-                    self.data = self._root.CsBlob.Expr.AndExpr(self._io, self, self._root)
-                elif _on == self._root.CsBlob.Expr.OpEnum.anchor_hash:
-                    self.data = self._root.CsBlob.Expr.AnchorHashExpr(self._io, self, self._root)
-                elif _on == self._root.CsBlob.Expr.OpEnum.info_key_value:
-                    self.data = self._root.CsBlob.Data(self._io, self, self._root)
+                if _on == self._root.CsBlob.Expr.OpEnum.ident:
+                    self.data = self._root.CsBlob.Expr.IdentExpr(self._io, self, self._root)
                 elif _on == self._root.CsBlob.Expr.OpEnum.or_op:
                     self.data = self._root.CsBlob.Expr.OrExpr(self._io, self, self._root)
-                elif _on == self._root.CsBlob.Expr.OpEnum.trusted_cert:
-                    self.data = self._root.CsBlob.Expr.CertSlotExpr(self._io, self, self._root)
+                elif _on == self._root.CsBlob.Expr.OpEnum.info_key_value:
+                    self.data = self._root.CsBlob.Data(self._io, self, self._root)
+                elif _on == self._root.CsBlob.Expr.OpEnum.anchor_hash:
+                    self.data = self._root.CsBlob.Expr.AnchorHashExpr(self._io, self, self._root)
+                elif _on == self._root.CsBlob.Expr.OpEnum.info_key_field:
+                    self.data = self._root.CsBlob.Expr.InfoKeyFieldExpr(self._io, self, self._root)
                 elif _on == self._root.CsBlob.Expr.OpEnum.not_op:
                     self.data = self._root.CsBlob.Expr(self._io, self, self._root)
-                elif _on == self._root.CsBlob.Expr.OpEnum.ident:
-                    self.data = self._root.CsBlob.Expr.IdentExpr(self._io, self, self._root)
-                elif _on == self._root.CsBlob.Expr.OpEnum.cert_field:
-                    self.data = self._root.CsBlob.Expr.CertFieldExpr(self._io, self, self._root)
                 elif _on == self._root.CsBlob.Expr.OpEnum.entitlement_field:
                     self.data = self._root.CsBlob.Expr.EntitlementFieldExpr(self._io, self, self._root)
+                elif _on == self._root.CsBlob.Expr.OpEnum.trusted_cert:
+                    self.data = self._root.CsBlob.Expr.CertSlotExpr(self._io, self, self._root)
+                elif _on == self._root.CsBlob.Expr.OpEnum.and_op:
+                    self.data = self._root.CsBlob.Expr.AndExpr(self._io, self, self._root)
+                elif _on == self._root.CsBlob.Expr.OpEnum.cert_generic:
+                    self.data = self._root.CsBlob.Expr.CertGenericExpr(self._io, self, self._root)
+                elif _on == self._root.CsBlob.Expr.OpEnum.cert_field:
+                    self.data = self._root.CsBlob.Expr.CertFieldExpr(self._io, self, self._root)
                 elif _on == self._root.CsBlob.Expr.OpEnum.cd_hash:
                     self.data = self._root.CsBlob.Data(self._io, self, self._root)
+                elif _on == self._root.CsBlob.Expr.OpEnum.apple_generic_anchor:
+                    self.data = self._root.CsBlob.Expr.AppleGenericAnchorExpr(self._io, self, self._root)
 
             class InfoKeyFieldExpr(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
@@ -421,7 +421,7 @@ class MachO(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.value = self._root.CsBlob.Expr.CertSlot(self._io.read_u4be())
+                    self.value = KaitaiStream.resolve_enum(self._root.CsBlob.Expr.CertSlot, self._io.read_u4be())
 
 
             class CertGenericExpr(KaitaiStruct):
@@ -432,7 +432,7 @@ class MachO(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.cert_slot = self._root.CsBlob.Expr.CertSlot(self._io.read_u4be())
+                    self.cert_slot = KaitaiStream.resolve_enum(self._root.CsBlob.Expr.CertSlot, self._io.read_u4be())
                     self.data = self._root.CsBlob.Data(self._io, self, self._root)
                     self.match = self._root.CsBlob.Match(self._io, self, self._root)
 
@@ -456,7 +456,7 @@ class MachO(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.cert_slot = self._root.CsBlob.Expr.CertSlot(self._io.read_u4be())
+                    self.cert_slot = KaitaiStream.resolve_enum(self._root.CsBlob.Expr.CertSlot, self._io.read_u4be())
                     self.data = self._root.CsBlob.Data(self._io, self, self._root)
                     self.match = self._root.CsBlob.Match(self._io, self, self._root)
 
@@ -469,7 +469,7 @@ class MachO(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.cert_slot = self._root.CsBlob.Expr.CertSlot(self._io.read_u4be())
+                    self.cert_slot = KaitaiStream.resolve_enum(self._root.CsBlob.Expr.CertSlot, self._io.read_u4be())
                     self.data = self._root.CsBlob.Data(self._io, self, self._root)
 
 
@@ -547,7 +547,7 @@ class MachO(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.type = self._root.CsBlob.BlobIndex.CsslotType(self._io.read_u4be())
+                self.type = KaitaiStream.resolve_enum(self._root.CsBlob.BlobIndex.CsslotType, self._io.read_u4be())
                 self.offset = self._io.read_u4be()
 
             @property
@@ -559,8 +559,8 @@ class MachO(KaitaiStruct):
                 _pos = io.pos()
                 io.seek((self.offset - 8))
                 self._raw__m_blob = io.read_bytes_full()
-                io = KaitaiStream(BytesIO(self._raw__m_blob))
-                self._m_blob = self._root.CsBlob(io, self, self._root)
+                _io__raw__m_blob = KaitaiStream(BytesIO(self._raw__m_blob))
+                self._m_blob = self._root.CsBlob(_io__raw__m_blob, self, self._root)
                 io.seek(_pos)
                 return self._m_blob if hasattr(self, '_m_blob') else None
 
@@ -584,7 +584,7 @@ class MachO(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.match_op = self._root.CsBlob.Match.Op(self._io.read_u4be())
+                self.match_op = KaitaiStream.resolve_enum(self._root.CsBlob.Match.Op, self._io.read_u4be())
                 if self.match_op != self._root.CsBlob.Match.Op.exists:
                     self.data = self._root.CsBlob.Data(self._io, self, self._root)
 
@@ -642,7 +642,7 @@ class MachO(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.type = self._root.CsBlob.RequirementsBlobIndex.RequirementType(self._io.read_u4be())
+                self.type = KaitaiStream.resolve_enum(self._root.CsBlob.RequirementsBlobIndex.RequirementType, self._io.read_u4be())
                 self.offset = self._io.read_u4be()
 
             @property
@@ -1031,8 +1031,8 @@ class MachO(KaitaiStruct):
                         _on = self.id
                         if _on == 0:
                             self._raw_body = self._io.read_bytes((self.length - 4))
-                            io = KaitaiStream(BytesIO(self._raw_body))
-                            self.body = self._root.SegmentCommand64.Section64.EhFrameItem.Cie(io, self, self._root)
+                            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                            self.body = self._root.SegmentCommand64.Section64.EhFrameItem.Cie(_io__raw_body, self, self._root)
                         else:
                             self.body = self._io.read_bytes((self.length - 4))
 
@@ -1143,72 +1143,72 @@ class MachO(KaitaiStruct):
                 _on = self.sect_name
                 if _on == u"__objc_nlclslist":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 elif _on == u"__objc_methname":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.StringList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.StringList(_io__raw__m_data, self, self._root)
                 elif _on == u"__nl_symbol_ptr":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 elif _on == u"__la_symbol_ptr":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 elif _on == u"__objc_selrefs":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 elif _on == u"__cstring":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.StringList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.StringList(_io__raw__m_data, self, self._root)
                 elif _on == u"__objc_classlist":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 elif _on == u"__objc_protolist":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 elif _on == u"__objc_imageinfo":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 elif _on == u"__objc_methtype":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.StringList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.StringList(_io__raw__m_data, self, self._root)
                 elif _on == u"__cfstring":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.CfStringList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.CfStringList(_io__raw__m_data, self, self._root)
                 elif _on == u"__objc_classrefs":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 elif _on == u"__objc_protorefs":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 elif _on == u"__objc_classname":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.StringList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.StringList(_io__raw__m_data, self, self._root)
                 elif _on == u"__got":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 elif _on == u"__eh_frame":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.EhFrame(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.EhFrame(_io__raw__m_data, self, self._root)
                 elif _on == u"__objc_superrefs":
                     self._raw__m_data = io.read_bytes(self.size)
-                    io = KaitaiStream(BytesIO(self._raw__m_data))
-                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(io, self, self._root)
+                    _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                    self._m_data = self._root.SegmentCommand64.Section64.PointerList(_io__raw__m_data, self, self._root)
                 else:
                     self._m_data = io.read_bytes(self.size)
                 io.seek(_pos)
@@ -1286,9 +1286,9 @@ class MachO(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.cputype = self._root.CpuType(self._io.read_u4le())
+            self.cputype = KaitaiStream.resolve_enum(self._root.CpuType, self._io.read_u4le())
             self.cpusubtype = self._io.read_u4le()
-            self.filetype = self._root.FileType(self._io.read_u4le())
+            self.filetype = KaitaiStream.resolve_enum(self._root.FileType, self._io.read_u4le())
             self.ncmds = self._io.read_u4le()
             self.sizeofcmds = self._io.read_u4le()
             self.flags = self._io.read_u4le()
@@ -1390,8 +1390,8 @@ class MachO(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.data_off)
             self._raw__m_code_signature = io.read_bytes(self.data_size)
-            io = KaitaiStream(BytesIO(self._raw__m_code_signature))
-            self._m_code_signature = self._root.CsBlob(io, self, self._root)
+            _io__raw__m_code_signature = KaitaiStream(BytesIO(self._raw__m_code_signature))
+            self._m_code_signature = self._root.CsBlob(_io__raw__m_code_signature, self, self._root)
             io.seek(_pos)
             return self._m_code_signature if hasattr(self, '_m_code_signature') else None
 
@@ -1454,7 +1454,7 @@ class MachO(KaitaiStruct):
                 if hasattr(self, '_m_opcode'):
                     return self._m_opcode if hasattr(self, '_m_opcode') else None
 
-                self._m_opcode = self._root.DyldInfoCommand.BindOpcode((self.opcode_and_immediate & 240))
+                self._m_opcode = KaitaiStream.resolve_enum(self._root.DyldInfoCommand.BindOpcode, (self.opcode_and_immediate & 240))
                 return self._m_opcode if hasattr(self, '_m_opcode') else None
 
             @property
@@ -1515,7 +1515,7 @@ class MachO(KaitaiStruct):
                     if hasattr(self, '_m_opcode'):
                         return self._m_opcode if hasattr(self, '_m_opcode') else None
 
-                    self._m_opcode = self._root.DyldInfoCommand.RebaseData.Opcode((self.opcode_and_immediate & 240))
+                    self._m_opcode = KaitaiStream.resolve_enum(self._root.DyldInfoCommand.RebaseData.Opcode, (self.opcode_and_immediate & 240))
                     return self._m_opcode if hasattr(self, '_m_opcode') else None
 
                 @property
@@ -1611,8 +1611,8 @@ class MachO(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.rebase_off)
             self._raw__m_rebase = io.read_bytes(self.rebase_size)
-            io = KaitaiStream(BytesIO(self._raw__m_rebase))
-            self._m_rebase = self._root.DyldInfoCommand.RebaseData(io, self, self._root)
+            _io__raw__m_rebase = KaitaiStream(BytesIO(self._raw__m_rebase))
+            self._m_rebase = self._root.DyldInfoCommand.RebaseData(_io__raw__m_rebase, self, self._root)
             io.seek(_pos)
             return self._m_rebase if hasattr(self, '_m_rebase') else None
 
@@ -1625,8 +1625,8 @@ class MachO(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.bind_off)
             self._raw__m_bind = io.read_bytes(self.bind_size)
-            io = KaitaiStream(BytesIO(self._raw__m_bind))
-            self._m_bind = self._root.DyldInfoCommand.BindData(io, self, self._root)
+            _io__raw__m_bind = KaitaiStream(BytesIO(self._raw__m_bind))
+            self._m_bind = self._root.DyldInfoCommand.BindData(_io__raw__m_bind, self, self._root)
             io.seek(_pos)
             return self._m_bind if hasattr(self, '_m_bind') else None
 
@@ -1639,8 +1639,8 @@ class MachO(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.lazy_bind_off)
             self._raw__m_lazy_bind = io.read_bytes(self.lazy_bind_size)
-            io = KaitaiStream(BytesIO(self._raw__m_lazy_bind))
-            self._m_lazy_bind = self._root.DyldInfoCommand.LazyBindData(io, self, self._root)
+            _io__raw__m_lazy_bind = KaitaiStream(BytesIO(self._raw__m_lazy_bind))
+            self._m_lazy_bind = self._root.DyldInfoCommand.LazyBindData(_io__raw__m_lazy_bind, self, self._root)
             io.seek(_pos)
             return self._m_lazy_bind if hasattr(self, '_m_lazy_bind') else None
 
@@ -1653,8 +1653,8 @@ class MachO(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.export_off)
             self._raw__m_exports = io.read_bytes(self.export_size)
-            io = KaitaiStream(BytesIO(self._raw__m_exports))
-            self._m_exports = self._root.DyldInfoCommand.ExportNode(io, self, self._root)
+            _io__raw__m_exports = KaitaiStream(BytesIO(self._raw__m_exports))
+            self._m_exports = self._root.DyldInfoCommand.ExportNode(_io__raw__m_exports, self, self._root)
             io.seek(_pos)
             return self._m_exports if hasattr(self, '_m_exports') else None
 
@@ -1705,161 +1705,161 @@ class MachO(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.LoadCommandType(self._io.read_u4le())
+            self.type = KaitaiStream.resolve_enum(self._root.LoadCommandType, self._io.read_u4le())
             self.size = self._io.read_u4le()
             _on = self.type
-            if _on == self._root.LoadCommandType.sub_library:
+            if _on == self._root.LoadCommandType.id_dylinker:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SubCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.segment_split_info:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.LinkeditDataCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.rpath:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.RpathCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.source_version:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SourceVersionCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.encryption_info_64:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.EncryptionInfoCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.version_min_tvos:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.VersionMinCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.load_dylinker:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DylinkerCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.sub_framework:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SubCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.load_weak_dylib:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DylibCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.version_min_iphoneos:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.VersionMinCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.linker_optimization_hint:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.LinkeditDataCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.dyld_environment:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DylinkerCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.load_upward_dylib:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DylibCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.dylib_code_sign_drs:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.LinkeditDataCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.dyld_info:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DyldInfoCommand(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DylinkerCommand(_io__raw_body, self, self._root)
             elif _on == self._root.LoadCommandType.reexport_dylib:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DylibCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.symtab:
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DylibCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.source_version:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SymtabCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.routines_64:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.RoutinesCommand64(io, self, self._root)
-            elif _on == self._root.LoadCommandType.id_dylinker:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DylinkerCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.main:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.EntryPointCommand(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SourceVersionCommand(_io__raw_body, self, self._root)
             elif _on == self._root.LoadCommandType.function_starts:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.LinkeditDataCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.version_min_macosx:
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.LinkeditDataCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.rpath:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.VersionMinCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.data_in_code:
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.RpathCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.sub_framework:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.LinkeditDataCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.version_min_watchos:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.VersionMinCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.encryption_info:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.EncryptionInfoCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.sub_umbrella:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SubCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.linker_option:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.LinkerOptionCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.twolevel_hints:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.TwolevelHintsCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.uuid:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.UuidCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.dyld_info_only:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DyldInfoCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.lazy_load_dylib:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DylibCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.sub_client:
-                self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SubCommand(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SubCommand(_io__raw_body, self, self._root)
             elif _on == self._root.LoadCommandType.routines:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.RoutinesCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.code_signature:
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.RoutinesCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.sub_library:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CodeSignatureCommand(io, self, self._root)
-            elif _on == self._root.LoadCommandType.dysymtab:
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SubCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.dyld_info_only:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DysymtabCommand(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DyldInfoCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.dyld_environment:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DylinkerCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.load_dylinker:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DylinkerCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.segment_split_info:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.LinkeditDataCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.main:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.EntryPointCommand(_io__raw_body, self, self._root)
             elif _on == self._root.LoadCommandType.load_dylib:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DylibCommand(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DylibCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.encryption_info:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.EncryptionInfoCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.dysymtab:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DysymtabCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.twolevel_hints:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.TwolevelHintsCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.encryption_info_64:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.EncryptionInfoCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.linker_option:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.LinkerOptionCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.dyld_info:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DyldInfoCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.version_min_tvos:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.VersionMinCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.load_upward_dylib:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DylibCommand(_io__raw_body, self, self._root)
             elif _on == self._root.LoadCommandType.segment_64:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SegmentCommand64(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SegmentCommand64(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.sub_umbrella:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SubCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.version_min_watchos:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.VersionMinCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.routines_64:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.RoutinesCommand64(_io__raw_body, self, self._root)
             elif _on == self._root.LoadCommandType.id_dylib:
                 self._raw_body = self._io.read_bytes((self.size - 8))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DylibCommand(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DylibCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.sub_client:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SubCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.dylib_code_sign_drs:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.LinkeditDataCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.symtab:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SymtabCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.linker_optimization_hint:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.LinkeditDataCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.data_in_code:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.LinkeditDataCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.code_signature:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.CodeSignatureCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.version_min_iphoneos:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.VersionMinCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.load_weak_dylib:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DylibCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.lazy_load_dylib:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DylibCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.uuid:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.UuidCommand(_io__raw_body, self, self._root)
+            elif _on == self._root.LoadCommandType.version_min_macosx:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.VersionMinCommand(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes((self.size - 8))
 
@@ -1946,8 +1946,8 @@ class MachO(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.str_off)
             self._raw__m_strs = io.read_bytes(self.str_size)
-            io = KaitaiStream(BytesIO(self._raw__m_strs))
-            self._m_strs = self._root.SymtabCommand.StrTable(io, self, self._root)
+            _io__raw__m_strs = KaitaiStream(BytesIO(self._raw__m_strs))
+            self._m_strs = self._root.SymtabCommand.StrTable(_io__raw__m_strs, self, self._root)
             io.seek(_pos)
             return self._m_strs if hasattr(self, '_m_strs') else None
 

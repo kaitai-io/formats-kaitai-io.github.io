@@ -107,7 +107,7 @@ public class WindowsMinidump extends KaitaiStruct {
         }
         private void _read() {
             this.numThreads = this._io.readU4le();
-            threads = new ArrayList<Thread>((int) (numThreads()));
+            threads = new ArrayList<Thread>(((Number) (numThreads())).intValue());
             for (int i = 0; i < numThreads(); i++) {
                 this.threads.add(new Thread(this._io, this, _root));
             }
@@ -335,7 +335,7 @@ public class WindowsMinidump extends KaitaiStruct {
             this.addr = this._io.readU8le();
             this.numParams = this._io.readU4le();
             this.reserved = this._io.readU4le();
-            params = new ArrayList<Long>((int) (15));
+            params = new ArrayList<Long>(((Number) (15)).intValue());
             for (int i = 0; i < 15; i++) {
                 this.params.add(this._io.readU8le());
             }
@@ -469,41 +469,48 @@ public class WindowsMinidump extends KaitaiStruct {
                 return this.data;
             long _pos = this._io.pos();
             this._io.seek(ofsData());
-            switch (streamType()) {
-            case MISC_INFO: {
-                this._raw_data = this._io.readBytes(lenData());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new MiscInfo(_io__raw_data, this, _root);
-                break;
-            }
-            case EXCEPTION: {
-                this._raw_data = this._io.readBytes(lenData());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new ExceptionStream(_io__raw_data, this, _root);
-                break;
-            }
-            case MEMORY_LIST: {
-                this._raw_data = this._io.readBytes(lenData());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new MemoryList(_io__raw_data, this, _root);
-                break;
-            }
-            case SYSTEM_INFO: {
-                this._raw_data = this._io.readBytes(lenData());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new SystemInfo(_io__raw_data, this, _root);
-                break;
-            }
-            case THREAD_LIST: {
-                this._raw_data = this._io.readBytes(lenData());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new ThreadList(_io__raw_data, this, _root);
-                break;
-            }
-            default: {
-                this.data = this._io.readBytes(lenData());
-                break;
-            }
+            {
+                StreamTypes on = streamType();
+                if (on != null) {
+                    switch (streamType()) {
+                    case MEMORY_LIST: {
+                        this._raw_data = this._io.readBytes(lenData());
+                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                        this.data = new MemoryList(_io__raw_data, this, _root);
+                        break;
+                    }
+                    case MISC_INFO: {
+                        this._raw_data = this._io.readBytes(lenData());
+                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                        this.data = new MiscInfo(_io__raw_data, this, _root);
+                        break;
+                    }
+                    case THREAD_LIST: {
+                        this._raw_data = this._io.readBytes(lenData());
+                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                        this.data = new ThreadList(_io__raw_data, this, _root);
+                        break;
+                    }
+                    case EXCEPTION: {
+                        this._raw_data = this._io.readBytes(lenData());
+                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                        this.data = new ExceptionStream(_io__raw_data, this, _root);
+                        break;
+                    }
+                    case SYSTEM_INFO: {
+                        this._raw_data = this._io.readBytes(lenData());
+                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                        this.data = new SystemInfo(_io__raw_data, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.data = this._io.readBytes(lenData());
+                        break;
+                    }
+                    }
+                } else {
+                    this.data = this._io.readBytes(lenData());
+                }
             }
             this._io.seek(_pos);
             return this.data;
@@ -605,7 +612,7 @@ public class WindowsMinidump extends KaitaiStruct {
         }
         private void _read() {
             this.numMemRanges = this._io.readU4le();
-            memRanges = new ArrayList<MemoryDescriptor>((int) (numMemRanges()));
+            memRanges = new ArrayList<MemoryDescriptor>(((Number) (numMemRanges())).intValue());
             for (int i = 0; i < numMemRanges(); i++) {
                 this.memRanges.add(new MemoryDescriptor(this._io, this, _root));
             }
@@ -703,7 +710,7 @@ public class WindowsMinidump extends KaitaiStruct {
             return this.streams;
         long _pos = this._io.pos();
         this._io.seek(ofsStreams());
-        streams = new ArrayList<Dir>((int) (numStreams()));
+        streams = new ArrayList<Dir>(((Number) (numStreams())).intValue());
         for (int i = 0; i < numStreams(); i++) {
             this.streams.add(new Dir(this._io, this, _root));
         }

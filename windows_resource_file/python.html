@@ -191,11 +191,6 @@ empty.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Windows resource file parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Windows resource file parsing C# library">C#</a></li>
                 
                 
@@ -402,7 +397,7 @@ class WindowsResourceFile(KaitaiStruct):
                 return self._m_type_as_predef if hasattr(self, &#39;_m_type_as_predef&#39;) else None
 
             if  ((not (self.type.is_string)) and (self.type.as_numeric &lt;= 255)) :
-                self._m_type_as_predef = self._root.Resource.PredefTypes(self.type.as_numeric)
+                self._m_type_as_predef = KaitaiStream.resolve_enum(self._root.Resource.PredefTypes, self.type.as_numeric)
 
             return self._m_type_as_predef if hasattr(self, &#39;_m_type_as_predef&#39;) else None
 

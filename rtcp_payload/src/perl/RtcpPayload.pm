@@ -322,30 +322,30 @@ sub _read {
     $self->{payload_type} = $self->{_io}->read_u1();
     $self->{length} = $self->{_io}->read_u2be();
     my $_on = $self->payload_type();
-    if ($_on == $PAYLOAD_TYPE_SDES) {
+    if ($_on == $RtcpPayload::PAYLOAD_TYPE_SR) {
         $self->{_raw_body} = $self->{_io}->read_bytes((4 * $self->length()));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = RtcpPayload::SdesPacket->new($io__raw_body, $self, $self->{_root});
+        $self->{body} = RtcpPayload::SrPacket->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $PAYLOAD_TYPE_RR) {
-        $self->{_raw_body} = $self->{_io}->read_bytes((4 * $self->length()));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = RtcpPayload::RrPacket->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $PAYLOAD_TYPE_RTPFB) {
-        $self->{_raw_body} = $self->{_io}->read_bytes((4 * $self->length()));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = RtcpPayload::RtpfbPacket->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $PAYLOAD_TYPE_PSFB) {
+    elsif ($_on == $RtcpPayload::PAYLOAD_TYPE_PSFB) {
         $self->{_raw_body} = $self->{_io}->read_bytes((4 * $self->length()));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RtcpPayload::PsfbPacket->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $PAYLOAD_TYPE_SR) {
+    elsif ($_on == $RtcpPayload::PAYLOAD_TYPE_RR) {
         $self->{_raw_body} = $self->{_io}->read_bytes((4 * $self->length()));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = RtcpPayload::SrPacket->new($io__raw_body, $self, $self->{_root});
+        $self->{body} = RtcpPayload::RrPacket->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $RtcpPayload::PAYLOAD_TYPE_RTPFB) {
+        $self->{_raw_body} = $self->{_io}->read_bytes((4 * $self->length()));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = RtcpPayload::RtpfbPacket->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $RtcpPayload::PAYLOAD_TYPE_SDES) {
+        $self->{_raw_body} = $self->{_io}->read_bytes((4 * $self->length()));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = RtcpPayload::SdesPacket->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes((4 * $self->length()));
@@ -418,10 +418,10 @@ sub _read {
     my ($self) = @_;
 
     $self->{type} = $self->{_io}->read_u1();
-    if ($self->type() != $SDES_SUBTYPE_PAD) {
+    if ($self->type() != $RtcpPayload::SDES_SUBTYPE_PAD) {
         $self->{length} = $self->{_io}->read_u1();
     }
-    if ($self->type() != $SDES_SUBTYPE_PAD) {
+    if ($self->type() != $RtcpPayload::SDES_SUBTYPE_PAD) {
         $self->{value} = $self->{_io}->read_bytes($self->length());
     }
 }
@@ -640,7 +640,7 @@ sub _read {
     $self->{ssrc} = $self->{_io}->read_u4be();
     $self->{ssrc_media_source} = $self->{_io}->read_u4be();
     my $_on = $self->fmt();
-    if ($_on == $PSFB_SUBTYPE_AFB) {
+    if ($_on == $RtcpPayload::PSFB_SUBTYPE_AFB) {
         $self->{_raw_fci_block} = $self->{_io}->read_bytes_full();
         my $io__raw_fci_block = IO::KaitaiStruct::Stream->new($self->{_raw_fci_block});
         $self->{fci_block} = RtcpPayload::PsfbAfbPacket->new($io__raw_fci_block, $self, $self->{_root});
@@ -806,7 +806,7 @@ sub _read {
     $self->{ssrc} = $self->{_io}->read_u4be();
     $self->{ssrc_media_source} = $self->{_io}->read_u4be();
     my $_on = $self->fmt();
-    if ($_on == $RTPFB_SUBTYPE_TRANSPORT_FEEDBACK) {
+    if ($_on == $RtcpPayload::RTPFB_SUBTYPE_TRANSPORT_FEEDBACK) {
         $self->{_raw_fci_block} = $self->{_io}->read_bytes_full();
         my $io__raw_fci_block = IO::KaitaiStruct::Stream->new($self->{_raw_fci_block});
         $self->{fci_block} = RtcpPayload::RtpfbTransportFeedbackPacket->new($io__raw_fci_block, $self, $self->{_root});

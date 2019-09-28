@@ -114,16 +114,16 @@ public class DsStore extends KaitaiStruct {
         private void _read() {
             this.numBlocks = this._io.readU4be();
             this._unnamed1 = this._io.readBytes(4);
-            blockAddresses = new ArrayList<BlockDescriptor>((int) (numBlockAddresses()));
+            blockAddresses = new ArrayList<BlockDescriptor>(((Number) (numBlockAddresses())).intValue());
             for (int i = 0; i < numBlockAddresses(); i++) {
                 this.blockAddresses.add(new BlockDescriptor(this._io, this, _root));
             }
             this.numDirectories = this._io.readU4be();
-            directoryEntries = new ArrayList<DirectoryEntry>((int) (numDirectories()));
+            directoryEntries = new ArrayList<DirectoryEntry>(((Number) (numDirectories())).intValue());
             for (int i = 0; i < numDirectories(); i++) {
                 this.directoryEntries.add(new DirectoryEntry(this._io, this, _root));
             }
-            freeLists = new ArrayList<FreeList>((int) (numFreeLists()));
+            freeLists = new ArrayList<FreeList>(((Number) (numFreeLists())).intValue());
             for (int i = 0; i < numFreeLists(); i++) {
                 this.freeLists.add(new FreeList(this._io, this, _root));
             }
@@ -229,7 +229,7 @@ public class DsStore extends KaitaiStruct {
             }
             private void _read() {
                 this.counter = this._io.readU4be();
-                offsets = new ArrayList<Long>((int) (counter()));
+                offsets = new ArrayList<Long>(((Number) (counter())).intValue());
                 for (int i = 0; i < counter(); i++) {
                     this.offsets.add(this._io.readU4be());
                 }
@@ -268,7 +268,7 @@ public class DsStore extends KaitaiStruct {
             if (this.directories != null)
                 return this.directories;
             KaitaiStream io = _root._io();
-            directories = new ArrayList<MasterBlockRef>((int) (numDirectories()));
+            directories = new ArrayList<MasterBlockRef>(((Number) (numDirectories())).intValue());
             for (int i = 0; i < numDirectories(); i++) {
                 this.directories.add(new MasterBlockRef(io, this, _root, i));
             }
@@ -445,7 +445,7 @@ public class DsStore extends KaitaiStruct {
         private void _read() {
             this.mode = this._io.readU4be();
             this.counter = this._io.readU4be();
-            data = new ArrayList<BlockData>((int) (counter()));
+            data = new ArrayList<BlockData>(((Number) (counter())).intValue());
             for (int i = 0; i < counter(); i++) {
                 this.data.add(new BlockData(this._io, this, _root, mode()));
             }

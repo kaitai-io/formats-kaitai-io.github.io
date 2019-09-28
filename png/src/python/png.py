@@ -71,44 +71,44 @@ class Png(KaitaiStruct):
             _on = self.type
             if _on == u"iTXt":
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.InternationalTextChunk(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.InternationalTextChunk(_io__raw_body, self, self._root)
             elif _on == u"gAMA":
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.GamaChunk(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.GamaChunk(_io__raw_body, self, self._root)
             elif _on == u"tIME":
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.TimeChunk(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.TimeChunk(_io__raw_body, self, self._root)
             elif _on == u"PLTE":
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.PlteChunk(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.PlteChunk(_io__raw_body, self, self._root)
             elif _on == u"bKGD":
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.BkgdChunk(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.BkgdChunk(_io__raw_body, self, self._root)
             elif _on == u"pHYs":
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.PhysChunk(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.PhysChunk(_io__raw_body, self, self._root)
             elif _on == u"tEXt":
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.TextChunk(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.TextChunk(_io__raw_body, self, self._root)
             elif _on == u"cHRM":
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.ChrmChunk(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.ChrmChunk(_io__raw_body, self, self._root)
             elif _on == u"sRGB":
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SrgbChunk(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SrgbChunk(_io__raw_body, self, self._root)
             elif _on == u"zTXt":
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CompressedTextChunk(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.CompressedTextChunk(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.len)
             self.crc = self._io.read_bytes(4)
@@ -199,7 +199,7 @@ class Png(KaitaiStruct):
             self.width = self._io.read_u4be()
             self.height = self._io.read_u4be()
             self.bit_depth = self._io.read_u1()
-            self.color_type = self._root.ColorType(self._io.read_u1())
+            self.color_type = KaitaiStream.resolve_enum(self._root.ColorType, self._io.read_u1())
             self.compression_method = self._io.read_u1()
             self.filter_method = self._io.read_u1()
             self.interlace_method = self._io.read_u1()
@@ -243,7 +243,7 @@ class Png(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.render_intent = self._root.SrgbChunk.Intent(self._io.read_u1())
+            self.render_intent = KaitaiStream.resolve_enum(self._root.SrgbChunk.Intent, self._io.read_u1())
 
 
     class CompressedTextChunk(KaitaiStruct):
@@ -262,7 +262,7 @@ class Png(KaitaiStruct):
 
         def _read(self):
             self.keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
-            self.compression_method = self._root.CompressionMethods(self._io.read_u1())
+            self.compression_method = KaitaiStream.resolve_enum(self._root.CompressionMethods, self._io.read_u1())
             self._raw_text_datastream = self._io.read_bytes_full()
             self.text_datastream = zlib.decompress(self._raw_text_datastream)
 
@@ -319,16 +319,16 @@ class Png(KaitaiStruct):
 
         def _read(self):
             _on = self._root.ihdr.color_type
-            if _on == self._root.ColorType.greyscale_alpha:
-                self.bkgd = self._root.BkgdGreyscale(self._io, self, self._root)
-            elif _on == self._root.ColorType.indexed:
+            if _on == self._root.ColorType.indexed:
                 self.bkgd = self._root.BkgdIndexed(self._io, self, self._root)
-            elif _on == self._root.ColorType.greyscale:
-                self.bkgd = self._root.BkgdGreyscale(self._io, self, self._root)
             elif _on == self._root.ColorType.truecolor_alpha:
                 self.bkgd = self._root.BkgdTruecolor(self._io, self, self._root)
+            elif _on == self._root.ColorType.greyscale_alpha:
+                self.bkgd = self._root.BkgdGreyscale(self._io, self, self._root)
             elif _on == self._root.ColorType.truecolor:
                 self.bkgd = self._root.BkgdTruecolor(self._io, self, self._root)
+            elif _on == self._root.ColorType.greyscale:
+                self.bkgd = self._root.BkgdGreyscale(self._io, self, self._root)
 
 
     class PhysChunk(KaitaiStruct):
@@ -347,7 +347,7 @@ class Png(KaitaiStruct):
         def _read(self):
             self.pixels_per_unit_x = self._io.read_u4be()
             self.pixels_per_unit_y = self._io.read_u4be()
-            self.unit = self._root.PhysUnit(self._io.read_u1())
+            self.unit = KaitaiStream.resolve_enum(self._root.PhysUnit, self._io.read_u1())
 
 
     class InternationalTextChunk(KaitaiStruct):
@@ -368,7 +368,7 @@ class Png(KaitaiStruct):
         def _read(self):
             self.keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
             self.compression_flag = self._io.read_u1()
-            self.compression_method = self._root.CompressionMethods(self._io.read_u1())
+            self.compression_method = KaitaiStream.resolve_enum(self._root.CompressionMethods, self._io.read_u1())
             self.language_tag = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
             self.translated_keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
             self.text = (self._io.read_bytes_full()).decode(u"UTF-8")

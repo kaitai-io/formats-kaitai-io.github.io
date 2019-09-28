@@ -177,11 +177,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".dbf file format of dBASE parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".dbf file format of dBASE parsing C# library">C#</a></li>
                 
                 
@@ -307,7 +302,7 @@ public class Dbf extends KaitaiStruct {
         this._raw_header2 = this._io.readBytes((header1().lenHeader() - 12));
         KaitaiStream _io__raw_header2 = new ByteBufferKaitaiStream(_raw_header2);
         this.header2 = new Header2(_io__raw_header2, this, _root);
-        records = new ArrayList&lt;byte[]&gt;((int) (header1().numRecords()));
+        records = new ArrayList&lt;byte[]&gt;(((Number) (header1().numRecords())).intValue());
         for (int i = 0; i &lt; header1().numRecords(); i++) {
             this.records.add(this._io.readBytes(header1().lenRecord()));
         }
@@ -338,7 +333,7 @@ public class Dbf extends KaitaiStruct {
             if (_root.header1().dbaseLevel() == 7) {
                 this.headerDbase7 = new HeaderDbase7(this._io, this, _root);
             }
-            fields = new ArrayList&lt;Field&gt;((int) (11));
+            fields = new ArrayList&lt;Field&gt;(((Number) (11)).intValue());
             for (int i = 0; i &lt; 11; i++) {
                 this.fields.add(new Field(this._io, this, _root));
             }

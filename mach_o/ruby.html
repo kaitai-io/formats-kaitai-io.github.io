@@ -129,11 +129,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="mach_o parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="mach_o parsing C# library">C#</a></li>
                 
                 
@@ -452,34 +447,34 @@ class MachO &lt; Kaitai::Struct::Struct
       @magic = Kaitai::Struct::Stream::resolve_enum(CS_MAGIC, @_io.read_u4be)
       @length = @_io.read_u4be
       case magic
-      when :cs_magic_detached_signature
-        @_raw_body = @_io.read_bytes((length - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SuperBlob.new(io, self, @_root)
-      when :cs_magic_embedded_signature
-        @_raw_body = @_io.read_bytes((length - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SuperBlob.new(io, self, @_root)
-      when :cs_magic_entitlement
-        @_raw_body = @_io.read_bytes((length - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Entitlement.new(io, self, @_root)
-      when :cs_magic_blob_wrapper
-        @_raw_body = @_io.read_bytes((length - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = BlobWrapper.new(io, self, @_root)
       when :cs_magic_requirement
         @_raw_body = @_io.read_bytes((length - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Requirement.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Requirement.new(_io__raw_body, self, @_root)
       when :cs_magic_code_directory
         @_raw_body = @_io.read_bytes((length - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = CodeDirectory.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = CodeDirectory.new(_io__raw_body, self, @_root)
+      when :cs_magic_entitlement
+        @_raw_body = @_io.read_bytes((length - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Entitlement.new(_io__raw_body, self, @_root)
       when :cs_magic_requirements
         @_raw_body = @_io.read_bytes((length - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Requirements.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Requirements.new(_io__raw_body, self, @_root)
+      when :cs_magic_blob_wrapper
+        @_raw_body = @_io.read_bytes((length - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = BlobWrapper.new(_io__raw_body, self, @_root)
+      when :cs_magic_embedded_signature
+        @_raw_body = @_io.read_bytes((length - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SuperBlob.new(_io__raw_body, self, @_root)
+      when :cs_magic_detached_signature
+        @_raw_body = @_io.read_bytes((length - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SuperBlob.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes((length - 8))
       end
@@ -635,32 +630,32 @@ class MachO &lt; Kaitai::Struct::Struct
       def _read
         @op = Kaitai::Struct::Stream::resolve_enum(OP_ENUM, @_io.read_u4be)
         case op
-        when :op_enum_cert_generic
-          @data = CertGenericExpr.new(@_io, self, @_root)
-        when :op_enum_apple_generic_anchor
-          @data = AppleGenericAnchorExpr.new(@_io, self, @_root)
-        when :op_enum_info_key_field
-          @data = InfoKeyFieldExpr.new(@_io, self, @_root)
-        when :op_enum_and_op
-          @data = AndExpr.new(@_io, self, @_root)
-        when :op_enum_anchor_hash
-          @data = AnchorHashExpr.new(@_io, self, @_root)
-        when :op_enum_info_key_value
-          @data = Data.new(@_io, self, @_root)
-        when :op_enum_or_op
-          @data = OrExpr.new(@_io, self, @_root)
-        when :op_enum_trusted_cert
-          @data = CertSlotExpr.new(@_io, self, @_root)
-        when :op_enum_not_op
-          @data = Expr.new(@_io, self, @_root)
         when :op_enum_ident
           @data = IdentExpr.new(@_io, self, @_root)
-        when :op_enum_cert_field
-          @data = CertFieldExpr.new(@_io, self, @_root)
+        when :op_enum_or_op
+          @data = OrExpr.new(@_io, self, @_root)
+        when :op_enum_info_key_value
+          @data = Data.new(@_io, self, @_root)
+        when :op_enum_anchor_hash
+          @data = AnchorHashExpr.new(@_io, self, @_root)
+        when :op_enum_info_key_field
+          @data = InfoKeyFieldExpr.new(@_io, self, @_root)
+        when :op_enum_not_op
+          @data = Expr.new(@_io, self, @_root)
         when :op_enum_entitlement_field
           @data = EntitlementFieldExpr.new(@_io, self, @_root)
+        when :op_enum_trusted_cert
+          @data = CertSlotExpr.new(@_io, self, @_root)
+        when :op_enum_and_op
+          @data = AndExpr.new(@_io, self, @_root)
+        when :op_enum_cert_generic
+          @data = CertGenericExpr.new(@_io, self, @_root)
+        when :op_enum_cert_field
+          @data = CertFieldExpr.new(@_io, self, @_root)
         when :op_enum_cd_hash
           @data = Data.new(@_io, self, @_root)
+        when :op_enum_apple_generic_anchor
+          @data = AppleGenericAnchorExpr.new(@_io, self, @_root)
         end
         self
       end
@@ -685,7 +680,7 @@ class MachO &lt; Kaitai::Struct::Struct
         end
 
         def _read
-          @value = Kaitai::Struct::Stream::resolve_enum(CERT_SLOT, @_io.read_u4be)
+          @value = Kaitai::Struct::Stream::resolve_enum(MachO::CsBlob::Expr::CERT_SLOT, @_io.read_u4be)
           self
         end
         attr_reader :value
@@ -697,7 +692,7 @@ class MachO &lt; Kaitai::Struct::Struct
         end
 
         def _read
-          @cert_slot = Kaitai::Struct::Stream::resolve_enum(CERT_SLOT, @_io.read_u4be)
+          @cert_slot = Kaitai::Struct::Stream::resolve_enum(MachO::CsBlob::Expr::CERT_SLOT, @_io.read_u4be)
           @data = Data.new(@_io, self, @_root)
           @match = Match.new(@_io, self, @_root)
           self
@@ -725,7 +720,7 @@ class MachO &lt; Kaitai::Struct::Struct
         end
 
         def _read
-          @cert_slot = Kaitai::Struct::Stream::resolve_enum(CERT_SLOT, @_io.read_u4be)
+          @cert_slot = Kaitai::Struct::Stream::resolve_enum(MachO::CsBlob::Expr::CERT_SLOT, @_io.read_u4be)
           @data = Data.new(@_io, self, @_root)
           @match = Match.new(@_io, self, @_root)
           self
@@ -741,7 +736,7 @@ class MachO &lt; Kaitai::Struct::Struct
         end
 
         def _read
-          @cert_slot = Kaitai::Struct::Stream::resolve_enum(CERT_SLOT, @_io.read_u4be)
+          @cert_slot = Kaitai::Struct::Stream::resolve_enum(MachO::CsBlob::Expr::CERT_SLOT, @_io.read_u4be)
           @data = Data.new(@_io, self, @_root)
           self
         end
@@ -837,8 +832,8 @@ class MachO &lt; Kaitai::Struct::Struct
         _pos = io.pos
         io.seek((offset - 8))
         @_raw_blob = io.read_bytes_full
-        io = Kaitai::Struct::Stream.new(@_raw_blob)
-        @blob = CsBlob.new(io, self, @_root)
+        _io__raw_blob = Kaitai::Struct::Stream.new(@_raw_blob)
+        @blob = CsBlob.new(_io__raw_blob, self, @_root)
         io.seek(_pos)
         @blob
       end
@@ -1304,8 +1299,8 @@ class MachO &lt; Kaitai::Struct::Struct
             case id
             when 0
               @_raw_body = @_io.read_bytes((length - 4))
-              io = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = Cie.new(io, self, @_root)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = Cie.new(_io__raw_body, self, @_root)
             else
               @body = @_io.read_bytes((length - 4))
             end
@@ -1433,72 +1428,72 @@ class MachO &lt; Kaitai::Struct::Struct
         case sect_name
         when &quot;__objc_nlclslist&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         when &quot;__objc_methname&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = StringList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = StringList.new(_io__raw_data, self, @_root)
         when &quot;__nl_symbol_ptr&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         when &quot;__la_symbol_ptr&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         when &quot;__objc_selrefs&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         when &quot;__cstring&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = StringList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = StringList.new(_io__raw_data, self, @_root)
         when &quot;__objc_classlist&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         when &quot;__objc_protolist&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         when &quot;__objc_imageinfo&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         when &quot;__objc_methtype&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = StringList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = StringList.new(_io__raw_data, self, @_root)
         when &quot;__cfstring&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = CfStringList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = CfStringList.new(_io__raw_data, self, @_root)
         when &quot;__objc_classrefs&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         when &quot;__objc_protorefs&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         when &quot;__objc_classname&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = StringList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = StringList.new(_io__raw_data, self, @_root)
         when &quot;__got&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         when &quot;__eh_frame&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = EhFrame.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = EhFrame.new(_io__raw_data, self, @_root)
         when &quot;__objc_superrefs&quot;
           @_raw_data = io.read_bytes(size)
-          io = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = PointerList.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = PointerList.new(_io__raw_data, self, @_root)
         else
           @data = io.read_bytes(size)
         end
@@ -1650,9 +1645,9 @@ class MachO &lt; Kaitai::Struct::Struct
     end
 
     def _read
-      @cputype = Kaitai::Struct::Stream::resolve_enum(CPU_TYPE, @_io.read_u4le)
+      @cputype = Kaitai::Struct::Stream::resolve_enum(MachO::CPU_TYPE, @_io.read_u4le)
       @cpusubtype = @_io.read_u4le
-      @filetype = Kaitai::Struct::Stream::resolve_enum(FILE_TYPE, @_io.read_u4le)
+      @filetype = Kaitai::Struct::Stream::resolve_enum(MachO::FILE_TYPE, @_io.read_u4le)
       @ncmds = @_io.read_u4le
       @sizeofcmds = @_io.read_u4le
       @flags = @_io.read_u4le
@@ -1769,8 +1764,8 @@ class MachO &lt; Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(data_off)
       @_raw_code_signature = io.read_bytes(data_size)
-      io = Kaitai::Struct::Stream.new(@_raw_code_signature)
-      @code_signature = CsBlob.new(io, self, @_root)
+      _io__raw_code_signature = Kaitai::Struct::Stream.new(@_raw_code_signature)
+      @code_signature = CsBlob.new(_io__raw_code_signature, self, @_root)
       io.seek(_pos)
       @code_signature
     end
@@ -1835,7 +1830,7 @@ class MachO &lt; Kaitai::Struct::Struct
       end
       def opcode
         return @opcode unless @opcode.nil?
-        @opcode = Kaitai::Struct::Stream::resolve_enum(BIND_OPCODE, (opcode_and_immediate &amp; 240))
+        @opcode = Kaitai::Struct::Stream::resolve_enum(MachO::DyldInfoCommand::BIND_OPCODE, (opcode_and_immediate &amp; 240))
         @opcode
       end
       def immediate
@@ -1895,7 +1890,7 @@ class MachO &lt; Kaitai::Struct::Struct
         end
         def opcode
           return @opcode unless @opcode.nil?
-          @opcode = Kaitai::Struct::Stream::resolve_enum(OPCODE, (opcode_and_immediate &amp; 240))
+          @opcode = Kaitai::Struct::Stream::resolve_enum(MachO::DyldInfoCommand::RebaseData::OPCODE, (opcode_and_immediate &amp; 240))
           @opcode
         end
         def immediate
@@ -1993,8 +1988,8 @@ class MachO &lt; Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(rebase_off)
       @_raw_rebase = io.read_bytes(rebase_size)
-      io = Kaitai::Struct::Stream.new(@_raw_rebase)
-      @rebase = RebaseData.new(io, self, @_root)
+      _io__raw_rebase = Kaitai::Struct::Stream.new(@_raw_rebase)
+      @rebase = RebaseData.new(_io__raw_rebase, self, @_root)
       io.seek(_pos)
       @rebase
     end
@@ -2004,8 +1999,8 @@ class MachO &lt; Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(bind_off)
       @_raw_bind = io.read_bytes(bind_size)
-      io = Kaitai::Struct::Stream.new(@_raw_bind)
-      @bind = BindData.new(io, self, @_root)
+      _io__raw_bind = Kaitai::Struct::Stream.new(@_raw_bind)
+      @bind = BindData.new(_io__raw_bind, self, @_root)
       io.seek(_pos)
       @bind
     end
@@ -2015,8 +2010,8 @@ class MachO &lt; Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(lazy_bind_off)
       @_raw_lazy_bind = io.read_bytes(lazy_bind_size)
-      io = Kaitai::Struct::Stream.new(@_raw_lazy_bind)
-      @lazy_bind = LazyBindData.new(io, self, @_root)
+      _io__raw_lazy_bind = Kaitai::Struct::Stream.new(@_raw_lazy_bind)
+      @lazy_bind = LazyBindData.new(_io__raw_lazy_bind, self, @_root)
       io.seek(_pos)
       @lazy_bind
     end
@@ -2026,8 +2021,8 @@ class MachO &lt; Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(export_off)
       @_raw_exports = io.read_bytes(export_size)
-      io = Kaitai::Struct::Stream.new(@_raw_exports)
-      @exports = ExportNode.new(io, self, @_root)
+      _io__raw_exports = Kaitai::Struct::Stream.new(@_raw_exports)
+      @exports = ExportNode.new(_io__raw_exports, self, @_root)
       io.seek(_pos)
       @exports
     end
@@ -2099,161 +2094,161 @@ class MachO &lt; Kaitai::Struct::Struct
     end
 
     def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(LOAD_COMMAND_TYPE, @_io.read_u4le)
+      @type = Kaitai::Struct::Stream::resolve_enum(MachO::LOAD_COMMAND_TYPE, @_io.read_u4le)
       @size = @_io.read_u4le
       case type
-      when :load_command_type_sub_library
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SubCommand.new(io, self, @_root)
-      when :load_command_type_segment_split_info
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = LinkeditDataCommand.new(io, self, @_root)
-      when :load_command_type_rpath
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RpathCommand.new(io, self, @_root)
-      when :load_command_type_source_version
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SourceVersionCommand.new(io, self, @_root)
-      when :load_command_type_encryption_info_64
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = EncryptionInfoCommand.new(io, self, @_root)
-      when :load_command_type_version_min_tvos
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = VersionMinCommand.new(io, self, @_root)
-      when :load_command_type_load_dylinker
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DylinkerCommand.new(io, self, @_root)
-      when :load_command_type_sub_framework
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SubCommand.new(io, self, @_root)
-      when :load_command_type_load_weak_dylib
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DylibCommand.new(io, self, @_root)
-      when :load_command_type_version_min_iphoneos
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = VersionMinCommand.new(io, self, @_root)
-      when :load_command_type_linker_optimization_hint
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = LinkeditDataCommand.new(io, self, @_root)
-      when :load_command_type_dyld_environment
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DylinkerCommand.new(io, self, @_root)
-      when :load_command_type_load_upward_dylib
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DylibCommand.new(io, self, @_root)
-      when :load_command_type_dylib_code_sign_drs
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = LinkeditDataCommand.new(io, self, @_root)
-      when :load_command_type_dyld_info
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DyldInfoCommand.new(io, self, @_root)
-      when :load_command_type_reexport_dylib
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DylibCommand.new(io, self, @_root)
-      when :load_command_type_symtab
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SymtabCommand.new(io, self, @_root)
-      when :load_command_type_routines_64
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RoutinesCommand64.new(io, self, @_root)
       when :load_command_type_id_dylinker
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DylinkerCommand.new(io, self, @_root)
-      when :load_command_type_main
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylinkerCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_reexport_dylib
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = EntryPointCommand.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_source_version
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SourceVersionCommand.new(_io__raw_body, self, @_root)
       when :load_command_type_function_starts
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = LinkeditDataCommand.new(io, self, @_root)
-      when :load_command_type_version_min_macosx
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = LinkeditDataCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_rpath
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = VersionMinCommand.new(io, self, @_root)
-      when :load_command_type_data_in_code
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = RpathCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_sub_framework
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = LinkeditDataCommand.new(io, self, @_root)
-      when :load_command_type_version_min_watchos
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = VersionMinCommand.new(io, self, @_root)
-      when :load_command_type_encryption_info
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = EncryptionInfoCommand.new(io, self, @_root)
-      when :load_command_type_sub_umbrella
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SubCommand.new(io, self, @_root)
-      when :load_command_type_linker_option
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = LinkerOptionCommand.new(io, self, @_root)
-      when :load_command_type_twolevel_hints
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = TwolevelHintsCommand.new(io, self, @_root)
-      when :load_command_type_uuid
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = UuidCommand.new(io, self, @_root)
-      when :load_command_type_dyld_info_only
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DyldInfoCommand.new(io, self, @_root)
-      when :load_command_type_lazy_load_dylib
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DylibCommand.new(io, self, @_root)
-      when :load_command_type_sub_client
-        @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SubCommand.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SubCommand.new(_io__raw_body, self, @_root)
       when :load_command_type_routines
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RoutinesCommand.new(io, self, @_root)
-      when :load_command_type_code_signature
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = RoutinesCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_sub_library
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = CodeSignatureCommand.new(io, self, @_root)
-      when :load_command_type_dysymtab
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SubCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_dyld_info_only
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DysymtabCommand.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DyldInfoCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_dyld_environment
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylinkerCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_load_dylinker
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylinkerCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_segment_split_info
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = LinkeditDataCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_main
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = EntryPointCommand.new(_io__raw_body, self, @_root)
       when :load_command_type_load_dylib
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DylibCommand.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_encryption_info
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = EncryptionInfoCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_dysymtab
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DysymtabCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_twolevel_hints
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = TwolevelHintsCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_encryption_info_64
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = EncryptionInfoCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_linker_option
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = LinkerOptionCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_dyld_info
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DyldInfoCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_version_min_tvos
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = VersionMinCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_load_upward_dylib
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(_io__raw_body, self, @_root)
       when :load_command_type_segment_64
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SegmentCommand64.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SegmentCommand64.new(_io__raw_body, self, @_root)
+      when :load_command_type_sub_umbrella
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SubCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_version_min_watchos
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = VersionMinCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_routines_64
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = RoutinesCommand64.new(_io__raw_body, self, @_root)
       when :load_command_type_id_dylib
         @_raw_body = @_io.read_bytes((size - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DylibCommand.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_sub_client
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SubCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_dylib_code_sign_drs
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = LinkeditDataCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_symtab
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SymtabCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_linker_optimization_hint
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = LinkeditDataCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_data_in_code
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = LinkeditDataCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_code_signature
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = CodeSignatureCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_version_min_iphoneos
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = VersionMinCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_load_weak_dylib
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_lazy_load_dylib
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_uuid
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = UuidCommand.new(_io__raw_body, self, @_root)
+      when :load_command_type_version_min_macosx
+        @_raw_body = @_io.read_bytes((size - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = VersionMinCommand.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes((size - 8))
       end
@@ -2347,8 +2342,8 @@ class MachO &lt; Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(str_off)
       @_raw_strs = io.read_bytes(str_size)
-      io = Kaitai::Struct::Stream.new(@_raw_strs)
-      @strs = StrTable.new(io, self, @_root)
+      _io__raw_strs = Kaitai::Struct::Stream.new(@_raw_strs)
+      @strs = StrTable.new(_io__raw_strs, self, @_root)
       io.seek(_pos)
       @strs
     end

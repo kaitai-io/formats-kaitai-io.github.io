@@ -34,8 +34,8 @@ class HeapsPak(KaitaiStruct):
             self.len_header = self._io.read_u4le()
             self.len_data = self._io.read_u4le()
             self._raw_root_entry = self._io.read_bytes((self.len_header - 16))
-            io = KaitaiStream(BytesIO(self._raw_root_entry))
-            self.root_entry = self._root.Header.Entry(io, self, self._root)
+            _io__raw_root_entry = KaitaiStream(BytesIO(self._raw_root_entry))
+            self.root_entry = self._root.Header.Entry(_io__raw_root_entry, self, self._root)
             self.magic2 = self._io.ensure_fixed_contents(b"\x44\x41\x54\x41")
 
         class Entry(KaitaiStruct):

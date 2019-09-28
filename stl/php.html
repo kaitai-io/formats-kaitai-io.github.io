@@ -190,11 +190,6 @@ describes binary version.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".stl file format of 3D Systems Stereolithography parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".stl file format of 3D Systems Stereolithography parsing C# library">C#</a></li>
                 
                 
@@ -331,11 +326,25 @@ class Triangle extends \Kaitai\Struct\Struct {
         for ($i = 0; $i &lt; $n; $i++) {
             $this-&gt;_m_vertices[] = new \Stl\Vec3d($this-&gt;_io, $this, $this-&gt;_root);
         }
+        $this-&gt;_m_abr = $this-&gt;_io-&gt;readU2le();
     }
     protected $_m_normal;
     protected $_m_vertices;
+    protected $_m_abr;
     public function normal() { return $this-&gt;_m_normal; }
     public function vertices() { return $this-&gt;_m_vertices; }
+
+    /**
+     * In theory (per standard), it&#39;s &quot;attribute byte count&quot; with
+     * no other details given on what &quot;attribute&quot; is and what
+     * should be stored in this field.
+     * 
+     * In practice, software dealing with STL either expected to
+     * see 0 here, or uses this 16-bit field per se to store
+     * additional attributes (such as RGB color of a vertex or
+     * color index).
+     */
+    public function abr() { return $this-&gt;_m_abr; }
 }
 
 namespace \Stl;
@@ -350,27 +359,13 @@ class Vec3d extends \Kaitai\Struct\Struct {
         $this-&gt;_m_x = $this-&gt;_io-&gt;readF4le();
         $this-&gt;_m_y = $this-&gt;_io-&gt;readF4le();
         $this-&gt;_m_z = $this-&gt;_io-&gt;readF4le();
-        $this-&gt;_m_abr = $this-&gt;_io-&gt;readU2le();
     }
     protected $_m_x;
     protected $_m_y;
     protected $_m_z;
-    protected $_m_abr;
     public function x() { return $this-&gt;_m_x; }
     public function y() { return $this-&gt;_m_y; }
     public function z() { return $this-&gt;_m_z; }
-
-    /**
-     * In theory (per standard), it&#39;s &quot;attribute byte count&quot; with
-     * no other details given on what &quot;attribute&quot; is and what
-     * should be stored in this field.
-     * 
-     * In practice, software dealing with STL either expected to
-     * see 0 here, or uses this 16-bit field per se to store
-     * additional attributes (such as RGB color of a vertex or
-     * color index).
-     */
-    public function abr() { return $this-&gt;_m_abr; }
 }
 </code></pre>
             

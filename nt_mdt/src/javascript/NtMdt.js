@@ -527,30 +527,30 @@ var NtMdt = (function() {
         this.dateTime = new DateTime(this._io, this, this._root);
         this.varSize = this._io.readU2le();
         switch (this.type) {
-        case NtMdt.Frame.FrameType.SCANNED:
+        case NtMdt.Frame.FrameType.MDA:
           this._raw_frameData = this._io.readBytesFull();
           var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
-          this.frameData = new FdScanned(_io__raw_frameData, this, this._root);
+          this.frameData = new FdMetaData(_io__raw_frameData, this, this._root);
           break;
         case NtMdt.Frame.FrameType.CURVES_NEW:
           this._raw_frameData = this._io.readBytesFull();
           var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
           this.frameData = new FdCurvesNew(_io__raw_frameData, this, this._root);
           break;
-        case NtMdt.Frame.FrameType.MDA:
+        case NtMdt.Frame.FrameType.CURVES:
           this._raw_frameData = this._io.readBytesFull();
           var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
-          this.frameData = new FdMetaData(_io__raw_frameData, this, this._root);
+          this.frameData = new FdSpectroscopy(_io__raw_frameData, this, this._root);
           break;
         case NtMdt.Frame.FrameType.SPECTROSCOPY:
           this._raw_frameData = this._io.readBytesFull();
           var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
           this.frameData = new FdSpectroscopy(_io__raw_frameData, this, this._root);
           break;
-        case NtMdt.Frame.FrameType.CURVES:
+        case NtMdt.Frame.FrameType.SCANNED:
           this._raw_frameData = this._io.readBytesFull();
           var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
-          this.frameData = new FdSpectroscopy(_io__raw_frameData, this, this._root);
+          this.frameData = new FdScanned(_io__raw_frameData, this, this._root);
           break;
         default:
           this.frameData = this._io.readBytesFull();
@@ -686,26 +686,17 @@ var NtMdt = (function() {
             this.items = new Array(this._parent._parent.nMesurands);
             for (var i = 0; i < this._parent._parent.nMesurands; i++) {
               switch (this._parent._parent.mesurands[i].dataType) {
-              case NtMdt.DataType.UINT8:
-                this.items[i] = this._io.readU1();
-                break;
-              case NtMdt.DataType.INT8:
-                this.items[i] = this._io.readS1();
-                break;
-              case NtMdt.DataType.INT16:
-                this.items[i] = this._io.readS2le();
-                break;
               case NtMdt.DataType.UINT64:
                 this.items[i] = this._io.readU8le();
                 break;
-              case NtMdt.DataType.FLOAT64:
-                this.items[i] = this._io.readF8le();
-                break;
-              case NtMdt.DataType.INT32:
-                this.items[i] = this._io.readS4le();
+              case NtMdt.DataType.UINT8:
+                this.items[i] = this._io.readU1();
                 break;
               case NtMdt.DataType.FLOAT32:
                 this.items[i] = this._io.readF4le();
+                break;
+              case NtMdt.DataType.INT8:
+                this.items[i] = this._io.readS1();
                 break;
               case NtMdt.DataType.UINT16:
                 this.items[i] = this._io.readU2le();
@@ -715,6 +706,15 @@ var NtMdt = (function() {
                 break;
               case NtMdt.DataType.UINT32:
                 this.items[i] = this._io.readU4le();
+                break;
+              case NtMdt.DataType.FLOAT64:
+                this.items[i] = this._io.readF8le();
+                break;
+              case NtMdt.DataType.INT16:
+                this.items[i] = this._io.readS2le();
+                break;
+              case NtMdt.DataType.INT32:
+                this.items[i] = this._io.readS4le();
                 break;
               }
             }

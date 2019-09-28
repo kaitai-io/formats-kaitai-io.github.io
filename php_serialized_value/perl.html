@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Serialized PHP value: Perl parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Serialized PHP value</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Serialized PHP value:
+            
+            Perl parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A serialized PHP value, in the format used by PHP's built-in <code>serialize</code> and
+<code>unserialize</code> functions. This format closely mirrors PHP's data model:
+it supports all of PHP's scalar types (<code>NULL</code>, booleans, numbers, strings),
+associative arrays, objects, and recursive data structures using references.
+The only PHP values not supported by this format are <em>resources</em>,
+which usually correspond to native file or connection handles and cannot be
+meaningfully serialized.</p>
+<p>There is no official documentation for this data format;
+this spec was created based on the PHP source code and the behavior of
+<code>serialize</code>/<code>unserialize</code>. PHP makes no guarantees about compatibility of
+serialized data between PHP versions, but in practice, the format has
+remained fully backwards-compatible - values serialized by an older
+PHP version can be unserialized on any newer PHP version.
+This spec supports serialized values from PHP 7.3 or any earlier version.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        PHP
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Serialized PHP value
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Serialized PHP value parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Serialized PHP value parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Serialized PHP value parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Serialized PHP value parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Serialized PHP value parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Serialized PHP value parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="perl.html" title="Serialized PHP value parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Serialized PHP value parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Serialized PHP value parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Serialized PHP value parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Perl source code to parse Serialized PHP value
+            
+        </h2>
+
+        
+
+        <h3>PhpSerializedValue.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/PhpSerializedValue.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+use Encode;
+
+########################################################################
+package PhpSerializedValue;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $VALUE_TYPE_CUSTOM_SERIALIZED_OBJECT = 67;
+our $VALUE_TYPE_NULL = 78;
+our $VALUE_TYPE_OBJECT = 79;
+our $VALUE_TYPE_VARIABLE_REFERENCE = 82;
+our $VALUE_TYPE_PHP_6_STRING = 83;
+our $VALUE_TYPE_ARRAY = 97;
+our $VALUE_TYPE_BOOL = 98;
+our $VALUE_TYPE_FLOAT = 100;
+our $VALUE_TYPE_INT = 105;
+our $VALUE_TYPE_PHP_3_OBJECT = 111;
+our $VALUE_TYPE_OBJECT_REFERENCE = 114;
+our $VALUE_TYPE_STRING = 115;
+
+our $BOOL_VALUE_FALSE = 48;
+our $BOOL_VALUE_TRUE = 49;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{type} = $self-&gt;{_io}-&gt;read_u1();
+    my $_on = $self-&gt;type();
+    if ($_on == $PhpSerializedValue::VALUE_TYPE_CUSTOM_SERIALIZED_OBJECT) {
+        $self-&gt;{contents} = PhpSerializedValue::CustomSerializedObjectContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_PHP_3_OBJECT) {
+        $self-&gt;{contents} = PhpSerializedValue::Php3ObjectContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_OBJECT) {
+        $self-&gt;{contents} = PhpSerializedValue::ObjectContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_VARIABLE_REFERENCE) {
+        $self-&gt;{contents} = PhpSerializedValue::IntContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_PHP_6_STRING) {
+        $self-&gt;{contents} = PhpSerializedValue::StringContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_FLOAT) {
+        $self-&gt;{contents} = PhpSerializedValue::FloatContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_OBJECT_REFERENCE) {
+        $self-&gt;{contents} = PhpSerializedValue::IntContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_NULL) {
+        $self-&gt;{contents} = PhpSerializedValue::NullContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_BOOL) {
+        $self-&gt;{contents} = PhpSerializedValue::BoolContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_INT) {
+        $self-&gt;{contents} = PhpSerializedValue::IntContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_ARRAY) {
+        $self-&gt;{contents} = PhpSerializedValue::ArrayContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PhpSerializedValue::VALUE_TYPE_STRING) {
+        $self-&gt;{contents} = PhpSerializedValue::StringContents-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub type {
+    my ($self) = @_;
+    return $self-&gt;{type};
+}
+
+sub contents {
+    my ($self) = @_;
+    return $self-&gt;{contents};
+}
+
+########################################################################
+package PhpSerializedValue::CountPrefixedMapping;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{num_entries_dec} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes_term(58, 0, 1, 1));
+    $self-&gt;{opening_brace} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (123)));
+    $self-&gt;{entries} = ();
+    my $n_entries = $self-&gt;num_entries();
+    for (my $i = 0; $i &lt; $n_entries; $i++) {
+        $self-&gt;{entries}[$i] = PhpSerializedValue::MappingEntry-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    $self-&gt;{closing_brace} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (125)));
+}
+
+sub num_entries {
+    my ($self) = @_;
+    return $self-&gt;{num_entries} if ($self-&gt;{num_entries});
+    $self-&gt;{num_entries} = $self-&gt;num_entries_dec();
+    return $self-&gt;{num_entries};
+}
+
+sub num_entries_dec {
+    my ($self) = @_;
+    return $self-&gt;{num_entries_dec};
+}
+
+sub opening_brace {
+    my ($self) = @_;
+    return $self-&gt;{opening_brace};
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self-&gt;{entries};
+}
+
+sub closing_brace {
+    my ($self) = @_;
+    return $self-&gt;{closing_brace};
+}
+
+########################################################################
+package PhpSerializedValue::FloatContents;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{colon} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (58)));
+    $self-&gt;{value_dec} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes_term(59, 0, 1, 1));
+}
+
+sub colon {
+    my ($self) = @_;
+    return $self-&gt;{colon};
+}
+
+sub value_dec {
+    my ($self) = @_;
+    return $self-&gt;{value_dec};
+}
+
+########################################################################
+package PhpSerializedValue::LengthPrefixedQuotedString;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len_data_dec} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes_term(58, 0, 1, 1));
+    $self-&gt;{opening_quote} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (34)));
+    $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
+    $self-&gt;{closing_quote} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (34)));
+}
+
+sub len_data {
+    my ($self) = @_;
+    return $self-&gt;{len_data} if ($self-&gt;{len_data});
+    $self-&gt;{len_data} = $self-&gt;len_data_dec();
+    return $self-&gt;{len_data};
+}
+
+sub len_data_dec {
+    my ($self) = @_;
+    return $self-&gt;{len_data_dec};
+}
+
+sub opening_quote {
+    my ($self) = @_;
+    return $self-&gt;{opening_quote};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+sub closing_quote {
+    my ($self) = @_;
+    return $self-&gt;{closing_quote};
+}
+
+########################################################################
+package PhpSerializedValue::ObjectContents;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{colon1} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (58)));
+    $self-&gt;{class_name} = PhpSerializedValue::LengthPrefixedQuotedString-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{colon2} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (58)));
+    $self-&gt;{properties} = PhpSerializedValue::CountPrefixedMapping-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub colon1 {
+    my ($self) = @_;
+    return $self-&gt;{colon1};
+}
+
+sub class_name {
+    my ($self) = @_;
+    return $self-&gt;{class_name};
+}
+
+sub colon2 {
+    my ($self) = @_;
+    return $self-&gt;{colon2};
+}
+
+sub properties {
+    my ($self) = @_;
+    return $self-&gt;{properties};
+}
+
+########################################################################
+package PhpSerializedValue::ArrayContents;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{colon} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (58)));
+    $self-&gt;{elements} = PhpSerializedValue::CountPrefixedMapping-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub colon {
+    my ($self) = @_;
+    return $self-&gt;{colon};
+}
+
+sub elements {
+    my ($self) = @_;
+    return $self-&gt;{elements};
+}
+
+########################################################################
+package PhpSerializedValue::CustomSerializedObjectContents;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{colon1} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (58)));
+    $self-&gt;{class_name} = PhpSerializedValue::LengthPrefixedQuotedString-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{colon2} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (58)));
+    $self-&gt;{len_data_dec} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes_term(58, 0, 1, 1));
+    $self-&gt;{opening_brace} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (123)));
+    $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
+    $self-&gt;{closing_quote} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (125)));
+}
+
+sub len_data {
+    my ($self) = @_;
+    return $self-&gt;{len_data} if ($self-&gt;{len_data});
+    $self-&gt;{len_data} = $self-&gt;len_data_dec();
+    return $self-&gt;{len_data};
+}
+
+sub colon1 {
+    my ($self) = @_;
+    return $self-&gt;{colon1};
+}
+
+sub class_name {
+    my ($self) = @_;
+    return $self-&gt;{class_name};
+}
+
+sub colon2 {
+    my ($self) = @_;
+    return $self-&gt;{colon2};
+}
+
+sub len_data_dec {
+    my ($self) = @_;
+    return $self-&gt;{len_data_dec};
+}
+
+sub opening_brace {
+    my ($self) = @_;
+    return $self-&gt;{opening_brace};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+sub closing_quote {
+    my ($self) = @_;
+    return $self-&gt;{closing_quote};
+}
+
+########################################################################
+package PhpSerializedValue::NullContents;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{semicolon} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (59)));
+}
+
+sub semicolon {
+    my ($self) = @_;
+    return $self-&gt;{semicolon};
+}
+
+########################################################################
+package PhpSerializedValue::Php3ObjectContents;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{colon} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (58)));
+    $self-&gt;{properties} = PhpSerializedValue::CountPrefixedMapping-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub colon {
+    my ($self) = @_;
+    return $self-&gt;{colon};
+}
+
+sub properties {
+    my ($self) = @_;
+    return $self-&gt;{properties};
+}
+
+########################################################################
+package PhpSerializedValue::BoolContents;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{colon} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (58)));
+    $self-&gt;{value_dec} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{semicolon} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (59)));
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value} if ($self-&gt;{value});
+    $self-&gt;{value} = $self-&gt;value_dec() == $PhpSerializedValue::BOOL_VALUE_TRUE;
+    return $self-&gt;{value};
+}
+
+sub colon {
+    my ($self) = @_;
+    return $self-&gt;{colon};
+}
+
+sub value_dec {
+    my ($self) = @_;
+    return $self-&gt;{value_dec};
+}
+
+sub semicolon {
+    my ($self) = @_;
+    return $self-&gt;{semicolon};
+}
+
+########################################################################
+package PhpSerializedValue::StringContents;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{colon} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (58)));
+    $self-&gt;{string} = PhpSerializedValue::LengthPrefixedQuotedString-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{semicolon} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (59)));
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value} if ($self-&gt;{value});
+    $self-&gt;{value} = $self-&gt;string()-&gt;data();
+    return $self-&gt;{value};
+}
+
+sub colon {
+    my ($self) = @_;
+    return $self-&gt;{colon};
+}
+
+sub string {
+    my ($self) = @_;
+    return $self-&gt;{string};
+}
+
+sub semicolon {
+    my ($self) = @_;
+    return $self-&gt;{semicolon};
+}
+
+########################################################################
+package PhpSerializedValue::IntContents;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{colon} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (58)));
+    $self-&gt;{value_dec} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes_term(59, 0, 1, 1));
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value} if ($self-&gt;{value});
+    $self-&gt;{value} = $self-&gt;value_dec();
+    return $self-&gt;{value};
+}
+
+sub colon {
+    my ($self) = @_;
+    return $self-&gt;{colon};
+}
+
+sub value_dec {
+    my ($self) = @_;
+    return $self-&gt;{value_dec};
+}
+
+########################################################################
+package PhpSerializedValue::MappingEntry;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{key} = PhpSerializedValue-&gt;new($self-&gt;{_io});
+    $self-&gt;{value} = PhpSerializedValue-&gt;new($self-&gt;{_io});
+}
+
+sub key {
+    my ($self) = @_;
+    return $self-&gt;{key};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value};
+}
+
+1;
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

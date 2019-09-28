@@ -50,7 +50,7 @@ class AixUtmp < Kaitai::Struct::Struct
       @inittab_id = (@_io.read_bytes(14)).force_encoding("ascii")
       @device = (@_io.read_bytes(64)).force_encoding("ascii")
       @pid = @_io.read_u8be
-      @type = Kaitai::Struct::Stream::resolve_enum(ENTRY_TYPE, @_io.read_s2be)
+      @type = Kaitai::Struct::Stream::resolve_enum(AixUtmp::ENTRY_TYPE, @_io.read_s2be)
       @timestamp = @_io.read_s8be
       @exit_status = ExitStatus.new(@_io, self, @_root)
       @hostname = (@_io.read_bytes(256)).force_encoding("ascii")

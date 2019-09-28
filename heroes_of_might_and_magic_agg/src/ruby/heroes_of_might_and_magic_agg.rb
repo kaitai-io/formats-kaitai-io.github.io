@@ -69,8 +69,8 @@ class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
     @filenames = Array.new(num_files)
     (num_files).times { |i|
       @_raw_filenames[i] = @_io.read_bytes(15)
-      io = Kaitai::Struct::Stream.new(@_raw_filenames[i])
-      @filenames[i] = Filename.new(io, self, @_root)
+      _io__raw_filenames = Kaitai::Struct::Stream.new(@_raw_filenames[i])
+      @filenames[i] = Filename.new(_io__raw_filenames, self, @_root)
     }
     @_io.seek(_pos)
     @filenames

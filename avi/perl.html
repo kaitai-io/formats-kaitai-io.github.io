@@ -167,11 +167,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Microsoft AVI file parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Microsoft AVI file parsing C# library">C#</a></li>
                 
                 
@@ -606,17 +601,17 @@ sub _read {
     $self-&gt;{four_cc} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{block_size} = $self-&gt;{_io}-&gt;read_u4le();
     my $_on = $self-&gt;four_cc();
-    if ($_on == $CHUNK_TYPE_LIST) {
+    if ($_on == $Avi::CHUNK_TYPE_LIST) {
         $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;block_size());
         my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
         $self-&gt;{data} = Avi::ListBody-&gt;new($io__raw_data, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $CHUNK_TYPE_AVIH) {
+    elsif ($_on == $Avi::CHUNK_TYPE_AVIH) {
         $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;block_size());
         my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
         $self-&gt;{data} = Avi::AvihBody-&gt;new($io__raw_data, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $CHUNK_TYPE_STRH) {
+    elsif ($_on == $Avi::CHUNK_TYPE_STRH) {
         $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;block_size());
         my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
         $self-&gt;{data} = Avi::StrhBody-&gt;new($io__raw_data, $self, $self-&gt;{_root});

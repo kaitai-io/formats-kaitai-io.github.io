@@ -577,63 +577,63 @@ class DirTableEntry extends \Kaitai\Struct\Struct {
         switch ($this->tag()) {
             case "head":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Head($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Head($_io__raw_value, $this, $this->_root);
                 break;
             case "cvt ":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Cvt($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Cvt($_io__raw_value, $this, $this->_root);
                 break;
             case "prep":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Prep($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Prep($_io__raw_value, $this, $this->_root);
                 break;
             case "kern":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Kern($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Kern($_io__raw_value, $this, $this->_root);
                 break;
             case "hhea":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Hhea($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Hhea($_io__raw_value, $this, $this->_root);
                 break;
             case "post":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Post($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Post($_io__raw_value, $this, $this->_root);
                 break;
             case "OS/2":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Os2($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Os2($_io__raw_value, $this, $this->_root);
                 break;
             case "name":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Name($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Name($_io__raw_value, $this, $this->_root);
                 break;
             case "maxp":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Maxp($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Maxp($_io__raw_value, $this, $this->_root);
                 break;
             case "glyf":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Glyf($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Glyf($_io__raw_value, $this, $this->_root);
                 break;
             case "fpgm":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Fpgm($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Fpgm($_io__raw_value, $this, $this->_root);
                 break;
             case "cmap":
                 $this->_m__raw_value = $io->readBytes($this->length());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Cmap($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Cmap($_io__raw_value, $this, $this->_root);
                 break;
             default:
                 $this->_m_value = $io->readBytes($this->length());
@@ -1829,23 +1829,23 @@ class Subtable extends \Kaitai\Struct\Struct {
         switch ($this->format()) {
             case \Ttf\Cmap\Subtable\SubtableFormat::BYTE_ENCODING_TABLE:
                 $this->_m__raw_value = $this->_io->readBytes(($this->length() - 6));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Cmap\Subtable\ByteEncodingTable($io, $this, $this->_root);
-                break;
-            case \Ttf\Cmap\Subtable\SubtableFormat::HIGH_BYTE_MAPPING_THROUGH_TABLE:
-                $this->_m__raw_value = $this->_io->readBytes(($this->length() - 6));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Cmap\Subtable\HighByteMappingThroughTable($io, $this, $this->_root);
-                break;
-            case \Ttf\Cmap\Subtable\SubtableFormat::TRIMMED_TABLE_MAPPING:
-                $this->_m__raw_value = $this->_io->readBytes(($this->length() - 6));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Cmap\Subtable\TrimmedTableMapping($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Cmap\Subtable\ByteEncodingTable($_io__raw_value, $this, $this->_root);
                 break;
             case \Ttf\Cmap\Subtable\SubtableFormat::SEGMENT_MAPPING_TO_DELTA_VALUES:
                 $this->_m__raw_value = $this->_io->readBytes(($this->length() - 6));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_value);
-                $this->_m_value = new \Ttf\Cmap\Subtable\SegmentMappingToDeltaValues($io, $this, $this->_root);
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Cmap\Subtable\SegmentMappingToDeltaValues($_io__raw_value, $this, $this->_root);
+                break;
+            case \Ttf\Cmap\Subtable\SubtableFormat::HIGH_BYTE_MAPPING_THROUGH_TABLE:
+                $this->_m__raw_value = $this->_io->readBytes(($this->length() - 6));
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Cmap\Subtable\HighByteMappingThroughTable($_io__raw_value, $this, $this->_root);
+                break;
+            case \Ttf\Cmap\Subtable\SubtableFormat::TRIMMED_TABLE_MAPPING:
+                $this->_m__raw_value = $this->_io->readBytes(($this->length() - 6));
+                $_io__raw_value = new \Kaitai\Struct\Stream($this->_m__raw_value);
+                $this->_m_value = new \Ttf\Cmap\Subtable\TrimmedTableMapping($_io__raw_value, $this, $this->_root);
                 break;
             default:
                 $this->_m_value = $this->_io->readBytes(($this->length() - 6));

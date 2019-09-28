@@ -179,8 +179,8 @@ class S3m(KaitaiStruct):
         def _read(self):
             self.size = self._io.read_u2le()
             self._raw_body = self._io.read_bytes((self.size - 2))
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.PatternCells(io, self, self._root)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = self._root.PatternCells(_io__raw_body, self, self._root)
 
 
     class PatternPtr(KaitaiStruct):
@@ -244,7 +244,7 @@ class S3m(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.Instrument.InstTypes(self._io.read_u1())
+            self.type = KaitaiStream.resolve_enum(self._root.Instrument.InstTypes, self._io.read_u1())
             self.filename = KaitaiStream.bytes_terminate(self._io.read_bytes(12), 0, False)
             _on = self.type
             if _on == self._root.Instrument.InstTypes.sample:

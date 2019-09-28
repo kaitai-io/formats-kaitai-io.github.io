@@ -72,8 +72,8 @@ class GptPartitionTable < Kaitai::Struct::Struct
       @entries = Array.new(entries_count)
       (entries_count).times { |i|
         @_raw_entries[i] = io.read_bytes(entries_size)
-        io = Kaitai::Struct::Stream.new(@_raw_entries[i])
-        @entries[i] = PartitionEntry.new(io, self, @_root)
+        _io__raw_entries = Kaitai::Struct::Stream.new(@_raw_entries[i])
+        @entries[i] = PartitionEntry.new(_io__raw_entries, self, @_root)
       }
       io.seek(_pos)
       @entries

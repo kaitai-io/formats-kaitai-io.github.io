@@ -442,200 +442,200 @@ class Op extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_code = $this->_io->readU1();
         switch ($this->code()) {
-            case \PythonPickle\Opcode::LIST:
+            case \PythonPickle\Opcode::EXT4:
+                $this->_m_arg = $this->_io->readU4le();
+                break;
+            case \PythonPickle\Opcode::TUPLE1:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::SETITEM:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::STOP:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
             case \PythonPickle\Opcode::EXT2:
                 $this->_m_arg = $this->_io->readU2le();
                 break;
-            case \PythonPickle\Opcode::STOP:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::BINUNICODE:
-                $this->_m_arg = new \PythonPickle\Unicodestring4($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::PUT:
-                $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::NEWFALSE:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::LONG1:
-                $this->_m_arg = new \PythonPickle\Long1($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::UNICODE:
-                $this->_m_arg = new \PythonPickle\Unicodestringnl($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::EMPTY_LIST:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::MARK:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::PERSID:
-                $this->_m_arg = new \PythonPickle\StringnlNoescape($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::STACK_GLOBAL:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::BININT:
-                $this->_m_arg = $this->_io->readS4le();
-                break;
-            case \PythonPickle\Opcode::BINPUT:
-                $this->_m_arg = $this->_io->readU1();
-                break;
-            case \PythonPickle\Opcode::BININT1:
-                $this->_m_arg = $this->_io->readU1();
-                break;
-            case \PythonPickle\Opcode::BININT2:
-                $this->_m_arg = $this->_io->readU2le();
-                break;
-            case \PythonPickle\Opcode::TUPLE:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::SHORT_BINSTRING:
-                $this->_m_arg = new \PythonPickle\String1($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::EMPTY_SET:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::STRING:
-                $this->_m_arg = new \PythonPickle\Stringnl($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::EMPTY_DICT:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::BINGET:
-                $this->_m_arg = $this->_io->readU1();
-                break;
-            case \PythonPickle\Opcode::APPEND:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::POP_MARK:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::GET:
-                $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::NEWOBJ:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::REDUCE:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::BINBYTES:
-                $this->_m_arg = new \PythonPickle\Bytes4($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::BINBYTES8:
-                $this->_m_arg = new \PythonPickle\Bytes8($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::SETITEM:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::FRAME:
-                $this->_m_arg = $this->_io->readU8le();
-                break;
-            case \PythonPickle\Opcode::FLOAT:
-                $this->_m_arg = new \PythonPickle\Floatnl($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::BINUNICODE8:
-                $this->_m_arg = new \PythonPickle\Unicodestring8($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::INT:
-                $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::LONG_BINPUT:
-                $this->_m_arg = $this->_io->readU4le();
-                break;
             case \PythonPickle\Opcode::EMPTY_TUPLE:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::NEWTRUE:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
             case \PythonPickle\Opcode::LONG:
                 $this->_m_arg = new \PythonPickle\DecimalnlLong($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::FROZENSET:
+            case \PythonPickle\Opcode::NEWOBJ:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::GLOBAL:
-                $this->_m_arg = new \PythonPickle\StringnlNoescapePair($this->_io, $this, $this->_root);
+            case \PythonPickle\Opcode::PUT:
+                $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::OBJ:
+            case \PythonPickle\Opcode::STACK_GLOBAL:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::ADDITEMS:
+            case \PythonPickle\Opcode::POP_MARK:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::TUPLE1:
+            case \PythonPickle\Opcode::APPEND:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::SETITEMS:
+            case \PythonPickle\Opcode::NEWFALSE:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::NONE:
+            case \PythonPickle\Opcode::BINPERSID:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
             case \PythonPickle\Opcode::BUILD:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::EXT4:
-                $this->_m_arg = $this->_io->readU4le();
-                break;
-            case \PythonPickle\Opcode::NEWOBJ_EX:
+            case \PythonPickle\Opcode::EMPTY_DICT:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::BINFLOAT:
-                $this->_m_arg = $this->_io->readF8be();
-                break;
-            case \PythonPickle\Opcode::DUP:
+            case \PythonPickle\Opcode::TUPLE2:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
             case \PythonPickle\Opcode::LONG4:
                 $this->_m_arg = new \PythonPickle\Long4($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::SHORT_BINUNICODE:
-                $this->_m_arg = new \PythonPickle\Unicodestring1($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::TUPLE3:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::SHORT_BINBYTES:
-                $this->_m_arg = new \PythonPickle\Bytes1($this->_io, $this, $this->_root);
-                break;
-            case \PythonPickle\Opcode::EXT1:
-                $this->_m_arg = $this->_io->readU1();
-                break;
-            case \PythonPickle\Opcode::DICT:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                break;
             case \PythonPickle\Opcode::APPENDS:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::INST:
-                $this->_m_arg = new \PythonPickle\StringnlNoescapePair($this->_io, $this, $this->_root);
+            case \PythonPickle\Opcode::BINBYTES:
+                $this->_m_arg = new \PythonPickle\Bytes4($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::BINPERSID:
+            case \PythonPickle\Opcode::DUP:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::MEMOIZE:
+            case \PythonPickle\Opcode::LIST:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
             case \PythonPickle\Opcode::PROTO:
                 $this->_m_arg = $this->_io->readU1();
                 break;
-            case \PythonPickle\Opcode::NEWTRUE:
+            case \PythonPickle\Opcode::POP:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::FRAME:
+                $this->_m_arg = $this->_io->readU8le();
+                break;
+            case \PythonPickle\Opcode::STRING:
+                $this->_m_arg = new \PythonPickle\Stringnl($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::BINUNICODE:
+                $this->_m_arg = new \PythonPickle\Unicodestring4($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::FLOAT:
+                $this->_m_arg = new \PythonPickle\Floatnl($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::REDUCE:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::BINPUT:
+                $this->_m_arg = $this->_io->readU1();
+                break;
+            case \PythonPickle\Opcode::MEMOIZE:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::PERSID:
+                $this->_m_arg = new \PythonPickle\StringnlNoescape($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::EXT1:
+                $this->_m_arg = $this->_io->readU1();
+                break;
+            case \PythonPickle\Opcode::NONE:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::SHORT_BINUNICODE:
+                $this->_m_arg = new \PythonPickle\Unicodestring1($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::OBJ:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::BINFLOAT:
+                $this->_m_arg = $this->_io->readF8be();
+                break;
+            case \PythonPickle\Opcode::NEWOBJ_EX:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::EMPTY_LIST:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::TUPLE:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::BINUNICODE8:
+                $this->_m_arg = new \PythonPickle\Unicodestring8($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::BINGET:
+                $this->_m_arg = $this->_io->readU1();
+                break;
+            case \PythonPickle\Opcode::GLOBAL:
+                $this->_m_arg = new \PythonPickle\StringnlNoescapePair($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::DICT:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
             case \PythonPickle\Opcode::BINSTRING:
                 $this->_m_arg = new \PythonPickle\String4($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::TUPLE2:
+            case \PythonPickle\Opcode::SETITEMS:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
-            case \PythonPickle\Opcode::POP:
-                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+            case \PythonPickle\Opcode::BININT2:
+                $this->_m_arg = $this->_io->readU2le();
+                break;
+            case \PythonPickle\Opcode::BINBYTES8:
+                $this->_m_arg = new \PythonPickle\Bytes8($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::BININT1:
+                $this->_m_arg = $this->_io->readU1();
+                break;
+            case \PythonPickle\Opcode::INST:
+                $this->_m_arg = new \PythonPickle\StringnlNoescapePair($this->_io, $this, $this->_root);
                 break;
             case \PythonPickle\Opcode::LONG_BINGET:
                 $this->_m_arg = $this->_io->readU4le();
+                break;
+            case \PythonPickle\Opcode::LONG_BINPUT:
+                $this->_m_arg = $this->_io->readU4le();
+                break;
+            case \PythonPickle\Opcode::INT:
+                $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::BININT:
+                $this->_m_arg = $this->_io->readS4le();
+                break;
+            case \PythonPickle\Opcode::UNICODE:
+                $this->_m_arg = new \PythonPickle\Unicodestringnl($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::LONG1:
+                $this->_m_arg = new \PythonPickle\Long1($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::SHORT_BINSTRING:
+                $this->_m_arg = new \PythonPickle\String1($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::MARK:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::FROZENSET:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::TUPLE3:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::ADDITEMS:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::GET:
+                $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::EMPTY_SET:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::SHORT_BINBYTES:
+                $this->_m_arg = new \PythonPickle\Bytes1($this->_io, $this, $this->_root);
                 break;
         }
     }

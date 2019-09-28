@@ -94,6 +94,7 @@ sub _read {
     for (my $i = 0; $i < $n_vertices; $i++) {
         $self->{vertices}[$i] = Stl::Vec3d->new($self->{_io}, $self, $self->{_root});
     }
+    $self->{abr} = $self->{_io}->read_u2le();
 }
 
 sub normal {
@@ -104,6 +105,11 @@ sub normal {
 sub vertices {
     my ($self) = @_;
     return $self->{vertices};
+}
+
+sub abr {
+    my ($self) = @_;
+    return $self->{abr};
 }
 
 ########################################################################
@@ -139,7 +145,6 @@ sub _read {
     $self->{x} = $self->{_io}->read_f4le();
     $self->{y} = $self->{_io}->read_f4le();
     $self->{z} = $self->{_io}->read_f4le();
-    $self->{abr} = $self->{_io}->read_u2le();
 }
 
 sub x {
@@ -155,11 +160,6 @@ sub y {
 sub z {
     my ($self) = @_;
     return $self->{z};
-}
-
-sub abr {
-    my ($self) = @_;
-    return $self->{abr};
 }
 
 1;

@@ -37,7 +37,7 @@ class VmwareVmdk(KaitaiStruct):
         self.size_metadata = self._io.read_s8le()
         self.is_dirty = self._io.read_u1()
         self.stuff = self._io.read_bytes(4)
-        self.compression_method = self._root.CompressionMethods(self._io.read_u2le())
+        self.compression_method = KaitaiStream.resolve_enum(self._root.CompressionMethods, self._io.read_u2le())
 
     class HeaderFlags(KaitaiStruct):
         """

@@ -136,11 +136,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C# library">C#</a></li>
                 
                 
@@ -332,36 +327,36 @@ sub _read {
 
     $self-&gt;{magic} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (255)));
     $self-&gt;{marker} = $self-&gt;{_io}-&gt;read_u1();
-    if ( (($self-&gt;marker() != $MARKER_ENUM_SOI) &amp;&amp; ($self-&gt;marker() != $MARKER_ENUM_EOI)) ) {
+    if ( (($self-&gt;marker() != $Jpeg::Segment::MARKER_ENUM_SOI) &amp;&amp; ($self-&gt;marker() != $Jpeg::Segment::MARKER_ENUM_EOI)) ) {
         $self-&gt;{length} = $self-&gt;{_io}-&gt;read_u2be();
     }
-    if ( (($self-&gt;marker() != $MARKER_ENUM_SOI) &amp;&amp; ($self-&gt;marker() != $MARKER_ENUM_EOI)) ) {
+    if ( (($self-&gt;marker() != $Jpeg::Segment::MARKER_ENUM_SOI) &amp;&amp; ($self-&gt;marker() != $Jpeg::Segment::MARKER_ENUM_EOI)) ) {
         my $_on = $self-&gt;marker();
-        if ($_on == $MARKER_ENUM_SOS) {
-            $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 2));
-            my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
-            $self-&gt;{data} = Jpeg::SegmentSos-&gt;new($io__raw_data, $self, $self-&gt;{_root});
-        }
-        elsif ($_on == $MARKER_ENUM_APP1) {
+        if ($_on == $Jpeg::Segment::MARKER_ENUM_APP1) {
             $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 2));
             my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
             $self-&gt;{data} = Jpeg::SegmentApp1-&gt;new($io__raw_data, $self, $self-&gt;{_root});
         }
-        elsif ($_on == $MARKER_ENUM_SOF0) {
+        elsif ($_on == $Jpeg::Segment::MARKER_ENUM_APP0) {
+            $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 2));
+            my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+            $self-&gt;{data} = Jpeg::SegmentApp0-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+        }
+        elsif ($_on == $Jpeg::Segment::MARKER_ENUM_SOF0) {
             $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 2));
             my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
             $self-&gt;{data} = Jpeg::SegmentSof0-&gt;new($io__raw_data, $self, $self-&gt;{_root});
         }
-        elsif ($_on == $MARKER_ENUM_APP0) {
+        elsif ($_on == $Jpeg::Segment::MARKER_ENUM_SOS) {
             $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 2));
             my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
-            $self-&gt;{data} = Jpeg::SegmentApp0-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+            $self-&gt;{data} = Jpeg::SegmentSos-&gt;new($io__raw_data, $self, $self-&gt;{_root});
         }
         else {
             $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 2));
         }
     }
-    if ($self-&gt;marker() == $MARKER_ENUM_SOS) {
+    if ($self-&gt;marker() == $Jpeg::Segment::MARKER_ENUM_SOS) {
         $self-&gt;{image_data} = $self-&gt;{_io}-&gt;read_bytes_full();
     }
 }

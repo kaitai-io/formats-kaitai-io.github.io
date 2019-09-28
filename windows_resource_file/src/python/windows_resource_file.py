@@ -110,7 +110,7 @@ class WindowsResourceFile(KaitaiStruct):
                 return self._m_type_as_predef if hasattr(self, '_m_type_as_predef') else None
 
             if  ((not (self.type.is_string)) and (self.type.as_numeric <= 255)) :
-                self._m_type_as_predef = self._root.Resource.PredefTypes(self.type.as_numeric)
+                self._m_type_as_predef = KaitaiStream.resolve_enum(self._root.Resource.PredefTypes, self.type.as_numeric)
 
             return self._m_type_as_predef if hasattr(self, '_m_type_as_predef') else None
 

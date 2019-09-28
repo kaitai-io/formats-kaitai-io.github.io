@@ -146,11 +146,6 @@ used for that purpose in Windows and Google Chrome projects.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Windows MiniDump parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Windows MiniDump parsing C# library">C#</a></li>
                 
                 
@@ -829,30 +824,30 @@ sub data {
     my $_pos = $self-&gt;{_io}-&gt;pos();
     $self-&gt;{_io}-&gt;seek($self-&gt;ofs_data());
     my $_on = $self-&gt;stream_type();
-    if ($_on == $STREAM_TYPES_MISC_INFO) {
-        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
-        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
-        $self-&gt;{data} = WindowsMinidump::MiscInfo-&gt;new($io__raw_data, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $STREAM_TYPES_EXCEPTION) {
-        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
-        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
-        $self-&gt;{data} = WindowsMinidump::ExceptionStream-&gt;new($io__raw_data, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $STREAM_TYPES_MEMORY_LIST) {
+    if ($_on == $WindowsMinidump::STREAM_TYPES_MEMORY_LIST) {
         $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
         my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
         $self-&gt;{data} = WindowsMinidump::MemoryList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $STREAM_TYPES_SYSTEM_INFO) {
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_MISC_INFO) {
         $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
         my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
-        $self-&gt;{data} = WindowsMinidump::SystemInfo-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+        $self-&gt;{data} = WindowsMinidump::MiscInfo-&gt;new($io__raw_data, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $STREAM_TYPES_THREAD_LIST) {
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_THREAD_LIST) {
         $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
         my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
         $self-&gt;{data} = WindowsMinidump::ThreadList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_EXCEPTION) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = WindowsMinidump::ExceptionStream-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_SYSTEM_INFO) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = WindowsMinidump::SystemInfo-&gt;new($io__raw_data, $self, $self-&gt;{_root});
     }
     else {
         $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());

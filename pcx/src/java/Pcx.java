@@ -174,7 +174,7 @@ public class Pcx extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.ensureFixedContents(new byte[] { 12 });
-            colors = new ArrayList<Rgb>((int) (256));
+            colors = new ArrayList<Rgb>(((Number) (256)).intValue());
             for (int i = 0; i < 256; i++) {
                 this.colors.add(new Rgb(this._io, this, _root));
             }

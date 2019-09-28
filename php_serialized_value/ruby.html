@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Serialized PHP value: Ruby parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Serialized PHP value</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Serialized PHP value:
+            
+            Ruby parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A serialized PHP value, in the format used by PHP's built-in <code>serialize</code> and
+<code>unserialize</code> functions. This format closely mirrors PHP's data model:
+it supports all of PHP's scalar types (<code>NULL</code>, booleans, numbers, strings),
+associative arrays, objects, and recursive data structures using references.
+The only PHP values not supported by this format are <em>resources</em>,
+which usually correspond to native file or connection handles and cannot be
+meaningfully serialized.</p>
+<p>There is no official documentation for this data format;
+this spec was created based on the PHP source code and the behavior of
+<code>serialize</code>/<code>unserialize</code>. PHP makes no guarantees about compatibility of
+serialized data between PHP versions, but in practice, the format has
+remained fully backwards-compatible - values serialized by an older
+PHP version can be unserialized on any newer PHP version.
+This spec supports serialized values from PHP 7.3 or any earlier version.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        PHP
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Serialized PHP value
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Serialized PHP value parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Serialized PHP value parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Serialized PHP value parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Serialized PHP value parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Serialized PHP value parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Serialized PHP value parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Serialized PHP value parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Serialized PHP value parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Serialized PHP value parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="ruby.html" title="Serialized PHP value parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="ruby">data = PhpSerializedValue.from_file("path/to/local/file.Serialized PHP value")</code></pre>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<pre><code class="ruby">bytes = "\x00\x01\x02..."
+data = PhpSerializedValue.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="ruby">data.type # => A single-character code indicating the type of the serialized value.</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Ruby source code to parse Serialized PHP value
+            
+        </h2>
+
+        
+
+        <h3>php_serialized_value.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/php_serialized_value.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+require &#39;kaitai/struct/struct&#39;
+
+unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
+  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
+end
+
+
+##
+# A serialized PHP value, in the format used by PHP&#39;s built-in `serialize` and
+# `unserialize` functions. This format closely mirrors PHP&#39;s data model:
+# it supports all of PHP&#39;s scalar types (`NULL`, booleans, numbers, strings),
+# associative arrays, objects, and recursive data structures using references.
+# The only PHP values not supported by this format are *resources*,
+# which usually correspond to native file or connection handles and cannot be
+# meaningfully serialized.
+# 
+# There is no official documentation for this data format;
+# this spec was created based on the PHP source code and the behavior of
+# `serialize`/`unserialize`. PHP makes no guarantees about compatibility of
+# serialized data between PHP versions, but in practice, the format has
+# remained fully backwards-compatible - values serialized by an older
+# PHP version can be unserialized on any newer PHP version.
+# This spec supports serialized values from PHP 7.3 or any earlier version.
+# @see https://www.php.net/manual/en/function.serialize.php Source
+# @see https://www.php.net/manual/en/function.serialize.php#66147 Source
+# @see https://www.php.net/manual/en/function.unserialize.php Source
+# @see https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var_unserializer.re Source
+# @see https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var.c#L822 Source
+class PhpSerializedValue &lt; Kaitai::Struct::Struct
+
+  VALUE_TYPE = {
+    67 =&gt; :value_type_custom_serialized_object,
+    78 =&gt; :value_type_null,
+    79 =&gt; :value_type_object,
+    82 =&gt; :value_type_variable_reference,
+    83 =&gt; :value_type_php_6_string,
+    97 =&gt; :value_type_array,
+    98 =&gt; :value_type_bool,
+    100 =&gt; :value_type_float,
+    105 =&gt; :value_type_int,
+    111 =&gt; :value_type_php_3_object,
+    114 =&gt; :value_type_object_reference,
+    115 =&gt; :value_type_string,
+  }
+  I__VALUE_TYPE = VALUE_TYPE.invert
+
+  BOOL_VALUE = {
+    48 =&gt; :bool_value_false,
+    49 =&gt; :bool_value_true,
+  }
+  I__BOOL_VALUE = BOOL_VALUE.invert
+  def initialize(_io, _parent = nil, _root = self)
+    super(_io, _parent, _root)
+    _read
+  end
+
+  def _read
+    @type = Kaitai::Struct::Stream::resolve_enum(VALUE_TYPE, @_io.read_u1)
+    case type
+    when :value_type_custom_serialized_object
+      @contents = CustomSerializedObjectContents.new(@_io, self, @_root)
+    when :value_type_php_3_object
+      @contents = Php3ObjectContents.new(@_io, self, @_root)
+    when :value_type_object
+      @contents = ObjectContents.new(@_io, self, @_root)
+    when :value_type_variable_reference
+      @contents = IntContents.new(@_io, self, @_root)
+    when :value_type_php_6_string
+      @contents = StringContents.new(@_io, self, @_root)
+    when :value_type_float
+      @contents = FloatContents.new(@_io, self, @_root)
+    when :value_type_object_reference
+      @contents = IntContents.new(@_io, self, @_root)
+    when :value_type_null
+      @contents = NullContents.new(@_io, self, @_root)
+    when :value_type_bool
+      @contents = BoolContents.new(@_io, self, @_root)
+    when :value_type_int
+      @contents = IntContents.new(@_io, self, @_root)
+    when :value_type_array
+      @contents = ArrayContents.new(@_io, self, @_root)
+    when :value_type_string
+      @contents = StringContents.new(@_io, self, @_root)
+    end
+    self
+  end
+
+  ##
+  # A mapping (a sequence of key-value pairs) prefixed with its size.
+  class CountPrefixedMapping &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_entries_dec = (@_io.read_bytes_term(58, false, true, true)).force_encoding(&quot;ASCII&quot;)
+      @opening_brace = @_io.ensure_fixed_contents([123].pack(&#39;C*&#39;))
+      @entries = Array.new(num_entries)
+      (num_entries).times { |i|
+        @entries[i] = MappingEntry.new(@_io, self, @_root)
+      }
+      @closing_brace = @_io.ensure_fixed_contents([125].pack(&#39;C*&#39;))
+      self
+    end
+
+    ##
+    # The number of key-value pairs in the mapping, parsed as an integer.
+    def num_entries
+      return @num_entries unless @num_entries.nil?
+      @num_entries = num_entries_dec.to_i
+      @num_entries
+    end
+
+    ##
+    # The number of key-value pairs in the mapping, in ASCII decimal.
+    attr_reader :num_entries_dec
+    attr_reader :opening_brace
+
+    ##
+    # The key-value pairs contained in the mapping.
+    attr_reader :entries
+    attr_reader :closing_brace
+  end
+
+  ##
+  # The contents of a floating-point value.
+  class FloatContents &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @colon = @_io.ensure_fixed_contents([58].pack(&#39;C*&#39;))
+      @value_dec = (@_io.read_bytes_term(59, false, true, true)).force_encoding(&quot;ASCII&quot;)
+      self
+    end
+    attr_reader :colon
+
+    ##
+    # The value of the `float`, in ASCII decimal, as generated by PHP&#39;s
+    # usual double-to-string conversion. In particular, this means that:
+    # 
+    # * A decimal point may not be included (for integral numbers)
+    # * The number may use exponent notation (e. g. `1.0E+16`)
+    # * Positive and negative infinity are represented as `INF`
+    #   and `-INF`, respectively
+    # * Not-a-number is represented as `NAN`
+    attr_reader :value_dec
+  end
+
+  ##
+  # A quoted string prefixed with its length.
+  # 
+  # Despite the quotes surrounding the string data, it can contain
+  # arbitrary bytes, which are never escaped in any way.
+  # This does not cause any ambiguities when parsing - the bounds of
+  # the string are determined only by the length field, not by the quotes.
+  class LengthPrefixedQuotedString &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len_data_dec = (@_io.read_bytes_term(58, false, true, true)).force_encoding(&quot;ASCII&quot;)
+      @opening_quote = @_io.ensure_fixed_contents([34].pack(&#39;C*&#39;))
+      @data = @_io.read_bytes(len_data)
+      @closing_quote = @_io.ensure_fixed_contents([34].pack(&#39;C*&#39;))
+      self
+    end
+
+    ##
+    # The length of the string&#39;s contents in bytes, parsed as an integer.
+    # The quotes are not counted in this size number.
+    def len_data
+      return @len_data unless @len_data.nil?
+      @len_data = len_data_dec.to_i
+      @len_data
+    end
+
+    ##
+    # The length of the string&#39;s data in bytes, in ASCII decimal.
+    # The quotes are not counted in this length number.
+    attr_reader :len_data_dec
+    attr_reader :opening_quote
+
+    ##
+    # The data contained in the string. The quotes are not included.
+    attr_reader :data
+    attr_reader :closing_quote
+  end
+
+  ##
+  # The contents of an object value serialized in the default format.
+  # Unlike its PHP 3 counterpart, it contains a class name.
+  class ObjectContents &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @colon1 = @_io.ensure_fixed_contents([58].pack(&#39;C*&#39;))
+      @class_name = LengthPrefixedQuotedString.new(@_io, self, @_root)
+      @colon2 = @_io.ensure_fixed_contents([58].pack(&#39;C*&#39;))
+      @properties = CountPrefixedMapping.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :colon1
+
+    ##
+    # The name of the object&#39;s class.
+    attr_reader :class_name
+    attr_reader :colon2
+
+    ##
+    # The object&#39;s properties. Keys ust be of type `string`,
+    # values may have any type.
+    attr_reader :properties
+  end
+
+  ##
+  # The contents of an array value.
+  class ArrayContents &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @colon = @_io.ensure_fixed_contents([58].pack(&#39;C*&#39;))
+      @elements = CountPrefixedMapping.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :colon
+
+    ##
+    # The array&#39;s elements. Keys must be of type `int` or `string`,
+    # values may have any type.
+    attr_reader :elements
+  end
+
+  ##
+  # The contents of an object value that implements a custom
+  # serialized format using `Serializable`.
+  class CustomSerializedObjectContents &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @colon1 = @_io.ensure_fixed_contents([58].pack(&#39;C*&#39;))
+      @class_name = LengthPrefixedQuotedString.new(@_io, self, @_root)
+      @colon2 = @_io.ensure_fixed_contents([58].pack(&#39;C*&#39;))
+      @len_data_dec = (@_io.read_bytes_term(58, false, true, true)).force_encoding(&quot;ASCII&quot;)
+      @opening_brace = @_io.ensure_fixed_contents([123].pack(&#39;C*&#39;))
+      @data = @_io.read_bytes(len_data)
+      @closing_quote = @_io.ensure_fixed_contents([125].pack(&#39;C*&#39;))
+      self
+    end
+
+    ##
+    # The length of the serialized data in bytes, parsed as an integer.
+    # The braces are not counted in this length number.
+    def len_data
+      return @len_data unless @len_data.nil?
+      @len_data = len_data_dec.to_i
+      @len_data
+    end
+    attr_reader :colon1
+
+    ##
+    # The name of the object&#39;s class.
+    attr_reader :class_name
+    attr_reader :colon2
+
+    ##
+    # The length of the serialized data in bytes, in ASCII decimal.
+    # The braces are not counted in this size number.
+    attr_reader :len_data_dec
+    attr_reader :opening_brace
+
+    ##
+    # The custom serialized data. The braces are not included.
+    # 
+    # Although the surrounding braces make it look like a regular
+    # serialized object, this field is actually more similar to a string:
+    # it can contain arbitrary data that is not required to follow
+    # any common structure.
+    attr_reader :data
+    attr_reader :closing_quote
+  end
+
+  ##
+  # The contents of a null value (`value_type::null`). This structure
+  # contains no actual data, since there is only a single `NULL` value.
+  class NullContents &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @semicolon = @_io.ensure_fixed_contents([59].pack(&#39;C*&#39;))
+      self
+    end
+    attr_reader :semicolon
+  end
+
+  ##
+  # The contents of a PHP 3 object value. Unlike its counterpart in PHP 4
+  # and above, it does not contain a class name.
+  class Php3ObjectContents &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @colon = @_io.ensure_fixed_contents([58].pack(&#39;C*&#39;))
+      @properties = CountPrefixedMapping.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :colon
+
+    ##
+    # The object&#39;s properties. Keys must be of type `string`,
+    # values may have any type.
+    attr_reader :properties
+  end
+
+  ##
+  # The contents of a boolean value (`value_type::bool`).
+  class BoolContents &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @colon = @_io.ensure_fixed_contents([58].pack(&#39;C*&#39;))
+      @value_dec = Kaitai::Struct::Stream::resolve_enum(PhpSerializedValue::BOOL_VALUE, @_io.read_u1)
+      @semicolon = @_io.ensure_fixed_contents([59].pack(&#39;C*&#39;))
+      self
+    end
+
+    ##
+    # The value of the `bool`, parsed as a boolean.
+    def value
+      return @value unless @value.nil?
+      @value = value_dec == :bool_value_true
+      @value
+    end
+    attr_reader :colon
+
+    ##
+    # The value of the `bool`: `0` for `false` or `1` for `true`.
+    attr_reader :value_dec
+    attr_reader :semicolon
+  end
+
+  ##
+  # The contents of a string value.
+  # 
+  # Note: PHP strings can contain arbitrary byte sequences.
+  # They are not necessarily valid text in any specific encoding.
+  class StringContents &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @colon = @_io.ensure_fixed_contents([58].pack(&#39;C*&#39;))
+      @string = LengthPrefixedQuotedString.new(@_io, self, @_root)
+      @semicolon = @_io.ensure_fixed_contents([59].pack(&#39;C*&#39;))
+      self
+    end
+
+    ##
+    # The value of the string, as a byte array.
+    def value
+      return @value unless @value.nil?
+      @value = string.data
+      @value
+    end
+    attr_reader :colon
+    attr_reader :string
+    attr_reader :semicolon
+  end
+
+  ##
+  # The contents of an integer-like value:
+  # either an actual integer (`value_type::int`) or a reference
+  # (`value_type::variable_reference`, `value_type::object_reference`).
+  class IntContents &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @colon = @_io.ensure_fixed_contents([58].pack(&#39;C*&#39;))
+      @value_dec = (@_io.read_bytes_term(59, false, true, true)).force_encoding(&quot;ASCII&quot;)
+      self
+    end
+
+    ##
+    # The value of the `int`, parsed as an integer.
+    def value
+      return @value unless @value.nil?
+      @value = value_dec.to_i
+      @value
+    end
+    attr_reader :colon
+
+    ##
+    # The value of the `int`, in ASCII decimal.
+    attr_reader :value_dec
+  end
+
+  ##
+  # A mapping entry consisting of a key and a value.
+  class MappingEntry &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @key = PhpSerializedValue.new(@_io)
+      @value = PhpSerializedValue.new(@_io)
+      self
+    end
+
+    ##
+    # The key of the entry.
+    attr_reader :key
+
+    ##
+    # The value of the entry.
+    attr_reader :value
+  end
+
+  ##
+  # A single-character code indicating the type of the serialized value.
+  attr_reader :type
+
+  ##
+  # The contents of the serialized value, which vary depending on the type.
+  attr_reader :contents
+end
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

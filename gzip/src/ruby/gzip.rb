@@ -182,8 +182,8 @@ class Gzip < Kaitai::Struct::Struct
     def _read
       @len_subfields = @_io.read_u2le
       @_raw_subfields = @_io.read_bytes(len_subfields)
-      io = Kaitai::Struct::Stream.new(@_raw_subfields)
-      @subfields = Subfields.new(io, self, @_root)
+      _io__raw_subfields = Kaitai::Struct::Stream.new(@_raw_subfields)
+      @subfields = Subfields.new(_io__raw_subfields, self, @_root)
       self
     end
     attr_reader :len_subfields

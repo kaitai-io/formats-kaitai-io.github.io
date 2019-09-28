@@ -14,8 +14,8 @@ class Dune2Pak < Kaitai::Struct::Struct
 
   def _read
     @_raw_dir = @_io.read_bytes(dir_size)
-    io = Kaitai::Struct::Stream.new(@_raw_dir)
-    @dir = Files.new(io, self, @_root)
+    _io__raw_dir = Kaitai::Struct::Stream.new(@_raw_dir)
+    @dir = Files.new(_io__raw_dir, self, @_root)
     self
   end
   class Files < Kaitai::Struct::Struct

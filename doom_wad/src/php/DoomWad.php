@@ -499,48 +499,48 @@ class IndexEntry extends \Kaitai\Struct\Struct {
         switch ($this->name()) {
             case "SECTORS":
                 $this->_m__raw_contents = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
-                $this->_m_contents = new \DoomWad\Sectors($io, $this, $this->_root);
+                $_io__raw_contents = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Sectors($_io__raw_contents, $this, $this->_root);
                 break;
             case "TEXTURE1":
                 $this->_m__raw_contents = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
-                $this->_m_contents = new \DoomWad\Texture12($io, $this, $this->_root);
+                $_io__raw_contents = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Texture12($_io__raw_contents, $this, $this->_root);
                 break;
             case "VERTEXES":
                 $this->_m__raw_contents = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
-                $this->_m_contents = new \DoomWad\Vertexes($io, $this, $this->_root);
+                $_io__raw_contents = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Vertexes($_io__raw_contents, $this, $this->_root);
                 break;
             case "BLOCKMAP":
                 $this->_m__raw_contents = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
-                $this->_m_contents = new \DoomWad\Blockmap($io, $this, $this->_root);
+                $_io__raw_contents = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Blockmap($_io__raw_contents, $this, $this->_root);
                 break;
             case "PNAMES":
                 $this->_m__raw_contents = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
-                $this->_m_contents = new \DoomWad\Pnames($io, $this, $this->_root);
+                $_io__raw_contents = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Pnames($_io__raw_contents, $this, $this->_root);
                 break;
             case "TEXTURE2":
                 $this->_m__raw_contents = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
-                $this->_m_contents = new \DoomWad\Texture12($io, $this, $this->_root);
+                $_io__raw_contents = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Texture12($_io__raw_contents, $this, $this->_root);
                 break;
             case "THINGS":
                 $this->_m__raw_contents = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
-                $this->_m_contents = new \DoomWad\Things($io, $this, $this->_root);
+                $_io__raw_contents = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Things($_io__raw_contents, $this, $this->_root);
                 break;
             case "LINEDEFS":
                 $this->_m__raw_contents = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
-                $this->_m_contents = new \DoomWad\Linedefs($io, $this, $this->_root);
+                $_io__raw_contents = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Linedefs($_io__raw_contents, $this, $this->_root);
                 break;
             case "SIDEDEFS":
                 $this->_m__raw_contents = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
-                $this->_m_contents = new \DoomWad\Sidedefs($io, $this, $this->_root);
+                $_io__raw_contents = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Sidedefs($_io__raw_contents, $this, $this->_root);
                 break;
             default:
                 $this->_m_contents = $io->readBytes($this->size());

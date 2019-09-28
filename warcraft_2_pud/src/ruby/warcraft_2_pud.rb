@@ -185,7 +185,7 @@ class Warcraft2Pud < Kaitai::Struct::Struct
     end
 
     def _read
-      @terrain = Kaitai::Struct::Stream::resolve_enum(TERRAIN_TYPE, @_io.read_u2le)
+      @terrain = Kaitai::Struct::Stream::resolve_enum(Warcraft2Pud::TERRAIN_TYPE, @_io.read_u2le)
       self
     end
     attr_reader :terrain
@@ -276,44 +276,44 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       case name
       when "SLBR"
         @_raw_body = @_io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionStartingResource.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionStartingResource.new(_io__raw_body, self, @_root)
       when "ERAX"
         @_raw_body = @_io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionEra.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionEra.new(_io__raw_body, self, @_root)
       when "OWNR"
         @_raw_body = @_io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionOwnr.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionOwnr.new(_io__raw_body, self, @_root)
       when "ERA "
         @_raw_body = @_io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionEra.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionEra.new(_io__raw_body, self, @_root)
       when "SGLD"
         @_raw_body = @_io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionStartingResource.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionStartingResource.new(_io__raw_body, self, @_root)
       when "VER "
         @_raw_body = @_io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionVer.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionVer.new(_io__raw_body, self, @_root)
       when "SOIL"
         @_raw_body = @_io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionStartingResource.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionStartingResource.new(_io__raw_body, self, @_root)
       when "UNIT"
         @_raw_body = @_io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionUnit.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionUnit.new(_io__raw_body, self, @_root)
       when "DIM "
         @_raw_body = @_io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionDim.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionDim.new(_io__raw_body, self, @_root)
       when "TYPE"
         @_raw_body = @_io.read_bytes(size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionType.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionType.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes(size)
       end
@@ -337,7 +337,7 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       @controller_by_player = []
       i = 0
       while not @_io.eof?
-        @controller_by_player << Kaitai::Struct::Stream::resolve_enum(CONTROLLER, @_io.read_u1)
+        @controller_by_player << Kaitai::Struct::Stream::resolve_enum(Warcraft2Pud::CONTROLLER, @_io.read_u1)
         i += 1
       end
       self
@@ -353,7 +353,7 @@ class Warcraft2Pud < Kaitai::Struct::Struct
     def _read
       @x = @_io.read_u2le
       @y = @_io.read_u2le
-      @u_type = Kaitai::Struct::Stream::resolve_enum(UNIT_TYPE, @_io.read_u1)
+      @u_type = Kaitai::Struct::Stream::resolve_enum(Warcraft2Pud::UNIT_TYPE, @_io.read_u1)
       @owner = @_io.read_u1
       @options = @_io.read_u2le
       self

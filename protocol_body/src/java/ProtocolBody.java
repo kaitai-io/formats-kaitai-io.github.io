@@ -198,35 +198,40 @@ public class ProtocolBody extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        switch (protocol()) {
-        case TCP: {
-            this.body = new TcpSegment(this._io);
-            break;
-        }
-        case IPV6_NONXT: {
-            this.body = new NoNextHeader(this._io, this, _root);
-            break;
-        }
-        case ICMP: {
-            this.body = new IcmpPacket(this._io);
-            break;
-        }
-        case UDP: {
-            this.body = new UdpDatagram(this._io);
-            break;
-        }
-        case HOPOPT: {
-            this.body = new OptionHopByHop(this._io, this, _root);
-            break;
-        }
-        case IPV6: {
-            this.body = new Ipv6Packet(this._io);
-            break;
-        }
-        case IPV4: {
-            this.body = new Ipv4Packet(this._io);
-            break;
-        }
+        {
+            ProtocolEnum on = protocol();
+            if (on != null) {
+                switch (protocol()) {
+                case IPV6_NONXT: {
+                    this.body = new NoNextHeader(this._io, this, _root);
+                    break;
+                }
+                case IPV4: {
+                    this.body = new Ipv4Packet(this._io);
+                    break;
+                }
+                case UDP: {
+                    this.body = new UdpDatagram(this._io);
+                    break;
+                }
+                case ICMP: {
+                    this.body = new IcmpPacket(this._io);
+                    break;
+                }
+                case HOPOPT: {
+                    this.body = new OptionHopByHop(this._io, this, _root);
+                    break;
+                }
+                case IPV6: {
+                    this.body = new Ipv6Packet(this._io);
+                    break;
+                }
+                case TCP: {
+                    this.body = new TcpSegment(this._io);
+                    break;
+                }
+                }
+            }
         }
     }
 

@@ -354,8 +354,8 @@ class BlockPtr extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek(($this->ptr() * $this->_root()->bg1()->superBlock()->blockSize()));
         $this->_m__raw_body = $this->_io->readBytes($this->_root()->bg1()->superBlock()->blockSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-        $this->_m_body = new \Ext2\RawBlock($io, $this, $this->_root);
+        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+        $this->_m_body = new \Ext2\RawBlock($_io__raw_body, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_body;
     }
@@ -395,8 +395,8 @@ class BlockGroup extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_superBlock = $this->_io->readBytes(1024);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_superBlock);
-        $this->_m_superBlock = new \Ext2\SuperBlockStruct($io, $this, $this->_root);
+        $_io__raw_superBlock = new \Kaitai\Struct\Stream($this->_m__raw_superBlock);
+        $this->_m_superBlock = new \Ext2\SuperBlockStruct($_io__raw_superBlock, $this, $this->_root);
         $this->_m_blockGroups = [];
         $n = $this->superBlock()->blockGroupCount();
         for ($i = 0; $i < $n; $i++) {

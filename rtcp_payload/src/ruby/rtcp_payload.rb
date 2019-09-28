@@ -163,29 +163,29 @@ class RtcpPayload < Kaitai::Struct::Struct
       @padding = @_io.read_bits_int(1) != 0
       @subtype = @_io.read_bits_int(5)
       @_io.align_to_byte
-      @payload_type = Kaitai::Struct::Stream::resolve_enum(PAYLOAD_TYPE, @_io.read_u1)
+      @payload_type = Kaitai::Struct::Stream::resolve_enum(RtcpPayload::PAYLOAD_TYPE, @_io.read_u1)
       @length = @_io.read_u2be
       case payload_type
-      when :payload_type_sdes
-        @_raw_body = @_io.read_bytes((4 * length))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SdesPacket.new(io, self, @_root)
-      when :payload_type_rr
-        @_raw_body = @_io.read_bytes((4 * length))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RrPacket.new(io, self, @_root)
-      when :payload_type_rtpfb
-        @_raw_body = @_io.read_bytes((4 * length))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RtpfbPacket.new(io, self, @_root)
-      when :payload_type_psfb
-        @_raw_body = @_io.read_bytes((4 * length))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PsfbPacket.new(io, self, @_root)
       when :payload_type_sr
         @_raw_body = @_io.read_bytes((4 * length))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SrPacket.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SrPacket.new(_io__raw_body, self, @_root)
+      when :payload_type_psfb
+        @_raw_body = @_io.read_bytes((4 * length))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = PsfbPacket.new(_io__raw_body, self, @_root)
+      when :payload_type_rr
+        @_raw_body = @_io.read_bytes((4 * length))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = RrPacket.new(_io__raw_body, self, @_root)
+      when :payload_type_rtpfb
+        @_raw_body = @_io.read_bytes((4 * length))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = RtpfbPacket.new(_io__raw_body, self, @_root)
+      when :payload_type_sdes
+        @_raw_body = @_io.read_bytes((4 * length))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SdesPacket.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes((4 * length))
       end
@@ -206,7 +206,7 @@ class RtcpPayload < Kaitai::Struct::Struct
     end
 
     def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(SDES_SUBTYPE, @_io.read_u1)
+      @type = Kaitai::Struct::Stream::resolve_enum(RtcpPayload::SDES_SUBTYPE, @_io.read_u1)
       if type != :sdes_subtype_pad
         @length = @_io.read_u1
       end
@@ -301,8 +301,8 @@ class RtcpPayload < Kaitai::Struct::Struct
       case fmt
       when :psfb_subtype_afb
         @_raw_fci_block = @_io.read_bytes_full
-        io = Kaitai::Struct::Stream.new(@_raw_fci_block)
-        @fci_block = PsfbAfbPacket.new(io, self, @_root)
+        _io__raw_fci_block = Kaitai::Struct::Stream.new(@_raw_fci_block)
+        @fci_block = PsfbAfbPacket.new(_io__raw_fci_block, self, @_root)
       else
         @fci_block = @_io.read_bytes_full
       end
@@ -310,7 +310,7 @@ class RtcpPayload < Kaitai::Struct::Struct
     end
     def fmt
       return @fmt unless @fmt.nil?
-      @fmt = Kaitai::Struct::Stream::resolve_enum(PSFB_SUBTYPE, _parent.subtype)
+      @fmt = Kaitai::Struct::Stream::resolve_enum(RtcpPayload::PSFB_SUBTYPE, _parent.subtype)
       @fmt
     end
     attr_reader :ssrc
@@ -369,8 +369,8 @@ class RtcpPayload < Kaitai::Struct::Struct
       case fmt
       when :rtpfb_subtype_transport_feedback
         @_raw_fci_block = @_io.read_bytes_full
-        io = Kaitai::Struct::Stream.new(@_raw_fci_block)
-        @fci_block = RtpfbTransportFeedbackPacket.new(io, self, @_root)
+        _io__raw_fci_block = Kaitai::Struct::Stream.new(@_raw_fci_block)
+        @fci_block = RtpfbTransportFeedbackPacket.new(_io__raw_fci_block, self, @_root)
       else
         @fci_block = @_io.read_bytes_full
       end
@@ -378,7 +378,7 @@ class RtcpPayload < Kaitai::Struct::Struct
     end
     def fmt
       return @fmt unless @fmt.nil?
-      @fmt = Kaitai::Struct::Stream::resolve_enum(RTPFB_SUBTYPE, _parent.subtype)
+      @fmt = Kaitai::Struct::Stream::resolve_enum(RtcpPayload::RTPFB_SUBTYPE, _parent.subtype)
       @fmt
     end
     attr_reader :ssrc
@@ -430,8 +430,8 @@ class RtcpPayload < Kaitai::Struct::Struct
       case uid
       when 1380273474
         @_raw_contents = @_io.read_bytes_full
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = PsfbAfbRembPacket.new(io, self, @_root)
+        _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = PsfbAfbRembPacket.new(_io__raw_contents, self, @_root)
       else
         @contents = @_io.read_bytes_full
       end

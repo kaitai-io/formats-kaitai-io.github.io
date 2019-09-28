@@ -9,8 +9,8 @@ class Pcx extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_hdr = $this->_io->readBytes(128);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_hdr);
-        $this->_m_hdr = new \Pcx\Header($io, $this, $this->_root);
+        $_io__raw_hdr = new \Kaitai\Struct\Stream($this->_m__raw_hdr);
+        $this->_m_hdr = new \Pcx\Header($_io__raw_hdr, $this, $this->_root);
     }
     protected $_m_palette256;
     public function palette256() {

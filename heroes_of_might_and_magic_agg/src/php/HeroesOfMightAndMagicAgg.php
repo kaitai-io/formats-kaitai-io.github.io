@@ -26,8 +26,8 @@ class HeroesOfMightAndMagicAgg extends \Kaitai\Struct\Struct {
         $n = $this->numFiles();
         for ($i = 0; $i < $n; $i++) {
             $this->_m__raw_filenames[] = $this->_io->readBytes(15);
-            $io = new \Kaitai\Struct\Stream(end($this->_m__raw_filenames));
-            $this->_m_filenames[] = new \HeroesOfMightAndMagicAgg\Filename($io, $this, $this->_root);
+            $_io__raw_filenames = new \Kaitai\Struct\Stream(end($this->_m__raw_filenames));
+            $this->_m_filenames[] = new \HeroesOfMightAndMagicAgg\Filename($_io__raw_filenames, $this, $this->_root);
         }
         $this->_io->seek($_pos);
         return $this->_m_filenames;

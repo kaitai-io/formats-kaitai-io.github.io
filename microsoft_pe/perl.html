@@ -183,11 +183,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Microsoft PE (Portable Executable) file format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Microsoft PE (Portable Executable) file format parsing C# library">C#</a></li>
                 
                 
@@ -424,10 +419,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $PE_FORMAT_PE32) {
+    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32) {
         $self-&gt;{image_base_32} = $self-&gt;{_io}-&gt;read_u4le();
     }
-    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $PE_FORMAT_PE32_PLUS) {
+    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32_PLUS) {
         $self-&gt;{image_base_64} = $self-&gt;{_io}-&gt;read_u8le();
     }
     $self-&gt;{section_alignment} = $self-&gt;{_io}-&gt;read_u4le();
@@ -444,28 +439,28 @@ sub _read {
     $self-&gt;{check_sum} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{subsystem} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{dll_characteristics} = $self-&gt;{_io}-&gt;read_u2le();
-    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $PE_FORMAT_PE32) {
+    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32) {
         $self-&gt;{size_of_stack_reserve_32} = $self-&gt;{_io}-&gt;read_u4le();
     }
-    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $PE_FORMAT_PE32_PLUS) {
+    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32_PLUS) {
         $self-&gt;{size_of_stack_reserve_64} = $self-&gt;{_io}-&gt;read_u8le();
     }
-    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $PE_FORMAT_PE32) {
+    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32) {
         $self-&gt;{size_of_stack_commit_32} = $self-&gt;{_io}-&gt;read_u4le();
     }
-    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $PE_FORMAT_PE32_PLUS) {
+    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32_PLUS) {
         $self-&gt;{size_of_stack_commit_64} = $self-&gt;{_io}-&gt;read_u8le();
     }
-    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $PE_FORMAT_PE32) {
+    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32) {
         $self-&gt;{size_of_heap_reserve_32} = $self-&gt;{_io}-&gt;read_u4le();
     }
-    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $PE_FORMAT_PE32_PLUS) {
+    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32_PLUS) {
         $self-&gt;{size_of_heap_reserve_64} = $self-&gt;{_io}-&gt;read_u8le();
     }
-    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $PE_FORMAT_PE32) {
+    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32) {
         $self-&gt;{size_of_heap_commit_32} = $self-&gt;{_io}-&gt;read_u4le();
     }
-    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $PE_FORMAT_PE32_PLUS) {
+    if ($self-&gt;_parent()-&gt;std()-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32_PLUS) {
         $self-&gt;{size_of_heap_commit_64} = $self-&gt;{_io}-&gt;read_u8le();
     }
     $self-&gt;{loader_flags} = $self-&gt;{_io}-&gt;read_u4le();
@@ -1227,7 +1222,7 @@ sub _read {
     $self-&gt;{size_of_uninitialized_data} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{address_of_entry_point} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{base_of_code} = $self-&gt;{_io}-&gt;read_u4le();
-    if ($self-&gt;format() == $PE_FORMAT_PE32) {
+    if ($self-&gt;format() == $MicrosoftPe::PE_FORMAT_PE32) {
         $self-&gt;{base_of_data} = $self-&gt;{_io}-&gt;read_u4le();
     }
 }

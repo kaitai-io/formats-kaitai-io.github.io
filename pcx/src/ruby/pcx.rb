@@ -28,8 +28,8 @@ class Pcx < Kaitai::Struct::Struct
 
   def _read
     @_raw_hdr = @_io.read_bytes(128)
-    io = Kaitai::Struct::Stream.new(@_raw_hdr)
-    @hdr = Header.new(io, self, @_root)
+    _io__raw_hdr = Kaitai::Struct::Stream.new(@_raw_hdr)
+    @hdr = Header.new(_io__raw_hdr, self, @_root)
     self
   end
 
@@ -43,8 +43,8 @@ class Pcx < Kaitai::Struct::Struct
 
     def _read
       @magic = @_io.ensure_fixed_contents([10].pack('C*'))
-      @version = Kaitai::Struct::Stream::resolve_enum(VERSIONS, @_io.read_u1)
-      @encoding = Kaitai::Struct::Stream::resolve_enum(ENCODINGS, @_io.read_u1)
+      @version = Kaitai::Struct::Stream::resolve_enum(Pcx::VERSIONS, @_io.read_u1)
+      @encoding = Kaitai::Struct::Stream::resolve_enum(Pcx::ENCODINGS, @_io.read_u1)
       @bits_per_pixel = @_io.read_u1
       @img_x_min = @_io.read_u2le
       @img_y_min = @_io.read_u2le

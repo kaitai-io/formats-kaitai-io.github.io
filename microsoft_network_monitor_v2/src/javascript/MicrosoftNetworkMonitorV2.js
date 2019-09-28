@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './WindowsSystemtime', './EthernetFrame'], factory);
+    define(['kaitai-struct/KaitaiStream', './EthernetFrame', './WindowsSystemtime'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./WindowsSystemtime'), require('./EthernetFrame'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./EthernetFrame'), require('./WindowsSystemtime'));
   } else {
-    root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.WindowsSystemtime, root.EthernetFrame);
+    root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.EthernetFrame, root.WindowsSystemtime);
   }
-}(this, function (KaitaiStream, WindowsSystemtime, EthernetFrame) {
+}(this, function (KaitaiStream, EthernetFrame, WindowsSystemtime) {
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
  * network packet sniffing and analysis tool. It can save captured

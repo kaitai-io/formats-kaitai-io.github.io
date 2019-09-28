@@ -28,8 +28,8 @@ class Header extends \Kaitai\Struct\Struct {
         $this->_m_lenHeader = $this->_io->readU4le();
         $this->_m_lenData = $this->_io->readU4le();
         $this->_m__raw_rootEntry = $this->_io->readBytes(($this->lenHeader() - 16));
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_rootEntry);
-        $this->_m_rootEntry = new \HeapsPak\Header\Entry($io, $this, $this->_root);
+        $_io__raw_rootEntry = new \Kaitai\Struct\Stream($this->_m__raw_rootEntry);
+        $this->_m_rootEntry = new \HeapsPak\Header\Entry($_io__raw_rootEntry, $this, $this->_root);
         $this->_m_magic2 = $this->_io->ensureFixedContents("\x44\x41\x54\x41");
     }
     protected $_m_magic1;

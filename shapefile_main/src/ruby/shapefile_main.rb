@@ -398,7 +398,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       @unused_field_5 = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
       @file_length = @_io.read_s4be
       @version = @_io.ensure_fixed_contents([232, 3, 0, 0].pack('C*'))
-      @shape_type = Kaitai::Struct::Stream::resolve_enum(SHAPE_TYPE, @_io.read_s4le)
+      @shape_type = Kaitai::Struct::Stream::resolve_enum(ShapefileMain::SHAPE_TYPE, @_io.read_s4le)
       @bounding_box = BoundingBoxXYZM.new(@_io, self, @_root)
       self
     end
@@ -461,35 +461,35 @@ class ShapefileMain < Kaitai::Struct::Struct
     end
 
     def _read
-      @shape_type = Kaitai::Struct::Stream::resolve_enum(SHAPE_TYPE, @_io.read_s4le)
+      @shape_type = Kaitai::Struct::Stream::resolve_enum(ShapefileMain::SHAPE_TYPE, @_io.read_s4le)
       if shape_type != :shape_type_null_shape
         case shape_type
-        when :shape_type_point_m
-          @shape_parameters = PointM.new(@_io, self, @_root)
-        when :shape_type_polygon_z
-          @shape_parameters = PolygonZ.new(@_io, self, @_root)
-        when :shape_type_multi_point_m
-          @shape_parameters = MultiPointM.new(@_io, self, @_root)
         when :shape_type_poly_line_z
           @shape_parameters = PolyLineZ.new(@_io, self, @_root)
-        when :shape_type_multi_point_z
-          @shape_parameters = MultiPointZ.new(@_io, self, @_root)
-        when :shape_type_multi_point
-          @shape_parameters = MultiPoint.new(@_io, self, @_root)
-        when :shape_type_polygon_m
-          @shape_parameters = PolygonM.new(@_io, self, @_root)
-        when :shape_type_polygon
-          @shape_parameters = Polygon.new(@_io, self, @_root)
-        when :shape_type_point
-          @shape_parameters = Point.new(@_io, self, @_root)
-        when :shape_type_poly_line_m
-          @shape_parameters = PolyLineM.new(@_io, self, @_root)
-        when :shape_type_poly_line
-          @shape_parameters = PolyLine.new(@_io, self, @_root)
-        when :shape_type_point_z
-          @shape_parameters = PointZ.new(@_io, self, @_root)
         when :shape_type_multi_patch
           @shape_parameters = MultiPatch.new(@_io, self, @_root)
+        when :shape_type_poly_line_m
+          @shape_parameters = PolyLineM.new(@_io, self, @_root)
+        when :shape_type_polygon
+          @shape_parameters = Polygon.new(@_io, self, @_root)
+        when :shape_type_polygon_z
+          @shape_parameters = PolygonZ.new(@_io, self, @_root)
+        when :shape_type_point_z
+          @shape_parameters = PointZ.new(@_io, self, @_root)
+        when :shape_type_poly_line
+          @shape_parameters = PolyLine.new(@_io, self, @_root)
+        when :shape_type_point_m
+          @shape_parameters = PointM.new(@_io, self, @_root)
+        when :shape_type_polygon_m
+          @shape_parameters = PolygonM.new(@_io, self, @_root)
+        when :shape_type_multi_point
+          @shape_parameters = MultiPoint.new(@_io, self, @_root)
+        when :shape_type_point
+          @shape_parameters = Point.new(@_io, self, @_root)
+        when :shape_type_multi_point_m
+          @shape_parameters = MultiPointM.new(@_io, self, @_root)
+        when :shape_type_multi_point_z
+          @shape_parameters = MultiPointZ.new(@_io, self, @_root)
         end
       end
       self
@@ -513,7 +513,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       }
       @part_types = Array.new(number_of_parts)
       (number_of_parts).times { |i|
-        @part_types[i] = Kaitai::Struct::Stream::resolve_enum(PART_TYPE, @_io.read_s4le)
+        @part_types[i] = Kaitai::Struct::Stream::resolve_enum(ShapefileMain::PART_TYPE, @_io.read_s4le)
       }
       @points = Array.new(number_of_points)
       (number_of_points).times { |i|

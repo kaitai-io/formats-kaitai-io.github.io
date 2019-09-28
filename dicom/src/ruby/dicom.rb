@@ -4139,7 +4139,7 @@ class Dicom < Kaitai::Struct::Struct
     end
     def tag
       return @tag unless @tag.nil?
-      @tag = Kaitai::Struct::Stream::resolve_enum(TAGS, ((tag_group << 16) | tag_elem))
+      @tag = Kaitai::Struct::Stream::resolve_enum(Dicom::TAGS, ((tag_group << 16) | tag_elem))
       @tag
     end
     attr_reader :tag_group
@@ -4199,7 +4199,7 @@ class Dicom < Kaitai::Struct::Struct
     end
     def tag
       return @tag unless @tag.nil?
-      @tag = Kaitai::Struct::Stream::resolve_enum(TAGS, ((tag_group << 16) | tag_elem))
+      @tag = Kaitai::Struct::Stream::resolve_enum(Dicom::TAGS, ((tag_group << 16) | tag_elem))
       @tag
     end
     def is_transfer_syntax_change_explicit

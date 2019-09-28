@@ -146,11 +146,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".nes file format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".nes file format parsing C# library">C#</a></li>
                 
                 
@@ -268,8 +263,8 @@ class Ines(KaitaiStruct):
 
     def _read(self):
         self._raw_header = self._io.read_bytes(16)
-        io = KaitaiStream(BytesIO(self._raw_header))
-        self.header = self._root.Header(io, self, self._root)
+        _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+        self.header = self._root.Header(_io__raw_header, self, self._root)
         if self.header.f6.trainer:
             self.trainer = self._io.read_bytes(512)
 
@@ -294,18 +289,18 @@ class Ines(KaitaiStruct):
             self.len_prg_rom = self._io.read_u1()
             self.len_chr_rom = self._io.read_u1()
             self._raw_f6 = self._io.read_bytes(1)
-            io = KaitaiStream(BytesIO(self._raw_f6))
-            self.f6 = self._root.Header.F6(io, self, self._root)
+            _io__raw_f6 = KaitaiStream(BytesIO(self._raw_f6))
+            self.f6 = self._root.Header.F6(_io__raw_f6, self, self._root)
             self._raw_f7 = self._io.read_bytes(1)
-            io = KaitaiStream(BytesIO(self._raw_f7))
-            self.f7 = self._root.Header.F7(io, self, self._root)
+            _io__raw_f7 = KaitaiStream(BytesIO(self._raw_f7))
+            self.f7 = self._root.Header.F7(_io__raw_f7, self, self._root)
             self.len_prg_ram = self._io.read_u1()
             self._raw_f9 = self._io.read_bytes(1)
-            io = KaitaiStream(BytesIO(self._raw_f9))
-            self.f9 = self._root.Header.F9(io, self, self._root)
+            _io__raw_f9 = KaitaiStream(BytesIO(self._raw_f9))
+            self.f9 = self._root.Header.F9(_io__raw_f9, self, self._root)
             self._raw_f10 = self._io.read_bytes(1)
-            io = KaitaiStream(BytesIO(self._raw_f10))
-            self.f10 = self._root.Header.F10(io, self, self._root)
+            _io__raw_f10 = KaitaiStream(BytesIO(self._raw_f10))
+            self.f10 = self._root.Header.F10(_io__raw_f10, self, self._root)
             self.reserved = self._io.ensure_fixed_contents(b&quot;\x00\x00\x00\x00\x00&quot;)
 
         class F6(KaitaiStruct):
@@ -328,7 +323,7 @@ class Ines(KaitaiStruct):
                 self.four_screen = self._io.read_bits_int(1) != 0
                 self.trainer = self._io.read_bits_int(1) != 0
                 self.has_battery_ram = self._io.read_bits_int(1) != 0
-                self.mirroring = self._root.Header.F6.Mirroring(self._io.read_bits_int(1))
+                self.mirroring = KaitaiStream.resolve_enum(self._root.Header.F6.Mirroring, self._io.read_bits_int(1))
 
 
         class F7(KaitaiStruct):
@@ -366,7 +361,7 @@ class Ines(KaitaiStruct):
 
             def _read(self):
                 self.reserved = self._io.read_bits_int(7)
-                self.tv_system = self._root.Header.F9.TvSystem(self._io.read_bits_int(1))
+                self.tv_system = KaitaiStream.resolve_enum(self._root.Header.F9.TvSystem, self._io.read_bits_int(1))
 
 
         class F10(KaitaiStruct):
@@ -391,7 +386,7 @@ class Ines(KaitaiStruct):
                 self.bus_conflict = self._io.read_bits_int(1) != 0
                 self.prg_ram = self._io.read_bits_int(1) != 0
                 self.reserved2 = self._io.read_bits_int(2)
-                self.tv_system = self._root.Header.F10.TvSystem(self._io.read_bits_int(2))
+                self.tv_system = KaitaiStream.resolve_enum(self._root.Header.F10.TvSystem, self._io.read_bits_int(2))
 
 
         @property

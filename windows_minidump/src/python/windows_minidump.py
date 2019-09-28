@@ -144,7 +144,7 @@ class WindowsMinidump(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.cpu_arch = self._root.SystemInfo.CpuArchs(self._io.read_u2le())
+            self.cpu_arch = KaitaiStream.resolve_enum(self._root.SystemInfo.CpuArchs, self._io.read_u2le())
             self.cpu_level = self._io.read_u2le()
             self.cpu_revision = self._io.read_u2le()
             self.num_cpus = self._io.read_u1()
@@ -233,7 +233,7 @@ class WindowsMinidump(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.stream_type = self._root.StreamTypes(self._io.read_u4le())
+            self.stream_type = KaitaiStream.resolve_enum(self._root.StreamTypes, self._io.read_u4le())
             self.len_data = self._io.read_u4le()
             self.ofs_data = self._io.read_u4le()
 
@@ -245,26 +245,26 @@ class WindowsMinidump(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek(self.ofs_data)
             _on = self.stream_type
-            if _on == self._root.StreamTypes.misc_info:
+            if _on == self._root.StreamTypes.memory_list:
                 self._raw__m_data = self._io.read_bytes(self.len_data)
-                io = KaitaiStream(BytesIO(self._raw__m_data))
-                self._m_data = self._root.MiscInfo(io, self, self._root)
-            elif _on == self._root.StreamTypes.exception:
+                _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                self._m_data = self._root.MemoryList(_io__raw__m_data, self, self._root)
+            elif _on == self._root.StreamTypes.misc_info:
                 self._raw__m_data = self._io.read_bytes(self.len_data)
-                io = KaitaiStream(BytesIO(self._raw__m_data))
-                self._m_data = self._root.ExceptionStream(io, self, self._root)
-            elif _on == self._root.StreamTypes.memory_list:
-                self._raw__m_data = self._io.read_bytes(self.len_data)
-                io = KaitaiStream(BytesIO(self._raw__m_data))
-                self._m_data = self._root.MemoryList(io, self, self._root)
-            elif _on == self._root.StreamTypes.system_info:
-                self._raw__m_data = self._io.read_bytes(self.len_data)
-                io = KaitaiStream(BytesIO(self._raw__m_data))
-                self._m_data = self._root.SystemInfo(io, self, self._root)
+                _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                self._m_data = self._root.MiscInfo(_io__raw__m_data, self, self._root)
             elif _on == self._root.StreamTypes.thread_list:
                 self._raw__m_data = self._io.read_bytes(self.len_data)
-                io = KaitaiStream(BytesIO(self._raw__m_data))
-                self._m_data = self._root.ThreadList(io, self, self._root)
+                _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                self._m_data = self._root.ThreadList(_io__raw__m_data, self, self._root)
+            elif _on == self._root.StreamTypes.exception:
+                self._raw__m_data = self._io.read_bytes(self.len_data)
+                _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                self._m_data = self._root.ExceptionStream(_io__raw__m_data, self, self._root)
+            elif _on == self._root.StreamTypes.system_info:
+                self._raw__m_data = self._io.read_bytes(self.len_data)
+                _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                self._m_data = self._root.SystemInfo(_io__raw__m_data, self, self._root)
             else:
                 self._m_data = self._io.read_bytes(self.len_data)
             self._io.seek(_pos)

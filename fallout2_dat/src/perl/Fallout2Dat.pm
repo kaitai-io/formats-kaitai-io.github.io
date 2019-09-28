@@ -237,7 +237,7 @@ sub _read {
 sub contents {
     my ($self) = @_;
     return $self->{contents} if ($self->{contents});
-    if ($self->flags() == $COMPRESSION_ZLIB) {
+    if ($self->flags() == $Fallout2Dat::COMPRESSION_ZLIB) {
         my $io = $self->_root()->_io();
         my $_pos = $io->pos();
         $io->seek($self->offset());

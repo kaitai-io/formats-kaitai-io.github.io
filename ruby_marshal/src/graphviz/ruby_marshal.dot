@@ -112,15 +112,15 @@ packed_int__seq_encoded2_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 			</TABLE>>];
 record__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:codes_bignum</TD><TD PORT="case0">Bignum</TD></TR>
-	<TR><TD>:codes_ruby_hash</TD><TD PORT="case1">RubyHash</TD></TR>
+	<TR><TD>:codes_packed_int</TD><TD PORT="case0">PackedInt</TD></TR>
+	<TR><TD>:codes_bignum</TD><TD PORT="case1">Bignum</TD></TR>
 	<TR><TD>:codes_ruby_array</TD><TD PORT="case2">RubyArray</TD></TR>
-	<TR><TD>:codes_ruby_symbol</TD><TD PORT="case3">RubySymbol</TD></TR>
-	<TR><TD>:codes_instance_var</TD><TD PORT="case4">InstanceVar</TD></TR>
+	<TR><TD>:codes_ruby_symbol_link</TD><TD PORT="case3">PackedInt</TD></TR>
+	<TR><TD>:codes_ruby_struct</TD><TD PORT="case4">RubyStruct</TD></TR>
 	<TR><TD>:codes_ruby_string</TD><TD PORT="case5">RubyString</TD></TR>
-	<TR><TD>:codes_packed_int</TD><TD PORT="case6">PackedInt</TD></TR>
-	<TR><TD>:codes_ruby_struct</TD><TD PORT="case7">RubyStruct</TD></TR>
-	<TR><TD>:codes_ruby_symbol_link</TD><TD PORT="case8">PackedInt</TD></TR>
+	<TR><TD>:codes_instance_var</TD><TD PORT="case6">InstanceVar</TD></TR>
+	<TR><TD>:codes_ruby_hash</TD><TD PORT="case7">RubyHash</TD></TR>
+	<TR><TD>:codes_ruby_symbol</TD><TD PORT="case8">RubySymbol</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__ruby_hash {
@@ -186,15 +186,15 @@ record__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"
 	instance_var__seq:vars_type -> pair__seq [style=bold];
 	packed_int__inst__value:value_type -> instance_var__seq:vars__repeat [color="#404040"];
 	record__seq:body_type -> record__seq_body_switch [style=bold];
-	record__seq_body_switch:case0 -> bignum__seq [style=bold];
-	record__seq_body_switch:case1 -> ruby_hash__seq [style=bold];
+	record__seq_body_switch:case0 -> packed_int__seq [style=bold];
+	record__seq_body_switch:case1 -> bignum__seq [style=bold];
 	record__seq_body_switch:case2 -> ruby_array__seq [style=bold];
-	record__seq_body_switch:case3 -> ruby_symbol__seq [style=bold];
-	record__seq_body_switch:case4 -> instance_var__seq [style=bold];
+	record__seq_body_switch:case3 -> packed_int__seq [style=bold];
+	record__seq_body_switch:case4 -> ruby_struct__seq [style=bold];
 	record__seq_body_switch:case5 -> ruby_string__seq [style=bold];
-	record__seq_body_switch:case6 -> packed_int__seq [style=bold];
-	record__seq_body_switch:case7 -> ruby_struct__seq [style=bold];
-	record__seq_body_switch:case8 -> packed_int__seq [style=bold];
+	record__seq_body_switch:case6 -> instance_var__seq [style=bold];
+	record__seq_body_switch:case7 -> ruby_hash__seq [style=bold];
+	record__seq_body_switch:case8 -> ruby_symbol__seq [style=bold];
 	record__seq:code_type -> record__seq:body_type [color="#404040"];
 	ruby_hash__seq:num_pairs_type -> packed_int__seq [style=bold];
 	ruby_hash__seq:pairs_type -> pair__seq [style=bold];

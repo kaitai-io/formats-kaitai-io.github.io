@@ -24,11 +24,11 @@ class Ipv4Packet < Kaitai::Struct::Struct
     @src_ip_addr = @_io.read_bytes(4)
     @dst_ip_addr = @_io.read_bytes(4)
     @_raw_options = @_io.read_bytes((ihl_bytes - 20))
-    io = Kaitai::Struct::Stream.new(@_raw_options)
-    @options = Ipv4Options.new(io, self, @_root)
+    _io__raw_options = Kaitai::Struct::Stream.new(@_raw_options)
+    @options = Ipv4Options.new(_io__raw_options, self, @_root)
     @_raw_body = @_io.read_bytes((total_length - ihl_bytes))
-    io = Kaitai::Struct::Stream.new(@_raw_body)
-    @body = ProtocolBody.new(io, protocol)
+    _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+    @body = ProtocolBody.new(_io__raw_body, protocol)
     self
   end
   class Ipv4Options < Kaitai::Struct::Struct

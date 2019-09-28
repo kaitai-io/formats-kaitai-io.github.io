@@ -24,8 +24,8 @@ class MicrosoftCfb extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->sectorSize());
         $this->_m__raw_fat = $this->_io->readBytes(($this->header()->sizeFat() * $this->sectorSize()));
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_fat);
-        $this->_m_fat = new \MicrosoftCfb\FatEntries($io, $this, $this->_root);
+        $_io__raw_fat = new \Kaitai\Struct\Stream($this->_m__raw_fat);
+        $this->_m_fat = new \MicrosoftCfb\FatEntries($_io__raw_fat, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_fat;
     }

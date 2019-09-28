@@ -237,8 +237,8 @@ class MicrosoftCfb < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(sector_size)
     @_raw_fat = @_io.read_bytes((header.size_fat * sector_size))
-    io = Kaitai::Struct::Stream.new(@_raw_fat)
-    @fat = FatEntries.new(io, self, @_root)
+    _io__raw_fat = Kaitai::Struct::Stream.new(@_raw_fat)
+    @fat = FatEntries.new(_io__raw_fat, self, @_root)
     @_io.seek(_pos)
     @fat
   end

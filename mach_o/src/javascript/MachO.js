@@ -327,26 +327,6 @@ var MachO = (function() {
       this.magic = this._io.readU4be();
       this.length = this._io.readU4be();
       switch (this.magic) {
-      case MachO.CsBlob.CsMagic.DETACHED_SIGNATURE:
-        this._raw_body = this._io.readBytes((this.length - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SuperBlob(_io__raw_body, this, this._root);
-        break;
-      case MachO.CsBlob.CsMagic.EMBEDDED_SIGNATURE:
-        this._raw_body = this._io.readBytes((this.length - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SuperBlob(_io__raw_body, this, this._root);
-        break;
-      case MachO.CsBlob.CsMagic.ENTITLEMENT:
-        this._raw_body = this._io.readBytes((this.length - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new Entitlement(_io__raw_body, this, this._root);
-        break;
-      case MachO.CsBlob.CsMagic.BLOB_WRAPPER:
-        this._raw_body = this._io.readBytes((this.length - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new BlobWrapper(_io__raw_body, this, this._root);
-        break;
       case MachO.CsBlob.CsMagic.REQUIREMENT:
         this._raw_body = this._io.readBytes((this.length - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -357,10 +337,30 @@ var MachO = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new CodeDirectory(_io__raw_body, this, this._root);
         break;
+      case MachO.CsBlob.CsMagic.ENTITLEMENT:
+        this._raw_body = this._io.readBytes((this.length - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new Entitlement(_io__raw_body, this, this._root);
+        break;
       case MachO.CsBlob.CsMagic.REQUIREMENTS:
         this._raw_body = this._io.readBytes((this.length - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new Requirements(_io__raw_body, this, this._root);
+        break;
+      case MachO.CsBlob.CsMagic.BLOB_WRAPPER:
+        this._raw_body = this._io.readBytes((this.length - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new BlobWrapper(_io__raw_body, this, this._root);
+        break;
+      case MachO.CsBlob.CsMagic.EMBEDDED_SIGNATURE:
+        this._raw_body = this._io.readBytes((this.length - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SuperBlob(_io__raw_body, this, this._root);
+        break;
+      case MachO.CsBlob.CsMagic.DETACHED_SIGNATURE:
+        this._raw_body = this._io.readBytes((this.length - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SuperBlob(_io__raw_body, this, this._root);
         break;
       default:
         this.body = this._io.readBytes((this.length - 8));
@@ -544,44 +544,44 @@ var MachO = (function() {
       Expr.prototype._read = function() {
         this.op = this._io.readU4be();
         switch (this.op) {
-        case MachO.CsBlob.Expr.OpEnum.CERT_GENERIC:
-          this.data = new CertGenericExpr(this._io, this, this._root);
-          break;
-        case MachO.CsBlob.Expr.OpEnum.APPLE_GENERIC_ANCHOR:
-          this.data = new AppleGenericAnchorExpr(this._io, this, this._root);
-          break;
-        case MachO.CsBlob.Expr.OpEnum.INFO_KEY_FIELD:
-          this.data = new InfoKeyFieldExpr(this._io, this, this._root);
-          break;
-        case MachO.CsBlob.Expr.OpEnum.AND_OP:
-          this.data = new AndExpr(this._io, this, this._root);
-          break;
-        case MachO.CsBlob.Expr.OpEnum.ANCHOR_HASH:
-          this.data = new AnchorHashExpr(this._io, this, this._root);
-          break;
-        case MachO.CsBlob.Expr.OpEnum.INFO_KEY_VALUE:
-          this.data = new Data(this._io, this, this._root);
+        case MachO.CsBlob.Expr.OpEnum.IDENT:
+          this.data = new IdentExpr(this._io, this, this._root);
           break;
         case MachO.CsBlob.Expr.OpEnum.OR_OP:
           this.data = new OrExpr(this._io, this, this._root);
           break;
-        case MachO.CsBlob.Expr.OpEnum.TRUSTED_CERT:
-          this.data = new CertSlotExpr(this._io, this, this._root);
+        case MachO.CsBlob.Expr.OpEnum.INFO_KEY_VALUE:
+          this.data = new Data(this._io, this, this._root);
+          break;
+        case MachO.CsBlob.Expr.OpEnum.ANCHOR_HASH:
+          this.data = new AnchorHashExpr(this._io, this, this._root);
+          break;
+        case MachO.CsBlob.Expr.OpEnum.INFO_KEY_FIELD:
+          this.data = new InfoKeyFieldExpr(this._io, this, this._root);
           break;
         case MachO.CsBlob.Expr.OpEnum.NOT_OP:
           this.data = new Expr(this._io, this, this._root);
           break;
-        case MachO.CsBlob.Expr.OpEnum.IDENT:
-          this.data = new IdentExpr(this._io, this, this._root);
+        case MachO.CsBlob.Expr.OpEnum.ENTITLEMENT_FIELD:
+          this.data = new EntitlementFieldExpr(this._io, this, this._root);
+          break;
+        case MachO.CsBlob.Expr.OpEnum.TRUSTED_CERT:
+          this.data = new CertSlotExpr(this._io, this, this._root);
+          break;
+        case MachO.CsBlob.Expr.OpEnum.AND_OP:
+          this.data = new AndExpr(this._io, this, this._root);
+          break;
+        case MachO.CsBlob.Expr.OpEnum.CERT_GENERIC:
+          this.data = new CertGenericExpr(this._io, this, this._root);
           break;
         case MachO.CsBlob.Expr.OpEnum.CERT_FIELD:
           this.data = new CertFieldExpr(this._io, this, this._root);
           break;
-        case MachO.CsBlob.Expr.OpEnum.ENTITLEMENT_FIELD:
-          this.data = new EntitlementFieldExpr(this._io, this, this._root);
-          break;
         case MachO.CsBlob.Expr.OpEnum.CD_HASH:
           this.data = new Data(this._io, this, this._root);
+          break;
+        case MachO.CsBlob.Expr.OpEnum.APPLE_GENERIC_ANCHOR:
+          this.data = new AppleGenericAnchorExpr(this._io, this, this._root);
           break;
         }
       }
@@ -2275,12 +2275,22 @@ var MachO = (function() {
       this.type = this._io.readU4le();
       this.size = this._io.readU4le();
       switch (this.type) {
-      case MachO.LoadCommandType.SUB_LIBRARY:
+      case MachO.LoadCommandType.ID_DYLINKER:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SubCommand(_io__raw_body, this, this._root);
+        this.body = new DylinkerCommand(_io__raw_body, this, this._root);
         break;
-      case MachO.LoadCommandType.SEGMENT_SPLIT_INFO:
+      case MachO.LoadCommandType.REEXPORT_DYLIB:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylibCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.SOURCE_VERSION:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SourceVersionCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.FUNCTION_STARTS:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
@@ -2290,147 +2300,7 @@ var MachO = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new RpathCommand(_io__raw_body, this, this._root);
         break;
-      case MachO.LoadCommandType.SOURCE_VERSION:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SourceVersionCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.ENCRYPTION_INFO_64:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new EncryptionInfoCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.VERSION_MIN_TVOS:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.LOAD_DYLINKER:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new DylinkerCommand(_io__raw_body, this, this._root);
-        break;
       case MachO.LoadCommandType.SUB_FRAMEWORK:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SubCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.LOAD_WEAK_DYLIB:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new DylibCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.VERSION_MIN_IPHONEOS:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.LINKER_OPTIMIZATION_HINT:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.DYLD_ENVIRONMENT:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new DylinkerCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.LOAD_UPWARD_DYLIB:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new DylibCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.DYLIB_CODE_SIGN_DRS:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.DYLD_INFO:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new DyldInfoCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.REEXPORT_DYLIB:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new DylibCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.SYMTAB:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SymtabCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.ROUTINES_64:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new RoutinesCommand64(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.ID_DYLINKER:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new DylinkerCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.MAIN:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new EntryPointCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.FUNCTION_STARTS:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.VERSION_MIN_MACOSX:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.DATA_IN_CODE:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.VERSION_MIN_WATCHOS:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.ENCRYPTION_INFO:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new EncryptionInfoCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.SUB_UMBRELLA:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SubCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.LINKER_OPTION:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new LinkerOptionCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.TWOLEVEL_HINTS:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new TwolevelHintsCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.UUID:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new UuidCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.DYLD_INFO_ONLY:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new DyldInfoCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.LAZY_LOAD_DYLIB:
-        this._raw_body = this._io.readBytes((this.size - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new DylibCommand(_io__raw_body, this, this._root);
-        break;
-      case MachO.LoadCommandType.SUB_CLIENT:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new SubCommand(_io__raw_body, this, this._root);
@@ -2440,17 +2310,77 @@ var MachO = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new RoutinesCommand(_io__raw_body, this, this._root);
         break;
-      case MachO.LoadCommandType.CODE_SIGNATURE:
+      case MachO.LoadCommandType.SUB_LIBRARY:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new CodeSignatureCommand(_io__raw_body, this, this._root);
+        this.body = new SubCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.DYLD_INFO_ONLY:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DyldInfoCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.DYLD_ENVIRONMENT:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylinkerCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LOAD_DYLINKER:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylinkerCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.SEGMENT_SPLIT_INFO:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.MAIN:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new EntryPointCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LOAD_DYLIB:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylibCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.ENCRYPTION_INFO:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new EncryptionInfoCommand(_io__raw_body, this, this._root);
         break;
       case MachO.LoadCommandType.DYSYMTAB:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new DysymtabCommand(_io__raw_body, this, this._root);
         break;
-      case MachO.LoadCommandType.LOAD_DYLIB:
+      case MachO.LoadCommandType.TWOLEVEL_HINTS:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new TwolevelHintsCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.ENCRYPTION_INFO_64:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new EncryptionInfoCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LINKER_OPTION:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new LinkerOptionCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.DYLD_INFO:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DyldInfoCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.VERSION_MIN_TVOS:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LOAD_UPWARD_DYLIB:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new DylibCommand(_io__raw_body, this, this._root);
@@ -2460,10 +2390,80 @@ var MachO = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new SegmentCommand64(_io__raw_body, this, this._root);
         break;
+      case MachO.LoadCommandType.SUB_UMBRELLA:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SubCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.VERSION_MIN_WATCHOS:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.ROUTINES_64:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new RoutinesCommand64(_io__raw_body, this, this._root);
+        break;
       case MachO.LoadCommandType.ID_DYLIB:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new DylibCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.SUB_CLIENT:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SubCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.DYLIB_CODE_SIGN_DRS:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.SYMTAB:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SymtabCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LINKER_OPTIMIZATION_HINT:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.DATA_IN_CODE:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.CODE_SIGNATURE:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new CodeSignatureCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.VERSION_MIN_IPHONEOS:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LOAD_WEAK_DYLIB:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylibCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LAZY_LOAD_DYLIB:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylibCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.UUID:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new UuidCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.VERSION_MIN_MACOSX:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
         break;
       default:
         this.body = this._io.readBytes((this.size - 8));

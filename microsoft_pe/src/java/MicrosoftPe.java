@@ -483,7 +483,7 @@ public class MicrosoftPe extends KaitaiStruct {
             this._raw_optionalHdr = this._io.readBytes(coffHdr().sizeOfOptionalHeader());
             KaitaiStream _io__raw_optionalHdr = new ByteBufferKaitaiStream(_raw_optionalHdr);
             this.optionalHdr = new OptionalHeader(_io__raw_optionalHdr, this, _root);
-            sections = new ArrayList<Section>((int) (coffHdr().numberOfSections()));
+            sections = new ArrayList<Section>(((Number) (coffHdr().numberOfSections())).intValue());
             for (int i = 0; i < coffHdr().numberOfSections(); i++) {
                 this.sections.add(new Section(this._io, this, _root));
             }
@@ -853,7 +853,7 @@ public class MicrosoftPe extends KaitaiStruct {
                 return this.symbolTable;
             long _pos = this._io.pos();
             this._io.seek(pointerToSymbolTable());
-            symbolTable = new ArrayList<CoffSymbol>((int) (numberOfSymbols()));
+            symbolTable = new ArrayList<CoffSymbol>(((Number) (numberOfSymbols())).intValue());
             for (int i = 0; i < numberOfSymbols(); i++) {
                 this.symbolTable.add(new CoffSymbol(this._io, this, _root));
             }

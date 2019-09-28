@@ -50,7 +50,7 @@ sub _read {
 sub palette_256 {
     my ($self) = @_;
     return $self->{palette_256} if ($self->{palette_256});
-    if ( (($self->hdr()->version() == $VERSIONS_V3_0) && ($self->hdr()->bits_per_pixel() == 8) && ($self->hdr()->num_planes() == 1)) ) {
+    if ( (($self->hdr()->version() == $Pcx::VERSIONS_V3_0) && ($self->hdr()->bits_per_pixel() == 8) && ($self->hdr()->num_planes() == 1)) ) {
         my $_pos = $self->{_io}->pos();
         $self->{_io}->seek(($self->_io()->size() - 769));
         $self->{palette_256} = Pcx::TPalette256->new($self->{_io}, $self, $self->{_root});

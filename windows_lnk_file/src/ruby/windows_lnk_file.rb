@@ -74,8 +74,8 @@ class WindowsLnkFile < Kaitai::Struct::Struct
     def _read
       @len_id_list = @_io.read_u2le
       @_raw_id_list = @_io.read_bytes(len_id_list)
-      io = Kaitai::Struct::Stream.new(@_raw_id_list)
-      @id_list = WindowsShellItems.new(io)
+      _io__raw_id_list = Kaitai::Struct::Stream.new(@_raw_id_list)
+      @id_list = WindowsShellItems.new(_io__raw_id_list)
       self
     end
     attr_reader :len_id_list
@@ -108,8 +108,8 @@ class WindowsLnkFile < Kaitai::Struct::Struct
     def _read
       @len_all = @_io.read_u4le
       @_raw_all = @_io.read_bytes((len_all - 4))
-      io = Kaitai::Struct::Stream.new(@_raw_all)
-      @all = All.new(io, self, @_root)
+      _io__raw_all = Kaitai::Struct::Stream.new(@_raw_all)
+      @all = All.new(_io__raw_all, self, @_root)
       self
     end
 
@@ -122,7 +122,7 @@ class WindowsLnkFile < Kaitai::Struct::Struct
       end
 
       def _read
-        @drive_type = Kaitai::Struct::Stream::resolve_enum(DRIVE_TYPES, @_io.read_u4le)
+        @drive_type = Kaitai::Struct::Stream::resolve_enum(WindowsLnkFile::DRIVE_TYPES, @_io.read_u4le)
         @drive_serial_number = @_io.read_u4le
         @ofs_volume_label = @_io.read_u4le
         if is_unicode
@@ -162,8 +162,8 @@ class WindowsLnkFile < Kaitai::Struct::Struct
       def _read
         @len_header = @_io.read_u4le
         @_raw_header = @_io.read_bytes((len_header - 8))
-        io = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = Header.new(io, self, @_root)
+        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = Header.new(_io__raw_header, self, @_root)
         self
       end
       def volume_id
@@ -202,8 +202,8 @@ class WindowsLnkFile < Kaitai::Struct::Struct
       def _read
         @len_all = @_io.read_u4le
         @_raw_body = @_io.read_bytes((len_all - 4))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = VolumeIdBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = VolumeIdBody.new(_io__raw_body, self, @_root)
         self
       end
       attr_reader :len_all
@@ -316,15 +316,15 @@ class WindowsLnkFile < Kaitai::Struct::Struct
       @len_header = @_io.ensure_fixed_contents([76, 0, 0, 0].pack('C*'))
       @link_clsid = @_io.ensure_fixed_contents([1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70].pack('C*'))
       @_raw_flags = @_io.read_bytes(4)
-      io = Kaitai::Struct::Stream.new(@_raw_flags)
-      @flags = LinkFlags.new(io, self, @_root)
+      _io__raw_flags = Kaitai::Struct::Stream.new(@_raw_flags)
+      @flags = LinkFlags.new(_io__raw_flags, self, @_root)
       @file_attrs = @_io.read_u4le
       @time_creation = @_io.read_u8le
       @time_access = @_io.read_u8le
       @time_write = @_io.read_u8le
       @target_file_size = @_io.read_u4le
       @icon_index = @_io.read_s4le
-      @show_command = Kaitai::Struct::Stream::resolve_enum(WINDOW_STATE, @_io.read_u4le)
+      @show_command = Kaitai::Struct::Stream::resolve_enum(WindowsLnkFile::WINDOW_STATE, @_io.read_u4le)
       @hotkey = @_io.read_u2le
       @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'))
       self

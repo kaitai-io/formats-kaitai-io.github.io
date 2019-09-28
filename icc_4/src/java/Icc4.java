@@ -588,7 +588,7 @@ public class Icc4 extends KaitaiStruct {
         }
         private void _read() {
             this.tagCount = this._io.readU4be();
-            tags = new ArrayList<TagDefinition>((int) (tagCount()));
+            tags = new ArrayList<TagDefinition>(((Number) (tagCount())).intValue());
             for (int i = 0; i < tagCount(); i++) {
                 this.tags.add(new TagDefinition(this._io, this, _root));
             }
@@ -760,11 +760,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case XYZ_TYPE: {
-                        this.tagData = new XyzType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case XYZ_TYPE: {
+                                this.tagData = new XyzType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -797,11 +802,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_LOCALIZED_UNICODE_TYPE: {
-                        this.tagData = new MultiLocalizedUnicodeType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_LOCALIZED_UNICODE_TYPE: {
+                                this.tagData = new MultiLocalizedUnicodeType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -838,16 +848,16 @@ public class Icc4 extends KaitaiStruct {
                     this.countOfNamedColours = this._io.readU4be();
                     this.numberOfDeviceCoordinatesForEachNamedColour = this._io.readU4be();
                     this.prefixForEachColourName = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
-                    prefixForEachColourNamePadding = new ArrayList<byte[]>((int) ((32 - prefixForEachColourName().length())));
+                    prefixForEachColourNamePadding = new ArrayList<byte[]>(((Number) ((32 - prefixForEachColourName().length()))).intValue());
                     for (int i = 0; i < (32 - prefixForEachColourName().length()); i++) {
                         this.prefixForEachColourNamePadding = this._io.ensureFixedContents(new byte[] { 0 });
                     }
                     this.suffixForEachColourName = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
-                    suffixForEachColourNamePadding = new ArrayList<byte[]>((int) ((32 - suffixForEachColourName().length())));
+                    suffixForEachColourNamePadding = new ArrayList<byte[]>(((Number) ((32 - suffixForEachColourName().length()))).intValue());
                     for (int i = 0; i < (32 - suffixForEachColourName().length()); i++) {
                         this.suffixForEachColourNamePadding = this._io.ensureFixedContents(new byte[] { 0 });
                     }
-                    namedColourDefinitions = new ArrayList<NamedColourDefinition>((int) (countOfNamedColours()));
+                    namedColourDefinitions = new ArrayList<NamedColourDefinition>(((Number) (countOfNamedColours())).intValue());
                     for (int i = 0; i < countOfNamedColours(); i++) {
                         this.namedColourDefinitions.add(new NamedColourDefinition(this._io, this, _root));
                     }
@@ -873,13 +883,13 @@ public class Icc4 extends KaitaiStruct {
                     }
                     private void _read() {
                         this.rootName = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
-                        rootNamePadding = new ArrayList<byte[]>((int) ((32 - rootName().length())));
+                        rootNamePadding = new ArrayList<byte[]>(((Number) ((32 - rootName().length()))).intValue());
                         for (int i = 0; i < (32 - rootName().length()); i++) {
                             this.rootNamePadding = this._io.ensureFixedContents(new byte[] { 0 });
                         }
                         this.pcsCoordinates = this._io.readBytes(6);
                         if (_parent().numberOfDeviceCoordinatesForEachNamedColour() > 0) {
-                            deviceCoordinates = new ArrayList<Integer>((int) (_parent().countOfNamedColours()));
+                            deviceCoordinates = new ArrayList<Integer>(((Number) (_parent().countOfNamedColours())).intValue());
                             for (int i = 0; i < _parent().countOfNamedColours(); i++) {
                                 this.deviceCoordinates.add(this._io.readU2be());
                             }
@@ -942,11 +952,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case VIEWING_CONDITIONS_TYPE: {
-                        this.tagData = new ViewingConditionsType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case VIEWING_CONDITIONS_TYPE: {
+                                this.tagData = new ViewingConditionsType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -979,15 +994,20 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case CURVE_TYPE: {
-                        this.tagData = new CurveType(this._io, this, _root);
-                        break;
-                    }
-                    case PARAMETRIC_CURVE_TYPE: {
-                        this.tagData = new ParametricCurveType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case CURVE_TYPE: {
+                                this.tagData = new CurveType(this._io, this, _root);
+                                break;
+                            }
+                            case PARAMETRIC_CURVE_TYPE: {
+                                this.tagData = new ParametricCurveType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1022,7 +1042,7 @@ public class Icc4 extends KaitaiStruct {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.numberOfChannels = this._io.readU2be();
                     this.countOfMeasurementTypes = this._io.readU2be();
-                    responseCurveStructureOffsets = new ArrayList<Long>((int) (countOfMeasurementTypes()));
+                    responseCurveStructureOffsets = new ArrayList<Long>(((Number) (countOfMeasurementTypes())).intValue());
                     for (int i = 0; i < countOfMeasurementTypes(); i++) {
                         this.responseCurveStructureOffsets.add(this._io.readU4be());
                     }
@@ -1066,7 +1086,7 @@ public class Icc4 extends KaitaiStruct {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.numberOfEntries = this._io.readU4be();
                     if (numberOfEntries() > 1) {
-                        curveValues = new ArrayList<Long>((int) (numberOfEntries()));
+                        curveValues = new ArrayList<Long>(((Number) (numberOfEntries())).intValue());
                         for (int i = 0; i < numberOfEntries(); i++) {
                             this.curveValues.add(this._io.readU4be());
                         }
@@ -1109,11 +1129,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case SIGNATURE_TYPE: {
-                        this.tagData = new SignatureType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case SIGNATURE_TYPE: {
+                                this.tagData = new SignatureType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1189,7 +1214,7 @@ public class Icc4 extends KaitaiStruct {
                     this.numberOfOutputChannels = this._io.readU1();
                     this.numberOfClutGridPoints = this._io.readU1();
                     this.padding = this._io.ensureFixedContents(new byte[] { 0 });
-                    encodedEParameters = new ArrayList<Integer>((int) (9));
+                    encodedEParameters = new ArrayList<Integer>(((Number) (9)).intValue());
                     for (int i = 0; i < 9; i++) {
                         this.encodedEParameters.add(this._io.readS4be());
                     }
@@ -1247,19 +1272,24 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut8Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut16Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
-                        this.tagData = new LutBToAType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut8Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut16Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+                                this.tagData = new LutBToAType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1348,19 +1378,24 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut8Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut16Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
-                        this.tagData = new LutBToAType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut8Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut16Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+                                this.tagData = new LutBToAType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1393,11 +1428,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case XYZ_TYPE: {
-                        this.tagData = new XyzType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case XYZ_TYPE: {
+                                this.tagData = new XyzType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1434,7 +1474,7 @@ public class Icc4 extends KaitaiStruct {
                     this.numberOfOutputChannels = this._io.readU1();
                     this.numberOfClutGridPoints = this._io.readU1();
                     this.padding = this._io.ensureFixedContents(new byte[] { 0 });
-                    encodedEParameters = new ArrayList<Integer>((int) (9));
+                    encodedEParameters = new ArrayList<Integer>(((Number) (9)).intValue());
                     for (int i = 0; i < 9; i++) {
                         this.encodedEParameters.add(this._io.readS4be());
                     }
@@ -1492,11 +1532,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case SIGNATURE_TYPE: {
-                        this.tagData = new SignatureType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case SIGNATURE_TYPE: {
+                                this.tagData = new SignatureType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1568,11 +1613,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case COLORANT_TABLE_TYPE: {
-                        this.tagData = new ColorantTableType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case COLORANT_TABLE_TYPE: {
+                                this.tagData = new ColorantTableType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1605,11 +1655,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MEASUREMENT_TYPE: {
-                        this.tagData = new MeasurementType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MEASUREMENT_TYPE: {
+                                this.tagData = new MeasurementType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1642,11 +1697,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case PROFILE_SEQUENCE_DESC_TYPE: {
-                        this.tagData = new ProfileSequenceDescType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case PROFILE_SEQUENCE_DESC_TYPE: {
+                                this.tagData = new ProfileSequenceDescType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1679,11 +1739,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case SIGNATURE_TYPE: {
-                        this.tagData = new SignatureType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case SIGNATURE_TYPE: {
+                                this.tagData = new SignatureType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1716,19 +1781,24 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut8Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut16Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
-                        this.tagData = new LutAToBType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut8Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut16Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
+                                this.tagData = new LutAToBType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1761,11 +1831,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_PROCESS_ELEMENTS_TYPE: {
-                        this.tagData = new MultiProcessElementsType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_PROCESS_ELEMENTS_TYPE: {
+                                this.tagData = new MultiProcessElementsType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1798,11 +1873,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case RESPONSE_CURVE_SET_16_TYPE: {
-                        this.tagData = new ResponseCurveSet16Type(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case RESPONSE_CURVE_SET_16_TYPE: {
+                                this.tagData = new ResponseCurveSet16Type(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1835,11 +1915,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case XYZ_TYPE: {
-                        this.tagData = new XyzType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case XYZ_TYPE: {
+                                this.tagData = new XyzType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1872,11 +1957,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_LOCALIZED_UNICODE_TYPE: {
-                        this.tagData = new MultiLocalizedUnicodeType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_LOCALIZED_UNICODE_TYPE: {
+                                this.tagData = new MultiLocalizedUnicodeType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1909,19 +1999,24 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut8Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut16Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
-                        this.tagData = new LutBToAType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut8Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut16Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+                                this.tagData = new LutBToAType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1954,15 +2049,20 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case CURVE_TYPE: {
-                        this.tagData = new CurveType(this._io, this, _root);
-                        break;
-                    }
-                    case PARAMETRIC_CURVE_TYPE: {
-                        this.tagData = new ParametricCurveType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case CURVE_TYPE: {
+                                this.tagData = new CurveType(this._io, this, _root);
+                                break;
+                            }
+                            case PARAMETRIC_CURVE_TYPE: {
+                                this.tagData = new ParametricCurveType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -1995,11 +2095,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_PROCESS_ELEMENTS_TYPE: {
-                        this.tagData = new MultiProcessElementsType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_PROCESS_ELEMENTS_TYPE: {
+                                this.tagData = new MultiProcessElementsType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -2032,11 +2137,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_PROCESS_ELEMENTS_TYPE: {
-                        this.tagData = new MultiProcessElementsType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_PROCESS_ELEMENTS_TYPE: {
+                                this.tagData = new MultiProcessElementsType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -2069,19 +2179,24 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut8Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut16Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
-                        this.tagData = new LutBToAType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut8Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut16Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+                                this.tagData = new LutBToAType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -2134,27 +2249,32 @@ public class Icc4 extends KaitaiStruct {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.functionType = ParametricCurveTypeFunctions.byId(this._io.readU2be());
                     this.reserved2 = this._io.ensureFixedContents(new byte[] { 0, 0 });
-                    switch (functionType()) {
-                    case Y_EQUALS_X_TO_POWER_OF_G: {
-                        this.parameters = new ParamsYEqualsXToPowerOfG(this._io, this, _root);
-                        break;
-                    }
-                    case CIE_122_1996: {
-                        this.parameters = new ParamsCie1221996(this._io, this, _root);
-                        break;
-                    }
-                    case IEC_61966_2_1: {
-                        this.parameters = new ParamsIec6196621(this._io, this, _root);
-                        break;
-                    }
-                    case Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C: {
-                        this.parameters = new ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(this._io, this, _root);
-                        break;
-                    }
-                    case IEC_61966_3: {
-                        this.parameters = new ParamsIec619663(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        ParametricCurveTypeFunctions on = functionType();
+                        if (on != null) {
+                            switch (functionType()) {
+                            case CIE_122_1996: {
+                                this.parameters = new ParamsCie1221996(this._io, this, _root);
+                                break;
+                            }
+                            case IEC_61966_3: {
+                                this.parameters = new ParamsIec619663(this._io, this, _root);
+                                break;
+                            }
+                            case IEC_61966_2_1: {
+                                this.parameters = new ParamsIec6196621(this._io, this, _root);
+                                break;
+                            }
+                            case Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C: {
+                                this.parameters = new ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(this._io, this, _root);
+                                break;
+                            }
+                            case Y_EQUALS_X_TO_POWER_OF_G: {
+                                this.parameters = new ParamsYEqualsXToPowerOfG(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 public static class ParamsIec619663 extends KaitaiStruct {
@@ -2381,11 +2501,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case CHROMATICITY_TYPE: {
-                        this.tagData = new ChromaticityType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case CHROMATICITY_TYPE: {
+                                this.tagData = new ChromaticityType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -2418,11 +2543,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case S_15_FIXED_16_ARRAY_TYPE: {
-                        this.tagData = new S15Fixed16ArrayType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case S_15_FIXED_16_ARRAY_TYPE: {
+                                this.tagData = new S15Fixed16ArrayType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -2579,11 +2709,11 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.numberOfStructures = this._io.readU4be();
-                    positionsTable = new ArrayList<PositionNumber>((int) (numberOfStructures()));
+                    positionsTable = new ArrayList<PositionNumber>(((Number) (numberOfStructures())).intValue());
                     for (int i = 0; i < numberOfStructures(); i++) {
                         this.positionsTable.add(new PositionNumber(this._io, this, _root));
                     }
-                    profileIdentifiers = new ArrayList<ProfileIdentifier>((int) (numberOfStructures()));
+                    profileIdentifiers = new ArrayList<ProfileIdentifier>(((Number) (numberOfStructures())).intValue());
                     for (int i = 0; i < numberOfStructures(); i++) {
                         this.profileIdentifiers.add(new ProfileIdentifier(this._io, this, _root));
                     }
@@ -2655,7 +2785,7 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.countOfColorants = this._io.readU4be();
-                    colorants = new ArrayList<Colorant>((int) (countOfColorants()));
+                    colorants = new ArrayList<Colorant>(((Number) (countOfColorants())).intValue());
                     for (int i = 0; i < countOfColorants(); i++) {
                         this.colorants.add(new Colorant(this._io, this, _root));
                     }
@@ -2681,7 +2811,7 @@ public class Icc4 extends KaitaiStruct {
                     }
                     private void _read() {
                         this.name = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
-                        padding = new ArrayList<byte[]>((int) ((32 - name().length())));
+                        padding = new ArrayList<byte[]>(((Number) ((32 - name().length()))).intValue());
                         for (int i = 0; i < (32 - name().length()); i++) {
                             this.padding = this._io.ensureFixedContents(new byte[] { 0 });
                         }
@@ -2762,11 +2892,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_LOCALIZED_UNICODE_TYPE: {
-                        this.tagData = new MultiLocalizedUnicodeType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_LOCALIZED_UNICODE_TYPE: {
+                                this.tagData = new MultiLocalizedUnicodeType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -2799,23 +2934,28 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut8Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut16Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
-                        this.tagData = new LutAToBType(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
-                        this.tagData = new LutBToAType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut8Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut16Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
+                                this.tagData = new LutAToBType(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+                                this.tagData = new LutBToAType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -2880,11 +3020,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_PROCESS_ELEMENTS_TYPE: {
-                        this.tagData = new MultiProcessElementsType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_PROCESS_ELEMENTS_TYPE: {
+                                this.tagData = new MultiProcessElementsType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -2917,19 +3062,24 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut8Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut16Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
-                        this.tagData = new LutBToAType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut8Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut16Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+                                this.tagData = new LutBToAType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -2962,11 +3112,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_LOCALIZED_UNICODE_TYPE: {
-                        this.tagData = new MultiLocalizedUnicodeType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_LOCALIZED_UNICODE_TYPE: {
+                                this.tagData = new MultiLocalizedUnicodeType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3002,7 +3157,7 @@ public class Icc4 extends KaitaiStruct {
                     this.numberOfInputChannels = this._io.readU2be();
                     this.numberOfOutputChannels = this._io.readU2be();
                     this.numberOfProcessingElements = this._io.readU4be();
-                    processElementPositionsTable = new ArrayList<PositionNumber>((int) (numberOfProcessingElements()));
+                    processElementPositionsTable = new ArrayList<PositionNumber>(((Number) (numberOfProcessingElements())).intValue());
                     for (int i = 0; i < numberOfProcessingElements(); i++) {
                         this.processElementPositionsTable.add(new PositionNumber(this._io, this, _root));
                     }
@@ -3085,11 +3240,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case COLORANT_ORDER_TYPE: {
-                        this.tagData = new ColorantOrderType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case COLORANT_ORDER_TYPE: {
+                                this.tagData = new ColorantOrderType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3186,7 +3346,7 @@ public class Icc4 extends KaitaiStruct {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.numberOfDeviceChannels = this._io.readU2be();
                     this.colorantAndPhosphorEncoding = ColorantAndPhosphorEncodings.byId(this._io.readU2be());
-                    ciexyCoordinatesPerChannel = new ArrayList<CiexyCoordinateValues>((int) (numberOfDeviceChannels()));
+                    ciexyCoordinatesPerChannel = new ArrayList<CiexyCoordinateValues>(((Number) (numberOfDeviceChannels())).intValue());
                     for (int i = 0; i < numberOfDeviceChannels(); i++) {
                         this.ciexyCoordinatesPerChannel.add(new CiexyCoordinateValues(this._io, this, _root));
                     }
@@ -3257,11 +3417,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case XYZ_TYPE: {
-                        this.tagData = new XyzType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case XYZ_TYPE: {
+                                this.tagData = new XyzType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3335,7 +3500,7 @@ public class Icc4 extends KaitaiStruct {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.numberOfRecords = this._io.readU4be();
                     this.recordSize = this._io.readU4be();
-                    records = new ArrayList<Record>((int) (numberOfRecords()));
+                    records = new ArrayList<Record>(((Number) (numberOfRecords())).intValue());
                     for (int i = 0; i < numberOfRecords(); i++) {
                         this.records.add(new Record(this._io, this, _root));
                     }
@@ -3422,19 +3587,24 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut8Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut16Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
-                        this.tagData = new LutAToBType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut8Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut16Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
+                                this.tagData = new LutAToBType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3467,19 +3637,24 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut8Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut16Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
-                        this.tagData = new LutAToBType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut8Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut16Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
+                                this.tagData = new LutAToBType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3512,11 +3687,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case SIGNATURE_TYPE: {
-                        this.tagData = new SignatureType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case SIGNATURE_TYPE: {
+                                this.tagData = new SignatureType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3549,11 +3729,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case TEXT_TYPE: {
-                        this.tagData = new TextType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case TEXT_TYPE: {
+                                this.tagData = new TextType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3586,11 +3771,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case COLORANT_TABLE_TYPE: {
-                        this.tagData = new ColorantTableType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case COLORANT_TABLE_TYPE: {
+                                this.tagData = new ColorantTableType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3623,11 +3813,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case DATE_TIME_TYPE: {
-                        this.tagData = new DateTimeType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case DATE_TIME_TYPE: {
+                                this.tagData = new DateTimeType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3660,11 +3855,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case NAMED_COLOR_2_TYPE: {
-                        this.tagData = new NamedColor2Type(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case NAMED_COLOR_2_TYPE: {
+                                this.tagData = new NamedColor2Type(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3697,11 +3897,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_LOCALIZED_UNICODE_TYPE: {
-                        this.tagData = new MultiLocalizedUnicodeType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_LOCALIZED_UNICODE_TYPE: {
+                                this.tagData = new MultiLocalizedUnicodeType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3734,11 +3939,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_PROCESS_ELEMENTS_TYPE: {
-                        this.tagData = new MultiProcessElementsType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_PROCESS_ELEMENTS_TYPE: {
+                                this.tagData = new MultiProcessElementsType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3772,7 +3982,7 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.numberOfDescriptionStructures = this._io.readU4be();
-                    profileDescriptions = new ArrayList<ProfileDescription>((int) (numberOfDescriptionStructures()));
+                    profileDescriptions = new ArrayList<ProfileDescription>(((Number) (numberOfDescriptionStructures())).intValue());
                     for (int i = 0; i < numberOfDescriptionStructures(); i++) {
                         this.profileDescriptions.add(new ProfileDescription(this._io, this, _root));
                     }
@@ -3853,11 +4063,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case PROFILE_SEQUENCE_IDENTIFIER_TYPE: {
-                        this.tagData = new ProfileSequenceIdentifierType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case PROFILE_SEQUENCE_IDENTIFIER_TYPE: {
+                                this.tagData = new ProfileSequenceIdentifierType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3890,11 +4105,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_PROCESS_ELEMENTS_TYPE: {
-                        this.tagData = new MultiProcessElementsType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_PROCESS_ELEMENTS_TYPE: {
+                                this.tagData = new MultiProcessElementsType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -3928,7 +4148,7 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.countOfColorants = this._io.readU4be();
-                    numbersOfColorantsInOrderOfPrinting = new ArrayList<Integer>((int) (countOfColorants()));
+                    numbersOfColorantsInOrderOfPrinting = new ArrayList<Integer>(((Number) (countOfColorants())).intValue());
                     for (int i = 0; i < countOfColorants(); i++) {
                         this.numbersOfColorantsInOrderOfPrinting.add(this._io.readU1());
                     }
@@ -3965,11 +4185,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_PROCESS_ELEMENTS_TYPE: {
-                        this.tagData = new MultiProcessElementsType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_PROCESS_ELEMENTS_TYPE: {
+                                this.tagData = new MultiProcessElementsType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -4002,15 +4227,20 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case CURVE_TYPE: {
-                        this.tagData = new CurveType(this._io, this, _root);
-                        break;
-                    }
-                    case PARAMETRIC_CURVE_TYPE: {
-                        this.tagData = new ParametricCurveType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case CURVE_TYPE: {
+                                this.tagData = new CurveType(this._io, this, _root);
+                                break;
+                            }
+                            case PARAMETRIC_CURVE_TYPE: {
+                                this.tagData = new ParametricCurveType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -4137,15 +4367,20 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case CURVE_TYPE: {
-                        this.tagData = new CurveType(this._io, this, _root);
-                        break;
-                    }
-                    case PARAMETRIC_CURVE_TYPE: {
-                        this.tagData = new ParametricCurveType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case CURVE_TYPE: {
+                                this.tagData = new CurveType(this._io, this, _root);
+                                break;
+                            }
+                            case PARAMETRIC_CURVE_TYPE: {
+                                this.tagData = new ParametricCurveType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -4217,19 +4452,24 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut8Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
-                        this.tagData = new Lut16Type(this._io, this, _root);
-                        break;
-                    }
-                    case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
-                        this.tagData = new LutBToAType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut8Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+                                this.tagData = new Lut16Type(this._io, this, _root);
+                                break;
+                            }
+                            case MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+                                this.tagData = new LutBToAType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -4301,11 +4541,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case XYZ_TYPE: {
-                        this.tagData = new XyzType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case XYZ_TYPE: {
+                                this.tagData = new XyzType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -4377,11 +4622,16 @@ public class Icc4 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tagType = Icc4.TagTable.TagDefinition.TagTypeSignatures.byId(this._io.readU4be());
-                    switch (tagType()) {
-                    case MULTI_PROCESS_ELEMENTS_TYPE: {
-                        this.tagData = new MultiProcessElementsType(this._io, this, _root);
-                        break;
-                    }
+                    {
+                        TagTypeSignatures on = tagType();
+                        if (on != null) {
+                            switch (tagType()) {
+                            case MULTI_PROCESS_ELEMENTS_TYPE: {
+                                this.tagData = new MultiProcessElementsType(this._io, this, _root);
+                                break;
+                            }
+                            }
+                        }
                     }
                 }
                 private TagTypeSignatures tagType;
@@ -4399,305 +4649,312 @@ public class Icc4 extends KaitaiStruct {
                     return this.tagDataElement;
                 long _pos = this._io.pos();
                 this._io.seek(offsetToDataElement());
-                switch (tagSignature()) {
-                case PROFILE_SEQUENCE_IDENTIFIER: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ProfileSequenceIdentifierTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case COLORIMETRIC_INTENT_IMAGE_STATE: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ColorimetricIntentImageStateTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case RED_TRC: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new RedTrcTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case PREVIEW_0: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new Preview0Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case GREEN_TRC: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new GreenTrcTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case B_TO_D_0: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new BToD0Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case COLORANT_TABLE_OUT: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ColorantTableOutTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case B_TO_A_2: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new BToA2Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case CALIBRATION_DATE_TIME: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new CalibrationDateTimeTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case CHROMATIC_ADAPTATION: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ChromaticAdaptationTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case COLORANT_TABLE: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ColorantTableTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case A_TO_B_2: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new AToB2Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case D_TO_B_1: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new DToB1Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case CHROMATICITY: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ChromaticityTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case BLUE_MATRIX_COLUMN: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new BlueMatrixColumnTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case A_TO_B_0: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new AToB0Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case B_TO_D_2: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new BToD2Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case B_TO_A_1: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new BToA1Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case MEDIA_WHITE_POINT: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new MediaWhitePointTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case D_TO_B_0: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new DToB0Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case NAMED_COLOR_2: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new NamedColor2Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case D_TO_B_2: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new DToB2Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case RED_MATRIX_COLUMN: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new RedMatrixColumnTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case VIEWING_CONDITIONS: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ViewingConditionsTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case A_TO_B_1: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new AToB1Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case PREVIEW_1: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new Preview1Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case GRAY_TRC: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new GrayTrcTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case DEVICE_MFG_DESC: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new DeviceMfgDescTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case B_TO_D_1: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new BToD1Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case COLORANT_ORDER: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ColorantOrderTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case COPYRIGHT: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new CopyrightTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case GAMUT: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new GamutTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case CHAR_TARGET: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new CharTargetTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case OUTPUT_RESPONSE: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new OutputResponseTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case TECHNOLOGY: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new TechnologyTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case VIEWING_COND_DESC: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ViewingCondDescTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case PROFILE_DESCRIPTION: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ProfileDescriptionTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case LUMINANCE: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new LuminanceTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case D_TO_B_3: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new DToB3Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case B_TO_D_3: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new BToD3Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case B_TO_A_0: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new BToA0Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case PREVIEW_2: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new Preview2Tag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case GREEN_MATRIX_COLUMN: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new GreenMatrixColumnTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case PROFILE_SEQUENCE: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new ProfileSequenceTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case SATURATION_RENDERING_INTENT_GAMUT: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new SaturationRenderingIntentGamutTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case PERCEPTUAL_RENDERING_INTENT_GAMUT: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new PerceptualRenderingIntentGamutTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case BLUE_TRC: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new BlueTrcTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case DEVICE_MODEL_DESC: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new DeviceModelDescTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                case MEASUREMENT: {
-                    this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
-                    this.tagDataElement = new MeasurementTag(_io__raw_tagDataElement, this, _root);
-                    break;
-                }
-                default: {
-                    this.tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    break;
-                }
+                {
+                    TagSignatures on = tagSignature();
+                    if (on != null) {
+                        switch (tagSignature()) {
+                        case COLORANT_ORDER: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ColorantOrderTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case B_TO_A_2: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new BToA2Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case MEDIA_WHITE_POINT: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new MediaWhitePointTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case B_TO_D_3: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new BToD3Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case COLORIMETRIC_INTENT_IMAGE_STATE: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ColorimetricIntentImageStateTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case VIEWING_COND_DESC: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ViewingCondDescTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case PREVIEW_1: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new Preview1Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case DEVICE_MODEL_DESC: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new DeviceModelDescTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case CHROMATICITY: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ChromaticityTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case PREVIEW_0: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new Preview0Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case D_TO_B_1: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new DToB1Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case SATURATION_RENDERING_INTENT_GAMUT: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new SaturationRenderingIntentGamutTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case B_TO_A_0: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new BToA0Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case GREEN_MATRIX_COLUMN: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new GreenMatrixColumnTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case COPYRIGHT: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new CopyrightTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case BLUE_MATRIX_COLUMN: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new BlueMatrixColumnTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case CHROMATIC_ADAPTATION: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ChromaticAdaptationTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case A_TO_B_1: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new AToB1Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case OUTPUT_RESPONSE: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new OutputResponseTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case PROFILE_SEQUENCE: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ProfileSequenceTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case CHAR_TARGET: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new CharTargetTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case RED_TRC: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new RedTrcTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case GAMUT: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new GamutTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case DEVICE_MFG_DESC: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new DeviceMfgDescTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case MEASUREMENT: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new MeasurementTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case GREEN_TRC: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new GreenTrcTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case D_TO_B_3: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new DToB3Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case COLORANT_TABLE: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ColorantTableTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case D_TO_B_2: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new DToB2Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case PROFILE_DESCRIPTION: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ProfileDescriptionTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case PROFILE_SEQUENCE_IDENTIFIER: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ProfileSequenceIdentifierTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case GRAY_TRC: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new GrayTrcTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case PERCEPTUAL_RENDERING_INTENT_GAMUT: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new PerceptualRenderingIntentGamutTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case BLUE_TRC: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new BlueTrcTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case D_TO_B_0: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new DToB0Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case A_TO_B_2: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new AToB2Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case CALIBRATION_DATE_TIME: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new CalibrationDateTimeTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case COLORANT_TABLE_OUT: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ColorantTableOutTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case RED_MATRIX_COLUMN: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new RedMatrixColumnTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case PREVIEW_2: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new Preview2Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case A_TO_B_0: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new AToB0Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case LUMINANCE: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new LuminanceTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case NAMED_COLOR_2: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new NamedColor2Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case B_TO_D_2: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new BToD2Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case B_TO_D_0: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new BToD0Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case B_TO_A_1: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new BToA1Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case B_TO_D_1: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new BToD1Tag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case VIEWING_CONDITIONS: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new ViewingConditionsTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        case TECHNOLOGY: {
+                            this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
+                            this.tagDataElement = new TechnologyTag(_io__raw_tagDataElement, this, _root);
+                            break;
+                        }
+                        default: {
+                            this.tagDataElement = this._io.readBytes(sizeOfDataElement());
+                            break;
+                        }
+                        }
+                    } else {
+                        this.tagDataElement = this._io.readBytes(sizeOfDataElement());
+                    }
                 }
                 this._io.seek(_pos);
                 return this.tagDataElement;

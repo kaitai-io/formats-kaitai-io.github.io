@@ -318,7 +318,7 @@ sub _read {
 sub mini_stream {
     my ($self) = @_;
     return $self->{mini_stream} if ($self->{mini_stream});
-    if ($self->object_type() == $OBJ_TYPE_ROOT_STORAGE) {
+    if ($self->object_type() == $MicrosoftCfb::DirEntry::OBJ_TYPE_ROOT_STORAGE) {
         my $io = $self->_root()->_io();
         my $_pos = $io->pos();
         $io->seek((($self->ofs() + 1) * $self->_root()->sector_size()));

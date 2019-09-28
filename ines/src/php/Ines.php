@@ -9,8 +9,8 @@ class Ines extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_header = $this->_io->readBytes(16);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_header);
-        $this->_m_header = new \Ines\Header($io, $this, $this->_root);
+        $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+        $this->_m_header = new \Ines\Header($_io__raw_header, $this, $this->_root);
         if ($this->header()->f6()->trainer()) {
             $this->_m_trainer = $this->_io->readBytes(512);
         }
@@ -52,18 +52,18 @@ class Header extends \Kaitai\Struct\Struct {
         $this->_m_lenPrgRom = $this->_io->readU1();
         $this->_m_lenChrRom = $this->_io->readU1();
         $this->_m__raw_f6 = $this->_io->readBytes(1);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_f6);
-        $this->_m_f6 = new \Ines\Header\F6($io, $this, $this->_root);
+        $_io__raw_f6 = new \Kaitai\Struct\Stream($this->_m__raw_f6);
+        $this->_m_f6 = new \Ines\Header\F6($_io__raw_f6, $this, $this->_root);
         $this->_m__raw_f7 = $this->_io->readBytes(1);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_f7);
-        $this->_m_f7 = new \Ines\Header\F7($io, $this, $this->_root);
+        $_io__raw_f7 = new \Kaitai\Struct\Stream($this->_m__raw_f7);
+        $this->_m_f7 = new \Ines\Header\F7($_io__raw_f7, $this, $this->_root);
         $this->_m_lenPrgRam = $this->_io->readU1();
         $this->_m__raw_f9 = $this->_io->readBytes(1);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_f9);
-        $this->_m_f9 = new \Ines\Header\F9($io, $this, $this->_root);
+        $_io__raw_f9 = new \Kaitai\Struct\Stream($this->_m__raw_f9);
+        $this->_m_f9 = new \Ines\Header\F9($_io__raw_f9, $this, $this->_root);
         $this->_m__raw_f10 = $this->_io->readBytes(1);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_f10);
-        $this->_m_f10 = new \Ines\Header\F10($io, $this, $this->_root);
+        $_io__raw_f10 = new \Kaitai\Struct\Stream($this->_m__raw_f10);
+        $this->_m_f10 = new \Ines\Header\F10($_io__raw_f10, $this, $this->_root);
         $this->_m_reserved = $this->_io->ensureFixedContents("\x00\x00\x00\x00\x00");
     }
     protected $_m_mapper;

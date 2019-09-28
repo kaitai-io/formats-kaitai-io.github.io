@@ -170,7 +170,7 @@ public class MachO extends KaitaiStruct {
     private void _read() {
         this.magic = MagicType.byId(this._io.readU4be());
         this.header = new MachHeader(this._io, this, _root);
-        loadCommands = new ArrayList<LoadCommand>((int) (header().ncmds()));
+        loadCommands = new ArrayList<LoadCommand>(((Number) (header().ncmds())).intValue());
         for (int i = 0; i < header().ncmds(); i++) {
             this.loadCommands.add(new LoadCommand(this._io, this, _root));
         }
@@ -360,53 +360,60 @@ public class MachO extends KaitaiStruct {
         private void _read() {
             this.magic = CsMagic.byId(this._io.readU4be());
             this.length = this._io.readU4be();
-            switch (magic()) {
-            case DETACHED_SIGNATURE: {
-                this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SuperBlob(_io__raw_body, this, _root);
-                break;
-            }
-            case EMBEDDED_SIGNATURE: {
-                this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SuperBlob(_io__raw_body, this, _root);
-                break;
-            }
-            case ENTITLEMENT: {
-                this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Entitlement(_io__raw_body, this, _root);
-                break;
-            }
-            case BLOB_WRAPPER: {
-                this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new BlobWrapper(_io__raw_body, this, _root);
-                break;
-            }
-            case REQUIREMENT: {
-                this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Requirement(_io__raw_body, this, _root);
-                break;
-            }
-            case CODE_DIRECTORY: {
-                this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new CodeDirectory(_io__raw_body, this, _root);
-                break;
-            }
-            case REQUIREMENTS: {
-                this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Requirements(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes((length() - 8));
-                break;
-            }
+            {
+                CsMagic on = magic();
+                if (on != null) {
+                    switch (magic()) {
+                    case REQUIREMENT: {
+                        this._raw_body = this._io.readBytes((length() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new Requirement(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case CODE_DIRECTORY: {
+                        this._raw_body = this._io.readBytes((length() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new CodeDirectory(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case ENTITLEMENT: {
+                        this._raw_body = this._io.readBytes((length() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new Entitlement(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case REQUIREMENTS: {
+                        this._raw_body = this._io.readBytes((length() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new Requirements(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case BLOB_WRAPPER: {
+                        this._raw_body = this._io.readBytes((length() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new BlobWrapper(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case EMBEDDED_SIGNATURE: {
+                        this._raw_body = this._io.readBytes((length() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SuperBlob(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case DETACHED_SIGNATURE: {
+                        this._raw_body = this._io.readBytes((length() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SuperBlob(_io__raw_body, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes((length() - 8));
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes((length() - 8));
+                }
             }
         }
         public static class Entitlement extends KaitaiStruct {
@@ -503,7 +510,7 @@ public class MachO extends KaitaiStruct {
                     return this.hashes;
                 long _pos = this._io.pos();
                 this._io.seek(((hashOffset() - 8) - (hashSize() * nSpecialSlots())));
-                hashes = new ArrayList<byte[]>((int) ((nSpecialSlots() + nCodeSlots())));
+                hashes = new ArrayList<byte[]>(((Number) ((nSpecialSlots() + nCodeSlots()))).intValue());
                 for (int i = 0; i < (nSpecialSlots() + nCodeSlots()); i++) {
                     this.hashes.add(this._io.readBytes(hashSize()));
                 }
@@ -599,7 +606,7 @@ public class MachO extends KaitaiStruct {
             }
             private void _read() {
                 this.count = this._io.readU4be();
-                blobs = new ArrayList<BlobIndex>((int) (count()));
+                blobs = new ArrayList<BlobIndex>(((Number) (count())).intValue());
                 for (int i = 0; i < count(); i++) {
                     this.blobs.add(new BlobIndex(this._io, this, _root));
                 }
@@ -679,59 +686,64 @@ public class MachO extends KaitaiStruct {
             }
             private void _read() {
                 this.op = OpEnum.byId(this._io.readU4be());
-                switch (op()) {
-                case CERT_GENERIC: {
-                    this.data = new CertGenericExpr(this._io, this, _root);
-                    break;
-                }
-                case APPLE_GENERIC_ANCHOR: {
-                    this.data = new AppleGenericAnchorExpr(this._io, this, _root);
-                    break;
-                }
-                case INFO_KEY_FIELD: {
-                    this.data = new InfoKeyFieldExpr(this._io, this, _root);
-                    break;
-                }
-                case AND_OP: {
-                    this.data = new AndExpr(this._io, this, _root);
-                    break;
-                }
-                case ANCHOR_HASH: {
-                    this.data = new AnchorHashExpr(this._io, this, _root);
-                    break;
-                }
-                case INFO_KEY_VALUE: {
-                    this.data = new Data(this._io, this, _root);
-                    break;
-                }
-                case OR_OP: {
-                    this.data = new OrExpr(this._io, this, _root);
-                    break;
-                }
-                case TRUSTED_CERT: {
-                    this.data = new CertSlotExpr(this._io, this, _root);
-                    break;
-                }
-                case NOT_OP: {
-                    this.data = new Expr(this._io, this, _root);
-                    break;
-                }
-                case IDENT: {
-                    this.data = new IdentExpr(this._io, this, _root);
-                    break;
-                }
-                case CERT_FIELD: {
-                    this.data = new CertFieldExpr(this._io, this, _root);
-                    break;
-                }
-                case ENTITLEMENT_FIELD: {
-                    this.data = new EntitlementFieldExpr(this._io, this, _root);
-                    break;
-                }
-                case CD_HASH: {
-                    this.data = new Data(this._io, this, _root);
-                    break;
-                }
+                {
+                    OpEnum on = op();
+                    if (on != null) {
+                        switch (op()) {
+                        case IDENT: {
+                            this.data = new IdentExpr(this._io, this, _root);
+                            break;
+                        }
+                        case OR_OP: {
+                            this.data = new OrExpr(this._io, this, _root);
+                            break;
+                        }
+                        case INFO_KEY_VALUE: {
+                            this.data = new Data(this._io, this, _root);
+                            break;
+                        }
+                        case ANCHOR_HASH: {
+                            this.data = new AnchorHashExpr(this._io, this, _root);
+                            break;
+                        }
+                        case INFO_KEY_FIELD: {
+                            this.data = new InfoKeyFieldExpr(this._io, this, _root);
+                            break;
+                        }
+                        case NOT_OP: {
+                            this.data = new Expr(this._io, this, _root);
+                            break;
+                        }
+                        case ENTITLEMENT_FIELD: {
+                            this.data = new EntitlementFieldExpr(this._io, this, _root);
+                            break;
+                        }
+                        case TRUSTED_CERT: {
+                            this.data = new CertSlotExpr(this._io, this, _root);
+                            break;
+                        }
+                        case AND_OP: {
+                            this.data = new AndExpr(this._io, this, _root);
+                            break;
+                        }
+                        case CERT_GENERIC: {
+                            this.data = new CertGenericExpr(this._io, this, _root);
+                            break;
+                        }
+                        case CERT_FIELD: {
+                            this.data = new CertFieldExpr(this._io, this, _root);
+                            break;
+                        }
+                        case CD_HASH: {
+                            this.data = new Data(this._io, this, _root);
+                            break;
+                        }
+                        case APPLE_GENERIC_ANCHOR: {
+                            this.data = new AppleGenericAnchorExpr(this._io, this, _root);
+                            break;
+                        }
+                        }
+                    }
                 }
             }
             public static class InfoKeyFieldExpr extends KaitaiStruct {
@@ -1241,7 +1253,7 @@ public class MachO extends KaitaiStruct {
             }
             private void _read() {
                 this.count = this._io.readU4be();
-                items = new ArrayList<RequirementsBlobIndex>((int) (count()));
+                items = new ArrayList<RequirementsBlobIndex>(((Number) (count())).intValue());
                 for (int i = 0; i < count(); i++) {
                     this.items.add(new RequirementsBlobIndex(this._io, this, _root));
                 }
@@ -1769,7 +1781,7 @@ public class MachO extends KaitaiStruct {
         }
         private void _read() {
             this.numStrings = this._io.readU4le();
-            strings = new ArrayList<String>((int) (numStrings()));
+            strings = new ArrayList<String>(((Number) (numStrings())).intValue());
             for (int i = 0; i < numStrings(); i++) {
                 this.strings.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("utf-8")));
             }
@@ -1812,7 +1824,7 @@ public class MachO extends KaitaiStruct {
             this.initprot = new VmProt(this._io, this, _root);
             this.nsects = this._io.readU4le();
             this.flags = this._io.readU4le();
-            sections = new ArrayList<Section64>((int) (nsects()));
+            sections = new ArrayList<Section64>(((Number) (nsects())).intValue());
             for (int i = 0; i < nsects(); i++) {
                 this.sections.add(new Section64(this._io, this, _root));
             }
@@ -2510,7 +2522,7 @@ public class MachO extends KaitaiStruct {
             KaitaiStream io = _root._io();
             long _pos = io.pos();
             io.seek(indirectSymOff());
-            indirectSymbols = new ArrayList<Long>((int) (nIndirectSyms()));
+            indirectSymbols = new ArrayList<Long>(((Number) (nIndirectSyms())).intValue());
             for (int i = 0; i < nIndirectSyms(); i++) {
                 this.indirectSymbols.add(io.readU4le());
             }
@@ -3084,7 +3096,7 @@ public class MachO extends KaitaiStruct {
             private void _read() {
                 this.terminalSize = new Uleb128(this._io, this, _root);
                 this.childrenCount = this._io.readU1();
-                children = new ArrayList<Child>((int) (childrenCount()));
+                children = new ArrayList<Child>(((Number) (childrenCount())).intValue());
                 for (int i = 0; i < childrenCount(); i++) {
                     this.children.add(new Child(this._io, this, _root));
                 }
@@ -3428,239 +3440,246 @@ public class MachO extends KaitaiStruct {
         private void _read() {
             this.type = MachO.LoadCommandType.byId(this._io.readU4le());
             this.size = this._io.readU4le();
-            switch (type()) {
-            case SUB_LIBRARY: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SubCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case SEGMENT_SPLIT_INFO: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case RPATH: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new RpathCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case SOURCE_VERSION: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SourceVersionCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case ENCRYPTION_INFO_64: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new EncryptionInfoCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case VERSION_MIN_TVOS: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new VersionMinCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case LOAD_DYLINKER: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DylinkerCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case SUB_FRAMEWORK: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SubCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case LOAD_WEAK_DYLIB: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DylibCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case VERSION_MIN_IPHONEOS: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new VersionMinCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case LINKER_OPTIMIZATION_HINT: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case DYLD_ENVIRONMENT: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DylinkerCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case LOAD_UPWARD_DYLIB: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DylibCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case DYLIB_CODE_SIGN_DRS: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case DYLD_INFO: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DyldInfoCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case REEXPORT_DYLIB: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DylibCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case SYMTAB: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SymtabCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case ROUTINES_64: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new RoutinesCommand64(_io__raw_body, this, _root);
-                break;
-            }
-            case ID_DYLINKER: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DylinkerCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case MAIN: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new EntryPointCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case FUNCTION_STARTS: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case VERSION_MIN_MACOSX: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new VersionMinCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case DATA_IN_CODE: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case VERSION_MIN_WATCHOS: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new VersionMinCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case ENCRYPTION_INFO: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new EncryptionInfoCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case SUB_UMBRELLA: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SubCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case LINKER_OPTION: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new LinkerOptionCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case TWOLEVEL_HINTS: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new TwolevelHintsCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case UUID: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new UuidCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case DYLD_INFO_ONLY: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DyldInfoCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case LAZY_LOAD_DYLIB: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DylibCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case SUB_CLIENT: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SubCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case ROUTINES: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new RoutinesCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case CODE_SIGNATURE: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new CodeSignatureCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case DYSYMTAB: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DysymtabCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case LOAD_DYLIB: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DylibCommand(_io__raw_body, this, _root);
-                break;
-            }
-            case SEGMENT_64: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SegmentCommand64(_io__raw_body, this, _root);
-                break;
-            }
-            case ID_DYLIB: {
-                this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DylibCommand(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes((size() - 8));
-                break;
-            }
+            {
+                LoadCommandType on = type();
+                if (on != null) {
+                    switch (type()) {
+                    case ID_DYLINKER: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DylinkerCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case REEXPORT_DYLIB: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DylibCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SOURCE_VERSION: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SourceVersionCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case FUNCTION_STARTS: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case RPATH: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new RpathCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SUB_FRAMEWORK: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SubCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case ROUTINES: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new RoutinesCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SUB_LIBRARY: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SubCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case DYLD_INFO_ONLY: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DyldInfoCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case DYLD_ENVIRONMENT: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DylinkerCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case LOAD_DYLINKER: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DylinkerCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SEGMENT_SPLIT_INFO: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case MAIN: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new EntryPointCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case LOAD_DYLIB: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DylibCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case ENCRYPTION_INFO: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new EncryptionInfoCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case DYSYMTAB: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DysymtabCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case TWOLEVEL_HINTS: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new TwolevelHintsCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case ENCRYPTION_INFO_64: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new EncryptionInfoCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case LINKER_OPTION: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new LinkerOptionCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case DYLD_INFO: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DyldInfoCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case VERSION_MIN_TVOS: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new VersionMinCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case LOAD_UPWARD_DYLIB: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DylibCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SEGMENT_64: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SegmentCommand64(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SUB_UMBRELLA: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SubCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case VERSION_MIN_WATCHOS: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new VersionMinCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case ROUTINES_64: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new RoutinesCommand64(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case ID_DYLIB: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DylibCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SUB_CLIENT: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SubCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case DYLIB_CODE_SIGN_DRS: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case SYMTAB: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new SymtabCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case LINKER_OPTIMIZATION_HINT: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case DATA_IN_CODE: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case CODE_SIGNATURE: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new CodeSignatureCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case VERSION_MIN_IPHONEOS: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new VersionMinCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case LOAD_WEAK_DYLIB: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DylibCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case LAZY_LOAD_DYLIB: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DylibCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case UUID: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new UuidCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case VERSION_MIN_MACOSX: {
+                        this._raw_body = this._io.readBytes((size() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new VersionMinCommand(_io__raw_body, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes((size() - 8));
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes((size() - 8));
+                }
             }
         }
         private LoadCommandType type;
@@ -3819,7 +3838,7 @@ public class MachO extends KaitaiStruct {
             KaitaiStream io = _root._io();
             long _pos = io.pos();
             io.seek(symOff());
-            symbols = new ArrayList<Nlist64>((int) (nSyms()));
+            symbols = new ArrayList<Nlist64>(((Number) (nSyms())).intValue());
             for (int i = 0; i < nSyms(); i++) {
                 this.symbols.add(new Nlist64(io, this, _root));
             }

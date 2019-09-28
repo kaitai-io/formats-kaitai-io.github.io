@@ -68,21 +68,21 @@ public class S3m extends KaitaiStruct {
         this.hasCustomPan = this._io.readU1();
         this.reserved2 = this._io.readBytes(8);
         this.ofsSpecial = this._io.readU2le();
-        channels = new ArrayList<Channel>((int) (32));
+        channels = new ArrayList<Channel>(((Number) (32)).intValue());
         for (int i = 0; i < 32; i++) {
             this.channels.add(new Channel(this._io, this, _root));
         }
         this.orders = this._io.readBytes(numOrders());
-        instruments = new ArrayList<InstrumentPtr>((int) (numInstruments()));
+        instruments = new ArrayList<InstrumentPtr>(((Number) (numInstruments())).intValue());
         for (int i = 0; i < numInstruments(); i++) {
             this.instruments.add(new InstrumentPtr(this._io, this, _root));
         }
-        patterns = new ArrayList<PatternPtr>((int) (numPatterns()));
+        patterns = new ArrayList<PatternPtr>(((Number) (numPatterns())).intValue());
         for (int i = 0; i < numPatterns(); i++) {
             this.patterns.add(new PatternPtr(this._io, this, _root));
         }
         if (hasCustomPan() == 252) {
-            channelPans = new ArrayList<ChannelPan>((int) (32));
+            channelPans = new ArrayList<ChannelPan>(((Number) (32)).intValue());
             for (int i = 0; i < 32; i++) {
                 this.channelPans.add(new ChannelPan(this._io, this, _root));
             }
@@ -468,15 +468,22 @@ public class S3m extends KaitaiStruct {
         private void _read() {
             this.type = InstTypes.byId(this._io.readU1());
             this.filename = KaitaiStream.bytesTerminate(this._io.readBytes(12), (byte) 0, false);
-            switch (type()) {
-            case SAMPLE: {
-                this.body = new Sampled(this._io, this, _root);
-                break;
-            }
-            default: {
-                this.body = new Adlib(this._io, this, _root);
-                break;
-            }
+            {
+                InstTypes on = type();
+                if (on != null) {
+                    switch (type()) {
+                    case SAMPLE: {
+                        this.body = new Sampled(this._io, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = new Adlib(this._io, this, _root);
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = new Adlib(this._io, this, _root);
+                }
             }
             this.tuningHz = this._io.readU4le();
             this.reserved2 = this._io.readBytes(12);

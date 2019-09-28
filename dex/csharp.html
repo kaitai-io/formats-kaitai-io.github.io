@@ -586,36 +586,28 @@ namespace Kaitai
                 _valueType = ((ValueTypeEnum) m_io.ReadBitsInt(5));
                 m_io.AlignToByte();
                 switch (ValueType) {
-                case ValueTypeEnum.Double: {
-                    _value = m_io.ReadF8le();
+                case ValueTypeEnum.Int: {
+                    _value = m_io.ReadS4le();
                     break;
                 }
                 case ValueTypeEnum.Annotation: {
                     _value = new EncodedAnnotation(m_io, this, m_root);
                     break;
                 }
-                case ValueTypeEnum.Type: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.Char: {
-                    _value = m_io.ReadU2le();
+                case ValueTypeEnum.Long: {
+                    _value = m_io.ReadS8le();
                     break;
                 }
                 case ValueTypeEnum.MethodHandle: {
                     _value = m_io.ReadU4le();
                     break;
                 }
-                case ValueTypeEnum.Array: {
-                    _value = new EncodedArray(m_io, this, m_root);
-                    break;
-                }
                 case ValueTypeEnum.Byte: {
                     _value = m_io.ReadS1();
                     break;
                 }
-                case ValueTypeEnum.Method: {
-                    _value = m_io.ReadU4le();
+                case ValueTypeEnum.Array: {
+                    _value = new EncodedArray(m_io, this, m_root);
                     break;
                 }
                 case ValueTypeEnum.MethodType: {
@@ -626,28 +618,36 @@ namespace Kaitai
                     _value = m_io.ReadS2le();
                     break;
                 }
-                case ValueTypeEnum.String: {
+                case ValueTypeEnum.Method: {
                     _value = m_io.ReadU4le();
                     break;
                 }
-                case ValueTypeEnum.Int: {
-                    _value = m_io.ReadS4le();
-                    break;
-                }
-                case ValueTypeEnum.Field: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.Long: {
-                    _value = m_io.ReadS8le();
+                case ValueTypeEnum.Double: {
+                    _value = m_io.ReadF8le();
                     break;
                 }
                 case ValueTypeEnum.Float: {
                     _value = m_io.ReadF4le();
                     break;
                 }
+                case ValueTypeEnum.Type: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
                 case ValueTypeEnum.Enum: {
                     _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.Field: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.String: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.Char: {
+                    _value = m_io.ReadU2le();
                     break;
                 }
                 }

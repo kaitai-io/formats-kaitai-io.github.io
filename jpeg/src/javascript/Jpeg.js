@@ -126,25 +126,25 @@ var Jpeg = (function() {
       }
       if ( ((this.marker != Jpeg.Segment.MarkerEnum.SOI) && (this.marker != Jpeg.Segment.MarkerEnum.EOI)) ) {
         switch (this.marker) {
-        case Jpeg.Segment.MarkerEnum.SOS:
-          this._raw_data = this._io.readBytes((this.length - 2));
-          var _io__raw_data = new KaitaiStream(this._raw_data);
-          this.data = new SegmentSos(_io__raw_data, this, this._root);
-          break;
         case Jpeg.Segment.MarkerEnum.APP1:
           this._raw_data = this._io.readBytes((this.length - 2));
           var _io__raw_data = new KaitaiStream(this._raw_data);
           this.data = new SegmentApp1(_io__raw_data, this, this._root);
+          break;
+        case Jpeg.Segment.MarkerEnum.APP0:
+          this._raw_data = this._io.readBytes((this.length - 2));
+          var _io__raw_data = new KaitaiStream(this._raw_data);
+          this.data = new SegmentApp0(_io__raw_data, this, this._root);
           break;
         case Jpeg.Segment.MarkerEnum.SOF0:
           this._raw_data = this._io.readBytes((this.length - 2));
           var _io__raw_data = new KaitaiStream(this._raw_data);
           this.data = new SegmentSof0(_io__raw_data, this, this._root);
           break;
-        case Jpeg.Segment.MarkerEnum.APP0:
+        case Jpeg.Segment.MarkerEnum.SOS:
           this._raw_data = this._io.readBytes((this.length - 2));
           var _io__raw_data = new KaitaiStream(this._raw_data);
-          this.data = new SegmentApp0(_io__raw_data, this, this._root);
+          this.data = new SegmentSos(_io__raw_data, this, this._root);
           break;
         default:
           this.data = this._io.readBytes((this.length - 2));

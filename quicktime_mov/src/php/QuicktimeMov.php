@@ -223,60 +223,60 @@ class Atom extends \Kaitai\Struct\Struct {
             $this->_m_len64 = $this->_io->readU8be();
         }
         switch ($this->atomType()) {
-            case \QuicktimeMov\AtomType::STBL:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\AtomList($io, $this, $this->_root);
-                break;
             case \QuicktimeMov\AtomType::MOOF:
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\AtomList($io, $this, $this->_root);
-                break;
-            case \QuicktimeMov\AtomType::MVHD:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\MvhdBody($io, $this, $this->_root);
-                break;
-            case \QuicktimeMov\AtomType::MINF:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\AtomList($io, $this, $this->_root);
-                break;
-            case \QuicktimeMov\AtomType::TRAK:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\AtomList($io, $this, $this->_root);
-                break;
-            case \QuicktimeMov\AtomType::TRAF:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\AtomList($io, $this, $this->_root);
-                break;
-            case \QuicktimeMov\AtomType::MDIA:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\AtomList($io, $this, $this->_root);
-                break;
-            case \QuicktimeMov\AtomType::FTYP:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\FtypBody($io, $this, $this->_root);
-                break;
-            case \QuicktimeMov\AtomType::MOOV:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\AtomList($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
                 break;
             case \QuicktimeMov\AtomType::TKHD:
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\TkhdBody($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\TkhdBody($_io__raw_body, $this, $this->_root);
+                break;
+            case \QuicktimeMov\AtomType::STBL:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                break;
+            case \QuicktimeMov\AtomType::TRAF:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                break;
+            case \QuicktimeMov\AtomType::MINF:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                break;
+            case \QuicktimeMov\AtomType::TRAK:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                break;
+            case \QuicktimeMov\AtomType::MOOV:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                break;
+            case \QuicktimeMov\AtomType::MDIA:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
                 break;
             case \QuicktimeMov\AtomType::DINF:
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \QuicktimeMov\AtomList($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                break;
+            case \QuicktimeMov\AtomType::MVHD:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\MvhdBody($_io__raw_body, $this, $this->_root);
+                break;
+            case \QuicktimeMov\AtomType::FTYP:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \QuicktimeMov\FtypBody($_io__raw_body, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->len());

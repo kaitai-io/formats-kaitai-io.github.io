@@ -332,7 +332,7 @@ class ShapefileMain(KaitaiStruct):
             self.unused_field_5 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
             self.file_length = self._io.read_s4be()
             self.version = self._io.ensure_fixed_contents(b"\xE8\x03\x00\x00")
-            self.shape_type = self._root.ShapeType(self._io.read_s4le())
+            self.shape_type = KaitaiStream.resolve_enum(self._root.ShapeType, self._io.read_s4le())
             self.bounding_box = self._root.BoundingBoxXYZM(self._io, self, self._root)
 
 
@@ -370,35 +370,35 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.shape_type = self._root.ShapeType(self._io.read_s4le())
+            self.shape_type = KaitaiStream.resolve_enum(self._root.ShapeType, self._io.read_s4le())
             if self.shape_type != self._root.ShapeType.null_shape:
                 _on = self.shape_type
-                if _on == self._root.ShapeType.point_m:
-                    self.shape_parameters = self._root.PointM(self._io, self, self._root)
-                elif _on == self._root.ShapeType.polygon_z:
-                    self.shape_parameters = self._root.PolygonZ(self._io, self, self._root)
-                elif _on == self._root.ShapeType.multi_point_m:
-                    self.shape_parameters = self._root.MultiPointM(self._io, self, self._root)
-                elif _on == self._root.ShapeType.poly_line_z:
+                if _on == self._root.ShapeType.poly_line_z:
                     self.shape_parameters = self._root.PolyLineZ(self._io, self, self._root)
-                elif _on == self._root.ShapeType.multi_point_z:
-                    self.shape_parameters = self._root.MultiPointZ(self._io, self, self._root)
-                elif _on == self._root.ShapeType.multi_point:
-                    self.shape_parameters = self._root.MultiPoint(self._io, self, self._root)
-                elif _on == self._root.ShapeType.polygon_m:
-                    self.shape_parameters = self._root.PolygonM(self._io, self, self._root)
-                elif _on == self._root.ShapeType.polygon:
-                    self.shape_parameters = self._root.Polygon(self._io, self, self._root)
-                elif _on == self._root.ShapeType.point:
-                    self.shape_parameters = self._root.Point(self._io, self, self._root)
-                elif _on == self._root.ShapeType.poly_line_m:
-                    self.shape_parameters = self._root.PolyLineM(self._io, self, self._root)
-                elif _on == self._root.ShapeType.poly_line:
-                    self.shape_parameters = self._root.PolyLine(self._io, self, self._root)
-                elif _on == self._root.ShapeType.point_z:
-                    self.shape_parameters = self._root.PointZ(self._io, self, self._root)
                 elif _on == self._root.ShapeType.multi_patch:
                     self.shape_parameters = self._root.MultiPatch(self._io, self, self._root)
+                elif _on == self._root.ShapeType.poly_line_m:
+                    self.shape_parameters = self._root.PolyLineM(self._io, self, self._root)
+                elif _on == self._root.ShapeType.polygon:
+                    self.shape_parameters = self._root.Polygon(self._io, self, self._root)
+                elif _on == self._root.ShapeType.polygon_z:
+                    self.shape_parameters = self._root.PolygonZ(self._io, self, self._root)
+                elif _on == self._root.ShapeType.point_z:
+                    self.shape_parameters = self._root.PointZ(self._io, self, self._root)
+                elif _on == self._root.ShapeType.poly_line:
+                    self.shape_parameters = self._root.PolyLine(self._io, self, self._root)
+                elif _on == self._root.ShapeType.point_m:
+                    self.shape_parameters = self._root.PointM(self._io, self, self._root)
+                elif _on == self._root.ShapeType.polygon_m:
+                    self.shape_parameters = self._root.PolygonM(self._io, self, self._root)
+                elif _on == self._root.ShapeType.multi_point:
+                    self.shape_parameters = self._root.MultiPoint(self._io, self, self._root)
+                elif _on == self._root.ShapeType.point:
+                    self.shape_parameters = self._root.Point(self._io, self, self._root)
+                elif _on == self._root.ShapeType.multi_point_m:
+                    self.shape_parameters = self._root.MultiPointM(self._io, self, self._root)
+                elif _on == self._root.ShapeType.multi_point_z:
+                    self.shape_parameters = self._root.MultiPointZ(self._io, self, self._root)
 
 
 
@@ -419,7 +419,7 @@ class ShapefileMain(KaitaiStruct):
 
             self.part_types = [None] * (self.number_of_parts)
             for i in range(self.number_of_parts):
-                self.part_types[i] = self._root.PartType(self._io.read_s4le())
+                self.part_types[i] = KaitaiStream.resolve_enum(self._root.PartType, self._io.read_s4le())
 
             self.points = [None] * (self.number_of_points)
             for i in range(self.number_of_points):

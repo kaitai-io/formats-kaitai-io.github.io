@@ -435,10 +435,22 @@ namespace Kaitai
                     long _pos = m_io.Pos;
                     m_io.Seek(OfsData);
                     switch (StreamType) {
+                    case WindowsMinidump.StreamTypes.MemoryList: {
+                        __raw_data = m_io.ReadBytes(LenData);
+                        var io___raw_data = new KaitaiStream(__raw_data);
+                        _data = new MemoryList(io___raw_data, this, m_root);
+                        break;
+                    }
                     case WindowsMinidump.StreamTypes.MiscInfo: {
                         __raw_data = m_io.ReadBytes(LenData);
                         var io___raw_data = new KaitaiStream(__raw_data);
                         _data = new MiscInfo(io___raw_data, this, m_root);
+                        break;
+                    }
+                    case WindowsMinidump.StreamTypes.ThreadList: {
+                        __raw_data = m_io.ReadBytes(LenData);
+                        var io___raw_data = new KaitaiStream(__raw_data);
+                        _data = new ThreadList(io___raw_data, this, m_root);
                         break;
                     }
                     case WindowsMinidump.StreamTypes.Exception: {
@@ -447,22 +459,10 @@ namespace Kaitai
                         _data = new ExceptionStream(io___raw_data, this, m_root);
                         break;
                     }
-                    case WindowsMinidump.StreamTypes.MemoryList: {
-                        __raw_data = m_io.ReadBytes(LenData);
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new MemoryList(io___raw_data, this, m_root);
-                        break;
-                    }
                     case WindowsMinidump.StreamTypes.SystemInfo: {
                         __raw_data = m_io.ReadBytes(LenData);
                         var io___raw_data = new KaitaiStream(__raw_data);
                         _data = new SystemInfo(io___raw_data, this, m_root);
-                        break;
-                    }
-                    case WindowsMinidump.StreamTypes.ThreadList: {
-                        __raw_data = m_io.ReadBytes(LenData);
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new ThreadList(io___raw_data, this, m_root);
                         break;
                     }
                     default: {

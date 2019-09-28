@@ -168,8 +168,8 @@ class Cramfs < Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(offset)
       @_raw_as_dir = io.read_bytes(size)
-      io = Kaitai::Struct::Stream.new(@_raw_as_dir)
-      @as_dir = DirInode.new(io, self, @_root)
+      _io__raw_as_dir = Kaitai::Struct::Stream.new(@_raw_as_dir)
+      @as_dir = DirInode.new(_io__raw_as_dir, self, @_root)
       io.seek(_pos)
       @as_dir
     end

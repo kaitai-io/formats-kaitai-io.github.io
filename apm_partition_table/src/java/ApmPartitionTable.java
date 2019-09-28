@@ -222,8 +222,8 @@ public class ApmPartitionTable extends KaitaiStruct {
         KaitaiStream io = _root._io();
         long _pos = io.pos();
         io.seek(_root.sectorSize());
-        this._raw_partitionEntries = new ArrayList<byte[]>((int) (_root.partitionLookup().numberOfPartitions()));
-        partitionEntries = new ArrayList<PartitionEntry>((int) (_root.partitionLookup().numberOfPartitions()));
+        this._raw_partitionEntries = new ArrayList<byte[]>(((Number) (_root.partitionLookup().numberOfPartitions())).intValue());
+        partitionEntries = new ArrayList<PartitionEntry>(((Number) (_root.partitionLookup().numberOfPartitions())).intValue());
         for (int i = 0; i < _root.partitionLookup().numberOfPartitions(); i++) {
             this._raw_partitionEntries.add(io.readBytes(sectorSize()));
             KaitaiStream _io__raw_partitionEntries = new ByteBufferKaitaiStream(_raw_partitionEntries.get(_raw_partitionEntries.size() - 1));

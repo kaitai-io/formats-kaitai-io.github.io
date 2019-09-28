@@ -53,8 +53,8 @@ class Lzh(KaitaiStruct):
 
         def _read(self):
             self._raw_header = self._io.read_bytes((self._parent.header_len - 1))
-            io = KaitaiStream(BytesIO(self._raw_header))
-            self.header = self._root.Header(io, self, self._root)
+            _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+            self.header = self._root.Header(_io__raw_header, self, self._root)
             if self.header.header1.lha_level == 0:
                 self.file_uncompr_crc16 = self._io.read_u2le()
 

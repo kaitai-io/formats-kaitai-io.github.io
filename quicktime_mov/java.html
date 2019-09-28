@@ -146,11 +146,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="quicktime_mov parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="quicktime_mov parsing C# library">C#</a></li>
                 
                 
@@ -720,77 +715,84 @@ public class QuicktimeMov extends KaitaiStruct {
             if (len32() == 1) {
                 this.len64 = this._io.readU8be();
             }
-            switch (atomType()) {
-            case STBL: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new AtomList(_io__raw_body, this, _root);
-                break;
-            }
-            case MOOF: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new AtomList(_io__raw_body, this, _root);
-                break;
-            }
-            case MVHD: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new MvhdBody(_io__raw_body, this, _root);
-                break;
-            }
-            case MINF: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new AtomList(_io__raw_body, this, _root);
-                break;
-            }
-            case TRAK: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new AtomList(_io__raw_body, this, _root);
-                break;
-            }
-            case TRAF: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new AtomList(_io__raw_body, this, _root);
-                break;
-            }
-            case MDIA: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new AtomList(_io__raw_body, this, _root);
-                break;
-            }
-            case FTYP: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new FtypBody(_io__raw_body, this, _root);
-                break;
-            }
-            case MOOV: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new AtomList(_io__raw_body, this, _root);
-                break;
-            }
-            case TKHD: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new TkhdBody(_io__raw_body, this, _root);
-                break;
-            }
-            case DINF: {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new AtomList(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(len());
-                break;
-            }
+            {
+                AtomType on = atomType();
+                if (on != null) {
+                    switch (atomType()) {
+                    case MOOF: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new AtomList(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case TKHD: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new TkhdBody(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case STBL: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new AtomList(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case TRAF: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new AtomList(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case MINF: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new AtomList(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case TRAK: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new AtomList(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case MOOV: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new AtomList(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case MDIA: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new AtomList(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case DINF: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new AtomList(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case MVHD: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new MvhdBody(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case FTYP: {
+                        this._raw_body = this._io.readBytes(len());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new FtypBody(_io__raw_body, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes(len());
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes(len());
+                }
             }
         }
         private Integer len;

@@ -136,40 +136,40 @@ class CsBlob extends \Kaitai\Struct\Struct {
         $this->_m_magic = $this->_io->readU4be();
         $this->_m_length = $this->_io->readU4be();
         switch ($this->magic()) {
-            case \MachO\CsBlob\CsMagic::DETACHED_SIGNATURE:
-                $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\CsBlob\SuperBlob($io, $this, $this->_root);
-                break;
-            case \MachO\CsBlob\CsMagic::EMBEDDED_SIGNATURE:
-                $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\CsBlob\SuperBlob($io, $this, $this->_root);
-                break;
-            case \MachO\CsBlob\CsMagic::ENTITLEMENT:
-                $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\CsBlob\Entitlement($io, $this, $this->_root);
-                break;
-            case \MachO\CsBlob\CsMagic::BLOB_WRAPPER:
-                $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\CsBlob\BlobWrapper($io, $this, $this->_root);
-                break;
             case \MachO\CsBlob\CsMagic::REQUIREMENT:
                 $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\CsBlob\Requirement($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\CsBlob\Requirement($_io__raw_body, $this, $this->_root);
                 break;
             case \MachO\CsBlob\CsMagic::CODE_DIRECTORY:
                 $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\CsBlob\CodeDirectory($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\CsBlob\CodeDirectory($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\CsBlob\CsMagic::ENTITLEMENT:
+                $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\CsBlob\Entitlement($_io__raw_body, $this, $this->_root);
                 break;
             case \MachO\CsBlob\CsMagic::REQUIREMENTS:
                 $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\CsBlob\Requirements($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\CsBlob\Requirements($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\CsBlob\CsMagic::BLOB_WRAPPER:
+                $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\CsBlob\BlobWrapper($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\CsBlob\CsMagic::EMBEDDED_SIGNATURE:
+                $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\CsBlob\SuperBlob($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\CsBlob\CsMagic::DETACHED_SIGNATURE:
+                $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\CsBlob\SuperBlob($_io__raw_body, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes(($this->length() - 8));
@@ -347,44 +347,44 @@ class Expr extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_op = $this->_io->readU4be();
         switch ($this->op()) {
-            case \MachO\CsBlob\Expr\OpEnum::CERT_GENERIC:
-                $this->_m_data = new \MachO\CsBlob\Expr\CertGenericExpr($this->_io, $this, $this->_root);
-                break;
-            case \MachO\CsBlob\Expr\OpEnum::APPLE_GENERIC_ANCHOR:
-                $this->_m_data = new \MachO\CsBlob\Expr\AppleGenericAnchorExpr($this->_io, $this, $this->_root);
-                break;
-            case \MachO\CsBlob\Expr\OpEnum::INFO_KEY_FIELD:
-                $this->_m_data = new \MachO\CsBlob\Expr\InfoKeyFieldExpr($this->_io, $this, $this->_root);
-                break;
-            case \MachO\CsBlob\Expr\OpEnum::AND_OP:
-                $this->_m_data = new \MachO\CsBlob\Expr\AndExpr($this->_io, $this, $this->_root);
-                break;
-            case \MachO\CsBlob\Expr\OpEnum::ANCHOR_HASH:
-                $this->_m_data = new \MachO\CsBlob\Expr\AnchorHashExpr($this->_io, $this, $this->_root);
-                break;
-            case \MachO\CsBlob\Expr\OpEnum::INFO_KEY_VALUE:
-                $this->_m_data = new \MachO\CsBlob\Data($this->_io, $this, $this->_root);
+            case \MachO\CsBlob\Expr\OpEnum::IDENT:
+                $this->_m_data = new \MachO\CsBlob\Expr\IdentExpr($this->_io, $this, $this->_root);
                 break;
             case \MachO\CsBlob\Expr\OpEnum::OR_OP:
                 $this->_m_data = new \MachO\CsBlob\Expr\OrExpr($this->_io, $this, $this->_root);
                 break;
-            case \MachO\CsBlob\Expr\OpEnum::TRUSTED_CERT:
-                $this->_m_data = new \MachO\CsBlob\Expr\CertSlotExpr($this->_io, $this, $this->_root);
+            case \MachO\CsBlob\Expr\OpEnum::INFO_KEY_VALUE:
+                $this->_m_data = new \MachO\CsBlob\Data($this->_io, $this, $this->_root);
+                break;
+            case \MachO\CsBlob\Expr\OpEnum::ANCHOR_HASH:
+                $this->_m_data = new \MachO\CsBlob\Expr\AnchorHashExpr($this->_io, $this, $this->_root);
+                break;
+            case \MachO\CsBlob\Expr\OpEnum::INFO_KEY_FIELD:
+                $this->_m_data = new \MachO\CsBlob\Expr\InfoKeyFieldExpr($this->_io, $this, $this->_root);
                 break;
             case \MachO\CsBlob\Expr\OpEnum::NOT_OP:
                 $this->_m_data = new \MachO\CsBlob\Expr($this->_io, $this, $this->_root);
                 break;
-            case \MachO\CsBlob\Expr\OpEnum::IDENT:
-                $this->_m_data = new \MachO\CsBlob\Expr\IdentExpr($this->_io, $this, $this->_root);
+            case \MachO\CsBlob\Expr\OpEnum::ENTITLEMENT_FIELD:
+                $this->_m_data = new \MachO\CsBlob\Expr\EntitlementFieldExpr($this->_io, $this, $this->_root);
+                break;
+            case \MachO\CsBlob\Expr\OpEnum::TRUSTED_CERT:
+                $this->_m_data = new \MachO\CsBlob\Expr\CertSlotExpr($this->_io, $this, $this->_root);
+                break;
+            case \MachO\CsBlob\Expr\OpEnum::AND_OP:
+                $this->_m_data = new \MachO\CsBlob\Expr\AndExpr($this->_io, $this, $this->_root);
+                break;
+            case \MachO\CsBlob\Expr\OpEnum::CERT_GENERIC:
+                $this->_m_data = new \MachO\CsBlob\Expr\CertGenericExpr($this->_io, $this, $this->_root);
                 break;
             case \MachO\CsBlob\Expr\OpEnum::CERT_FIELD:
                 $this->_m_data = new \MachO\CsBlob\Expr\CertFieldExpr($this->_io, $this, $this->_root);
                 break;
-            case \MachO\CsBlob\Expr\OpEnum::ENTITLEMENT_FIELD:
-                $this->_m_data = new \MachO\CsBlob\Expr\EntitlementFieldExpr($this->_io, $this, $this->_root);
-                break;
             case \MachO\CsBlob\Expr\OpEnum::CD_HASH:
                 $this->_m_data = new \MachO\CsBlob\Data($this->_io, $this, $this->_root);
+                break;
+            case \MachO\CsBlob\Expr\OpEnum::APPLE_GENERIC_ANCHOR:
+                $this->_m_data = new \MachO\CsBlob\Expr\AppleGenericAnchorExpr($this->_io, $this, $this->_root);
                 break;
         }
     }
@@ -624,8 +624,8 @@ class BlobIndex extends \Kaitai\Struct\Struct {
         $_pos = $io->pos();
         $io->seek(($this->offset() - 8));
         $this->_m__raw_blob = $io->readBytesFull();
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_blob);
-        $this->_m_blob = new \MachO\CsBlob($io, $this, $this->_root);
+        $_io__raw_blob = new \Kaitai\Struct\Stream($this->_m__raw_blob);
+        $this->_m_blob = new \MachO\CsBlob($_io__raw_blob, $this, $this->_root);
         $io->seek($_pos);
         return $this->_m_blob;
     }
@@ -1215,88 +1215,88 @@ class Section64 extends \Kaitai\Struct\Struct {
         switch ($this->sectName()) {
             case "__objc_nlclslist":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             case "__objc_methname":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\StringList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\StringList($_io__raw_data, $this, $this->_root);
                 break;
             case "__nl_symbol_ptr":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             case "__la_symbol_ptr":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             case "__objc_selrefs":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             case "__cstring":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\StringList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\StringList($_io__raw_data, $this, $this->_root);
                 break;
             case "__objc_classlist":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             case "__objc_protolist":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             case "__objc_imageinfo":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             case "__objc_methtype":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\StringList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\StringList($_io__raw_data, $this, $this->_root);
                 break;
             case "__cfstring":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\CfStringList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\CfStringList($_io__raw_data, $this, $this->_root);
                 break;
             case "__objc_classrefs":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             case "__objc_protorefs":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             case "__objc_classname":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\StringList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\StringList($_io__raw_data, $this, $this->_root);
                 break;
             case "__got":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             case "__eh_frame":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\EhFrame($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\EhFrame($_io__raw_data, $this, $this->_root);
                 break;
             case "__objc_superrefs":
                 $this->_m__raw_data = $io->readBytes($this->size());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \MachO\SegmentCommand64\Section64\PointerList($_io__raw_data, $this, $this->_root);
                 break;
             default:
                 $this->_m_data = $io->readBytes($this->size());
@@ -1395,8 +1395,8 @@ class EhFrameItem extends \Kaitai\Struct\Struct {
             switch ($this->id()) {
                 case 0:
                     $this->_m__raw_body = $this->_io->readBytes(($this->length() - 4));
-                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \MachO\SegmentCommand64\Section64\EhFrameItem\Cie($io, $this, $this->_root);
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \MachO\SegmentCommand64\Section64\EhFrameItem\Cie($_io__raw_body, $this, $this->_root);
                     break;
                 default:
                     $this->_m_body = $this->_io->readBytes(($this->length() - 4));
@@ -1867,8 +1867,8 @@ class CodeSignatureCommand extends \Kaitai\Struct\Struct {
         $_pos = $io->pos();
         $io->seek($this->dataOff());
         $this->_m__raw_codeSignature = $io->readBytes($this->dataSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_codeSignature);
-        $this->_m_codeSignature = new \MachO\CsBlob($io, $this, $this->_root);
+        $_io__raw_codeSignature = new \Kaitai\Struct\Stream($this->_m__raw_codeSignature);
+        $this->_m_codeSignature = new \MachO\CsBlob($_io__raw_codeSignature, $this, $this->_root);
         $io->seek($_pos);
         return $this->_m_codeSignature;
     }
@@ -1908,8 +1908,8 @@ class DyldInfoCommand extends \Kaitai\Struct\Struct {
         $_pos = $io->pos();
         $io->seek($this->rebaseOff());
         $this->_m__raw_rebase = $io->readBytes($this->rebaseSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_rebase);
-        $this->_m_rebase = new \MachO\DyldInfoCommand\RebaseData($io, $this, $this->_root);
+        $_io__raw_rebase = new \Kaitai\Struct\Stream($this->_m__raw_rebase);
+        $this->_m_rebase = new \MachO\DyldInfoCommand\RebaseData($_io__raw_rebase, $this, $this->_root);
         $io->seek($_pos);
         return $this->_m_rebase;
     }
@@ -1921,8 +1921,8 @@ class DyldInfoCommand extends \Kaitai\Struct\Struct {
         $_pos = $io->pos();
         $io->seek($this->bindOff());
         $this->_m__raw_bind = $io->readBytes($this->bindSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_bind);
-        $this->_m_bind = new \MachO\DyldInfoCommand\BindData($io, $this, $this->_root);
+        $_io__raw_bind = new \Kaitai\Struct\Stream($this->_m__raw_bind);
+        $this->_m_bind = new \MachO\DyldInfoCommand\BindData($_io__raw_bind, $this, $this->_root);
         $io->seek($_pos);
         return $this->_m_bind;
     }
@@ -1934,8 +1934,8 @@ class DyldInfoCommand extends \Kaitai\Struct\Struct {
         $_pos = $io->pos();
         $io->seek($this->lazyBindOff());
         $this->_m__raw_lazyBind = $io->readBytes($this->lazyBindSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_lazyBind);
-        $this->_m_lazyBind = new \MachO\DyldInfoCommand\LazyBindData($io, $this, $this->_root);
+        $_io__raw_lazyBind = new \Kaitai\Struct\Stream($this->_m__raw_lazyBind);
+        $this->_m_lazyBind = new \MachO\DyldInfoCommand\LazyBindData($_io__raw_lazyBind, $this, $this->_root);
         $io->seek($_pos);
         return $this->_m_lazyBind;
     }
@@ -1947,8 +1947,8 @@ class DyldInfoCommand extends \Kaitai\Struct\Struct {
         $_pos = $io->pos();
         $io->seek($this->exportOff());
         $this->_m__raw_exports = $io->readBytes($this->exportSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_exports);
-        $this->_m_exports = new \MachO\DyldInfoCommand\ExportNode($io, $this, $this->_root);
+        $_io__raw_exports = new \Kaitai\Struct\Stream($this->_m__raw_exports);
+        $this->_m_exports = new \MachO\DyldInfoCommand\ExportNode($_io__raw_exports, $this, $this->_root);
         $io->seek($_pos);
         return $this->_m_exports;
     }
@@ -2287,195 +2287,195 @@ class LoadCommand extends \Kaitai\Struct\Struct {
         $this->_m_type = $this->_io->readU4le();
         $this->_m_size = $this->_io->readU4le();
         switch ($this->type()) {
-            case \MachO\LoadCommandType::SUB_LIBRARY:
+            case \MachO\LoadCommandType::ID_DYLINKER:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\SubCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::SEGMENT_SPLIT_INFO:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\LinkeditDataCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::RPATH:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\RpathCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::SOURCE_VERSION:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\SourceVersionCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::ENCRYPTION_INFO_64:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\EncryptionInfoCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::VERSION_MIN_TVOS:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\VersionMinCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::LOAD_DYLINKER:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DylinkerCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::SUB_FRAMEWORK:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\SubCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::LOAD_WEAK_DYLIB:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::VERSION_MIN_IPHONEOS:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\VersionMinCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::LINKER_OPTIMIZATION_HINT:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\LinkeditDataCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::DYLD_ENVIRONMENT:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DylinkerCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::LOAD_UPWARD_DYLIB:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::DYLIB_CODE_SIGN_DRS:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\LinkeditDataCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::DYLD_INFO:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DyldInfoCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylinkerCommand($_io__raw_body, $this, $this->_root);
                 break;
             case \MachO\LoadCommandType::REEXPORT_DYLIB:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($_io__raw_body, $this, $this->_root);
                 break;
-            case \MachO\LoadCommandType::SYMTAB:
+            case \MachO\LoadCommandType::SOURCE_VERSION:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\SymtabCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::ROUTINES_64:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\RoutinesCommand64($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::ID_DYLINKER:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DylinkerCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::MAIN:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\EntryPointCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SourceVersionCommand($_io__raw_body, $this, $this->_root);
                 break;
             case \MachO\LoadCommandType::FUNCTION_STARTS:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\LinkeditDataCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\LinkeditDataCommand($_io__raw_body, $this, $this->_root);
                 break;
-            case \MachO\LoadCommandType::VERSION_MIN_MACOSX:
+            case \MachO\LoadCommandType::RPATH:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\VersionMinCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\RpathCommand($_io__raw_body, $this, $this->_root);
                 break;
-            case \MachO\LoadCommandType::DATA_IN_CODE:
+            case \MachO\LoadCommandType::SUB_FRAMEWORK:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\LinkeditDataCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::VERSION_MIN_WATCHOS:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\VersionMinCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::ENCRYPTION_INFO:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\EncryptionInfoCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::SUB_UMBRELLA:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\SubCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::LINKER_OPTION:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\LinkerOptionCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::TWOLEVEL_HINTS:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\TwolevelHintsCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::UUID:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\UuidCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::DYLD_INFO_ONLY:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DyldInfoCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::LAZY_LOAD_DYLIB:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
-                break;
-            case \MachO\LoadCommandType::SUB_CLIENT:
-                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\SubCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SubCommand($_io__raw_body, $this, $this->_root);
                 break;
             case \MachO\LoadCommandType::ROUTINES:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\RoutinesCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\RoutinesCommand($_io__raw_body, $this, $this->_root);
                 break;
-            case \MachO\LoadCommandType::CODE_SIGNATURE:
+            case \MachO\LoadCommandType::SUB_LIBRARY:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\CodeSignatureCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SubCommand($_io__raw_body, $this, $this->_root);
                 break;
-            case \MachO\LoadCommandType::DYSYMTAB:
+            case \MachO\LoadCommandType::DYLD_INFO_ONLY:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DysymtabCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DyldInfoCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::DYLD_ENVIRONMENT:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylinkerCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LOAD_DYLINKER:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylinkerCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::SEGMENT_SPLIT_INFO:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\LinkeditDataCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::MAIN:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\EntryPointCommand($_io__raw_body, $this, $this->_root);
                 break;
             case \MachO\LoadCommandType::LOAD_DYLIB:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::ENCRYPTION_INFO:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\EncryptionInfoCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::DYSYMTAB:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DysymtabCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::TWOLEVEL_HINTS:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\TwolevelHintsCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::ENCRYPTION_INFO_64:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\EncryptionInfoCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LINKER_OPTION:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\LinkerOptionCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::DYLD_INFO:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DyldInfoCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::VERSION_MIN_TVOS:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\VersionMinCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LOAD_UPWARD_DYLIB:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($_io__raw_body, $this, $this->_root);
                 break;
             case \MachO\LoadCommandType::SEGMENT_64:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\SegmentCommand64($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SegmentCommand64($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::SUB_UMBRELLA:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SubCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::VERSION_MIN_WATCHOS:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\VersionMinCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::ROUTINES_64:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\RoutinesCommand64($_io__raw_body, $this, $this->_root);
                 break;
             case \MachO\LoadCommandType::ID_DYLIB:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::SUB_CLIENT:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SubCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::DYLIB_CODE_SIGN_DRS:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\LinkeditDataCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::SYMTAB:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SymtabCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LINKER_OPTIMIZATION_HINT:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\LinkeditDataCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::DATA_IN_CODE:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\LinkeditDataCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::CODE_SIGNATURE:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\CodeSignatureCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::VERSION_MIN_IPHONEOS:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\VersionMinCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LOAD_WEAK_DYLIB:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LAZY_LOAD_DYLIB:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::UUID:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\UuidCommand($_io__raw_body, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::VERSION_MIN_MACOSX:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\VersionMinCommand($_io__raw_body, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes(($this->size() - 8));
@@ -2544,8 +2544,8 @@ class SymtabCommand extends \Kaitai\Struct\Struct {
         $_pos = $io->pos();
         $io->seek($this->strOff());
         $this->_m__raw_strs = $io->readBytes($this->strSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_strs);
-        $this->_m_strs = new \MachO\SymtabCommand\StrTable($io, $this, $this->_root);
+        $_io__raw_strs = new \Kaitai\Struct\Stream($this->_m__raw_strs);
+        $this->_m_strs = new \MachO\SymtabCommand\StrTable($_io__raw_strs, $this, $this->_root);
         $io->seek($_pos);
         return $this->_m_strs;
     }

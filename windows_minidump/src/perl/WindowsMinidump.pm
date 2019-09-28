@@ -606,30 +606,30 @@ sub data {
     my $_pos = $self->{_io}->pos();
     $self->{_io}->seek($self->ofs_data());
     my $_on = $self->stream_type();
-    if ($_on == $STREAM_TYPES_MISC_INFO) {
-        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
-        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-        $self->{data} = WindowsMinidump::MiscInfo->new($io__raw_data, $self, $self->{_root});
-    }
-    elsif ($_on == $STREAM_TYPES_EXCEPTION) {
-        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
-        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-        $self->{data} = WindowsMinidump::ExceptionStream->new($io__raw_data, $self, $self->{_root});
-    }
-    elsif ($_on == $STREAM_TYPES_MEMORY_LIST) {
+    if ($_on == $WindowsMinidump::STREAM_TYPES_MEMORY_LIST) {
         $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
         $self->{data} = WindowsMinidump::MemoryList->new($io__raw_data, $self, $self->{_root});
     }
-    elsif ($_on == $STREAM_TYPES_SYSTEM_INFO) {
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_MISC_INFO) {
         $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-        $self->{data} = WindowsMinidump::SystemInfo->new($io__raw_data, $self, $self->{_root});
+        $self->{data} = WindowsMinidump::MiscInfo->new($io__raw_data, $self, $self->{_root});
     }
-    elsif ($_on == $STREAM_TYPES_THREAD_LIST) {
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_THREAD_LIST) {
         $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
         $self->{data} = WindowsMinidump::ThreadList->new($io__raw_data, $self, $self->{_root});
+    }
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_EXCEPTION) {
+        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
+        $self->{data} = WindowsMinidump::ExceptionStream->new($io__raw_data, $self, $self->{_root});
+    }
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_SYSTEM_INFO) {
+        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
+        $self->{data} = WindowsMinidump::SystemInfo->new($io__raw_data, $self, $self->{_root});
     }
     else {
         $self->{data} = $self->{_io}->read_bytes($self->len_data());

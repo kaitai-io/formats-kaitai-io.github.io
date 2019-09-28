@@ -32,8 +32,8 @@ class Regf extends \Kaitai\Struct\Struct {
         $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m__raw_hiveBins[] = $this->_io->readBytes(4096);
-            $io = new \Kaitai\Struct\Stream(end($this->_m__raw_hiveBins));
-            $this->_m_hiveBins[] = new \Regf\HiveBin($io, $this, $this->_root);
+            $_io__raw_hiveBins = new \Kaitai\Struct\Stream(end($this->_m__raw_hiveBins));
+            $this->_m_hiveBins[] = new \Regf\HiveBin($_io__raw_hiveBins, $this, $this->_root);
             $i++;
         }
     }
@@ -155,38 +155,38 @@ class HiveBinCell extends \Kaitai\Struct\Struct {
         switch ($this->identifier()) {
             case "li":
                 $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Regf\HiveBinCell\SubKeyListLi($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Regf\HiveBinCell\SubKeyListLi($_io__raw_data, $this, $this->_root);
                 break;
             case "vk":
                 $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Regf\HiveBinCell\SubKeyListVk($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Regf\HiveBinCell\SubKeyListVk($_io__raw_data, $this, $this->_root);
                 break;
             case "lf":
                 $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Regf\HiveBinCell\SubKeyListLhLf($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Regf\HiveBinCell\SubKeyListLhLf($_io__raw_data, $this, $this->_root);
                 break;
             case "ri":
                 $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Regf\HiveBinCell\SubKeyListRi($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Regf\HiveBinCell\SubKeyListRi($_io__raw_data, $this, $this->_root);
                 break;
             case "lh":
                 $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Regf\HiveBinCell\SubKeyListLhLf($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Regf\HiveBinCell\SubKeyListLhLf($_io__raw_data, $this, $this->_root);
                 break;
             case "nk":
                 $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Regf\HiveBinCell\NamedKey($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Regf\HiveBinCell\NamedKey($_io__raw_data, $this, $this->_root);
                 break;
             case "sk":
                 $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Regf\HiveBinCell\SubKeyListSk($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Regf\HiveBinCell\SubKeyListSk($_io__raw_data, $this, $this->_root);
                 break;
             default:
                 $this->_m_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));

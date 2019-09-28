@@ -306,32 +306,32 @@ class Record extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_code = $this->_io->readU1();
         switch ($this->code()) {
+            case \RubyMarshal\Codes::PACKED_INT:
+                $this->_m_body = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
+                break;
             case \RubyMarshal\Codes::BIGNUM:
                 $this->_m_body = new \RubyMarshal\Bignum($this->_io, $this, $this->_root);
-                break;
-            case \RubyMarshal\Codes::RUBY_HASH:
-                $this->_m_body = new \RubyMarshal\RubyHash($this->_io, $this, $this->_root);
                 break;
             case \RubyMarshal\Codes::RUBY_ARRAY:
                 $this->_m_body = new \RubyMarshal\RubyArray($this->_io, $this, $this->_root);
                 break;
-            case \RubyMarshal\Codes::RUBY_SYMBOL:
-                $this->_m_body = new \RubyMarshal\RubySymbol($this->_io, $this, $this->_root);
-                break;
-            case \RubyMarshal\Codes::INSTANCE_VAR:
-                $this->_m_body = new \RubyMarshal\InstanceVar($this->_io, $this, $this->_root);
-                break;
-            case \RubyMarshal\Codes::RUBY_STRING:
-                $this->_m_body = new \RubyMarshal\RubyString($this->_io, $this, $this->_root);
-                break;
-            case \RubyMarshal\Codes::PACKED_INT:
+            case \RubyMarshal\Codes::RUBY_SYMBOL_LINK:
                 $this->_m_body = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
                 break;
             case \RubyMarshal\Codes::RUBY_STRUCT:
                 $this->_m_body = new \RubyMarshal\RubyStruct($this->_io, $this, $this->_root);
                 break;
-            case \RubyMarshal\Codes::RUBY_SYMBOL_LINK:
-                $this->_m_body = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
+            case \RubyMarshal\Codes::RUBY_STRING:
+                $this->_m_body = new \RubyMarshal\RubyString($this->_io, $this, $this->_root);
+                break;
+            case \RubyMarshal\Codes::INSTANCE_VAR:
+                $this->_m_body = new \RubyMarshal\InstanceVar($this->_io, $this, $this->_root);
+                break;
+            case \RubyMarshal\Codes::RUBY_HASH:
+                $this->_m_body = new \RubyMarshal\RubyHash($this->_io, $this, $this->_root);
+                break;
+            case \RubyMarshal\Codes::RUBY_SYMBOL:
+                $this->_m_body = new \RubyMarshal\RubySymbol($this->_io, $this, $this->_root);
                 break;
         }
     }

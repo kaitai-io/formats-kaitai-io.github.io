@@ -52,7 +52,7 @@ class ZxSpectrumTap(KaitaiStruct):
 
         def _read(self):
             self.len_block = self._io.read_u2le()
-            self.flag = self._root.FlagEnum(self._io.read_u1())
+            self.flag = KaitaiStream.resolve_enum(self._root.FlagEnum, self._io.read_u1())
             if  ((self.len_block == 19) and (self.flag == self._root.FlagEnum.header)) :
                 self.header = self._root.Header(self._io, self, self._root)
 
@@ -96,7 +96,7 @@ class ZxSpectrumTap(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.header_type = self._root.HeaderTypeEnum(self._io.read_u1())
+            self.header_type = KaitaiStream.resolve_enum(self._root.HeaderTypeEnum, self._io.read_u1())
             self.filename = KaitaiStream.bytes_strip_right(self._io.read_bytes(10), 32)
             self.len_data = self._io.read_u2le()
             _on = self.header_type

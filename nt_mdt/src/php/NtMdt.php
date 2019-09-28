@@ -29,8 +29,8 @@ class NtMdt extends \Kaitai\Struct\Struct {
         $this->_m_reserved1 = $this->_io->readBytes(18);
         $this->_m_wrondDoc = $this->_io->readBytes(1);
         $this->_m__raw_frames = $this->_io->readBytes($this->size());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_frames);
-        $this->_m_frames = new \NtMdt\Framez($io, $this, $this->_root);
+        $_io__raw_frames = new \Kaitai\Struct\Stream($this->_m__raw_frames);
+        $this->_m_frames = new \NtMdt\Framez($_io__raw_frames, $this, $this->_root);
     }
     protected $_m_signature;
     protected $_m_size;
@@ -107,8 +107,8 @@ class Frame extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_size = $this->_io->readU4le();
         $this->_m__raw_main = $this->_io->readBytes(($this->size() - 4));
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_main);
-        $this->_m_main = new \NtMdt\Frame\FrameMain($io, $this, $this->_root);
+        $_io__raw_main = new \Kaitai\Struct\Stream($this->_m__raw_main);
+        $this->_m_main = new \NtMdt\Frame\FrameMain($_io__raw_main, $this, $this->_root);
     }
     protected $_m_size;
     protected $_m_main;
@@ -167,8 +167,8 @@ class DotsHeader extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_headerSize = $this->_io->readS4le();
         $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_header);
-        $this->_m_header = new \NtMdt\Frame\Dots\DotsHeader\Header($io, $this, $this->_root);
+        $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+        $this->_m_header = new \NtMdt\Frame\Dots\DotsHeader\Header($_io__raw_header, $this, $this->_root);
     }
     protected $_m_headerSize;
     protected $_m_header;
@@ -266,30 +266,30 @@ class FrameMain extends \Kaitai\Struct\Struct {
         $this->_m_dateTime = new \NtMdt\Frame\DateTime($this->_io, $this, $this->_root);
         $this->_m_varSize = $this->_io->readU2le();
         switch ($this->type()) {
-            case \NtMdt\Frame\FrameType::SCANNED:
+            case \NtMdt\Frame\FrameType::MDA:
                 $this->_m__raw_frameData = $this->_io->readBytesFull();
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
-                $this->_m_frameData = new \NtMdt\Frame\FdScanned($io, $this, $this->_root);
+                $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
+                $this->_m_frameData = new \NtMdt\Frame\FdMetaData($_io__raw_frameData, $this, $this->_root);
                 break;
             case \NtMdt\Frame\FrameType::CURVES_NEW:
                 $this->_m__raw_frameData = $this->_io->readBytesFull();
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
-                $this->_m_frameData = new \NtMdt\Frame\FdCurvesNew($io, $this, $this->_root);
-                break;
-            case \NtMdt\Frame\FrameType::MDA:
-                $this->_m__raw_frameData = $this->_io->readBytesFull();
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
-                $this->_m_frameData = new \NtMdt\Frame\FdMetaData($io, $this, $this->_root);
-                break;
-            case \NtMdt\Frame\FrameType::SPECTROSCOPY:
-                $this->_m__raw_frameData = $this->_io->readBytesFull();
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
-                $this->_m_frameData = new \NtMdt\Frame\FdSpectroscopy($io, $this, $this->_root);
+                $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
+                $this->_m_frameData = new \NtMdt\Frame\FdCurvesNew($_io__raw_frameData, $this, $this->_root);
                 break;
             case \NtMdt\Frame\FrameType::CURVES:
                 $this->_m__raw_frameData = $this->_io->readBytesFull();
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
-                $this->_m_frameData = new \NtMdt\Frame\FdSpectroscopy($io, $this, $this->_root);
+                $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
+                $this->_m_frameData = new \NtMdt\Frame\FdSpectroscopy($_io__raw_frameData, $this, $this->_root);
+                break;
+            case \NtMdt\Frame\FrameType::SPECTROSCOPY:
+                $this->_m__raw_frameData = $this->_io->readBytesFull();
+                $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
+                $this->_m_frameData = new \NtMdt\Frame\FdSpectroscopy($_io__raw_frameData, $this, $this->_root);
+                break;
+            case \NtMdt\Frame\FrameType::SCANNED:
+                $this->_m__raw_frameData = $this->_io->readBytesFull();
+                $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
+                $this->_m_frameData = new \NtMdt\Frame\FdScanned($_io__raw_frameData, $this, $this->_root);
                 break;
             default:
                 $this->_m_frameData = $this->_io->readBytesFull();
@@ -426,8 +426,8 @@ class FdMetaData extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->dataOffset());
         $this->_m__raw_image = $this->_io->readBytes($this->dataSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_image);
-        $this->_m_image = new \NtMdt\Frame\FdMetaData\Image($io, $this, $this->_root);
+        $_io__raw_image = new \Kaitai\Struct\Stream($this->_m__raw_image);
+        $this->_m_image = new \NtMdt\Frame\FdMetaData\Image($_io__raw_image, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_image;
     }
@@ -510,26 +510,17 @@ class Vec extends \Kaitai\Struct\Struct {
         $n = $this->_parent()->_parent()->nMesurands();
         for ($i = 0; $i < $n; $i++) {
             switch ($this->_parent()->_parent()->mesurands()[$i]->dataType()) {
-                case \NtMdt\DataType::UINT8:
-                    $this->_m_items[] = $this->_io->readU1();
-                    break;
-                case \NtMdt\DataType::INT8:
-                    $this->_m_items[] = $this->_io->readS1();
-                    break;
-                case \NtMdt\DataType::INT16:
-                    $this->_m_items[] = $this->_io->readS2le();
-                    break;
                 case \NtMdt\DataType::UINT64:
                     $this->_m_items[] = $this->_io->readU8le();
                     break;
-                case \NtMdt\DataType::FLOAT64:
-                    $this->_m_items[] = $this->_io->readF8le();
-                    break;
-                case \NtMdt\DataType::INT32:
-                    $this->_m_items[] = $this->_io->readS4le();
+                case \NtMdt\DataType::UINT8:
+                    $this->_m_items[] = $this->_io->readU1();
                     break;
                 case \NtMdt\DataType::FLOAT32:
                     $this->_m_items[] = $this->_io->readF4le();
+                    break;
+                case \NtMdt\DataType::INT8:
+                    $this->_m_items[] = $this->_io->readS1();
                     break;
                 case \NtMdt\DataType::UINT16:
                     $this->_m_items[] = $this->_io->readU2le();
@@ -539,6 +530,15 @@ class Vec extends \Kaitai\Struct\Struct {
                     break;
                 case \NtMdt\DataType::UINT32:
                     $this->_m_items[] = $this->_io->readU4le();
+                    break;
+                case \NtMdt\DataType::FLOAT64:
+                    $this->_m_items[] = $this->_io->readF8le();
+                    break;
+                case \NtMdt\DataType::INT16:
+                    $this->_m_items[] = $this->_io->readS2le();
+                    break;
+                case \NtMdt\DataType::INT32:
+                    $this->_m_items[] = $this->_io->readS4le();
                     break;
             }
         }
@@ -630,8 +630,8 @@ class FdSpectroscopy extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_vars = $this->_io->readBytes($this->_parent()->varSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_vars);
-        $this->_m_vars = new \NtMdt\Frame\FdSpectroscopy\Vars($io, $this, $this->_root);
+        $_io__raw_vars = new \Kaitai\Struct\Stream($this->_m__raw_vars);
+        $this->_m_vars = new \NtMdt\Frame\FdSpectroscopy\Vars($_io__raw_vars, $this, $this->_root);
         $this->_m_fmMode = $this->_io->readU2le();
         $this->_m_fmXres = $this->_io->readU2le();
         $this->_m_fmYres = $this->_io->readU2le();
@@ -866,8 +866,8 @@ class FdScanned extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_vars = $this->_io->readBytes($this->_parent()->varSize());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_vars);
-        $this->_m_vars = new \NtMdt\Frame\FdScanned\Vars($io, $this, $this->_root);
+        $_io__raw_vars = new \Kaitai\Struct\Stream($this->_m__raw_vars);
+        $this->_m_vars = new \NtMdt\Frame\FdScanned\Vars($_io__raw_vars, $this, $this->_root);
         if (false) {
             $this->_m_origFormat = $this->_io->readU4le();
         }

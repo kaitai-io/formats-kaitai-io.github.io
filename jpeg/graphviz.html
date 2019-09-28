@@ -136,11 +136,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".jpg / .jpeg / .jpe / .jif / .jfif / .jfi file format parsing C# library">C#</a></li>
                 
                 
@@ -237,10 +232,10 @@ section#format-index .row {
 			&lt;/TABLE&gt;&gt;];
 segment__seq_data_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:marker_enum_sos&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;SegmentSos&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:marker_enum_app1&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;SegmentApp1&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:marker_enum_app1&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;SegmentApp1&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:marker_enum_app0&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;SegmentApp0&lt;/TD&gt;&lt;/TR&gt;
 	&lt;TR&gt;&lt;TD&gt;:marker_enum_sof0&lt;/TD&gt;&lt;TD PORT=&quot;case2&quot;&gt;SegmentSof0&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:marker_enum_app0&lt;/TD&gt;&lt;TD PORT=&quot;case3&quot;&gt;SegmentApp0&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:marker_enum_sos&lt;/TD&gt;&lt;TD PORT=&quot;case3&quot;&gt;SegmentSos&lt;/TD&gt;&lt;/TR&gt;
 &lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__segment_sos {
@@ -344,10 +339,10 @@ segment_app1__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 	}
 	jpeg__seq:segments_type -&gt; segment__seq [style=bold];
 	segment__seq:data_type -&gt; segment__seq_data_switch [style=bold];
-	segment__seq_data_switch:case0 -&gt; segment_sos__seq [style=bold];
-	segment__seq_data_switch:case1 -&gt; segment_app1__seq [style=bold];
+	segment__seq_data_switch:case0 -&gt; segment_app1__seq [style=bold];
+	segment__seq_data_switch:case1 -&gt; segment_app0__seq [style=bold];
 	segment__seq_data_switch:case2 -&gt; segment_sof0__seq [style=bold];
-	segment__seq_data_switch:case3 -&gt; segment_app0__seq [style=bold];
+	segment__seq_data_switch:case3 -&gt; segment_sos__seq [style=bold];
 	segment__seq:marker_type -&gt; segment__seq:data_type [color=&quot;#404040&quot;];
 	segment_sos__seq:components_type -&gt; component__seq [style=bold];
 	segment_sos__seq:num_components_type -&gt; segment_sos__seq:components__repeat [color=&quot;#404040&quot;];

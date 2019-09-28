@@ -153,12 +153,12 @@ class WindowsEvtLog < Kaitai::Struct::Struct
       case type
       when 1699505740
         @_raw_body = @_io.read_bytes((len_record - 12))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RecordBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = RecordBody.new(_io__raw_body, self, @_root)
       when 286331153
         @_raw_body = @_io.read_bytes((len_record - 12))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = CursorRecordBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = CursorRecordBody.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes((len_record - 12))
       end

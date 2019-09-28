@@ -240,8 +240,8 @@ class Extras extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_lenSubfields = $this->_io->readU2le();
         $this->_m__raw_subfields = $this->_io->readBytes($this->lenSubfields());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_subfields);
-        $this->_m_subfields = new \Gzip\Subfields($io, $this, $this->_root);
+        $_io__raw_subfields = new \Kaitai\Struct\Stream($this->_m__raw_subfields);
+        $this->_m_subfields = new \Gzip\Subfields($_io__raw_subfields, $this, $this->_root);
     }
     protected $_m_lenSubfields;
     protected $_m_subfields;

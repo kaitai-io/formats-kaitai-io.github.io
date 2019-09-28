@@ -85,8 +85,8 @@ class Block extends \Kaitai\Struct\Struct {
         switch ($this->blockType()) {
             case \Rar\BlockTypes::FILE_HEADER:
                 $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Rar\BlockFileHeader($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Rar\BlockFileHeader($_io__raw_body, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->bodySize());

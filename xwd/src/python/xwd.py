@@ -45,14 +45,14 @@ class Xwd(KaitaiStruct):
     def _read(self):
         self.header_size = self._io.read_u4be()
         self._raw_hdr = self._io.read_bytes((self.header_size - 4))
-        io = KaitaiStream(BytesIO(self._raw_hdr))
-        self.hdr = self._root.Header(io, self, self._root)
+        _io__raw_hdr = KaitaiStream(BytesIO(self._raw_hdr))
+        self.hdr = self._root.Header(_io__raw_hdr, self, self._root)
         self._raw_color_map = [None] * (self.hdr.color_map_entries)
         self.color_map = [None] * (self.hdr.color_map_entries)
         for i in range(self.hdr.color_map_entries):
             self._raw_color_map[i] = self._io.read_bytes(12)
-            io = KaitaiStream(BytesIO(self._raw_color_map[i]))
-            self.color_map[i] = self._root.ColorMapEntry(io, self, self._root)
+            _io__raw_color_map = KaitaiStream(BytesIO(self._raw_color_map[i]))
+            self.color_map[i] = self._root.ColorMapEntry(_io__raw_color_map, self, self._root)
 
 
     class Header(KaitaiStruct):
@@ -64,18 +64,18 @@ class Xwd(KaitaiStruct):
 
         def _read(self):
             self.file_version = self._io.read_u4be()
-            self.pixmap_format = self._root.PixmapFormat(self._io.read_u4be())
+            self.pixmap_format = KaitaiStream.resolve_enum(self._root.PixmapFormat, self._io.read_u4be())
             self.pixmap_depth = self._io.read_u4be()
             self.pixmap_width = self._io.read_u4be()
             self.pixmap_height = self._io.read_u4be()
             self.x_offset = self._io.read_u4be()
-            self.byte_order = self._root.ByteOrder(self._io.read_u4be())
+            self.byte_order = KaitaiStream.resolve_enum(self._root.ByteOrder, self._io.read_u4be())
             self.bitmap_unit = self._io.read_u4be()
             self.bitmap_bit_order = self._io.read_u4be()
             self.bitmap_pad = self._io.read_u4be()
             self.bits_per_pixel = self._io.read_u4be()
             self.bytes_per_line = self._io.read_u4be()
-            self.visual_class = self._root.VisualClass(self._io.read_u4be())
+            self.visual_class = KaitaiStream.resolve_enum(self._root.VisualClass, self._io.read_u4be())
             self.red_mask = self._io.read_u4be()
             self.green_mask = self._io.read_u4be()
             self.blue_mask = self._io.read_u4be()

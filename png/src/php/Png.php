@@ -70,53 +70,53 @@ class Chunk extends \Kaitai\Struct\Struct {
         switch ($this->type()) {
             case "iTXt":
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Png\InternationalTextChunk($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Png\InternationalTextChunk($_io__raw_body, $this, $this->_root);
                 break;
             case "gAMA":
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Png\GamaChunk($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Png\GamaChunk($_io__raw_body, $this, $this->_root);
                 break;
             case "tIME":
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Png\TimeChunk($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Png\TimeChunk($_io__raw_body, $this, $this->_root);
                 break;
             case "PLTE":
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Png\PlteChunk($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Png\PlteChunk($_io__raw_body, $this, $this->_root);
                 break;
             case "bKGD":
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Png\BkgdChunk($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Png\BkgdChunk($_io__raw_body, $this, $this->_root);
                 break;
             case "pHYs":
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Png\PhysChunk($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Png\PhysChunk($_io__raw_body, $this, $this->_root);
                 break;
             case "tEXt":
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Png\TextChunk($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Png\TextChunk($_io__raw_body, $this, $this->_root);
                 break;
             case "cHRM":
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Png\ChrmChunk($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Png\ChrmChunk($_io__raw_body, $this, $this->_root);
                 break;
             case "sRGB":
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Png\SrgbChunk($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Png\SrgbChunk($_io__raw_body, $this, $this->_root);
                 break;
             case "zTXt":
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Png\CompressedTextChunk($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Png\CompressedTextChunk($_io__raw_body, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->len());
@@ -403,20 +403,20 @@ class BkgdChunk extends \Kaitai\Struct\Struct {
 
     private function _read() {
         switch ($this->_root()->ihdr()->colorType()) {
-            case \Png\ColorType::GREYSCALE_ALPHA:
-                $this->_m_bkgd = new \Png\BkgdGreyscale($this->_io, $this, $this->_root);
-                break;
             case \Png\ColorType::INDEXED:
                 $this->_m_bkgd = new \Png\BkgdIndexed($this->_io, $this, $this->_root);
-                break;
-            case \Png\ColorType::GREYSCALE:
-                $this->_m_bkgd = new \Png\BkgdGreyscale($this->_io, $this, $this->_root);
                 break;
             case \Png\ColorType::TRUECOLOR_ALPHA:
                 $this->_m_bkgd = new \Png\BkgdTruecolor($this->_io, $this, $this->_root);
                 break;
+            case \Png\ColorType::GREYSCALE_ALPHA:
+                $this->_m_bkgd = new \Png\BkgdGreyscale($this->_io, $this, $this->_root);
+                break;
             case \Png\ColorType::TRUECOLOR:
                 $this->_m_bkgd = new \Png\BkgdTruecolor($this->_io, $this, $this->_root);
+                break;
+            case \Png\ColorType::GREYSCALE:
+                $this->_m_bkgd = new \Png\BkgdGreyscale($this->_io, $this, $this->_root);
                 break;
         }
     }

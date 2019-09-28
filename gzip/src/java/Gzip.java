@@ -86,11 +86,16 @@ public class Gzip extends KaitaiStruct {
         this.compressionMethod = CompressionMethods.byId(this._io.readU1());
         this.flags = new Flags(this._io, this, _root);
         this.modTime = this._io.readU4le();
-        switch (compressionMethod()) {
-        case DEFLATE: {
-            this.extraFlags = new ExtraFlagsDeflate(this._io, this, _root);
-            break;
-        }
+        {
+            CompressionMethods on = compressionMethod();
+            if (on != null) {
+                switch (compressionMethod()) {
+                case DEFLATE: {
+                    this.extraFlags = new ExtraFlagsDeflate(this._io, this, _root);
+                    break;
+                }
+                }
+            }
         }
         this.os = Oses.byId(this._io.readU1());
         if (flags().hasExtra()) {

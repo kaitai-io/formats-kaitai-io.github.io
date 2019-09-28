@@ -49,8 +49,8 @@ class Vdi(KaitaiStruct):
                 self.header_size_optional = self._io.read_u4le()
 
             self._raw_header_main = self._io.read_bytes(self.header_size)
-            io = KaitaiStream(BytesIO(self._raw_header_main))
-            self.header_main = self._root.Header.HeaderMain(io, self, self._root)
+            _io__raw_header_main = KaitaiStream(BytesIO(self._raw_header_main))
+            self.header_main = self._root.Header.HeaderMain(_io__raw_header_main, self, self._root)
 
         class Uuid(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
@@ -83,7 +83,7 @@ class Vdi(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.image_type = self._root.ImageType(self._io.read_u4le())
+                self.image_type = KaitaiStream.resolve_enum(self._root.ImageType, self._io.read_u4le())
                 self.image_flags = self._root.Header.HeaderMain.Flags(self._io, self, self._root)
                 self.description = (self._io.read_bytes(256)).decode(u"utf-8")
                 if self._parent.version.major >= 1:
@@ -263,8 +263,8 @@ class Vdi(KaitaiStruct):
                 i = 0
                 while not self._io.is_eof():
                     self._raw_data.append(self._io.read_bytes(self._root.header.header_main.block_data_size))
-                    io = KaitaiStream(BytesIO(self._raw_data[-1]))
-                    self.data.append(self._root.Disk.Block.Sector(io, self, self._root))
+                    _io__raw_data = KaitaiStream(BytesIO(self._raw_data[-1]))
+                    self.data.append(self._root.Disk.Block.Sector(_io__raw_data, self, self._root))
                     i += 1
 
 
@@ -308,8 +308,8 @@ class Vdi(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.header.blocks_map_offset)
         self._raw__m_blocks_map = self._io.read_bytes(self.header.blocks_map_size)
-        io = KaitaiStream(BytesIO(self._raw__m_blocks_map))
-        self._m_blocks_map = self._root.BlocksMap(io, self, self._root)
+        _io__raw__m_blocks_map = KaitaiStream(BytesIO(self._raw__m_blocks_map))
+        self._m_blocks_map = self._root.BlocksMap(_io__raw__m_blocks_map, self, self._root)
         self._io.seek(_pos)
         return self._m_blocks_map if hasattr(self, '_m_blocks_map') else None
 

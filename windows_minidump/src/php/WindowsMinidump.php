@@ -325,30 +325,30 @@ class Dir extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->ofsData());
         switch ($this->streamType()) {
-            case \WindowsMinidump\StreamTypes::MISC_INFO:
-                $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \WindowsMinidump\MiscInfo($io, $this, $this->_root);
-                break;
-            case \WindowsMinidump\StreamTypes::EXCEPTION:
-                $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \WindowsMinidump\ExceptionStream($io, $this, $this->_root);
-                break;
             case \WindowsMinidump\StreamTypes::MEMORY_LIST:
                 $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \WindowsMinidump\MemoryList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \WindowsMinidump\MemoryList($_io__raw_data, $this, $this->_root);
                 break;
-            case \WindowsMinidump\StreamTypes::SYSTEM_INFO:
+            case \WindowsMinidump\StreamTypes::MISC_INFO:
                 $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \WindowsMinidump\SystemInfo($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \WindowsMinidump\MiscInfo($_io__raw_data, $this, $this->_root);
                 break;
             case \WindowsMinidump\StreamTypes::THREAD_LIST:
                 $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \WindowsMinidump\ThreadList($io, $this, $this->_root);
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \WindowsMinidump\ThreadList($_io__raw_data, $this, $this->_root);
+                break;
+            case \WindowsMinidump\StreamTypes::EXCEPTION:
+                $this->_m__raw_data = $this->_io->readBytes($this->lenData());
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \WindowsMinidump\ExceptionStream($_io__raw_data, $this, $this->_root);
+                break;
+            case \WindowsMinidump\StreamTypes::SYSTEM_INFO:
+                $this->_m__raw_data = $this->_io->readBytes($this->lenData());
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \WindowsMinidump\SystemInfo($_io__raw_data, $this, $this->_root);
                 break;
             default:
                 $this->_m_data = $this->_io->readBytes($this->lenData());

@@ -123,7 +123,7 @@ public class Ext2 extends KaitaiStruct {
             this.journalInum = this._io.readU4le();
             this.journalDev = this._io.readU4le();
             this.lastOrphan = this._io.readU4le();
-            hashSeed = new ArrayList<Long>((int) (4));
+            hashSeed = new ArrayList<Long>(((Number) (4)).intValue());
             for (int i = 0; i < 4; i++) {
                 this.hashSeed.add(this._io.readU4le());
             }
@@ -342,7 +342,7 @@ public class Ext2 extends KaitaiStruct {
             this.blocks = this._io.readU4le();
             this.flags = this._io.readU4le();
             this.osd1 = this._io.readU4le();
-            block = new ArrayList<BlockPtr>((int) (15));
+            block = new ArrayList<BlockPtr>(((Number) (15)).intValue());
             for (int i = 0; i < 15; i++) {
                 this.block.add(new BlockPtr(this._io, this, _root));
             }
@@ -506,7 +506,7 @@ public class Ext2 extends KaitaiStruct {
             this._raw_superBlock = this._io.readBytes(1024);
             KaitaiStream _io__raw_superBlock = new ByteBufferKaitaiStream(_raw_superBlock);
             this.superBlock = new SuperBlockStruct(_io__raw_superBlock, this, _root);
-            blockGroups = new ArrayList<Bgd>((int) (superBlock().blockGroupCount()));
+            blockGroups = new ArrayList<Bgd>(((Number) (superBlock().blockGroupCount())).intValue());
             for (int i = 0; i < superBlock().blockGroupCount(); i++) {
                 this.blockGroups.add(new Bgd(this._io, this, _root));
             }
@@ -576,7 +576,7 @@ public class Ext2 extends KaitaiStruct {
                 return this.inodes;
             long _pos = this._io.pos();
             this._io.seek((inodeTableBlock() * _root.bg1().superBlock().blockSize()));
-            inodes = new ArrayList<Inode>((int) (_root.bg1().superBlock().inodesPerGroup()));
+            inodes = new ArrayList<Inode>(((Number) (_root.bg1().superBlock().inodesPerGroup())).intValue());
             for (int i = 0; i < _root.bg1().superBlock().inodesPerGroup(); i++) {
                 this.inodes.add(new Inode(this._io, this, _root));
             }

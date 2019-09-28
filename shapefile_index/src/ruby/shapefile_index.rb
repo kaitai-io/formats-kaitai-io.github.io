@@ -55,7 +55,7 @@ class ShapefileIndex < Kaitai::Struct::Struct
       @unused_field_5 = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
       @file_length = @_io.read_s4be
       @version = @_io.ensure_fixed_contents([232, 3, 0, 0].pack('C*'))
-      @shape_type = Kaitai::Struct::Stream::resolve_enum(SHAPE_TYPE, @_io.read_s4le)
+      @shape_type = Kaitai::Struct::Stream::resolve_enum(ShapefileIndex::SHAPE_TYPE, @_io.read_s4le)
       @bounding_box = BoundingBoxXYZM.new(@_io, self, @_root)
       self
     end

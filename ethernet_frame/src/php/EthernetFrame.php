@@ -20,13 +20,13 @@ class EthernetFrame extends \Kaitai\Struct\Struct {
         switch ($this->etherType()) {
             case \EthernetFrame\EtherTypeEnum::IPV4:
                 $this->_m__raw_body = $this->_io->readBytesFull();
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Ipv4Packet($io);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Ipv4Packet($_io__raw_body);
                 break;
             case \EthernetFrame\EtherTypeEnum::IPV6:
                 $this->_m__raw_body = $this->_io->readBytesFull();
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Ipv6Packet($io);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Ipv6Packet($_io__raw_body);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytesFull();

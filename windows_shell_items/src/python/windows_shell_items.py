@@ -73,8 +73,8 @@ class WindowsShellItems(KaitaiStruct):
             self.len_data = self._io.read_u2le()
             if self.len_data >= 2:
                 self._raw_data = self._io.read_bytes((self.len_data - 2))
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.ShellItemData(io, self, self._root)
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = self._root.ShellItemData(_io__raw_data, self, self._root)
 
 
 

@@ -37,370 +37,370 @@ class Operation extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_code = $this->_io->readU1();
         switch ($this->code()) {
-            case \Code6502\Opcode::LSR_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::AND_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::BIT_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ASL_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ROR_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::STY_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::ORA_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::EOR_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::EOR_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::EOR_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ORA_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::ADC_ABS_Y:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::STY_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::EOR_IND_Y:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ROL_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::EOR_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::BMI_REL:
-                $this->_m_args = $this->_io->readS1();
-                break;
-            case \Code6502\Opcode::INC_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::CPY_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::JSR_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::AND_ABS_Y:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::CMP_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::SBC_IND_Y:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::AND_X_IND:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::BVC_REL:
-                $this->_m_args = $this->_io->readS1();
-                break;
-            case \Code6502\Opcode::ORA_X_IND:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ORA_ABS_Y:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::LSR_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::LDX_ZPG_Y:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ROL_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::ADC_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::STY_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ORA_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::LDY_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::ADC_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::SBC_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::LDX_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::BEQ_REL:
-                $this->_m_args = $this->_io->readS1();
-                break;
-            case \Code6502\Opcode::SBC_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::LDX_ABS_Y:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::ORA_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::BCS_REL:
-                $this->_m_args = $this->_io->readS1();
-                break;
-            case \Code6502\Opcode::SBC_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::STA_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
             case \Code6502\Opcode::BCC_REL:
                 $this->_m_args = $this->_io->readS1();
                 break;
-            case \Code6502\Opcode::AND_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::LDY_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ADC_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::BNE_REL:
-                $this->_m_args = $this->_io->readS1();
-                break;
-            case \Code6502\Opcode::EOR_ABS_Y:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::CPY_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::STX_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::LDY_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::LDA_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::CMP_ABS_Y:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::LSR_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::EOR_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::CMP_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::INC_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::STA_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::STA_X_IND:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::CMP_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::EOR_X_IND:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::CMP_IND_Y:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::CMP_X_IND:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ASL_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::DEC_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::SBC_ABS_Y:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::STX_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::LDA_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::AND_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::SBC_X_IND:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::LDA_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::JMP_IND:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::STA_ABS_Y:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::ASL_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::CMP_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::LDX_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::ADC_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ROR_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::AND_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::STA_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::ADC_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::BIT_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::DEC_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::STX_ZPG_Y:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::LDA_ABS_Y:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::LDA_X_IND:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::CPY_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
             case \Code6502\Opcode::ORA_IND_Y:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ASL_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::AND_IND_Y:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::STA_IND_Y:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ROR_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::LDX_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::AND_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::CPX_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::BVS_REL:
-                $this->_m_args = $this->_io->readS1();
-                break;
-            case \Code6502\Opcode::LDY_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::INC_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::SBC_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::ROL_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::SBC_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ADC_X_IND:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::STA_ABS_X:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::CPX_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::CMP_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::LDA_ABS:
-                $this->_m_args = $this->_io->readU2le();
-                break;
-            case \Code6502\Opcode::ROL_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::INC_ZPG_X:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::LDA_IMM:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::DEC_ZPG:
-                $this->_m_args = $this->_io->readU1();
-                break;
-            case \Code6502\Opcode::ADC_IND_Y:
                 $this->_m_args = $this->_io->readU1();
                 break;
             case \Code6502\Opcode::LDA_IND_Y:
                 $this->_m_args = $this->_io->readU1();
                 break;
+            case \Code6502\Opcode::CPX_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::STA_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::STA_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::BCS_REL:
+                $this->_m_args = $this->_io->readS1();
+                break;
+            case \Code6502\Opcode::LDY_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::LSR_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::AND_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::ADC_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::STA_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::BNE_REL:
+                $this->_m_args = $this->_io->readS1();
+                break;
+            case \Code6502\Opcode::LDA_IMM:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ADC_IMM:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::LSR_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::ADC_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::STA_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::CPX_IMM:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::JMP_IND:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::ADC_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::EOR_IMM:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::EOR_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::STA_X_IND:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::SBC_IMM:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::CPY_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LDX_ABS_Y:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::ADC_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
             case \Code6502\Opcode::BPL_REL:
                 $this->_m_args = $this->_io->readS1();
                 break;
-            case \Code6502\Opcode::LSR_ZPG:
+            case \Code6502\Opcode::ORA_IMM:
                 $this->_m_args = $this->_io->readU1();
                 break;
-            case \Code6502\Opcode::JMP_ABS:
+            case \Code6502\Opcode::ROR_ABS_X:
                 $this->_m_args = $this->_io->readU2le();
                 break;
-            case \Code6502\Opcode::DEC_ABS:
+            case \Code6502\Opcode::ADC_IND_Y:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::EOR_IND_Y:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::LDA_ABS:
                 $this->_m_args = $this->_io->readU2le();
                 break;
-            case \Code6502\Opcode::ORA_ABS:
+            case \Code6502\Opcode::BIT_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ROL_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::STY_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::JSR_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::EOR_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::EOR_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LDA_ABS_Y:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LDA_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::BMI_REL:
+                $this->_m_args = $this->_io->readS1();
+                break;
+            case \Code6502\Opcode::STY_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ADC_X_IND:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ROL_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::STX_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ASL_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LSR_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ORA_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ADC_ABS_Y:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LDY_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::CMP_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LDA_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::BVS_REL:
+                $this->_m_args = $this->_io->readS1();
+                break;
+            case \Code6502\Opcode::LDA_X_IND:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::CMP_IMM:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::INC_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ASL_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::AND_ABS_Y:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LDX_IMM:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::AND_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::CPX_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::DEC_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ROR_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::LDX_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::DEC_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::SBC_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::CMP_ABS:
                 $this->_m_args = $this->_io->readU2le();
                 break;
             case \Code6502\Opcode::ROR_ZPG:
                 $this->_m_args = $this->_io->readU1();
                 break;
-            case \Code6502\Opcode::LDY_ZPG_X:
+            case \Code6502\Opcode::INC_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::AND_X_IND:
                 $this->_m_args = $this->_io->readU1();
                 break;
-            case \Code6502\Opcode::CPX_ZPG:
+            case \Code6502\Opcode::SBC_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::ASL_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::EOR_X_IND:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ORA_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LDY_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::SBC_X_IND:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ASL_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::SBC_ABS_Y:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::ROL_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LSR_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::STX_ZPG_Y:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ORA_ABS_Y:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::EOR_ABS_Y:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::BIT_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LDX_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LDY_IMM:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::JMP_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::BEQ_REL:
+                $this->_m_args = $this->_io->readS1();
+                break;
+            case \Code6502\Opcode::DEC_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::AND_IND_Y:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::AND_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::CMP_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::EOR_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::SBC_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::CMP_ABS_Y:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::SBC_IND_Y:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::CMP_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::STX_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::STY_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::CPY_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::DEC_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::ROR_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::STA_ABS_Y:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::INC_ABS_X:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::LDA_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::CMP_IND_Y:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::CPY_IMM:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::LDX_ZPG_Y:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::SBC_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ORA_X_IND:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ROL_ZPG_X:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::ORA_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::STA_IND_Y:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::AND_ABS:
+                $this->_m_args = $this->_io->readU2le();
+                break;
+            case \Code6502\Opcode::AND_IMM:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::CMP_X_IND:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::LDY_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::INC_ZPG:
+                $this->_m_args = $this->_io->readU1();
+                break;
+            case \Code6502\Opcode::BVC_REL:
+                $this->_m_args = $this->_io->readS1();
+                break;
+            case \Code6502\Opcode::ORA_ZPG:
                 $this->_m_args = $this->_io->readU1();
                 break;
         }

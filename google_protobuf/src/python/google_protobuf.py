@@ -8,7 +8,7 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-from vlq_base128_le import VlqBase128Le
+import vlq_base128_le
 class GoogleProtobuf(KaitaiStruct):
     """Google Protocol Buffers (AKA protobuf) is a popular data
     serialization scheme used for communication protocols, data storage,
@@ -72,10 +72,10 @@ class GoogleProtobuf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.key = VlqBase128Le(self._io)
+            self.key = vlq_base128_le.VlqBase128Le(self._io)
             _on = self.wire_type
             if _on == self._root.Pair.WireTypes.varint:
-                self.value = VlqBase128Le(self._io)
+                self.value = vlq_base128_le.VlqBase128Le(self._io)
             elif _on == self._root.Pair.WireTypes.len_delimited:
                 self.value = self._root.DelimitedBytes(self._io, self, self._root)
             elif _on == self._root.Pair.WireTypes.bit_64:
@@ -96,7 +96,7 @@ class GoogleProtobuf(KaitaiStruct):
             if hasattr(self, '_m_wire_type'):
                 return self._m_wire_type if hasattr(self, '_m_wire_type') else None
 
-            self._m_wire_type = self._root.Pair.WireTypes((self.key.value & 7))
+            self._m_wire_type = KaitaiStream.resolve_enum(self._root.Pair.WireTypes, (self.key.value & 7))
             return self._m_wire_type if hasattr(self, '_m_wire_type') else None
 
         @property
@@ -119,7 +119,7 @@ class GoogleProtobuf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.len = VlqBase128Le(self._io)
+            self.len = vlq_base128_le.VlqBase128Le(self._io)
             self.body = self._io.read_bytes(self.len.value)
 
 

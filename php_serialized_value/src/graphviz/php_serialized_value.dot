@@ -1,0 +1,218 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__php_serialized_value {
+		label="PhpSerializedValue";
+		graph[style=dotted];
+
+		php_serialized_value__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">1</TD><TD>u1→ValueType</TD><TD PORT="type_type">type</TD></TR>
+			<TR><TD PORT="contents_pos">1</TD><TD PORT="contents_size">...</TD><TD>switch (type)</TD><TD PORT="contents_type">contents</TD></TR>
+		</TABLE>>];
+php_serialized_value__seq_contents_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:value_type_custom_serialized_object</TD><TD PORT="case0">CustomSerializedObjectContents</TD></TR>
+	<TR><TD>:value_type_php_3_object</TD><TD PORT="case1">Php3ObjectContents</TD></TR>
+	<TR><TD>:value_type_object</TD><TD PORT="case2">ObjectContents</TD></TR>
+	<TR><TD>:value_type_variable_reference</TD><TD PORT="case3">IntContents</TD></TR>
+	<TR><TD>:value_type_php_6_string</TD><TD PORT="case4">StringContents</TD></TR>
+	<TR><TD>:value_type_float</TD><TD PORT="case5">FloatContents</TD></TR>
+	<TR><TD>:value_type_object_reference</TD><TD PORT="case6">IntContents</TD></TR>
+	<TR><TD>:value_type_null</TD><TD PORT="case7">NullContents</TD></TR>
+	<TR><TD>:value_type_bool</TD><TD PORT="case8">BoolContents</TD></TR>
+	<TR><TD>:value_type_int</TD><TD PORT="case9">IntContents</TD></TR>
+	<TR><TD>:value_type_array</TD><TD PORT="case10">ArrayContents</TD></TR>
+	<TR><TD>:value_type_string</TD><TD PORT="case11">StringContents</TD></TR>
+</TABLE>>];
+		subgraph cluster__count_prefixed_mapping {
+			label="PhpSerializedValue::CountPrefixedMapping";
+			graph[style=dotted];
+
+			count_prefixed_mapping__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_entries_dec_pos">0</TD><TD PORT="num_entries_dec_size">...</TD><TD>str(term=58, ASCII)</TD><TD PORT="num_entries_dec_type">num_entries_dec</TD></TR>
+				<TR><TD PORT="opening_brace_pos">...</TD><TD PORT="opening_brace_size">1</TD><TD>7B</TD><TD PORT="opening_brace_type">opening_brace</TD></TR>
+				<TR><TD PORT="entries_pos">...</TD><TD PORT="entries_size">...</TD><TD>MappingEntry</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat num_entries times</TD></TR>
+				<TR><TD PORT="closing_brace_pos">...</TD><TD PORT="closing_brace_size">1</TD><TD>7D</TD><TD PORT="closing_brace_type">closing_brace</TD></TR>
+			</TABLE>>];
+			count_prefixed_mapping__inst__num_entries [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_entries</TD><TD>num_entries_dec.to_i</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__float_contents {
+			label="PhpSerializedValue::FloatContents";
+			graph[style=dotted];
+
+			float_contents__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="colon_pos">0</TD><TD PORT="colon_size">1</TD><TD>3A</TD><TD PORT="colon_type">colon</TD></TR>
+				<TR><TD PORT="value_dec_pos">1</TD><TD PORT="value_dec_size">...</TD><TD>str(term=59, ASCII)</TD><TD PORT="value_dec_type">value_dec</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__length_prefixed_quoted_string {
+			label="PhpSerializedValue::LengthPrefixedQuotedString";
+			graph[style=dotted];
+
+			length_prefixed_quoted_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_data_dec_pos">0</TD><TD PORT="len_data_dec_size">...</TD><TD>str(term=58, ASCII)</TD><TD PORT="len_data_dec_type">len_data_dec</TD></TR>
+				<TR><TD PORT="opening_quote_pos">...</TD><TD PORT="opening_quote_size">1</TD><TD>22</TD><TD PORT="opening_quote_type">opening_quote</TD></TR>
+				<TR><TD PORT="data_pos">...</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD PORT="closing_quote_pos">...</TD><TD PORT="closing_quote_size">1</TD><TD>22</TD><TD PORT="closing_quote_type">closing_quote</TD></TR>
+			</TABLE>>];
+			length_prefixed_quoted_string__inst__len_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_data</TD><TD>len_data_dec.to_i</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__object_contents {
+			label="PhpSerializedValue::ObjectContents";
+			graph[style=dotted];
+
+			object_contents__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="colon1_pos">0</TD><TD PORT="colon1_size">1</TD><TD>3A</TD><TD PORT="colon1_type">colon1</TD></TR>
+				<TR><TD PORT="class_name_pos">1</TD><TD PORT="class_name_size">...</TD><TD>LengthPrefixedQuotedString</TD><TD PORT="class_name_type">class_name</TD></TR>
+				<TR><TD PORT="colon2_pos">...</TD><TD PORT="colon2_size">1</TD><TD>3A</TD><TD PORT="colon2_type">colon2</TD></TR>
+				<TR><TD PORT="properties_pos">...</TD><TD PORT="properties_size">...</TD><TD>CountPrefixedMapping</TD><TD PORT="properties_type">properties</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__array_contents {
+			label="PhpSerializedValue::ArrayContents";
+			graph[style=dotted];
+
+			array_contents__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="colon_pos">0</TD><TD PORT="colon_size">1</TD><TD>3A</TD><TD PORT="colon_type">colon</TD></TR>
+				<TR><TD PORT="elements_pos">1</TD><TD PORT="elements_size">...</TD><TD>CountPrefixedMapping</TD><TD PORT="elements_type">elements</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__custom_serialized_object_contents {
+			label="PhpSerializedValue::CustomSerializedObjectContents";
+			graph[style=dotted];
+
+			custom_serialized_object_contents__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="colon1_pos">0</TD><TD PORT="colon1_size">1</TD><TD>3A</TD><TD PORT="colon1_type">colon1</TD></TR>
+				<TR><TD PORT="class_name_pos">1</TD><TD PORT="class_name_size">...</TD><TD>LengthPrefixedQuotedString</TD><TD PORT="class_name_type">class_name</TD></TR>
+				<TR><TD PORT="colon2_pos">...</TD><TD PORT="colon2_size">1</TD><TD>3A</TD><TD PORT="colon2_type">colon2</TD></TR>
+				<TR><TD PORT="len_data_dec_pos">...</TD><TD PORT="len_data_dec_size">...</TD><TD>str(term=58, ASCII)</TD><TD PORT="len_data_dec_type">len_data_dec</TD></TR>
+				<TR><TD PORT="opening_brace_pos">...</TD><TD PORT="opening_brace_size">1</TD><TD>7B</TD><TD PORT="opening_brace_type">opening_brace</TD></TR>
+				<TR><TD PORT="data_pos">...</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD PORT="closing_quote_pos">...</TD><TD PORT="closing_quote_size">1</TD><TD>7D</TD><TD PORT="closing_quote_type">closing_quote</TD></TR>
+			</TABLE>>];
+			custom_serialized_object_contents__inst__len_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_data</TD><TD>len_data_dec.to_i</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__null_contents {
+			label="PhpSerializedValue::NullContents";
+			graph[style=dotted];
+
+			null_contents__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="semicolon_pos">0</TD><TD PORT="semicolon_size">1</TD><TD>3B</TD><TD PORT="semicolon_type">semicolon</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__php_3_object_contents {
+			label="PhpSerializedValue::Php3ObjectContents";
+			graph[style=dotted];
+
+			php_3_object_contents__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="colon_pos">0</TD><TD PORT="colon_size">1</TD><TD>3A</TD><TD PORT="colon_type">colon</TD></TR>
+				<TR><TD PORT="properties_pos">1</TD><TD PORT="properties_size">...</TD><TD>CountPrefixedMapping</TD><TD PORT="properties_type">properties</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bool_contents {
+			label="PhpSerializedValue::BoolContents";
+			graph[style=dotted];
+
+			bool_contents__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="colon_pos">0</TD><TD PORT="colon_size">1</TD><TD>3A</TD><TD PORT="colon_type">colon</TD></TR>
+				<TR><TD PORT="value_dec_pos">1</TD><TD PORT="value_dec_size">1</TD><TD>u1→BoolValue</TD><TD PORT="value_dec_type">value_dec</TD></TR>
+				<TR><TD PORT="semicolon_pos">2</TD><TD PORT="semicolon_size">1</TD><TD>3B</TD><TD PORT="semicolon_type">semicolon</TD></TR>
+			</TABLE>>];
+			bool_contents__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>value_dec == :bool_value_true</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__string_contents {
+			label="PhpSerializedValue::StringContents";
+			graph[style=dotted];
+
+			string_contents__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="colon_pos">0</TD><TD PORT="colon_size">1</TD><TD>3A</TD><TD PORT="colon_type">colon</TD></TR>
+				<TR><TD PORT="string_pos">1</TD><TD PORT="string_size">...</TD><TD>LengthPrefixedQuotedString</TD><TD PORT="string_type">string</TD></TR>
+				<TR><TD PORT="semicolon_pos">...</TD><TD PORT="semicolon_size">1</TD><TD>3B</TD><TD PORT="semicolon_type">semicolon</TD></TR>
+			</TABLE>>];
+			string_contents__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>string.data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__int_contents {
+			label="PhpSerializedValue::IntContents";
+			graph[style=dotted];
+
+			int_contents__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="colon_pos">0</TD><TD PORT="colon_size">1</TD><TD>3A</TD><TD PORT="colon_type">colon</TD></TR>
+				<TR><TD PORT="value_dec_pos">1</TD><TD PORT="value_dec_size">...</TD><TD>str(term=59, ASCII)</TD><TD PORT="value_dec_type">value_dec</TD></TR>
+			</TABLE>>];
+			int_contents__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>value_dec.to_i</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__mapping_entry {
+			label="PhpSerializedValue::MappingEntry";
+			graph[style=dotted];
+
+			mapping_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="key_pos">0</TD><TD PORT="key_size">...</TD><TD>PhpSerializedValue</TD><TD PORT="key_type">key</TD></TR>
+				<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">...</TD><TD>PhpSerializedValue</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+	}
+	php_serialized_value__seq:contents_type -> php_serialized_value__seq_contents_switch [style=bold];
+	php_serialized_value__seq_contents_switch:case0 -> custom_serialized_object_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case1 -> php_3_object_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case2 -> object_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case3 -> int_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case4 -> string_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case5 -> float_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case6 -> int_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case7 -> null_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case8 -> bool_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case9 -> int_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case10 -> array_contents__seq [style=bold];
+	php_serialized_value__seq_contents_switch:case11 -> string_contents__seq [style=bold];
+	php_serialized_value__seq:type_type -> php_serialized_value__seq:contents_type [color="#404040"];
+	count_prefixed_mapping__seq:entries_type -> mapping_entry__seq [style=bold];
+	count_prefixed_mapping__inst__num_entries:num_entries_type -> count_prefixed_mapping__seq:entries__repeat [color="#404040"];
+	count_prefixed_mapping__seq:num_entries_dec_type -> count_prefixed_mapping__inst__num_entries [color="#404040"];
+	length_prefixed_quoted_string__inst__len_data:len_data_type -> length_prefixed_quoted_string__seq:data_size [color="#404040"];
+	length_prefixed_quoted_string__seq:len_data_dec_type -> length_prefixed_quoted_string__inst__len_data [color="#404040"];
+	object_contents__seq:class_name_type -> length_prefixed_quoted_string__seq [style=bold];
+	object_contents__seq:properties_type -> count_prefixed_mapping__seq [style=bold];
+	array_contents__seq:elements_type -> count_prefixed_mapping__seq [style=bold];
+	custom_serialized_object_contents__seq:class_name_type -> length_prefixed_quoted_string__seq [style=bold];
+	custom_serialized_object_contents__inst__len_data:len_data_type -> custom_serialized_object_contents__seq:data_size [color="#404040"];
+	custom_serialized_object_contents__seq:len_data_dec_type -> custom_serialized_object_contents__inst__len_data [color="#404040"];
+	php_3_object_contents__seq:properties_type -> count_prefixed_mapping__seq [style=bold];
+	bool_contents__seq:value_dec_type -> bool_contents__inst__value [color="#404040"];
+	string_contents__seq:string_type -> length_prefixed_quoted_string__seq [style=bold];
+	length_prefixed_quoted_string__seq:data_type -> string_contents__inst__value [color="#404040"];
+	int_contents__seq:value_dec_type -> int_contents__inst__value [color="#404040"];
+	mapping_entry__seq:key_type -> php_serialized_value__seq [style=bold];
+	mapping_entry__seq:value_type -> php_serialized_value__seq [style=bold];
+}

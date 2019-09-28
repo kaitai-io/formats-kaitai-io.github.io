@@ -121,8 +121,8 @@ class SaintsRow2VppPc(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.ofs_filenames)
         self._raw__m_filenames = self._io.read_bytes(self.len_filenames)
-        io = KaitaiStream(BytesIO(self._raw__m_filenames))
-        self._m_filenames = self._root.Strings(io, self, self._root)
+        _io__raw__m_filenames = KaitaiStream(BytesIO(self._raw__m_filenames))
+        self._m_filenames = self._root.Strings(_io__raw__m_filenames, self, self._root)
         self._io.seek(_pos)
         return self._m_filenames if hasattr(self, '_m_filenames') else None
 
@@ -142,8 +142,8 @@ class SaintsRow2VppPc(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(2048)
         self._raw__m_files = self._io.read_bytes(self.len_offsets)
-        io = KaitaiStream(BytesIO(self._raw__m_files))
-        self._m_files = self._root.Offsets(io, self, self._root)
+        _io__raw__m_files = KaitaiStream(BytesIO(self._raw__m_files))
+        self._m_files = self._root.Offsets(_io__raw__m_files, self, self._root)
         self._io.seek(_pos)
         return self._m_files if hasattr(self, '_m_files') else None
 
@@ -163,8 +163,8 @@ class SaintsRow2VppPc(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.ofs_extensions)
         self._raw__m_extensions = self._io.read_bytes(self.len_extensions)
-        io = KaitaiStream(BytesIO(self._raw__m_extensions))
-        self._m_extensions = self._root.Strings(io, self, self._root)
+        _io__raw__m_extensions = KaitaiStream(BytesIO(self._raw__m_extensions))
+        self._m_extensions = self._root.Strings(_io__raw__m_extensions, self, self._root)
         self._io.seek(_pos)
         return self._m_extensions if hasattr(self, '_m_extensions') else None
 

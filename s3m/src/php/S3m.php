@@ -309,8 +309,8 @@ class Pattern extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_size = $this->_io->readU2le();
         $this->_m__raw_body = $this->_io->readBytes(($this->size() - 2));
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-        $this->_m_body = new \S3m\PatternCells($io, $this, $this->_root);
+        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+        $this->_m_body = new \S3m\PatternCells($_io__raw_body, $this, $this->_root);
     }
     protected $_m_size;
     protected $_m_body;

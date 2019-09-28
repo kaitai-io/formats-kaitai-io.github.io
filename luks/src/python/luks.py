@@ -60,7 +60,7 @@ class Luks(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.state_of_key_slot = self._root.PartitionHeader.KeySlot.KeySlotStates(self._io.read_u4be())
+                self.state_of_key_slot = KaitaiStream.resolve_enum(self._root.PartitionHeader.KeySlot.KeySlotStates, self._io.read_u4be())
                 self.iteration_parameter = self._io.read_u4be()
                 self.salt_parameter = self._io.read_bytes(32)
                 self.start_sector_of_key_material = self._io.read_u4be()

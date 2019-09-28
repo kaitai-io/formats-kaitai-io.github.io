@@ -442,31 +442,19 @@ namespace Kaitai
             {
                 _code = ((RubyMarshal.Codes) m_io.ReadU1());
                 switch (Code) {
-                case RubyMarshal.Codes.Bignum: {
-                    _body = new Bignum(m_io, this, m_root);
+                case RubyMarshal.Codes.PackedInt: {
+                    _body = new PackedInt(m_io, this, m_root);
                     break;
                 }
-                case RubyMarshal.Codes.RubyHash: {
-                    _body = new RubyHash(m_io, this, m_root);
+                case RubyMarshal.Codes.Bignum: {
+                    _body = new Bignum(m_io, this, m_root);
                     break;
                 }
                 case RubyMarshal.Codes.RubyArray: {
                     _body = new RubyArray(m_io, this, m_root);
                     break;
                 }
-                case RubyMarshal.Codes.RubySymbol: {
-                    _body = new RubySymbol(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.InstanceVar: {
-                    _body = new InstanceVar(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.RubyString: {
-                    _body = new RubyString(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.PackedInt: {
+                case RubyMarshal.Codes.RubySymbolLink: {
                     _body = new PackedInt(m_io, this, m_root);
                     break;
                 }
@@ -474,8 +462,20 @@ namespace Kaitai
                     _body = new RubyStruct(m_io, this, m_root);
                     break;
                 }
-                case RubyMarshal.Codes.RubySymbolLink: {
-                    _body = new PackedInt(m_io, this, m_root);
+                case RubyMarshal.Codes.RubyString: {
+                    _body = new RubyString(m_io, this, m_root);
+                    break;
+                }
+                case RubyMarshal.Codes.InstanceVar: {
+                    _body = new InstanceVar(m_io, this, m_root);
+                    break;
+                }
+                case RubyMarshal.Codes.RubyHash: {
+                    _body = new RubyHash(m_io, this, m_root);
+                    break;
+                }
+                case RubyMarshal.Codes.RubySymbol: {
+                    _body = new RubySymbol(m_io, this, m_root);
                     break;
                 }
                 }

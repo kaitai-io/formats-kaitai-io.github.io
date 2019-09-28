@@ -415,7 +415,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{op_code} = $self->{_io}->read_u1();
-    if ($self->op_code() >= $OP_CODE_ENUM_STORE_NAME) {
+    if ($self->op_code() >= $PythonPyc27::OpArg::OP_CODE_ENUM_STORE_NAME) {
         $self->{arg} = $self->{_io}->read_u2le();
     }
 }
@@ -473,32 +473,32 @@ sub _read {
 
     $self->{type} = $self->{_io}->read_u1();
     my $_on = $self->type();
-    if ($_on == $OBJECT_TYPE_NONE) {
-        $self->{value} = PythonPyc27::PyObject::PyNone->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OBJECT_TYPE_CODE_OBJECT) {
-        $self->{value} = PythonPyc27::CodeObject->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OBJECT_TYPE_INT) {
-        $self->{value} = $self->{_io}->read_u4le();
-    }
-    elsif ($_on == $OBJECT_TYPE_STRING_REF) {
-        $self->{value} = PythonPyc27::PyObject::StringRef->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OBJECT_TYPE_STRING) {
+    if ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_STRING) {
         $self->{value} = PythonPyc27::PyObject::PyString->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $OBJECT_TYPE_PY_FALSE) {
-        $self->{value} = PythonPyc27::PyObject::PyFalse->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OBJECT_TYPE_INTERNED) {
-        $self->{value} = PythonPyc27::PyObject::InternedString->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OBJECT_TYPE_TUPLE) {
+    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_TUPLE) {
         $self->{value} = PythonPyc27::PyObject::Tuple->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $OBJECT_TYPE_PY_TRUE) {
+    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_INT) {
+        $self->{value} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_PY_TRUE) {
         $self->{value} = PythonPyc27::PyObject::PyTrue->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_PY_FALSE) {
+        $self->{value} = PythonPyc27::PyObject::PyFalse->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_NONE) {
+        $self->{value} = PythonPyc27::PyObject::PyNone->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_STRING_REF) {
+        $self->{value} = PythonPyc27::PyObject::StringRef->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_CODE_OBJECT) {
+        $self->{value} = PythonPyc27::CodeObject->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_INTERNED) {
+        $self->{value} = PythonPyc27::PyObject::InternedString->new($self->{_io}, $self, $self->{_root});
     }
 }
 

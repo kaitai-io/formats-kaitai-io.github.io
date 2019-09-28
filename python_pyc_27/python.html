@@ -306,7 +306,7 @@ class PythonPyc27(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.version_magic = self._root.Version(self._io.read_u2le())
+        self.version_magic = KaitaiStream.resolve_enum(self._root.Version, self._io.read_u2le())
         self.crlf = self._io.read_u2le()
         self.modification_timestamp = self._io.read_u4le()
         self.body = self._root.PyObject(self._io, self, self._root)
@@ -327,7 +327,7 @@ class PythonPyc27(KaitaiStruct):
             self.arg_count = self._io.read_u4le()
             self.local_count = self._io.read_u4le()
             self.stack_size = self._io.read_u4le()
-            self.flags = self._root.CodeObject.FlagsEnum(self._io.read_u4le())
+            self.flags = KaitaiStream.resolve_enum(self._root.CodeObject.FlagsEnum, self._io.read_u4le())
             self.code = self._root.Assembly(self._io, self, self._root)
             self.consts = self._root.PyObject(self._io, self, self._root)
             self.names = self._root.PyObject(self._io, self, self._root)
@@ -351,8 +351,8 @@ class PythonPyc27(KaitaiStruct):
             self.string_magic = self._io.ensure_fixed_contents(b&quot;\x73&quot;)
             self.length = self._io.read_u4le()
             self._raw_items = self._io.read_bytes(self.length)
-            io = KaitaiStream(BytesIO(self._raw_items))
-            self.items = self._root.OpArgs(io, self, self._root)
+            _io__raw_items = KaitaiStream(BytesIO(self._raw_items))
+            self.items = self._root.OpArgs(_io__raw_items, self, self._root)
 
 
     class OpArg(KaitaiStruct):
@@ -484,7 +484,7 @@ class PythonPyc27(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.op_code = self._root.OpArg.OpCodeEnum(self._io.read_u1())
+            self.op_code = KaitaiStream.resolve_enum(self._root.OpArg.OpCodeEnum, self._io.read_u1())
             if self.op_code.value &gt;= self._root.OpArg.OpCodeEnum.store_name.value:
                 self.arg = self._io.read_u2le()
 
@@ -510,26 +510,26 @@ class PythonPyc27(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.PyObject.ObjectType(self._io.read_u1())
+            self.type = KaitaiStream.resolve_enum(self._root.PyObject.ObjectType, self._io.read_u1())
             _on = self.type
-            if _on == self._root.PyObject.ObjectType.none:
-                self.value = self._root.PyObject.PyNone(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.code_object:
-                self.value = self._root.CodeObject(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.int:
-                self.value = self._io.read_u4le()
-            elif _on == self._root.PyObject.ObjectType.string_ref:
-                self.value = self._root.PyObject.StringRef(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.string:
+            if _on == self._root.PyObject.ObjectType.string:
                 self.value = self._root.PyObject.PyString(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.py_false:
-                self.value = self._root.PyObject.PyFalse(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.interned:
-                self.value = self._root.PyObject.InternedString(self._io, self, self._root)
             elif _on == self._root.PyObject.ObjectType.tuple:
                 self.value = self._root.PyObject.Tuple(self._io, self, self._root)
+            elif _on == self._root.PyObject.ObjectType.int:
+                self.value = self._io.read_u4le()
             elif _on == self._root.PyObject.ObjectType.py_true:
                 self.value = self._root.PyObject.PyTrue(self._io, self, self._root)
+            elif _on == self._root.PyObject.ObjectType.py_false:
+                self.value = self._root.PyObject.PyFalse(self._io, self, self._root)
+            elif _on == self._root.PyObject.ObjectType.none:
+                self.value = self._root.PyObject.PyNone(self._io, self, self._root)
+            elif _on == self._root.PyObject.ObjectType.string_ref:
+                self.value = self._root.PyObject.StringRef(self._io, self, self._root)
+            elif _on == self._root.PyObject.ObjectType.code_object:
+                self.value = self._root.CodeObject(self._io, self, self._root)
+            elif _on == self._root.PyObject.ObjectType.interned:
+                self.value = self._root.PyObject.InternedString(self._io, self, self._root)
 
         class PyNone(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):

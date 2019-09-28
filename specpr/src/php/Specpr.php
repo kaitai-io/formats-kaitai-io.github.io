@@ -511,23 +511,23 @@ class Record extends \Kaitai\Struct\Struct {
         switch ($this->icflag()->type()) {
             case \Specpr\RecordType::DATA_INITIAL:
                 $this->_m__raw_content = $this->_io->readBytes((1536 - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \Specpr\DataInitial($io, $this, $this->_root);
+                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \Specpr\DataInitial($_io__raw_content, $this, $this->_root);
                 break;
             case \Specpr\RecordType::DATA_CONTINUATION:
                 $this->_m__raw_content = $this->_io->readBytes((1536 - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \Specpr\DataContinuation($io, $this, $this->_root);
+                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \Specpr\DataContinuation($_io__raw_content, $this, $this->_root);
                 break;
             case \Specpr\RecordType::TEXT_CONTINUATION:
                 $this->_m__raw_content = $this->_io->readBytes((1536 - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \Specpr\TextContinuation($io, $this, $this->_root);
+                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \Specpr\TextContinuation($_io__raw_content, $this, $this->_root);
                 break;
             case \Specpr\RecordType::TEXT_INITIAL:
                 $this->_m__raw_content = $this->_io->readBytes((1536 - 4));
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \Specpr\TextInitial($io, $this, $this->_root);
+                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \Specpr\TextInitial($_io__raw_content, $this, $this->_root);
                 break;
             default:
                 $this->_m_content = $this->_io->readBytes((1536 - 4));

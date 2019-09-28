@@ -128,35 +128,42 @@ public class Jpeg extends KaitaiStruct {
                 this.length = this._io.readU2be();
             }
             if ( ((marker() != MarkerEnum.SOI) && (marker() != MarkerEnum.EOI)) ) {
-                switch (marker()) {
-                case SOS: {
-                    this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                    this.data = new SegmentSos(_io__raw_data, this, _root);
-                    break;
-                }
-                case APP1: {
-                    this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                    this.data = new SegmentApp1(_io__raw_data, this, _root);
-                    break;
-                }
-                case SOF0: {
-                    this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                    this.data = new SegmentSof0(_io__raw_data, this, _root);
-                    break;
-                }
-                case APP0: {
-                    this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                    this.data = new SegmentApp0(_io__raw_data, this, _root);
-                    break;
-                }
-                default: {
-                    this.data = this._io.readBytes((length() - 2));
-                    break;
-                }
+                {
+                    MarkerEnum on = marker();
+                    if (on != null) {
+                        switch (marker()) {
+                        case APP1: {
+                            this._raw_data = this._io.readBytes((length() - 2));
+                            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                            this.data = new SegmentApp1(_io__raw_data, this, _root);
+                            break;
+                        }
+                        case APP0: {
+                            this._raw_data = this._io.readBytes((length() - 2));
+                            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                            this.data = new SegmentApp0(_io__raw_data, this, _root);
+                            break;
+                        }
+                        case SOF0: {
+                            this._raw_data = this._io.readBytes((length() - 2));
+                            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                            this.data = new SegmentSof0(_io__raw_data, this, _root);
+                            break;
+                        }
+                        case SOS: {
+                            this._raw_data = this._io.readBytes((length() - 2));
+                            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                            this.data = new SegmentSos(_io__raw_data, this, _root);
+                            break;
+                        }
+                        default: {
+                            this.data = this._io.readBytes((length() - 2));
+                            break;
+                        }
+                        }
+                    } else {
+                        this.data = this._io.readBytes((length() - 2));
+                    }
                 }
             }
             if (marker() == MarkerEnum.SOS) {
@@ -201,7 +208,7 @@ public class Jpeg extends KaitaiStruct {
         }
         private void _read() {
             this.numComponents = this._io.readU1();
-            components = new ArrayList<Component>((int) (numComponents()));
+            components = new ArrayList<Component>(((Number) (numComponents())).intValue());
             for (int i = 0; i < numComponents(); i++) {
                 this.components.add(new Component(this._io, this, _root));
             }
@@ -341,7 +348,7 @@ public class Jpeg extends KaitaiStruct {
             this.imageHeight = this._io.readU2be();
             this.imageWidth = this._io.readU2be();
             this.numComponents = this._io.readU1();
-            components = new ArrayList<Component>((int) (numComponents()));
+            components = new ArrayList<Component>(((Number) (numComponents())).intValue());
             for (int i = 0; i < numComponents(); i++) {
                 this.components.add(new Component(this._io, this, _root));
             }

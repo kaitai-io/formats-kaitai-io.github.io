@@ -390,40 +390,40 @@ sub _read {
     $self->{magic} = $self->{_io}->read_u4be();
     $self->{length} = $self->{_io}->read_u4be();
     my $_on = $self->magic();
-    if ($_on == $CS_MAGIC_DETACHED_SIGNATURE) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::CsBlob::SuperBlob->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $CS_MAGIC_EMBEDDED_SIGNATURE) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::CsBlob::SuperBlob->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $CS_MAGIC_ENTITLEMENT) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::CsBlob::Entitlement->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $CS_MAGIC_BLOB_WRAPPER) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::CsBlob::BlobWrapper->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $CS_MAGIC_REQUIREMENT) {
+    if ($_on == $MachO::CsBlob::CS_MAGIC_REQUIREMENT) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::CsBlob::Requirement->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $CS_MAGIC_CODE_DIRECTORY) {
+    elsif ($_on == $MachO::CsBlob::CS_MAGIC_CODE_DIRECTORY) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::CsBlob::CodeDirectory->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $CS_MAGIC_REQUIREMENTS) {
+    elsif ($_on == $MachO::CsBlob::CS_MAGIC_ENTITLEMENT) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::CsBlob::Entitlement->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::CS_MAGIC_REQUIREMENTS) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::CsBlob::Requirements->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::CS_MAGIC_BLOB_WRAPPER) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::CsBlob::BlobWrapper->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::CS_MAGIC_EMBEDDED_SIGNATURE) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::CsBlob::SuperBlob->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::CS_MAGIC_DETACHED_SIGNATURE) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::CsBlob::SuperBlob->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes(($self->length() - 8));
@@ -793,44 +793,44 @@ sub _read {
 
     $self->{op} = $self->{_io}->read_u4be();
     my $_on = $self->op();
-    if ($_on == $OP_ENUM_CERT_GENERIC) {
-        $self->{data} = MachO::CsBlob::Expr::CertGenericExpr->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OP_ENUM_APPLE_GENERIC_ANCHOR) {
-        $self->{data} = MachO::CsBlob::Expr::AppleGenericAnchorExpr->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OP_ENUM_INFO_KEY_FIELD) {
-        $self->{data} = MachO::CsBlob::Expr::InfoKeyFieldExpr->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OP_ENUM_AND_OP) {
-        $self->{data} = MachO::CsBlob::Expr::AndExpr->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OP_ENUM_ANCHOR_HASH) {
-        $self->{data} = MachO::CsBlob::Expr::AnchorHashExpr->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OP_ENUM_INFO_KEY_VALUE) {
-        $self->{data} = MachO::CsBlob::Data->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OP_ENUM_OR_OP) {
-        $self->{data} = MachO::CsBlob::Expr::OrExpr->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OP_ENUM_TRUSTED_CERT) {
-        $self->{data} = MachO::CsBlob::Expr::CertSlotExpr->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OP_ENUM_NOT_OP) {
-        $self->{data} = MachO::CsBlob::Expr->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $OP_ENUM_IDENT) {
+    if ($_on == $MachO::CsBlob::Expr::OP_ENUM_IDENT) {
         $self->{data} = MachO::CsBlob::Expr::IdentExpr->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $OP_ENUM_CERT_FIELD) {
-        $self->{data} = MachO::CsBlob::Expr::CertFieldExpr->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_OR_OP) {
+        $self->{data} = MachO::CsBlob::Expr::OrExpr->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $OP_ENUM_ENTITLEMENT_FIELD) {
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_INFO_KEY_VALUE) {
+        $self->{data} = MachO::CsBlob::Data->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_ANCHOR_HASH) {
+        $self->{data} = MachO::CsBlob::Expr::AnchorHashExpr->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_INFO_KEY_FIELD) {
+        $self->{data} = MachO::CsBlob::Expr::InfoKeyFieldExpr->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_NOT_OP) {
+        $self->{data} = MachO::CsBlob::Expr->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_ENTITLEMENT_FIELD) {
         $self->{data} = MachO::CsBlob::Expr::EntitlementFieldExpr->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $OP_ENUM_CD_HASH) {
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_TRUSTED_CERT) {
+        $self->{data} = MachO::CsBlob::Expr::CertSlotExpr->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_AND_OP) {
+        $self->{data} = MachO::CsBlob::Expr::AndExpr->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_CERT_GENERIC) {
+        $self->{data} = MachO::CsBlob::Expr::CertGenericExpr->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_CERT_FIELD) {
+        $self->{data} = MachO::CsBlob::Expr::CertFieldExpr->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_CD_HASH) {
         $self->{data} = MachO::CsBlob::Data->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::Expr::OP_ENUM_APPLE_GENERIC_ANCHOR) {
+        $self->{data} = MachO::CsBlob::Expr::AppleGenericAnchorExpr->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1391,7 +1391,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{match_op} = $self->{_io}->read_u4be();
-    if ($self->match_op() != $OP_EXISTS) {
+    if ($self->match_op() != $MachO::CsBlob::Match::OP_EXISTS) {
         $self->{data} = MachO::CsBlob::Data->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -2998,7 +2998,7 @@ sub _read {
     $self->{ncmds} = $self->{_io}->read_u4le();
     $self->{sizeofcmds} = $self->{_io}->read_u4le();
     $self->{flags} = $self->{_io}->read_u4le();
-    if ( (($self->_root()->magic() == $MAGIC_TYPE_MACHO_BE_X64) || ($self->_root()->magic() == $MAGIC_TYPE_MACHO_LE_X64)) ) {
+    if ( (($self->_root()->magic() == $MachO::MAGIC_TYPE_MACHO_BE_X64) || ($self->_root()->magic() == $MachO::MAGIC_TYPE_MACHO_LE_X64)) ) {
         $self->{reserved} = $self->{_io}->read_u4le();
     }
 }
@@ -3260,7 +3260,7 @@ sub _read {
     $self->{cryptoff} = $self->{_io}->read_u4le();
     $self->{cryptsize} = $self->{_io}->read_u4le();
     $self->{cryptid} = $self->{_io}->read_u4le();
-    if ( (($self->_root()->magic() == $MAGIC_TYPE_MACHO_BE_X64) || ($self->_root()->magic() == $MAGIC_TYPE_MACHO_LE_X64)) ) {
+    if ( (($self->_root()->magic() == $MachO::MAGIC_TYPE_MACHO_BE_X64) || ($self->_root()->magic() == $MachO::MAGIC_TYPE_MACHO_LE_X64)) ) {
         $self->{pad} = $self->{_io}->read_u4le();
     }
 }
@@ -3556,13 +3556,13 @@ sub _read {
     my ($self) = @_;
 
     $self->{opcode_and_immediate} = $self->{_io}->read_u1();
-    if ( (($self->opcode() == $BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB) || ($self->opcode() == $BIND_OPCODE_SET_APPEND_SLEB) || ($self->opcode() == $BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB) || ($self->opcode() == $BIND_OPCODE_ADD_ADDRESS_ULEB) || ($self->opcode() == $BIND_OPCODE_DO_BIND_ADD_ADDRESS_ULEB) || ($self->opcode() == $BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
+    if ( (($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_APPEND_SLEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_ADD_ADDRESS_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DO_BIND_ADD_ADDRESS_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
         $self->{uleb} = MachO::Uleb128->new($self->{_io}, $self, $self->{_root});
     }
-    if ($self->opcode() == $BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
+    if ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
         $self->{skip} = MachO::Uleb128->new($self->{_io}, $self, $self->{_root});
     }
-    if ($self->opcode() == $BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
+    if ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
         $self->{symbol} = Encode::decode("ascii", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
 }
@@ -3645,7 +3645,7 @@ sub _read {
     do {
         $_ = MachO::DyldInfoCommand::RebaseData::RebaseItem->new($self->{_io}, $self, $self->{_root});
         push @{$self->{items}}, $_;
-    } until ($_->opcode() == $OPCODE_DONE);
+    } until ($_->opcode() == $MachO::DyldInfoCommand::RebaseData::OPCODE_DONE);
 }
 
 sub items {
@@ -3684,10 +3684,10 @@ sub _read {
     my ($self) = @_;
 
     $self->{opcode_and_immediate} = $self->{_io}->read_u1();
-    if ( (($self->opcode() == $OPCODE_SET_SEGMENT_AND_OFFSET_ULEB) || ($self->opcode() == $OPCODE_ADD_ADDRESS_ULEB) || ($self->opcode() == $OPCODE_DO_REBASE_ULEB_TIMES) || ($self->opcode() == $OPCODE_DO_REBASE_ADD_ADDRESS_ULEB) || ($self->opcode() == $OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB)) ) {
+    if ( (($self->opcode() == $MachO::DyldInfoCommand::RebaseData::OPCODE_SET_SEGMENT_AND_OFFSET_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::RebaseData::OPCODE_ADD_ADDRESS_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::RebaseData::OPCODE_DO_REBASE_ULEB_TIMES) || ($self->opcode() == $MachO::DyldInfoCommand::RebaseData::OPCODE_DO_REBASE_ADD_ADDRESS_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::RebaseData::OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB)) ) {
         $self->{uleb} = MachO::Uleb128->new($self->{_io}, $self, $self->{_root});
     }
-    if ($self->opcode() == $OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB) {
+    if ($self->opcode() == $MachO::DyldInfoCommand::RebaseData::OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB) {
         $self->{skip} = MachO::Uleb128->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -3869,7 +3869,7 @@ sub _read {
     do {
         $_ = MachO::DyldInfoCommand::BindItem->new($self->{_io}, $self, $self->{_root});
         push @{$self->{items}}, $_;
-    } until ($_->opcode() == $BIND_OPCODE_DONE);
+    } until ($_->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DONE);
 }
 
 sub items {
@@ -4095,195 +4095,195 @@ sub _read {
     $self->{type} = $self->{_io}->read_u4le();
     $self->{size} = $self->{_io}->read_u4le();
     my $_on = $self->type();
-    if ($_on == $LOAD_COMMAND_TYPE_SUB_LIBRARY) {
+    if ($_on == $MachO::LOAD_COMMAND_TYPE_ID_DYLINKER) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
+        $self->{body} = MachO::DylinkerCommand->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_SEGMENT_SPLIT_INFO) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_REEXPORT_DYLIB) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
+        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_RPATH) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::RpathCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_SOURCE_VERSION) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_SOURCE_VERSION) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::SourceVersionCommand->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_ENCRYPTION_INFO_64) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_FUNCTION_STARTS) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::EncryptionInfoCommand->new($io__raw_body, $self, $self->{_root});
+        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_TVOS) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_RPATH) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
+        $self->{body} = MachO::RpathCommand->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_DYLINKER) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::DylinkerCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_SUB_FRAMEWORK) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_SUB_FRAMEWORK) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_WEAK_DYLIB) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_IPHONEOS) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_LINKER_OPTIMIZATION_HINT) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_DYLD_ENVIRONMENT) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::DylinkerCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_UPWARD_DYLIB) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_DYLIB_CODE_SIGN_DRS) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_DYLD_INFO) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::DyldInfoCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_REEXPORT_DYLIB) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_SYMTAB) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::SymtabCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_ROUTINES_64) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::RoutinesCommand64->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_ID_DYLINKER) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::DylinkerCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_MAIN) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::EntryPointCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_FUNCTION_STARTS) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_MACOSX) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_DATA_IN_CODE) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_WATCHOS) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_ENCRYPTION_INFO) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::EncryptionInfoCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_SUB_UMBRELLA) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_LINKER_OPTION) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::LinkerOptionCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_TWOLEVEL_HINTS) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::TwolevelHintsCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_UUID) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::UuidCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_DYLD_INFO_ONLY) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::DyldInfoCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_LAZY_LOAD_DYLIB) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_SUB_CLIENT) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $LOAD_COMMAND_TYPE_ROUTINES) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_ROUTINES) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::RoutinesCommand->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_CODE_SIGNATURE) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_SUB_LIBRARY) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::CodeSignatureCommand->new($io__raw_body, $self, $self->{_root});
+        $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_DYSYMTAB) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_DYLD_INFO_ONLY) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DyldInfoCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_DYLD_ENVIRONMENT) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylinkerCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_LOAD_DYLINKER) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylinkerCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_SEGMENT_SPLIT_INFO) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_MAIN) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::EntryPointCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_LOAD_DYLIB) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_ENCRYPTION_INFO) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::EncryptionInfoCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_DYSYMTAB) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::DysymtabCommand->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_DYLIB) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_TWOLEVEL_HINTS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::TwolevelHintsCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_ENCRYPTION_INFO_64) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::EncryptionInfoCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_LINKER_OPTION) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::LinkerOptionCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_DYLD_INFO) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DyldInfoCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_VERSION_MIN_TVOS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_LOAD_UPWARD_DYLIB) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_SEGMENT_64) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_SEGMENT_64) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::SegmentCommand64->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $LOAD_COMMAND_TYPE_ID_DYLIB) {
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_SUB_UMBRELLA) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_VERSION_MIN_WATCHOS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_ROUTINES_64) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::RoutinesCommand64->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_ID_DYLIB) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_SUB_CLIENT) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_DYLIB_CODE_SIGN_DRS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_SYMTAB) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::SymtabCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_LINKER_OPTIMIZATION_HINT) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_DATA_IN_CODE) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_CODE_SIGNATURE) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::CodeSignatureCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_VERSION_MIN_IPHONEOS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_LOAD_WEAK_DYLIB) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_LAZY_LOAD_DYLIB) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_UUID) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::UuidCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::LOAD_COMMAND_TYPE_VERSION_MIN_MACOSX) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes(($self->size() - 8));

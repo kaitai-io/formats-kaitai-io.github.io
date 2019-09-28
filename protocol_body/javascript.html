@@ -153,11 +153,6 @@ on that parameter.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="protocol_body parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="protocol_body parsing C# library">C#</a></li>
                 
                 
@@ -251,13 +246,13 @@ var data = new ProtocolBody(new KaitaiStream(arrayBuffer));</code></pre>
 
 (function (root, factory) {
   if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./UdpDatagram&#39;, &#39;./TcpSegment&#39;, &#39;./IcmpPacket&#39;, &#39;./Ipv4Packet&#39;, &#39;./Ipv6Packet&#39;], factory);
+    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./TcpSegment&#39;, &#39;./Ipv4Packet&#39;, &#39;./IcmpPacket&#39;, &#39;./UdpDatagram&#39;, &#39;./Ipv6Packet&#39;], factory);
   } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./UdpDatagram&#39;), require(&#39;./TcpSegment&#39;), require(&#39;./IcmpPacket&#39;), require(&#39;./Ipv4Packet&#39;), require(&#39;./Ipv6Packet&#39;));
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./TcpSegment&#39;), require(&#39;./Ipv4Packet&#39;), require(&#39;./IcmpPacket&#39;), require(&#39;./UdpDatagram&#39;), require(&#39;./Ipv6Packet&#39;));
   } else {
-    root.ProtocolBody = factory(root.KaitaiStream, root.UdpDatagram, root.TcpSegment, root.IcmpPacket, root.Ipv4Packet, root.Ipv6Packet);
+    root.ProtocolBody = factory(root.KaitaiStream, root.TcpSegment, root.Ipv4Packet, root.IcmpPacket, root.UdpDatagram, root.Ipv6Packet);
   }
-}(this, function (KaitaiStream, UdpDatagram, TcpSegment, IcmpPacket, Ipv4Packet, Ipv6Packet) {
+}(this, function (KaitaiStream, TcpSegment, Ipv4Packet, IcmpPacket, UdpDatagram, Ipv6Packet) {
 /**
  * Protocol body represents particular payload on transport level (OSI
  * layer 4).
@@ -577,17 +572,17 @@ var ProtocolBody = (function() {
   }
   ProtocolBody.prototype._read = function() {
     switch (this.protocol) {
-    case ProtocolBody.ProtocolEnum.TCP:
-      this.body = new TcpSegment(this._io, this, null);
-      break;
     case ProtocolBody.ProtocolEnum.IPV6_NONXT:
       this.body = new NoNextHeader(this._io, this, this._root);
       break;
-    case ProtocolBody.ProtocolEnum.ICMP:
-      this.body = new IcmpPacket(this._io, this, null);
+    case ProtocolBody.ProtocolEnum.IPV4:
+      this.body = new Ipv4Packet(this._io, this, null);
       break;
     case ProtocolBody.ProtocolEnum.UDP:
       this.body = new UdpDatagram(this._io, this, null);
+      break;
+    case ProtocolBody.ProtocolEnum.ICMP:
+      this.body = new IcmpPacket(this._io, this, null);
       break;
     case ProtocolBody.ProtocolEnum.HOPOPT:
       this.body = new OptionHopByHop(this._io, this, this._root);
@@ -595,8 +590,8 @@ var ProtocolBody = (function() {
     case ProtocolBody.ProtocolEnum.IPV6:
       this.body = new Ipv6Packet(this._io, this, null);
       break;
-    case ProtocolBody.ProtocolEnum.IPV4:
-      this.body = new Ipv4Packet(this._io, this, null);
+    case ProtocolBody.ProtocolEnum.TCP:
+      this.body = new TcpSegment(this._io, this, null);
       break;
     }
   }

@@ -25,17 +25,17 @@ class ProtocolBody extends \Kaitai\Struct\Struct {
 
     private function _read() {
         switch ($this->protocol()) {
-            case \ProtocolBody\ProtocolEnum::TCP:
-                $this->_m_body = new \TcpSegment($this->_io);
-                break;
             case \ProtocolBody\ProtocolEnum::IPV6_NONXT:
                 $this->_m_body = new \ProtocolBody\NoNextHeader($this->_io, $this, $this->_root);
                 break;
-            case \ProtocolBody\ProtocolEnum::ICMP:
-                $this->_m_body = new \IcmpPacket($this->_io);
+            case \ProtocolBody\ProtocolEnum::IPV4:
+                $this->_m_body = new \Ipv4Packet($this->_io);
                 break;
             case \ProtocolBody\ProtocolEnum::UDP:
                 $this->_m_body = new \UdpDatagram($this->_io);
+                break;
+            case \ProtocolBody\ProtocolEnum::ICMP:
+                $this->_m_body = new \IcmpPacket($this->_io);
                 break;
             case \ProtocolBody\ProtocolEnum::HOPOPT:
                 $this->_m_body = new \ProtocolBody\OptionHopByHop($this->_io, $this, $this->_root);
@@ -43,8 +43,8 @@ class ProtocolBody extends \Kaitai\Struct\Struct {
             case \ProtocolBody\ProtocolEnum::IPV6:
                 $this->_m_body = new \Ipv6Packet($this->_io);
                 break;
-            case \ProtocolBody\ProtocolEnum::IPV4:
-                $this->_m_body = new \Ipv4Packet($this->_io);
+            case \ProtocolBody\ProtocolEnum::TCP:
+                $this->_m_body = new \TcpSegment($this->_io);
                 break;
         }
     }

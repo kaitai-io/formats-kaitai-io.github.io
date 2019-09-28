@@ -164,11 +164,6 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C# library">C#</a></li>
                 
                 
@@ -273,8 +268,8 @@ from enum import Enum
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
     raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
 
-from windows_systemtime import WindowsSystemtime
-from ethernet_frame import EthernetFrame
+import ethernet_frame
+import windows_systemtime
 class MicrosoftNetworkMonitorV2(KaitaiStruct):
     &quot;&quot;&quot;Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft&#39;s
     network packet sniffing and analysis tool. It can save captured
@@ -404,8 +399,8 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         self.signature = self._io.ensure_fixed_contents(b&quot;\x47\x4D\x42\x55&quot;)
         self.version_minor = self._io.read_u1()
         self.version_major = self._io.read_u1()
-        self.mac_type = self._root.Linktype(self._io.read_u2le())
-        self.time_capture_start = WindowsSystemtime(self._io)
+        self.mac_type = KaitaiStream.resolve_enum(self._root.Linktype, self._io.read_u2le())
+        self.time_capture_start = windows_systemtime.WindowsSystemtime(self._io)
         self.frame_table_ofs = self._io.read_u4le()
         self.frame_table_len = self._io.read_u4le()
         self.user_data_ofs = self._io.read_u4le()
@@ -483,8 +478,8 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
             _on = self._root.mac_type
             if _on == self._root.Linktype.ethernet:
                 self._raw_body = self._io.read_bytes(self.inc_len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = EthernetFrame(io)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = ethernet_frame.EthernetFrame(_io__raw_body)
             else:
                 self.body = self._io.read_bytes(self.inc_len)
 
@@ -498,8 +493,8 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.frame_table_ofs)
         self._raw__m_frame_table = self._io.read_bytes(self.frame_table_len)
-        io = KaitaiStream(BytesIO(self._raw__m_frame_table))
-        self._m_frame_table = self._root.FrameIndex(io, self, self._root)
+        _io__raw__m_frame_table = KaitaiStream(BytesIO(self._raw__m_frame_table))
+        self._m_frame_table = self._root.FrameIndex(_io__raw__m_frame_table, self, self._root)
         self._io.seek(_pos)
         return self._m_frame_table if hasattr(self, &#39;_m_frame_table&#39;) else None
 

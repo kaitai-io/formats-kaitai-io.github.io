@@ -99,13 +99,13 @@ class Packet extends \Kaitai\Struct\Struct {
         switch ($this->_root()->hdr()->network()) {
             case \Pcap\Linktype::PPI:
                 $this->_m__raw_body = $this->_io->readBytes($this->inclLen());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \PacketPpi($io);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \PacketPpi($_io__raw_body);
                 break;
             case \Pcap\Linktype::ETHERNET:
                 $this->_m__raw_body = $this->_io->readBytes($this->inclLen());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \EthernetFrame($io);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \EthernetFrame($_io__raw_body);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->inclLen());

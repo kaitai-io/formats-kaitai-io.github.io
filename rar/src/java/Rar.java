@@ -179,17 +179,24 @@ public class Rar extends KaitaiStruct {
             if (hasAdd()) {
                 this.addSize = this._io.readU4le();
             }
-            switch (blockType()) {
-            case FILE_HEADER: {
-                this._raw_body = this._io.readBytes(bodySize());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new BlockFileHeader(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(bodySize());
-                break;
-            }
+            {
+                BlockTypes on = blockType();
+                if (on != null) {
+                    switch (blockType()) {
+                    case FILE_HEADER: {
+                        this._raw_body = this._io.readBytes(bodySize());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new BlockFileHeader(_io__raw_body, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes(bodySize());
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes(bodySize());
+                }
             }
             if (hasAdd()) {
                 this.addBody = this._io.readBytes(addSize());

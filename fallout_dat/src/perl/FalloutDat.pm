@@ -237,7 +237,7 @@ sub contents {
     my $io = $self->_root()->_io();
     my $_pos = $io->pos();
     $io->seek($self->offset());
-    $self->{contents} = $io->read_bytes(($self->flags() == $COMPRESSION_NONE ? $self->size_unpacked() : $self->size_packed()));
+    $self->{contents} = $io->read_bytes(($self->flags() == $FalloutDat::COMPRESSION_NONE ? $self->size_unpacked() : $self->size_packed()));
     $io->seek($_pos);
     return $self->{contents};
 }

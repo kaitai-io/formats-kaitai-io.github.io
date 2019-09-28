@@ -181,11 +181,6 @@ documented by Adobe.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Adobe Flash (AKA Shockwave Flash, Macromedia Flash) parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Adobe Flash (AKA Shockwave Flash, Macromedia Flash) parsing C# library">C#</a></li>
                 
                 
@@ -479,6 +474,11 @@ var Swf = (function() {
     Tag.prototype._read = function() {
       this.recordHeader = new RecordHeader(this._io, this, this._root);
       switch (this.recordHeader.tagType) {
+      case Swf.TagType.DEFINE_SOUND:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new DefineSoundBody(_io__raw_tagBody, this, this._root);
+        break;
       case Swf.TagType.SET_BACKGROUND_COLOR:
         this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
         var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
@@ -489,10 +489,10 @@ var Swf = (function() {
         var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
         this.tagBody = new ScriptLimitsBody(_io__raw_tagBody, this, this._root);
         break;
-      case Swf.TagType.DEFINE_SOUND:
+      case Swf.TagType.DO_ABC:
         this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
         var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new DefineSoundBody(_io__raw_tagBody, this, this._root);
+        this.tagBody = new DoAbcBody(_io__raw_tagBody, this, this._root);
         break;
       case Swf.TagType.EXPORT_ASSETS:
         this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
@@ -503,11 +503,6 @@ var Swf = (function() {
         this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
         var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
         this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, this._root);
-        break;
-      case Swf.TagType.DO_ABC:
-        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
-        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new DoAbcBody(_io__raw_tagBody, this, this._root);
         break;
       default:
         this.tagBody = this._io.readBytes(this.recordHeader.len);

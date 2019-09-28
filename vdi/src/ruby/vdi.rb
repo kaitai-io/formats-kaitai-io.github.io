@@ -47,8 +47,8 @@ class Vdi < Kaitai::Struct::Struct
         @header_size_optional = @_io.read_u4le
       end
       @_raw_header_main = @_io.read_bytes(header_size)
-      io = Kaitai::Struct::Stream.new(@_raw_header_main)
-      @header_main = HeaderMain.new(io, self, @_root)
+      _io__raw_header_main = Kaitai::Struct::Stream.new(@_raw_header_main)
+      @header_main = HeaderMain.new(_io__raw_header_main, self, @_root)
       self
     end
     class Uuid < Kaitai::Struct::Struct
@@ -84,7 +84,7 @@ class Vdi < Kaitai::Struct::Struct
       end
 
       def _read
-        @image_type = Kaitai::Struct::Stream::resolve_enum(IMAGE_TYPE, @_io.read_u4le)
+        @image_type = Kaitai::Struct::Stream::resolve_enum(Vdi::IMAGE_TYPE, @_io.read_u4le)
         @image_flags = Flags.new(@_io, self, @_root)
         @description = (@_io.read_bytes(256)).force_encoding("utf-8")
         if _parent.version.major >= 1
@@ -278,8 +278,8 @@ class Vdi < Kaitai::Struct::Struct
         i = 0
         while not @_io.eof?
           @_raw_data << @_io.read_bytes(_root.header.header_main.block_data_size)
-          io = Kaitai::Struct::Stream.new(@_raw_data.last)
-          @data << Sector.new(io, self, @_root)
+          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data.last)
+          @data << Sector.new(_io__raw_data, self, @_root)
           i += 1
         end
         self
@@ -321,8 +321,8 @@ class Vdi < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(header.blocks_map_offset)
     @_raw_blocks_map = @_io.read_bytes(header.blocks_map_size)
-    io = Kaitai::Struct::Stream.new(@_raw_blocks_map)
-    @blocks_map = BlocksMap.new(io, self, @_root)
+    _io__raw_blocks_map = Kaitai::Struct::Stream.new(@_raw_blocks_map)
+    @blocks_map = BlocksMap.new(_io__raw_blocks_map, self, @_root)
     @_io.seek(_pos)
     @blocks_map
   end

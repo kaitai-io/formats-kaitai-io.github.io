@@ -106,10 +106,10 @@ class Uimage(KaitaiStruct):
             self.load_address = self._io.read_u4be()
             self.entry_address = self._io.read_u4be()
             self.data_crc = self._io.read_u4be()
-            self.os_type = self._root.UimageOs(self._io.read_u1())
-            self.architecture = self._root.UimageArch(self._io.read_u1())
-            self.image_type = self._root.UimageType(self._io.read_u1())
-            self.compression_type = self._root.UimageComp(self._io.read_u1())
+            self.os_type = KaitaiStream.resolve_enum(self._root.UimageOs, self._io.read_u1())
+            self.architecture = KaitaiStream.resolve_enum(self._root.UimageArch, self._io.read_u1())
+            self.image_type = KaitaiStream.resolve_enum(self._root.UimageType, self._io.read_u1())
+            self.compression_type = KaitaiStream.resolve_enum(self._root.UimageComp, self._io.read_u1())
             self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"UTF-8")
 
 

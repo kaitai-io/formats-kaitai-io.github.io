@@ -118,8 +118,8 @@ public class GptPartitionTable extends KaitaiStruct {
             KaitaiStream io = _root._io();
             long _pos = io.pos();
             io.seek((entriesStart() * _root.sectorSize()));
-            this._raw_entries = new ArrayList<byte[]>((int) (entriesCount()));
-            entries = new ArrayList<PartitionEntry>((int) (entriesCount()));
+            this._raw_entries = new ArrayList<byte[]>(((Number) (entriesCount())).intValue());
+            entries = new ArrayList<PartitionEntry>(((Number) (entriesCount())).intValue());
             for (int i = 0; i < entriesCount(); i++) {
                 this._raw_entries.add(io.readBytes(entriesSize()));
                 KaitaiStream _io__raw_entries = new ByteBufferKaitaiStream(_raw_entries.get(_raw_entries.size() - 1));

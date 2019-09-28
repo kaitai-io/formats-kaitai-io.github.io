@@ -49,12 +49,12 @@ sub _read {
     $self->{src_mac} = $self->{_io}->read_bytes(6);
     $self->{ether_type} = $self->{_io}->read_u2be();
     my $_on = $self->ether_type();
-    if ($_on == $ETHER_TYPE_ENUM_IPV4) {
+    if ($_on == $EthernetFrame::ETHER_TYPE_ENUM_IPV4) {
         $self->{_raw_body} = $self->{_io}->read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Ipv4Packet->new($io__raw_body);
     }
-    elsif ($_on == $ETHER_TYPE_ENUM_IPV6) {
+    elsif ($_on == $EthernetFrame::ETHER_TYPE_ENUM_IPV6) {
         $self->{_raw_body} = $self->{_io}->read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Ipv6Packet->new($io__raw_body);

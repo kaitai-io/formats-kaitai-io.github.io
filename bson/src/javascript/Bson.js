@@ -236,32 +236,47 @@ var Bson = (function() {
       this.typeByte = this._io.readU1();
       this.name = new Cstring(this._io, this, this._root);
       switch (this.typeByte) {
-      case Bson.Element.BsonType.NUMBER_DOUBLE:
-        this.content = this._io.readF8le();
-        break;
       case Bson.Element.BsonType.CODE_WITH_SCOPE:
         this.content = new CodeWithScope(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.OBJECT_ID:
-        this.content = new ObjectId(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.STRING:
-        this.content = new String(this._io, this, this._root);
         break;
       case Bson.Element.BsonType.REG_EX:
         this.content = new RegEx(this._io, this, this._root);
         break;
-      case Bson.Element.BsonType.NUMBER_DECIMAL:
-        this.content = new F16(this._io, this, this._root);
+      case Bson.Element.BsonType.NUMBER_DOUBLE:
+        this.content = this._io.readF8le();
+        break;
+      case Bson.Element.BsonType.SYMBOL:
+        this.content = new String(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.TIMESTAMP:
+        this.content = new Timestamp(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.NUMBER_INT:
+        this.content = this._io.readS4le();
+        break;
+      case Bson.Element.BsonType.DOCUMENT:
+        this.content = new Bson(this._io, this, null);
+        break;
+      case Bson.Element.BsonType.OBJECT_ID:
+        this.content = new ObjectId(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.JAVASCRIPT:
+        this.content = new String(this._io, this, this._root);
         break;
       case Bson.Element.BsonType.UTC_DATETIME:
         this.content = this._io.readS8le();
         break;
+      case Bson.Element.BsonType.BOOLEAN:
+        this.content = this._io.readU1();
+        break;
       case Bson.Element.BsonType.NUMBER_LONG:
         this.content = this._io.readS8le();
         break;
-      case Bson.Element.BsonType.TIMESTAMP:
-        this.content = new Timestamp(this._io, this, this._root);
+      case Bson.Element.BsonType.BIN_DATA:
+        this.content = new BinData(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.STRING:
+        this.content = new String(this._io, this, this._root);
         break;
       case Bson.Element.BsonType.DB_POINTER:
         this.content = new DbPointer(this._io, this, this._root);
@@ -269,23 +284,8 @@ var Bson = (function() {
       case Bson.Element.BsonType.ARRAY:
         this.content = new Bson(this._io, this, null);
         break;
-      case Bson.Element.BsonType.JAVASCRIPT:
-        this.content = new String(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.BOOLEAN:
-        this.content = this._io.readU1();
-        break;
-      case Bson.Element.BsonType.DOCUMENT:
-        this.content = new Bson(this._io, this, null);
-        break;
-      case Bson.Element.BsonType.SYMBOL:
-        this.content = new String(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.NUMBER_INT:
-        this.content = this._io.readS4le();
-        break;
-      case Bson.Element.BsonType.BIN_DATA:
-        this.content = new BinData(this._io, this, this._root);
+      case Bson.Element.BsonType.NUMBER_DECIMAL:
+        this.content = new F16(this._io, this, this._root);
         break;
       }
     }

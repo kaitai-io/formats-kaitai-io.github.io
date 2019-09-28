@@ -160,11 +160,6 @@ as:</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C# library">C#</a></li>
                 
                 
@@ -349,47 +344,54 @@ public class Asn1Der extends KaitaiStruct {
     private void _read() {
         this.typeTag = TypeTag.byId(this._io.readU1());
         this.len = new LenEncoded(this._io, this, _root);
-        switch (typeTag()) {
-        case SEQUENCE_30: {
-            this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new BodySequence(_io__raw_body, this, _root);
-            break;
-        }
-        case SEQUENCE_10: {
-            this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new BodySequence(_io__raw_body, this, _root);
-            break;
-        }
-        case UTF8STRING: {
-            this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new BodyUtf8string(_io__raw_body, this, _root);
-            break;
-        }
-        case PRINTABLE_STRING: {
-            this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new BodyPrintableString(_io__raw_body, this, _root);
-            break;
-        }
-        case OBJECT_ID: {
-            this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new BodyObjectId(_io__raw_body, this, _root);
-            break;
-        }
-        case SET: {
-            this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new BodySequence(_io__raw_body, this, _root);
-            break;
-        }
-        default: {
-            this.body = this._io.readBytes(len().result());
-            break;
-        }
+        {
+            TypeTag on = typeTag();
+            if (on != null) {
+                switch (typeTag()) {
+                case PRINTABLE_STRING: {
+                    this._raw_body = this._io.readBytes(len().result());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new BodyPrintableString(_io__raw_body, this, _root);
+                    break;
+                }
+                case SEQUENCE_10: {
+                    this._raw_body = this._io.readBytes(len().result());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new BodySequence(_io__raw_body, this, _root);
+                    break;
+                }
+                case SET: {
+                    this._raw_body = this._io.readBytes(len().result());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new BodySequence(_io__raw_body, this, _root);
+                    break;
+                }
+                case SEQUENCE_30: {
+                    this._raw_body = this._io.readBytes(len().result());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new BodySequence(_io__raw_body, this, _root);
+                    break;
+                }
+                case UTF8STRING: {
+                    this._raw_body = this._io.readBytes(len().result());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new BodyUtf8string(_io__raw_body, this, _root);
+                    break;
+                }
+                case OBJECT_ID: {
+                    this._raw_body = this._io.readBytes(len().result());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new BodyObjectId(_io__raw_body, this, _root);
+                    break;
+                }
+                default: {
+                    this.body = this._io.readBytes(len().result());
+                    break;
+                }
+                }
+            } else {
+                this.body = this._io.readBytes(len().result());
+            }
         }
     }
     public static class BodySequence extends KaitaiStruct {

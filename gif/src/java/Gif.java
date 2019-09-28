@@ -337,15 +337,20 @@ public class Gif extends KaitaiStruct {
         }
         private void _read() {
             this.blockType = Gif.BlockType.byId(this._io.readU1());
-            switch (blockType()) {
-            case EXTENSION: {
-                this.body = new Extension(this._io, this, _root);
-                break;
-            }
-            case LOCAL_IMAGE_DESCRIPTOR: {
-                this.body = new LocalImageDescriptor(this._io, this, _root);
-                break;
-            }
+            {
+                BlockType on = blockType();
+                if (on != null) {
+                    switch (blockType()) {
+                    case EXTENSION: {
+                        this.body = new Extension(this._io, this, _root);
+                        break;
+                    }
+                    case LOCAL_IMAGE_DESCRIPTOR: {
+                        this.body = new LocalImageDescriptor(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
             }
         }
         private BlockType blockType;
@@ -626,23 +631,30 @@ public class Gif extends KaitaiStruct {
         }
         private void _read() {
             this.label = Gif.ExtensionLabel.byId(this._io.readU1());
-            switch (label()) {
-            case APPLICATION: {
-                this.body = new ExtApplication(this._io, this, _root);
-                break;
-            }
-            case COMMENT: {
-                this.body = new Subblocks(this._io, this, _root);
-                break;
-            }
-            case GRAPHIC_CONTROL: {
-                this.body = new ExtGraphicControl(this._io, this, _root);
-                break;
-            }
-            default: {
-                this.body = new Subblocks(this._io, this, _root);
-                break;
-            }
+            {
+                ExtensionLabel on = label();
+                if (on != null) {
+                    switch (label()) {
+                    case APPLICATION: {
+                        this.body = new ExtApplication(this._io, this, _root);
+                        break;
+                    }
+                    case COMMENT: {
+                        this.body = new Subblocks(this._io, this, _root);
+                        break;
+                    }
+                    case GRAPHIC_CONTROL: {
+                        this.body = new ExtGraphicControl(this._io, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = new Subblocks(this._io, this, _root);
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = new Subblocks(this._io, this, _root);
+                }
             }
         }
         private ExtensionLabel label;

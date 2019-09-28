@@ -96,16 +96,16 @@ namespace Kaitai
                 }
                 if ( ((Marker != MarkerEnum.Soi) && (Marker != MarkerEnum.Eoi)) ) {
                     switch (Marker) {
-                    case MarkerEnum.Sos: {
-                        __raw_data = m_io.ReadBytes((Length - 2));
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new SegmentSos(io___raw_data, this, m_root);
-                        break;
-                    }
                     case MarkerEnum.App1: {
                         __raw_data = m_io.ReadBytes((Length - 2));
                         var io___raw_data = new KaitaiStream(__raw_data);
                         _data = new SegmentApp1(io___raw_data, this, m_root);
+                        break;
+                    }
+                    case MarkerEnum.App0: {
+                        __raw_data = m_io.ReadBytes((Length - 2));
+                        var io___raw_data = new KaitaiStream(__raw_data);
+                        _data = new SegmentApp0(io___raw_data, this, m_root);
                         break;
                     }
                     case MarkerEnum.Sof0: {
@@ -114,10 +114,10 @@ namespace Kaitai
                         _data = new SegmentSof0(io___raw_data, this, m_root);
                         break;
                     }
-                    case MarkerEnum.App0: {
+                    case MarkerEnum.Sos: {
                         __raw_data = m_io.ReadBytes((Length - 2));
                         var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new SegmentApp0(io___raw_data, this, m_root);
+                        _data = new SegmentSos(io___raw_data, this, m_root);
                         break;
                     }
                     default: {

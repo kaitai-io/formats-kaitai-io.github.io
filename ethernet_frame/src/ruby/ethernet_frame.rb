@@ -37,12 +37,12 @@ class EthernetFrame < Kaitai::Struct::Struct
     case ether_type
     when :ether_type_enum_ipv4
       @_raw_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = Ipv4Packet.new(io)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = Ipv4Packet.new(_io__raw_body)
     when :ether_type_enum_ipv6
       @_raw_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = Ipv6Packet.new(io)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = Ipv6Packet.new(_io__raw_body)
     else
       @body = @_io.read_bytes_full
     end

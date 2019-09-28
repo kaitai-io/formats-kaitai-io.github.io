@@ -89,6 +89,12 @@ namespace Kaitai
                         _chunkContent = new Matt(io___raw_chunkContent, this, m_root);
                         break;
                     }
+                    case MagicavoxelVox.ChunkType.Rgba: {
+                        __raw_chunkContent = m_io.ReadBytes(NumBytesOfChunkContent);
+                        var io___raw_chunkContent = new KaitaiStream(__raw_chunkContent);
+                        _chunkContent = new Rgba(io___raw_chunkContent, this, m_root);
+                        break;
+                    }
                     case MagicavoxelVox.ChunkType.Xyzi: {
                         __raw_chunkContent = m_io.ReadBytes(NumBytesOfChunkContent);
                         var io___raw_chunkContent = new KaitaiStream(__raw_chunkContent);
@@ -99,12 +105,6 @@ namespace Kaitai
                         __raw_chunkContent = m_io.ReadBytes(NumBytesOfChunkContent);
                         var io___raw_chunkContent = new KaitaiStream(__raw_chunkContent);
                         _chunkContent = new Pack(io___raw_chunkContent, this, m_root);
-                        break;
-                    }
-                    case MagicavoxelVox.ChunkType.Rgba: {
-                        __raw_chunkContent = m_io.ReadBytes(NumBytesOfChunkContent);
-                        var io___raw_chunkContent = new KaitaiStream(__raw_chunkContent);
-                        _chunkContent = new Rgba(io___raw_chunkContent, this, m_root);
                         break;
                     }
                     default: {

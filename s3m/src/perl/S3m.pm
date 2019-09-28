@@ -682,7 +682,7 @@ sub _read {
     $self->{type} = $self->{_io}->read_u1();
     $self->{filename} = IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(12), 0, 0);
     my $_on = $self->type();
-    if ($_on == $INST_TYPES_SAMPLE) {
+    if ($_on == $S3m::Instrument::INST_TYPES_SAMPLE) {
         $self->{body} = S3m::Instrument::Sampled->new($self->{_io}, $self, $self->{_root});
     }
     else {

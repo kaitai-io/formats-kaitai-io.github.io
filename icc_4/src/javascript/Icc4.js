@@ -1332,11 +1332,11 @@ var Icc4 = (function() {
           this.functionType = this._io.readU2be();
           this.reserved2 = this._io.ensureFixedContents([0, 0]);
           switch (this.functionType) {
-          case Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.Y_EQUALS_X_TO_POWER_OF_G:
-            this.parameters = new ParamsYEqualsXToPowerOfG(this._io, this, this._root);
-            break;
           case Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.CIE_122_1996:
             this.parameters = new ParamsCie1221996(this._io, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.IEC_61966_3:
+            this.parameters = new ParamsIec619663(this._io, this, this._root);
             break;
           case Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.IEC_61966_2_1:
             this.parameters = new ParamsIec6196621(this._io, this, this._root);
@@ -1344,8 +1344,8 @@ var Icc4 = (function() {
           case Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C:
             this.parameters = new ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(this._io, this, this._root);
             break;
-          case Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.IEC_61966_3:
-            this.parameters = new ParamsIec619663(this._io, this, this._root);
+          case Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.Y_EQUALS_X_TO_POWER_OF_G:
+            this.parameters = new ParamsYEqualsXToPowerOfG(this._io, this, this._root);
             break;
           }
         }
@@ -2538,230 +2538,165 @@ var Icc4 = (function() {
           var _pos = this._io.pos;
           this._io.seek(this.offsetToDataElement);
           switch (this.tagSignature) {
-          case Icc4.TagTable.TagDefinition.TagSignatures.PROFILE_SEQUENCE_IDENTIFIER:
+          case Icc4.TagTable.TagDefinition.TagSignatures.COLORANT_ORDER:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new ProfileSequenceIdentifierTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.COLORIMETRIC_INTENT_IMAGE_STATE:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new ColorimetricIntentImageStateTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.RED_TRC:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new RedTrcTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.PREVIEW_0:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new Preview0Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.GREEN_TRC:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new GreenTrcTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_D_0:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new BToD0Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.COLORANT_TABLE_OUT:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new ColorantTableOutTag(_io__raw__m_tagDataElement, this, this._root);
+            this._m_tagDataElement = new ColorantOrderTag(_io__raw__m_tagDataElement, this, this._root);
             break;
           case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_A_2:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
             this._m_tagDataElement = new BToA2Tag(_io__raw__m_tagDataElement, this, this._root);
             break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.CALIBRATION_DATE_TIME:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new CalibrationDateTimeTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.CHROMATIC_ADAPTATION:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new ChromaticAdaptationTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.COLORANT_TABLE:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new ColorantTableTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.A_TO_B_2:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new AToB2Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.D_TO_B_1:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new DToB1Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.CHROMATICITY:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new ChromaticityTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.BLUE_MATRIX_COLUMN:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new BlueMatrixColumnTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.A_TO_B_0:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new AToB0Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_D_2:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new BToD2Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_A_1:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new BToA1Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
           case Icc4.TagTable.TagDefinition.TagSignatures.MEDIA_WHITE_POINT:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
             this._m_tagDataElement = new MediaWhitePointTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.D_TO_B_0:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new DToB0Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.NAMED_COLOR_2:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new NamedColor2Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.D_TO_B_2:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new DToB2Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.RED_MATRIX_COLUMN:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new RedMatrixColumnTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.VIEWING_CONDITIONS:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new ViewingConditionsTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.A_TO_B_1:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new AToB1Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.PREVIEW_1:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new Preview1Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.GRAY_TRC:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new GrayTrcTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.DEVICE_MFG_DESC:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new DeviceMfgDescTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_D_1:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new BToD1Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.COLORANT_ORDER:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new ColorantOrderTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.COPYRIGHT:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new CopyrightTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.GAMUT:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new GamutTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.CHAR_TARGET:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new CharTargetTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.OUTPUT_RESPONSE:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new OutputResponseTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.TECHNOLOGY:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new TechnologyTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.VIEWING_COND_DESC:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new ViewingCondDescTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.PROFILE_DESCRIPTION:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new ProfileDescriptionTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.LUMINANCE:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new LuminanceTag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.D_TO_B_3:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new DToB3Tag(_io__raw__m_tagDataElement, this, this._root);
             break;
           case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_D_3:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
             this._m_tagDataElement = new BToD3Tag(_io__raw__m_tagDataElement, this, this._root);
             break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.COLORIMETRIC_INTENT_IMAGE_STATE:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new ColorimetricIntentImageStateTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.VIEWING_COND_DESC:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new ViewingCondDescTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.PREVIEW_1:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new Preview1Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.DEVICE_MODEL_DESC:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new DeviceModelDescTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.CHROMATICITY:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new ChromaticityTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.PREVIEW_0:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new Preview0Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.D_TO_B_1:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new DToB1Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.SATURATION_RENDERING_INTENT_GAMUT:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new SaturationRenderingIntentGamutTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
           case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_A_0:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
             this._m_tagDataElement = new BToA0Tag(_io__raw__m_tagDataElement, this, this._root);
-            break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.PREVIEW_2:
-            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
-            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new Preview2Tag(_io__raw__m_tagDataElement, this, this._root);
             break;
           case Icc4.TagTable.TagDefinition.TagSignatures.GREEN_MATRIX_COLUMN:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
             this._m_tagDataElement = new GreenMatrixColumnTag(_io__raw__m_tagDataElement, this, this._root);
             break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.COPYRIGHT:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new CopyrightTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.BLUE_MATRIX_COLUMN:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new BlueMatrixColumnTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.CHROMATIC_ADAPTATION:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new ChromaticAdaptationTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.A_TO_B_1:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new AToB1Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.OUTPUT_RESPONSE:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new OutputResponseTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
           case Icc4.TagTable.TagDefinition.TagSignatures.PROFILE_SEQUENCE:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
             this._m_tagDataElement = new ProfileSequenceTag(_io__raw__m_tagDataElement, this, this._root);
             break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.SATURATION_RENDERING_INTENT_GAMUT:
+          case Icc4.TagTable.TagDefinition.TagSignatures.CHAR_TARGET:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new SaturationRenderingIntentGamutTag(_io__raw__m_tagDataElement, this, this._root);
+            this._m_tagDataElement = new CharTargetTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.RED_TRC:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new RedTrcTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.GAMUT:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new GamutTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.DEVICE_MFG_DESC:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new DeviceMfgDescTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.MEASUREMENT:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new MeasurementTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.GREEN_TRC:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new GreenTrcTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.D_TO_B_3:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new DToB3Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.COLORANT_TABLE:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new ColorantTableTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.D_TO_B_2:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new DToB2Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.PROFILE_DESCRIPTION:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new ProfileDescriptionTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.PROFILE_SEQUENCE_IDENTIFIER:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new ProfileSequenceIdentifierTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.GRAY_TRC:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new GrayTrcTag(_io__raw__m_tagDataElement, this, this._root);
             break;
           case Icc4.TagTable.TagDefinition.TagSignatures.PERCEPTUAL_RENDERING_INTENT_GAMUT:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
@@ -2773,15 +2708,80 @@ var Icc4 = (function() {
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
             this._m_tagDataElement = new BlueTrcTag(_io__raw__m_tagDataElement, this, this._root);
             break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.DEVICE_MODEL_DESC:
+          case Icc4.TagTable.TagDefinition.TagSignatures.D_TO_B_0:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new DeviceModelDescTag(_io__raw__m_tagDataElement, this, this._root);
+            this._m_tagDataElement = new DToB0Tag(_io__raw__m_tagDataElement, this, this._root);
             break;
-          case Icc4.TagTable.TagDefinition.TagSignatures.MEASUREMENT:
+          case Icc4.TagTable.TagDefinition.TagSignatures.A_TO_B_2:
             this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
             var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
-            this._m_tagDataElement = new MeasurementTag(_io__raw__m_tagDataElement, this, this._root);
+            this._m_tagDataElement = new AToB2Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.CALIBRATION_DATE_TIME:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new CalibrationDateTimeTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.COLORANT_TABLE_OUT:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new ColorantTableOutTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.RED_MATRIX_COLUMN:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new RedMatrixColumnTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.PREVIEW_2:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new Preview2Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.A_TO_B_0:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new AToB0Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.LUMINANCE:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new LuminanceTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.NAMED_COLOR_2:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new NamedColor2Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_D_2:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new BToD2Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_D_0:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new BToD0Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_A_1:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new BToA1Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.B_TO_D_1:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new BToD1Tag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.VIEWING_CONDITIONS:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new ViewingConditionsTag(_io__raw__m_tagDataElement, this, this._root);
+            break;
+          case Icc4.TagTable.TagDefinition.TagSignatures.TECHNOLOGY:
+            this._raw__m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);
+            var _io__raw__m_tagDataElement = new KaitaiStream(this._raw__m_tagDataElement);
+            this._m_tagDataElement = new TechnologyTag(_io__raw__m_tagDataElement, this, this._root);
             break;
           default:
             this._m_tagDataElement = this._io.readBytes(this.sizeOfDataElement);

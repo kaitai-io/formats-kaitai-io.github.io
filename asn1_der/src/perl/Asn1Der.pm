@@ -58,35 +58,35 @@ sub _read {
     $self->{type_tag} = $self->{_io}->read_u1();
     $self->{len} = Asn1Der::LenEncoded->new($self->{_io}, $self, $self->{_root});
     my $_on = $self->type_tag();
-    if ($_on == $TYPE_TAG_SEQUENCE_30) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Asn1Der::BodySequence->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TAG_SEQUENCE_10) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Asn1Der::BodySequence->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TAG_UTF8STRING) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Asn1Der::BodyUtf8string->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TAG_PRINTABLE_STRING) {
+    if ($_on == $Asn1Der::TYPE_TAG_PRINTABLE_STRING) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Asn1Der::BodyPrintableString->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $TYPE_TAG_OBJECT_ID) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Asn1Der::BodyObjectId->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $TYPE_TAG_SET) {
+    elsif ($_on == $Asn1Der::TYPE_TAG_SEQUENCE_10) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Asn1Der::BodySequence->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $Asn1Der::TYPE_TAG_SET) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Asn1Der::BodySequence->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $Asn1Der::TYPE_TAG_SEQUENCE_30) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Asn1Der::BodySequence->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $Asn1Der::TYPE_TAG_UTF8STRING) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Asn1Der::BodyUtf8string->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $Asn1Der::TYPE_TAG_OBJECT_ID) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Asn1Der::BodyObjectId->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes($self->len()->result());

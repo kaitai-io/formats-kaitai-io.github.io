@@ -178,20 +178,20 @@ class ProtocolBody < Kaitai::Struct::Struct
 
   def _read
     case protocol
-    when :protocol_enum_tcp
-      @body = TcpSegment.new(@_io)
     when :protocol_enum_ipv6_nonxt
       @body = NoNextHeader.new(@_io, self, @_root)
-    when :protocol_enum_icmp
-      @body = IcmpPacket.new(@_io)
+    when :protocol_enum_ipv4
+      @body = Ipv4Packet.new(@_io)
     when :protocol_enum_udp
       @body = UdpDatagram.new(@_io)
+    when :protocol_enum_icmp
+      @body = IcmpPacket.new(@_io)
     when :protocol_enum_hopopt
       @body = OptionHopByHop.new(@_io, self, @_root)
     when :protocol_enum_ipv6
       @body = Ipv6Packet.new(@_io)
-    when :protocol_enum_ipv4
-      @body = Ipv4Packet.new(@_io)
+    when :protocol_enum_tcp
+      @body = TcpSegment.new(@_io)
     end
     self
   end

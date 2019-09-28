@@ -51,8 +51,8 @@ class Iso9660 < Kaitai::Struct::Struct
       @lba_path_table_be = @_io.read_u4be
       @lba_opt_path_table_be = @_io.read_u4be
       @_raw_root_dir = @_io.read_bytes(34)
-      io = Kaitai::Struct::Stream.new(@_raw_root_dir)
-      @root_dir = DirEntry.new(io, self, @_root)
+      _io__raw_root_dir = Kaitai::Struct::Stream.new(@_raw_root_dir)
+      @root_dir = DirEntry.new(_io__raw_root_dir, self, @_root)
       @vol_set_id = (@_io.read_bytes(128)).force_encoding("UTF-8")
       @publisher_id = (@_io.read_bytes(128)).force_encoding("UTF-8")
       @data_preparer_id = (@_io.read_bytes(128)).force_encoding("UTF-8")
@@ -74,8 +74,8 @@ class Iso9660 < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek((lba_path_table_le * _root.sector_size))
       @_raw_path_table = @_io.read_bytes(path_table_size.le)
-      io = Kaitai::Struct::Stream.new(@_raw_path_table)
-      @path_table = PathTableLe.new(io, self, @_root)
+      _io__raw_path_table = Kaitai::Struct::Stream.new(@_raw_path_table)
+      @path_table = PathTableLe.new(_io__raw_path_table, self, @_root)
       @_io.seek(_pos)
       @path_table
     end
@@ -159,8 +159,8 @@ class Iso9660 < Kaitai::Struct::Struct
       @len = @_io.read_u1
       if len > 0
         @_raw_body = @_io.read_bytes((len - 1))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DirEntryBody.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DirEntryBody.new(_io__raw_body, self, @_root)
       end
       self
     end
@@ -341,8 +341,8 @@ class Iso9660 < Kaitai::Struct::Struct
         _pos = io.pos
         io.seek((lba_extent.le * _root.sector_size))
         @_raw_extent_as_dir = io.read_bytes(size_extent.le)
-        io = Kaitai::Struct::Stream.new(@_raw_extent_as_dir)
-        @extent_as_dir = DirEntries.new(io, self, @_root)
+        _io__raw_extent_as_dir = Kaitai::Struct::Stream.new(@_raw_extent_as_dir)
+        @extent_as_dir = DirEntries.new(_io__raw_extent_as_dir, self, @_root)
         io.seek(_pos)
       end
       @extent_as_dir

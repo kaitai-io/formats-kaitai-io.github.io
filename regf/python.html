@@ -163,11 +163,6 @@ filesystem with a running Windows OS.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Windows registry database parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Windows registry database parsing C# library">C#</a></li>
                 
                 
@@ -305,8 +300,8 @@ class Regf(KaitaiStruct):
         i = 0
         while not self._io.is_eof():
             self._raw_hive_bins.append(self._io.read_bytes(4096))
-            io = KaitaiStream(BytesIO(self._raw_hive_bins[-1]))
-            self.hive_bins.append(self._root.HiveBin(io, self, self._root))
+            _io__raw_hive_bins = KaitaiStream(BytesIO(self._raw_hive_bins[-1]))
+            self.hive_bins.append(self._root.HiveBin(_io__raw_hive_bins, self, self._root))
             i += 1
 
 
@@ -368,32 +363,32 @@ class Regf(KaitaiStruct):
             _on = self.identifier
             if _on == u&quot;li&quot;:
                 self._raw_data = self._io.read_bytes(((self.cell_size - 2) - 4))
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.HiveBinCell.SubKeyListLi(io, self, self._root)
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = self._root.HiveBinCell.SubKeyListLi(_io__raw_data, self, self._root)
             elif _on == u&quot;vk&quot;:
                 self._raw_data = self._io.read_bytes(((self.cell_size - 2) - 4))
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.HiveBinCell.SubKeyListVk(io, self, self._root)
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = self._root.HiveBinCell.SubKeyListVk(_io__raw_data, self, self._root)
             elif _on == u&quot;lf&quot;:
                 self._raw_data = self._io.read_bytes(((self.cell_size - 2) - 4))
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.HiveBinCell.SubKeyListLhLf(io, self, self._root)
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = self._root.HiveBinCell.SubKeyListLhLf(_io__raw_data, self, self._root)
             elif _on == u&quot;ri&quot;:
                 self._raw_data = self._io.read_bytes(((self.cell_size - 2) - 4))
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.HiveBinCell.SubKeyListRi(io, self, self._root)
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = self._root.HiveBinCell.SubKeyListRi(_io__raw_data, self, self._root)
             elif _on == u&quot;lh&quot;:
                 self._raw_data = self._io.read_bytes(((self.cell_size - 2) - 4))
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.HiveBinCell.SubKeyListLhLf(io, self, self._root)
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = self._root.HiveBinCell.SubKeyListLhLf(_io__raw_data, self, self._root)
             elif _on == u&quot;nk&quot;:
                 self._raw_data = self._io.read_bytes(((self.cell_size - 2) - 4))
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.HiveBinCell.NamedKey(io, self, self._root)
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = self._root.HiveBinCell.NamedKey(_io__raw_data, self, self._root)
             elif _on == u&quot;sk&quot;:
                 self._raw_data = self._io.read_bytes(((self.cell_size - 2) - 4))
-                io = KaitaiStream(BytesIO(self._raw_data))
-                self.data = self._root.HiveBinCell.SubKeyListSk(io, self, self._root)
+                _io__raw_data = KaitaiStream(BytesIO(self._raw_data))
+                self.data = self._root.HiveBinCell.SubKeyListSk(_io__raw_data, self, self._root)
             else:
                 self.data = self._io.read_bytes(((self.cell_size - 2) - 4))
 
@@ -425,8 +420,8 @@ class Regf(KaitaiStruct):
                 self.value_name_size = self._io.read_u2le()
                 self.data_size = self._io.read_u4le()
                 self.data_offset = self._io.read_u4le()
-                self.data_type = self._root.HiveBinCell.SubKeyListVk.DataTypeEnum(self._io.read_u4le())
-                self.flags = self._root.HiveBinCell.SubKeyListVk.VkFlags(self._io.read_u2le())
+                self.data_type = KaitaiStream.resolve_enum(self._root.HiveBinCell.SubKeyListVk.DataTypeEnum, self._io.read_u4le())
+                self.flags = KaitaiStream.resolve_enum(self._root.HiveBinCell.SubKeyListVk.VkFlags, self._io.read_u2le())
                 self.padding = self._io.read_u2le()
                 if self.flags == self._root.HiveBinCell.SubKeyListVk.VkFlags.value_comp_name:
                     self.value_name = (self._io.read_bytes(self.value_name_size)).decode(u&quot;ascii&quot;)
@@ -522,7 +517,7 @@ class Regf(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.flags = self._root.HiveBinCell.NamedKey.NkFlags(self._io.read_u2le())
+                self.flags = KaitaiStream.resolve_enum(self._root.HiveBinCell.NamedKey.NkFlags, self._io.read_u2le())
                 self.last_key_written_date_and_time = self._root.Filetime(self._io, self, self._root)
                 self.unknown1 = self._io.read_u4le()
                 self.parent_key_offset = self._io.read_u4le()
@@ -608,8 +603,8 @@ class Regf(KaitaiStruct):
             self.last_modification_date_and_time = self._root.Filetime(self._io, self, self._root)
             self.major_version = self._io.read_u4le()
             self.minor_version = self._io.read_u4le()
-            self.type = self._root.FileHeader.FileType(self._io.read_u4le())
-            self.format = self._root.FileHeader.FileFormat(self._io.read_u4le())
+            self.type = KaitaiStream.resolve_enum(self._root.FileHeader.FileType, self._io.read_u4le())
+            self.format = KaitaiStream.resolve_enum(self._root.FileHeader.FileFormat, self._io.read_u4le())
             self.root_key_offset = self._io.read_u4le()
             self.hive_bins_data_size = self._io.read_u4le()
             self.clustering_factor = self._io.read_u4le()

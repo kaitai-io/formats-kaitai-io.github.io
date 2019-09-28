@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Java Virtual Machine bytecode: Perl parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Executables and Byte-code</li>
+        <li class="active">Java Virtual Machine bytecode</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Java Virtual Machine bytecode:
+            
+            Perl parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Java Virtual Machine bytecode
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Java Virtual Machine bytecode parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Java Virtual Machine bytecode parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Java Virtual Machine bytecode parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Java Virtual Machine bytecode parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Java Virtual Machine bytecode parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Java Virtual Machine bytecode parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="perl.html" title="Java Virtual Machine bytecode parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Java Virtual Machine bytecode parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Java Virtual Machine bytecode parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Java Virtual Machine bytecode parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Perl source code to parse Java Virtual Machine bytecode
+            
+        </h2>
+
+        
+
+        <h3>JavaBytecode.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/JavaBytecode.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+
+########################################################################
+package JavaBytecode;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $OPCODES_NOP = 0;
+our $OPCODES_ACONST_NULL = 1;
+our $OPCODES_ICONST_M1 = 2;
+our $OPCODES_ICONST_0 = 3;
+our $OPCODES_ICONST_1 = 4;
+our $OPCODES_ICONST_2 = 5;
+our $OPCODES_ICONST_3 = 6;
+our $OPCODES_ICONST_4 = 7;
+our $OPCODES_ICONST_5 = 8;
+our $OPCODES_LCONST_0 = 9;
+our $OPCODES_LCONST_1 = 10;
+our $OPCODES_FCONST_0 = 11;
+our $OPCODES_FCONST_1 = 12;
+our $OPCODES_FCONST_2 = 13;
+our $OPCODES_DCONST_0 = 14;
+our $OPCODES_DCONST_1 = 15;
+our $OPCODES_BIPUSH = 16;
+our $OPCODES_SIPUSH = 17;
+our $OPCODES_LDC = 18;
+our $OPCODES_LDC_W = 19;
+our $OPCODES_LDC2_W = 20;
+our $OPCODES_ILOAD = 21;
+our $OPCODES_LLOAD = 22;
+our $OPCODES_FLOAD = 23;
+our $OPCODES_DLOAD = 24;
+our $OPCODES_ALOAD = 25;
+our $OPCODES_ILOAD_0 = 26;
+our $OPCODES_ILOAD_1 = 27;
+our $OPCODES_ILOAD_2 = 28;
+our $OPCODES_ILOAD_3 = 29;
+our $OPCODES_LLOAD_0 = 30;
+our $OPCODES_LLOAD_1 = 31;
+our $OPCODES_LLOAD_2 = 32;
+our $OPCODES_LLOAD_3 = 33;
+our $OPCODES_FLOAD_0 = 34;
+our $OPCODES_FLOAD_1 = 35;
+our $OPCODES_FLOAD_2 = 36;
+our $OPCODES_FLOAD_3 = 37;
+our $OPCODES_DLOAD_0 = 38;
+our $OPCODES_DLOAD_1 = 39;
+our $OPCODES_DLOAD_2 = 40;
+our $OPCODES_DLOAD_3 = 41;
+our $OPCODES_ALOAD_0 = 42;
+our $OPCODES_ALOAD_1 = 43;
+our $OPCODES_ALOAD_2 = 44;
+our $OPCODES_ALOAD_3 = 45;
+our $OPCODES_IALOAD = 46;
+our $OPCODES_LALOAD = 47;
+our $OPCODES_FALOAD = 48;
+our $OPCODES_DALOAD = 49;
+our $OPCODES_AALOAD = 50;
+our $OPCODES_BALOAD = 51;
+our $OPCODES_CALOAD = 52;
+our $OPCODES_SALOAD = 53;
+our $OPCODES_ISTORE = 54;
+our $OPCODES_LSTORE = 55;
+our $OPCODES_FSTORE = 56;
+our $OPCODES_DSTORE = 57;
+our $OPCODES_ASTORE = 58;
+our $OPCODES_ISTORE_0 = 59;
+our $OPCODES_ISTORE_1 = 60;
+our $OPCODES_ISTORE_2 = 61;
+our $OPCODES_ISTORE_3 = 62;
+our $OPCODES_LSTORE_0 = 63;
+our $OPCODES_LSTORE_1 = 64;
+our $OPCODES_LSTORE_2 = 65;
+our $OPCODES_LSTORE_3 = 66;
+our $OPCODES_FSTORE_0 = 67;
+our $OPCODES_FSTORE_1 = 68;
+our $OPCODES_FSTORE_2 = 69;
+our $OPCODES_FSTORE_3 = 70;
+our $OPCODES_DSTORE_0 = 71;
+our $OPCODES_DSTORE_1 = 72;
+our $OPCODES_DSTORE_2 = 73;
+our $OPCODES_DSTORE_3 = 74;
+our $OPCODES_ASTORE_0 = 75;
+our $OPCODES_ASTORE_1 = 76;
+our $OPCODES_ASTORE_2 = 77;
+our $OPCODES_ASTORE_3 = 78;
+our $OPCODES_IASTORE = 79;
+our $OPCODES_LASTORE = 80;
+our $OPCODES_FASTORE = 81;
+our $OPCODES_DASTORE = 82;
+our $OPCODES_AASTORE = 83;
+our $OPCODES_BASTORE = 84;
+our $OPCODES_CASTORE = 85;
+our $OPCODES_SASTORE = 86;
+our $OPCODES_POP = 87;
+our $OPCODES_POP2 = 88;
+our $OPCODES_DUP = 89;
+our $OPCODES_DUP_X1 = 90;
+our $OPCODES_DUP_X2 = 91;
+our $OPCODES_DUP2 = 92;
+our $OPCODES_DUP2_X1 = 93;
+our $OPCODES_DUP2_X2 = 94;
+our $OPCODES_SWAP = 95;
+our $OPCODES_IADD = 96;
+our $OPCODES_LADD = 97;
+our $OPCODES_FADD = 98;
+our $OPCODES_DADD = 99;
+our $OPCODES_ISUB = 100;
+our $OPCODES_LSUB = 101;
+our $OPCODES_FSUB = 102;
+our $OPCODES_DSUB = 103;
+our $OPCODES_IMUL = 104;
+our $OPCODES_LMUL = 105;
+our $OPCODES_FMUL = 106;
+our $OPCODES_DMUL = 107;
+our $OPCODES_IDIV = 108;
+our $OPCODES_LDIV = 109;
+our $OPCODES_FDIV = 110;
+our $OPCODES_DDIV = 111;
+our $OPCODES_IREM = 112;
+our $OPCODES_LREM = 113;
+our $OPCODES_FREM = 114;
+our $OPCODES_DREM = 115;
+our $OPCODES_INEG = 116;
+our $OPCODES_LNEG = 117;
+our $OPCODES_FNEG = 118;
+our $OPCODES_DNEG = 119;
+our $OPCODES_ISHL = 120;
+our $OPCODES_LSHL = 121;
+our $OPCODES_ISHR = 122;
+our $OPCODES_LSHR = 123;
+our $OPCODES_IUSHR = 124;
+our $OPCODES_LUSHR = 125;
+our $OPCODES_IAND = 126;
+our $OPCODES_LAND = 127;
+our $OPCODES_IOR = 128;
+our $OPCODES_LOR = 129;
+our $OPCODES_IXOR = 130;
+our $OPCODES_LXOR = 131;
+our $OPCODES_IINC = 132;
+our $OPCODES_I2L = 133;
+our $OPCODES_I2F = 134;
+our $OPCODES_I2D = 135;
+our $OPCODES_L2I = 136;
+our $OPCODES_L2F = 137;
+our $OPCODES_L2D = 138;
+our $OPCODES_F2I = 139;
+our $OPCODES_F2L = 140;
+our $OPCODES_F2D = 141;
+our $OPCODES_D2I = 142;
+our $OPCODES_D2L = 143;
+our $OPCODES_D2F = 144;
+our $OPCODES_I2B = 145;
+our $OPCODES_I2C = 146;
+our $OPCODES_I2S = 147;
+our $OPCODES_LCMP = 148;
+our $OPCODES_FCMPL = 149;
+our $OPCODES_FCMPG = 150;
+our $OPCODES_DCMPL = 151;
+our $OPCODES_DCMPG = 152;
+our $OPCODES_IFEQ = 153;
+our $OPCODES_IFNE = 154;
+our $OPCODES_IFLT = 155;
+our $OPCODES_IFGE = 156;
+our $OPCODES_IFGT = 157;
+our $OPCODES_IFLE = 158;
+our $OPCODES_IF_ICMPEQ = 159;
+our $OPCODES_IF_ICMPNE = 160;
+our $OPCODES_IF_ICMPLT = 161;
+our $OPCODES_IF_ICMPGE = 162;
+our $OPCODES_IF_ICMPGT = 163;
+our $OPCODES_IF_ICMPLE = 164;
+our $OPCODES_IF_ACMPEQ = 165;
+our $OPCODES_IF_ACMPNE = 166;
+our $OPCODES_GOTO = 167;
+our $OPCODES_JSR = 168;
+our $OPCODES_RET = 169;
+our $OPCODES_TABLESWITCH = 170;
+our $OPCODES_LOOKUPSWITCH = 171;
+our $OPCODES_IRETURN = 172;
+our $OPCODES_LRETURN = 173;
+our $OPCODES_FRETURN = 174;
+our $OPCODES_DRETURN = 175;
+our $OPCODES_ARETURN = 176;
+our $OPCODES_RETURN = 177;
+our $OPCODES_GETSTATIC = 178;
+our $OPCODES_PUTSTATIC = 179;
+our $OPCODES_GETFIELD = 180;
+our $OPCODES_PUTFIELD = 181;
+our $OPCODES_INVOKEVIRTUAL = 182;
+our $OPCODES_INVOKESPECIAL = 183;
+our $OPCODES_INVOKESTATIC = 184;
+our $OPCODES_INVOKEINTERFACE = 185;
+our $OPCODES_INVOKEDYNAMIC = 186;
+our $OPCODES_NEW = 187;
+our $OPCODES_NEWARRAY = 188;
+our $OPCODES_ANEWARRAY = 189;
+our $OPCODES_ARRAYLENGTH = 190;
+our $OPCODES_ATHROW = 191;
+our $OPCODES_CHECKCAST = 192;
+our $OPCODES_INSTANCEOF = 193;
+our $OPCODES_MONITORENTER = 194;
+our $OPCODES_MONITOREXIT = 195;
+our $OPCODES_WIDE = 196;
+our $OPCODES_MULTIANEWARRAY = 197;
+our $OPCODES_IFNULL = 198;
+our $OPCODES_IFNONNULL = 199;
+our $OPCODES_GOTO_W = 200;
+our $OPCODES_JSR_W = 201;
+our $OPCODES_BREAKPOINT = 202;
+our $OPCODES_IMPDEP1 = 254;
+our $OPCODES_IMPDEP2 = 255;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{instructions} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{instructions}}, JavaBytecode::Inst-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub instructions {
+    my ($self) = @_;
+    return $self-&gt;{instructions};
+}
+
+########################################################################
+package JavaBytecode::Inst;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{opcode} = $self-&gt;{_io}-&gt;read_u1();
+    my $_on = $self-&gt;opcode();
+    if ($_on == $JavaBytecode::OPCODES_FLOAD) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_LDC) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_LLOAD) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_NEW) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_JSR) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_s2be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_GETSTATIC) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_ILOAD) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_LDC2_W) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_DLOAD) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_GOTO) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_s2be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_LDC_W) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_INVOKEVIRTUAL) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_SIPUSH) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_s2be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_NEWARRAY) {
+        $self-&gt;{arg} = JavaBytecode::ArgNewarray-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_INVOKESTATIC) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_INVOKEINTERFACE) {
+        $self-&gt;{arg} = JavaBytecode::ArgInvokeinterface-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_BIPUSH) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_s1();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_INVOKESPECIAL) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_JSR_W) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_s4be();
+    }
+    elsif ($_on == $JavaBytecode::OPCODES_GOTO_W) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_s4be();
+    }
+}
+
+sub opcode {
+    my ($self) = @_;
+    return $self-&gt;{opcode};
+}
+
+sub arg {
+    my ($self) = @_;
+    return $self-&gt;{arg};
+}
+
+########################################################################
+package JavaBytecode::ArgInvokeinterface;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{method_index} = $self-&gt;{_io}-&gt;read_u2be();
+    $self-&gt;{count} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (0)));
+}
+
+sub method_index {
+    my ($self) = @_;
+    return $self-&gt;{method_index};
+}
+
+sub count {
+    my ($self) = @_;
+    return $self-&gt;{count};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+########################################################################
+package JavaBytecode::ArgNewarray;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $PRIM_TYPES_T_BOOLEAN = 4;
+our $PRIM_TYPES_T_CHAR = 5;
+our $PRIM_TYPES_T_FLOAT = 6;
+our $PRIM_TYPES_T_DOUBLE = 7;
+our $PRIM_TYPES_T_BYTE = 8;
+our $PRIM_TYPES_T_SHORT = 9;
+our $PRIM_TYPES_T_INT = 10;
+our $PRIM_TYPES_T_LONG = 11;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{atype} = $self-&gt;{_io}-&gt;read_u1();
+}
+
+sub atype {
+    my ($self) = @_;
+    return $self-&gt;{atype};
+}
+
+1;
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

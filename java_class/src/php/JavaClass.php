@@ -108,23 +108,23 @@ class AttributeInfo extends \Kaitai\Struct\Struct {
         switch ($this->nameAsStr()) {
             case "SourceFile":
                 $this->_m__raw_info = $this->_io->readBytes($this->attributeLength());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_info);
-                $this->_m_info = new \JavaClass\AttributeInfo\AttrBodySourceFile($io, $this, $this->_root);
+                $_io__raw_info = new \Kaitai\Struct\Stream($this->_m__raw_info);
+                $this->_m_info = new \JavaClass\AttributeInfo\AttrBodySourceFile($_io__raw_info, $this, $this->_root);
                 break;
             case "LineNumberTable":
                 $this->_m__raw_info = $this->_io->readBytes($this->attributeLength());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_info);
-                $this->_m_info = new \JavaClass\AttributeInfo\AttrBodyLineNumberTable($io, $this, $this->_root);
+                $_io__raw_info = new \Kaitai\Struct\Stream($this->_m__raw_info);
+                $this->_m_info = new \JavaClass\AttributeInfo\AttrBodyLineNumberTable($_io__raw_info, $this, $this->_root);
                 break;
             case "Exceptions":
                 $this->_m__raw_info = $this->_io->readBytes($this->attributeLength());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_info);
-                $this->_m_info = new \JavaClass\AttributeInfo\AttrBodyExceptions($io, $this, $this->_root);
+                $_io__raw_info = new \Kaitai\Struct\Stream($this->_m__raw_info);
+                $this->_m_info = new \JavaClass\AttributeInfo\AttrBodyExceptions($_io__raw_info, $this, $this->_root);
                 break;
             case "Code":
                 $this->_m__raw_info = $this->_io->readBytes($this->attributeLength());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_info);
-                $this->_m_info = new \JavaClass\AttributeInfo\AttrBodyCode($io, $this, $this->_root);
+                $_io__raw_info = new \Kaitai\Struct\Stream($this->_m__raw_info);
+                $this->_m_info = new \JavaClass\AttributeInfo\AttrBodyCode($_io__raw_info, $this, $this->_root);
                 break;
             default:
                 $this->_m_info = $this->_io->readBytes($this->attributeLength());
@@ -674,8 +674,32 @@ class ConstantPoolEntry extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_tag = $this->_io->readU1();
         switch ($this->tag()) {
+            case \JavaClass\ConstantPoolEntry\TagEnum::INTERFACE_METHOD_REF:
+                $this->_m_cpInfo = new \JavaClass\InterfaceMethodRefCpInfo($this->_io, $this, $this->_root);
+                break;
+            case \JavaClass\ConstantPoolEntry\TagEnum::CLASS_TYPE:
+                $this->_m_cpInfo = new \JavaClass\ClassCpInfo($this->_io, $this, $this->_root);
+                break;
+            case \JavaClass\ConstantPoolEntry\TagEnum::UTF8:
+                $this->_m_cpInfo = new \JavaClass\Utf8CpInfo($this->_io, $this, $this->_root);
+                break;
+            case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_TYPE:
+                $this->_m_cpInfo = new \JavaClass\MethodTypeCpInfo($this->_io, $this, $this->_root);
+                break;
+            case \JavaClass\ConstantPoolEntry\TagEnum::INTEGER:
+                $this->_m_cpInfo = new \JavaClass\IntegerCpInfo($this->_io, $this, $this->_root);
+                break;
             case \JavaClass\ConstantPoolEntry\TagEnum::STRING:
                 $this->_m_cpInfo = new \JavaClass\StringCpInfo($this->_io, $this, $this->_root);
+                break;
+            case \JavaClass\ConstantPoolEntry\TagEnum::FLOAT:
+                $this->_m_cpInfo = new \JavaClass\FloatCpInfo($this->_io, $this, $this->_root);
+                break;
+            case \JavaClass\ConstantPoolEntry\TagEnum::LONG:
+                $this->_m_cpInfo = new \JavaClass\LongCpInfo($this->_io, $this, $this->_root);
+                break;
+            case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_REF:
+                $this->_m_cpInfo = new \JavaClass\MethodRefCpInfo($this->_io, $this, $this->_root);
                 break;
             case \JavaClass\ConstantPoolEntry\TagEnum::DOUBLE:
                 $this->_m_cpInfo = new \JavaClass\DoubleCpInfo($this->_io, $this, $this->_root);
@@ -683,38 +707,14 @@ class ConstantPoolEntry extends \Kaitai\Struct\Struct {
             case \JavaClass\ConstantPoolEntry\TagEnum::INVOKE_DYNAMIC:
                 $this->_m_cpInfo = new \JavaClass\InvokeDynamicCpInfo($this->_io, $this, $this->_root);
                 break;
-            case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_HANDLE:
-                $this->_m_cpInfo = new \JavaClass\MethodHandleCpInfo($this->_io, $this, $this->_root);
-                break;
-            case \JavaClass\ConstantPoolEntry\TagEnum::CLASS_TYPE:
-                $this->_m_cpInfo = new \JavaClass\ClassCpInfo($this->_io, $this, $this->_root);
-                break;
-            case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_REF:
-                $this->_m_cpInfo = new \JavaClass\MethodRefCpInfo($this->_io, $this, $this->_root);
-                break;
-            case \JavaClass\ConstantPoolEntry\TagEnum::LONG:
-                $this->_m_cpInfo = new \JavaClass\LongCpInfo($this->_io, $this, $this->_root);
-                break;
-            case \JavaClass\ConstantPoolEntry\TagEnum::NAME_AND_TYPE:
-                $this->_m_cpInfo = new \JavaClass\NameAndTypeCpInfo($this->_io, $this, $this->_root);
-                break;
-            case \JavaClass\ConstantPoolEntry\TagEnum::FLOAT:
-                $this->_m_cpInfo = new \JavaClass\FloatCpInfo($this->_io, $this, $this->_root);
-                break;
-            case \JavaClass\ConstantPoolEntry\TagEnum::INTERFACE_METHOD_REF:
-                $this->_m_cpInfo = new \JavaClass\InterfaceMethodRefCpInfo($this->_io, $this, $this->_root);
-                break;
-            case \JavaClass\ConstantPoolEntry\TagEnum::INTEGER:
-                $this->_m_cpInfo = new \JavaClass\IntegerCpInfo($this->_io, $this, $this->_root);
-                break;
-            case \JavaClass\ConstantPoolEntry\TagEnum::UTF8:
-                $this->_m_cpInfo = new \JavaClass\Utf8CpInfo($this->_io, $this, $this->_root);
-                break;
             case \JavaClass\ConstantPoolEntry\TagEnum::FIELD_REF:
                 $this->_m_cpInfo = new \JavaClass\FieldRefCpInfo($this->_io, $this, $this->_root);
                 break;
-            case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_TYPE:
-                $this->_m_cpInfo = new \JavaClass\MethodTypeCpInfo($this->_io, $this, $this->_root);
+            case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_HANDLE:
+                $this->_m_cpInfo = new \JavaClass\MethodHandleCpInfo($this->_io, $this, $this->_root);
+                break;
+            case \JavaClass\ConstantPoolEntry\TagEnum::NAME_AND_TYPE:
+                $this->_m_cpInfo = new \JavaClass\NameAndTypeCpInfo($this->_io, $this, $this->_root);
                 break;
         }
     }

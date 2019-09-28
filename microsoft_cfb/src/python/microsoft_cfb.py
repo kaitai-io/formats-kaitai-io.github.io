@@ -85,8 +85,8 @@ class MicrosoftCfb(KaitaiStruct):
         def _read(self):
             self.name = (self._io.read_bytes(64)).decode(u"UTF-16LE")
             self.name_len = self._io.read_u2le()
-            self.object_type = self._root.DirEntry.ObjType(self._io.read_u1())
-            self.color_flag = self._root.DirEntry.RbColor(self._io.read_u1())
+            self.object_type = KaitaiStream.resolve_enum(self._root.DirEntry.ObjType, self._io.read_u1())
+            self.color_flag = KaitaiStream.resolve_enum(self._root.DirEntry.RbColor, self._io.read_u1())
             self.left_sibling_id = self._io.read_s4le()
             self.right_sibling_id = self._io.read_s4le()
             self.child_id = self._io.read_s4le()
@@ -170,8 +170,8 @@ class MicrosoftCfb(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.sector_size)
         self._raw__m_fat = self._io.read_bytes((self.header.size_fat * self.sector_size))
-        io = KaitaiStream(BytesIO(self._raw__m_fat))
-        self._m_fat = self._root.FatEntries(io, self, self._root)
+        _io__raw__m_fat = KaitaiStream(BytesIO(self._raw__m_fat))
+        self._m_fat = self._root.FatEntries(_io__raw__m_fat, self, self._root)
         self._io.seek(_pos)
         return self._m_fat if hasattr(self, '_m_fat') else None
 

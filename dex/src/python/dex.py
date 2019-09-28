@@ -8,7 +8,7 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-from vlq_base128_le import VlqBase128Le
+import vlq_base128_le
 class Dex(KaitaiStruct):
     """Android OS applications executables are typically stored in its own
     format, optimized for more efficient execution in Dalvik virtual
@@ -60,7 +60,7 @@ class Dex(KaitaiStruct):
             self.signature = self._io.read_bytes(20)
             self.file_size = self._io.read_u4le()
             self.header_size = self._io.read_u4le()
-            self.endian_tag = self._root.HeaderItem.EndianConstant(self._io.read_u4le())
+            self.endian_tag = KaitaiStream.resolve_enum(self._root.HeaderItem.EndianConstant, self._io.read_u4le())
             self.link_size = self._io.read_u4le()
             self.link_off = self._io.read_u4le()
             self.map_off = self._io.read_u4le()
@@ -124,41 +124,41 @@ class Dex(KaitaiStruct):
 
         def _read(self):
             self.value_arg = self._io.read_bits_int(3)
-            self.value_type = self._root.EncodedValue.ValueTypeEnum(self._io.read_bits_int(5))
+            self.value_type = KaitaiStream.resolve_enum(self._root.EncodedValue.ValueTypeEnum, self._io.read_bits_int(5))
             self._io.align_to_byte()
             _on = self.value_type
-            if _on == self._root.EncodedValue.ValueTypeEnum.double:
-                self.value = self._io.read_f8le()
+            if _on == self._root.EncodedValue.ValueTypeEnum.int:
+                self.value = self._io.read_s4le()
             elif _on == self._root.EncodedValue.ValueTypeEnum.annotation:
                 self.value = self._root.EncodedAnnotation(self._io, self, self._root)
-            elif _on == self._root.EncodedValue.ValueTypeEnum.type:
-                self.value = self._io.read_u4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.char:
-                self.value = self._io.read_u2le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.long:
+                self.value = self._io.read_s8le()
             elif _on == self._root.EncodedValue.ValueTypeEnum.method_handle:
                 self.value = self._io.read_u4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.array:
-                self.value = self._root.EncodedArray(self._io, self, self._root)
             elif _on == self._root.EncodedValue.ValueTypeEnum.byte:
                 self.value = self._io.read_s1()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.method:
-                self.value = self._io.read_u4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.array:
+                self.value = self._root.EncodedArray(self._io, self, self._root)
             elif _on == self._root.EncodedValue.ValueTypeEnum.method_type:
                 self.value = self._io.read_u4le()
             elif _on == self._root.EncodedValue.ValueTypeEnum.short:
                 self.value = self._io.read_s2le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.string:
+            elif _on == self._root.EncodedValue.ValueTypeEnum.method:
                 self.value = self._io.read_u4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.int:
-                self.value = self._io.read_s4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.field:
-                self.value = self._io.read_u4le()
-            elif _on == self._root.EncodedValue.ValueTypeEnum.long:
-                self.value = self._io.read_s8le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.double:
+                self.value = self._io.read_f8le()
             elif _on == self._root.EncodedValue.ValueTypeEnum.float:
                 self.value = self._io.read_f4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.type:
+                self.value = self._io.read_u4le()
             elif _on == self._root.EncodedValue.ValueTypeEnum.enum:
                 self.value = self._io.read_u4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.field:
+                self.value = self._io.read_u4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.string:
+                self.value = self._io.read_u4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.char:
+                self.value = self._io.read_u2le()
 
 
     class CallSiteIdItem(KaitaiStruct):
@@ -258,7 +258,7 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.name_idx = VlqBase128Le(self._io)
+            self.name_idx = vlq_base128_le.VlqBase128Le(self._io)
             self.value = self._root.EncodedValue(self._io, self, self._root)
 
 
@@ -270,8 +270,8 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.field_idx_diff = VlqBase128Le(self._io)
-            self.access_flags = VlqBase128Le(self._io)
+            self.field_idx_diff = vlq_base128_le.VlqBase128Le(self._io)
+            self.access_flags = vlq_base128_le.VlqBase128Le(self._io)
 
 
     class EncodedArrayItem(KaitaiStruct):
@@ -293,10 +293,10 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.static_fields_size = VlqBase128Le(self._io)
-            self.instance_fields_size = VlqBase128Le(self._io)
-            self.direct_methods_size = VlqBase128Le(self._io)
-            self.virtual_methods_size = VlqBase128Le(self._io)
+            self.static_fields_size = vlq_base128_le.VlqBase128Le(self._io)
+            self.instance_fields_size = vlq_base128_le.VlqBase128Le(self._io)
+            self.direct_methods_size = vlq_base128_le.VlqBase128Le(self._io)
+            self.virtual_methods_size = vlq_base128_le.VlqBase128Le(self._io)
             self.static_fields = [None] * (self.static_fields_size.value)
             for i in range(self.static_fields_size.value):
                 self.static_fields[i] = self._root.EncodedField(self._io, self, self._root)
@@ -363,8 +363,8 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type_idx = VlqBase128Le(self._io)
-            self.size = VlqBase128Le(self._io)
+            self.type_idx = vlq_base128_le.VlqBase128Le(self._io)
+            self.size = vlq_base128_le.VlqBase128Le(self._io)
             self.elements = [None] * (self.size.value)
             for i in range(self.size.value):
                 self.elements[i] = self._root.AnnotationElement(self._io, self, self._root)
@@ -380,7 +380,7 @@ class Dex(KaitaiStruct):
 
         def _read(self):
             self.class_idx = self._io.read_u4le()
-            self.access_flags = self._root.ClassAccessFlags(self._io.read_u4le())
+            self.access_flags = KaitaiStream.resolve_enum(self._root.ClassAccessFlags, self._io.read_u4le())
             self.superclass_idx = self._io.read_u4le()
             self.interfaces_off = self._io.read_u4le()
             self.source_file_idx = self._io.read_u4le()
@@ -456,7 +456,7 @@ class Dex(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.utf16_size = VlqBase128Le(self._io)
+                self.utf16_size = vlq_base128_le.VlqBase128Le(self._io)
                 self.data = (self._io.read_bytes(self.utf16_size.value)).decode(u"ascii")
 
 
@@ -526,9 +526,9 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.method_idx_diff = VlqBase128Le(self._io)
-            self.access_flags = VlqBase128Le(self._io)
-            self.code_off = VlqBase128Le(self._io)
+            self.method_idx_diff = vlq_base128_le.VlqBase128Le(self._io)
+            self.access_flags = vlq_base128_le.VlqBase128Le(self._io)
+            self.code_off = vlq_base128_le.VlqBase128Le(self._io)
 
 
     class MapItem(KaitaiStruct):
@@ -561,7 +561,7 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = self._root.MapItem.MapItemType(self._io.read_u2le())
+            self.type = KaitaiStream.resolve_enum(self._root.MapItem.MapItemType, self._io.read_u2le())
             self.unused = self._io.read_u2le()
             self.size = self._io.read_u4le()
             self.offset = self._io.read_u4le()
@@ -575,7 +575,7 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.size = VlqBase128Le(self._io)
+            self.size = vlq_base128_le.VlqBase128Le(self._io)
             self.values = [None] * (self.size.value)
             for i in range(self.size.value):
                 self.values[i] = self._root.EncodedValue(self._io, self, self._root)

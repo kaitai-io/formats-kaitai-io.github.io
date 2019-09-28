@@ -60,7 +60,7 @@ class Websocket(KaitaiStruct):
         def _read(self):
             self.finished = self._io.read_bits_int(1) != 0
             self.reserved = self._io.read_bits_int(3)
-            self.opcode = self._root.Opcode(self._io.read_bits_int(4))
+            self.opcode = KaitaiStream.resolve_enum(self._root.Opcode, self._io.read_bits_int(4))
             self.is_masked = self._io.read_bits_int(1) != 0
             self.len_payload_primary = self._io.read_bits_int(7)
             self._io.align_to_byte()

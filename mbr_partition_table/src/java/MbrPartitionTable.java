@@ -39,7 +39,7 @@ public class MbrPartitionTable extends KaitaiStruct {
     }
     private void _read() {
         this.bootstrapCode = this._io.readBytes(446);
-        partitions = new ArrayList<PartitionEntry>((int) (4));
+        partitions = new ArrayList<PartitionEntry>(((Number) (4)).intValue());
         for (int i = 0; i < 4; i++) {
             this.partitions.add(new PartitionEntry(this._io, this, _root));
         }

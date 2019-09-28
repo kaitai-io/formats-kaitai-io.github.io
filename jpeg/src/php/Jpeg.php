@@ -35,25 +35,25 @@ class Segment extends \Kaitai\Struct\Struct {
         }
         if ( (($this->marker() != \Jpeg\Segment\MarkerEnum::SOI) && ($this->marker() != \Jpeg\Segment\MarkerEnum::EOI)) ) {
             switch ($this->marker()) {
-                case \Jpeg\Segment\MarkerEnum::SOS:
-                    $this->_m__raw_data = $this->_io->readBytes(($this->length() - 2));
-                    $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \Jpeg\SegmentSos($io, $this, $this->_root);
-                    break;
                 case \Jpeg\Segment\MarkerEnum::APP1:
                     $this->_m__raw_data = $this->_io->readBytes(($this->length() - 2));
-                    $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \Jpeg\SegmentApp1($io, $this, $this->_root);
-                    break;
-                case \Jpeg\Segment\MarkerEnum::SOF0:
-                    $this->_m__raw_data = $this->_io->readBytes(($this->length() - 2));
-                    $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \Jpeg\SegmentSof0($io, $this, $this->_root);
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \Jpeg\SegmentApp1($_io__raw_data, $this, $this->_root);
                     break;
                 case \Jpeg\Segment\MarkerEnum::APP0:
                     $this->_m__raw_data = $this->_io->readBytes(($this->length() - 2));
-                    $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \Jpeg\SegmentApp0($io, $this, $this->_root);
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \Jpeg\SegmentApp0($_io__raw_data, $this, $this->_root);
+                    break;
+                case \Jpeg\Segment\MarkerEnum::SOF0:
+                    $this->_m__raw_data = $this->_io->readBytes(($this->length() - 2));
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \Jpeg\SegmentSof0($_io__raw_data, $this, $this->_root);
+                    break;
+                case \Jpeg\Segment\MarkerEnum::SOS:
+                    $this->_m__raw_data = $this->_io->readBytes(($this->length() - 2));
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \Jpeg\SegmentSos($_io__raw_data, $this, $this->_root);
                     break;
                 default:
                     $this->_m_data = $this->_io->readBytes(($this->length() - 2));
@@ -292,8 +292,8 @@ class ExifInJpeg extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_extraZero = $this->_io->ensureFixedContents("\x00");
         $this->_m__raw_data = $this->_io->readBytesFull();
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
-        $this->_m_data = new \Exif($io);
+        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+        $this->_m_data = new \Exif($_io__raw_data);
     }
     protected $_m_extraZero;
     protected $_m_data;

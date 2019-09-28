@@ -107,12 +107,12 @@ class WindowsEvtLog(KaitaiStruct):
             _on = self.type
             if _on == 1699505740:
                 self._raw_body = self._io.read_bytes((self.len_record - 12))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.RecordBody(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.RecordBody(_io__raw_body, self, self._root)
             elif _on == 286331153:
                 self._raw_body = self._io.read_bytes((self.len_record - 12))
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CursorRecordBody(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.CursorRecordBody(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes((self.len_record - 12))
             self.len_record2 = self._io.read_u4le()
@@ -141,7 +141,7 @@ class WindowsEvtLog(KaitaiStruct):
             self.time_generated = self._io.read_u4le()
             self.time_written = self._io.read_u4le()
             self.event_id = self._io.read_u4le()
-            self.event_type = self._root.RecordBody.EventTypes(self._io.read_u2le())
+            self.event_type = KaitaiStream.resolve_enum(self._root.RecordBody.EventTypes, self._io.read_u2le())
             self.num_strings = self._io.read_u2le()
             self.event_category = self._io.read_u2le()
             self.reserved = self._io.read_bytes(6)

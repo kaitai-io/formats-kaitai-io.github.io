@@ -267,7 +267,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
     end
 
     def _read
-      @stream_type = Kaitai::Struct::Stream::resolve_enum(STREAM_TYPES, @_io.read_u4le)
+      @stream_type = Kaitai::Struct::Stream::resolve_enum(WindowsMinidump::STREAM_TYPES, @_io.read_u4le)
       @len_data = @_io.read_u4le
       @ofs_data = @_io.read_u4le
       self
@@ -277,26 +277,26 @@ class WindowsMinidump < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek(ofs_data)
       case stream_type
-      when :stream_types_misc_info
-        @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = MiscInfo.new(io, self, @_root)
-      when :stream_types_exception
-        @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = ExceptionStream.new(io, self, @_root)
       when :stream_types_memory_list
         @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = MemoryList.new(io, self, @_root)
-      when :stream_types_system_info
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = MemoryList.new(_io__raw_data, self, @_root)
+      when :stream_types_misc_info
         @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SystemInfo.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = MiscInfo.new(_io__raw_data, self, @_root)
       when :stream_types_thread_list
         @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = ThreadList.new(io, self, @_root)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = ThreadList.new(_io__raw_data, self, @_root)
+      when :stream_types_exception
+        @_raw_data = @_io.read_bytes(len_data)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = ExceptionStream.new(_io__raw_data, self, @_root)
+      when :stream_types_system_info
+        @_raw_data = @_io.read_bytes(len_data)
+        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SystemInfo.new(_io__raw_data, self, @_root)
       else
         @data = @_io.read_bytes(len_data)
       end

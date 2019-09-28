@@ -56,6 +56,7 @@ class Stl(KaitaiStruct):
             for i in range(3):
                 self.vertices[i] = self._root.Vec3d(self._io, self, self._root)
 
+            self.abr = self._io.read_u2le()
 
 
     class Vec3d(KaitaiStruct):
@@ -69,7 +70,6 @@ class Stl(KaitaiStruct):
             self.x = self._io.read_f4le()
             self.y = self._io.read_f4le()
             self.z = self._io.read_f4le()
-            self.abr = self._io.read_u2le()
 
 
 

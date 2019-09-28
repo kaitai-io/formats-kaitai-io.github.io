@@ -209,7 +209,7 @@ class OpenpgpMessage(KaitaiStruct):
             self.algorithm = []
             i = 0
             while not self._io.is_eof():
-                self.algorithm.append(self._root.HashAlgorithms(self._io.read_u1()))
+                self.algorithm.append(KaitaiStream.resolve_enum(self._root.HashAlgorithms, self._io.read_u1()))
                 i += 1
 
 
@@ -225,7 +225,7 @@ class OpenpgpMessage(KaitaiStruct):
             self.algorithm = []
             i = 0
             while not self._io.is_eof():
-                self.algorithm.append(self._root.CompressionAlgorithms(self._io.read_u1()))
+                self.algorithm.append(KaitaiStream.resolve_enum(self._root.CompressionAlgorithms, self._io.read_u1()))
                 i += 1
 
 
@@ -252,7 +252,7 @@ class OpenpgpMessage(KaitaiStruct):
             self.public_key = self._root.PublicKeyPacket(self._io, self, self._root)
             self.string_to_key = self._io.read_u1()
             if self.string_to_key >= 254:
-                self.symmetric_encryption_algorithm = self._root.SymmetricKeyAlgorithm(self._io.read_u1())
+                self.symmetric_encryption_algorithm = KaitaiStream.resolve_enum(self._root.SymmetricKeyAlgorithm, self._io.read_u1())
 
             self.secret_key = self._io.read_bytes_full()
 
@@ -268,7 +268,7 @@ class OpenpgpMessage(KaitaiStruct):
             self.flag = []
             i = 0
             while not self._io.is_eof():
-                self.flag.append(self._root.ServerFlags(self._io.read_u1()))
+                self.flag.append(KaitaiStream.resolve_enum(self._root.ServerFlags, self._io.read_u1()))
                 i += 1
 
 
@@ -309,7 +309,7 @@ class OpenpgpMessage(KaitaiStruct):
 
         def _read(self):
             self.class = self._io.read_u1()
-            self.public_key_algorithm = self._root.PublicKeyAlgorithms(self._io.read_u1())
+            self.public_key_algorithm = KaitaiStream.resolve_enum(self._root.PublicKeyAlgorithms, self._io.read_u1())
             self.fingerprint = self._io.read_bytes(20)
 
 
@@ -343,8 +343,8 @@ class OpenpgpMessage(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.public_key_algorithm = self._root.PublicKeyAlgorithms(self._io.read_u1())
-            self.hash_algorithm = self._root.HashAlgorithms(self._io.read_u1())
+            self.public_key_algorithm = KaitaiStream.resolve_enum(self._root.PublicKeyAlgorithms, self._io.read_u1())
+            self.hash_algorithm = KaitaiStream.resolve_enum(self._root.HashAlgorithms, self._io.read_u1())
             self.hash = self._io.read_bytes_full()
 
 
@@ -359,7 +359,7 @@ class OpenpgpMessage(KaitaiStruct):
             self.flag = []
             i = 0
             while not self._io.is_eof():
-                self.flag.append(self._root.KeyFlags(self._io.read_u1()))
+                self.flag.append(KaitaiStream.resolve_enum(self._root.KeyFlags, self._io.read_u1()))
                 i += 1
 
 
@@ -395,96 +395,96 @@ class OpenpgpMessage(KaitaiStruct):
 
         def _read(self):
             self.len = self._root.LenSubpacket(self._io, self, self._root)
-            self.subpacket_type = self._root.SubpacketTypes(self._io.read_u1())
+            self.subpacket_type = KaitaiStream.resolve_enum(self._root.SubpacketTypes, self._io.read_u1())
             _on = self.subpacket_type
-            if _on == self._root.SubpacketTypes.exportable_certification:
+            if _on == self._root.SubpacketTypes.preferred_key_server:
                 self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.ExportableCertification(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.preferred_hash_algorithms:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.PreferredHashAlgorithms(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.embedded_signature:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.EmbeddedSignature(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.trust_signature:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.TrustSignature(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.reason_for_revocation:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.ReasonForRevocation(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.features:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.Features(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.signature_expiration_time:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.SignatureExpirationTime(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.preferred_compression_algorithms:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.PreferredCompressionAlgorithms(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.revocable:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.Revocable(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.regular_expression:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.RegularExpression(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.notation_data:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.NotationData(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.key_expiration_time:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.KeyExpirationTime(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.signature_creation_time:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.SignatureCreationTime(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.revocation_key:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.RevocationKey(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.key_flags:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.KeyFlags(io, self, self._root)
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.PreferredKeyServer(_io__raw_content, self, self._root)
             elif _on == self._root.SubpacketTypes.issuer:
                 self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.Issuer(io, self, self._root)
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.Issuer(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.revocable:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.Revocable(_io__raw_content, self, self._root)
             elif _on == self._root.SubpacketTypes.signature_target:
                 self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.SignatureTarget(io, self, self._root)
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.SignatureTarget(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.regular_expression:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.RegularExpression(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.exportable_certification:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.ExportableCertification(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.reason_for_revocation:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.ReasonForRevocation(_io__raw_content, self, self._root)
             elif _on == self._root.SubpacketTypes.key_server_preferences:
                 self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.KeyServerPreferences(io, self, self._root)
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.KeyServerPreferences(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.signature_creation_time:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.SignatureCreationTime(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.preferred_hash_algorithms:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.PreferredHashAlgorithms(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.trust_signature:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.TrustSignature(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.key_expiration_time:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.KeyExpirationTime(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.key_flags:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.KeyFlags(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.signature_expiration_time:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.SignatureExpirationTime(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.features:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.Features(_io__raw_content, self, self._root)
             elif _on == self._root.SubpacketTypes.signers_user_id:
                 self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.SignersUserId(io, self, self._root)
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.SignersUserId(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.notation_data:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.NotationData(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.revocation_key:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.RevocationKey(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.preferred_compression_algorithms:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.PreferredCompressionAlgorithms(_io__raw_content, self, self._root)
             elif _on == self._root.SubpacketTypes.policy_uri:
                 self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.PolicyUri(io, self, self._root)
-            elif _on == self._root.SubpacketTypes.preferred_key_server:
-                self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.PreferredKeyServer(io, self, self._root)
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.PolicyUri(_io__raw_content, self, self._root)
             elif _on == self._root.SubpacketTypes.primary_user_id:
                 self._raw_content = self._io.read_bytes((self.len.len - 1))
-                io = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.PrimaryUserId(io, self, self._root)
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.PrimaryUserId(_io__raw_content, self, self._root)
+            elif _on == self._root.SubpacketTypes.embedded_signature:
+                self._raw_content = self._io.read_bytes((self.len.len - 1))
+                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.EmbeddedSignature(_io__raw_content, self, self._root)
             else:
                 self.content = self._io.read_bytes((self.len.len - 1))
 
@@ -507,28 +507,28 @@ class OpenpgpMessage(KaitaiStruct):
             _on = self._parent.packet_type_old
             if _on == self._root.PacketTags.public_key_packet:
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.PublicKeyPacket(io, self, self._root)
-            elif _on == self._root.PacketTags.secret_subkey_packet:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.PublicKeyPacket(io, self, self._root)
-            elif _on == self._root.PacketTags.user_id_packet:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.UserIdPacket(io, self, self._root)
-            elif _on == self._root.PacketTags.secret_key_packet:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SecretKeyPacket(io, self, self._root)
-            elif _on == self._root.PacketTags.signature_packet:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SignaturePacket(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.PublicKeyPacket(_io__raw_body, self, self._root)
             elif _on == self._root.PacketTags.public_subkey_packet:
                 self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.PublicKeyPacket(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.PublicKeyPacket(_io__raw_body, self, self._root)
+            elif _on == self._root.PacketTags.user_id_packet:
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.UserIdPacket(_io__raw_body, self, self._root)
+            elif _on == self._root.PacketTags.signature_packet:
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SignaturePacket(_io__raw_body, self, self._root)
+            elif _on == self._root.PacketTags.secret_subkey_packet:
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.PublicKeyPacket(_io__raw_body, self, self._root)
+            elif _on == self._root.PacketTags.secret_key_packet:
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SecretKeyPacket(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.len)
 
@@ -587,16 +587,16 @@ class OpenpgpMessage(KaitaiStruct):
         def _read(self):
             self.version = self._io.read_u1()
             self.signature_type = self._io.read_u1()
-            self.public_key_algorithm = self._root.PublicKeyAlgorithms(self._io.read_u1())
-            self.hash_algorithm = self._root.HashAlgorithms(self._io.read_u1())
+            self.public_key_algorithm = KaitaiStream.resolve_enum(self._root.PublicKeyAlgorithms, self._io.read_u1())
+            self.hash_algorithm = KaitaiStream.resolve_enum(self._root.HashAlgorithms, self._io.read_u1())
             self.len_hashed_subpacket = self._io.read_u2be()
             self._raw_hashed_subpackets = self._io.read_bytes(self.len_hashed_subpacket)
-            io = KaitaiStream(BytesIO(self._raw_hashed_subpackets))
-            self.hashed_subpackets = self._root.Subpackets(io, self, self._root)
+            _io__raw_hashed_subpackets = KaitaiStream(BytesIO(self._raw_hashed_subpackets))
+            self.hashed_subpackets = self._root.Subpackets(_io__raw_hashed_subpackets, self, self._root)
             self.len_unhashed_subpacket = self._io.read_u2be()
             self._raw_unhashed_subpackets = self._io.read_bytes(self.len_unhashed_subpacket)
-            io = KaitaiStream(BytesIO(self._raw_unhashed_subpackets))
-            self.unhashed_subpackets = self._root.Subpackets(io, self, self._root)
+            _io__raw_unhashed_subpackets = KaitaiStream(BytesIO(self._raw_unhashed_subpackets))
+            self.unhashed_subpackets = self._root.Subpackets(_io__raw_unhashed_subpackets, self, self._root)
             self.left_signed_hash = self._io.read_u2be()
             self.rsa_n = self._io.read_u2be()
             self.signature = self._io.read_bytes_full()
@@ -643,7 +643,7 @@ class OpenpgpMessage(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.revocation_code = self._root.RevocationCodes(self._io.read_u1())
+            self.revocation_code = KaitaiStream.resolve_enum(self._root.RevocationCodes, self._io.read_u1())
             self.reason = (self._io.read_bytes_full()).decode(u"UTF-8")
 
 
@@ -697,7 +697,7 @@ class OpenpgpMessage(KaitaiStruct):
         def _read(self):
             self.version = self._io.read_u1()
             self.timestamp = self._io.read_u4be()
-            self.public_key_algorithm = self._root.PublicKeyAlgorithms(self._io.read_u1())
+            self.public_key_algorithm = KaitaiStream.resolve_enum(self._root.PublicKeyAlgorithms, self._io.read_u1())
             self.len_alg = self._io.read_u2be()
             self.rsa_n = self._io.read_bytes(self.len_alg // 8)
             self.padding = self._io.read_u2be()
@@ -726,10 +726,10 @@ class OpenpgpMessage(KaitaiStruct):
             self.one = self._io.read_bits_int(1) != 0
             self.new_packet_format = self._io.read_bits_int(1) != 0
             if self.new_packet_format:
-                self.packet_type_new = self._root.PacketTags(self._io.read_bits_int(6))
+                self.packet_type_new = KaitaiStream.resolve_enum(self._root.PacketTags, self._io.read_bits_int(6))
 
             if not (self.new_packet_format):
-                self.packet_type_old = self._root.PacketTags(self._io.read_bits_int(4))
+                self.packet_type_old = KaitaiStream.resolve_enum(self._root.PacketTags, self._io.read_bits_int(4))
 
             if not (self.new_packet_format):
                 self.len_type = self._io.read_bits_int(2)

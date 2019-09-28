@@ -107,8 +107,8 @@ class Assembly extends \Kaitai\Struct\Struct {
         $this->_m_stringMagic = $this->_io->ensureFixedContents("\x73");
         $this->_m_length = $this->_io->readU4le();
         $this->_m__raw_items = $this->_io->readBytes($this->length());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_items);
-        $this->_m_items = new \PythonPyc27\OpArgs($io, $this, $this->_root);
+        $_io__raw_items = new \Kaitai\Struct\Stream($this->_m__raw_items);
+        $this->_m_items = new \PythonPyc27\OpArgs($_io__raw_items, $this, $this->_root);
     }
     protected $_m_stringMagic;
     protected $_m_length;
@@ -275,32 +275,32 @@ class PyObject extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_type = $this->_io->readU1();
         switch ($this->type()) {
-            case \PythonPyc27\PyObject\ObjectType::NONE:
-                $this->_m_value = new \PythonPyc27\PyObject\PyNone($this->_io, $this, $this->_root);
-                break;
-            case \PythonPyc27\PyObject\ObjectType::CODE_OBJECT:
-                $this->_m_value = new \PythonPyc27\CodeObject($this->_io, $this, $this->_root);
-                break;
-            case \PythonPyc27\PyObject\ObjectType::INT:
-                $this->_m_value = $this->_io->readU4le();
-                break;
-            case \PythonPyc27\PyObject\ObjectType::STRING_REF:
-                $this->_m_value = new \PythonPyc27\PyObject\StringRef($this->_io, $this, $this->_root);
-                break;
             case \PythonPyc27\PyObject\ObjectType::STRING:
                 $this->_m_value = new \PythonPyc27\PyObject\PyString($this->_io, $this, $this->_root);
-                break;
-            case \PythonPyc27\PyObject\ObjectType::PY_FALSE:
-                $this->_m_value = new \PythonPyc27\PyObject\PyFalse($this->_io, $this, $this->_root);
-                break;
-            case \PythonPyc27\PyObject\ObjectType::INTERNED:
-                $this->_m_value = new \PythonPyc27\PyObject\InternedString($this->_io, $this, $this->_root);
                 break;
             case \PythonPyc27\PyObject\ObjectType::TUPLE:
                 $this->_m_value = new \PythonPyc27\PyObject\Tuple($this->_io, $this, $this->_root);
                 break;
+            case \PythonPyc27\PyObject\ObjectType::INT:
+                $this->_m_value = $this->_io->readU4le();
+                break;
             case \PythonPyc27\PyObject\ObjectType::PY_TRUE:
                 $this->_m_value = new \PythonPyc27\PyObject\PyTrue($this->_io, $this, $this->_root);
+                break;
+            case \PythonPyc27\PyObject\ObjectType::PY_FALSE:
+                $this->_m_value = new \PythonPyc27\PyObject\PyFalse($this->_io, $this, $this->_root);
+                break;
+            case \PythonPyc27\PyObject\ObjectType::NONE:
+                $this->_m_value = new \PythonPyc27\PyObject\PyNone($this->_io, $this, $this->_root);
+                break;
+            case \PythonPyc27\PyObject\ObjectType::STRING_REF:
+                $this->_m_value = new \PythonPyc27\PyObject\StringRef($this->_io, $this, $this->_root);
+                break;
+            case \PythonPyc27\PyObject\ObjectType::CODE_OBJECT:
+                $this->_m_value = new \PythonPyc27\CodeObject($this->_io, $this, $this->_root);
+                break;
+            case \PythonPyc27\PyObject\ObjectType::INTERNED:
+                $this->_m_value = new \PythonPyc27\PyObject\InternedString($this->_io, $this, $this->_root);
                 break;
         }
     }

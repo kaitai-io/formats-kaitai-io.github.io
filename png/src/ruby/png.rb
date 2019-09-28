@@ -76,44 +76,44 @@ class Png < Kaitai::Struct::Struct
       case type
       when "iTXt"
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = InternationalTextChunk.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = InternationalTextChunk.new(_io__raw_body, self, @_root)
       when "gAMA"
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = GamaChunk.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = GamaChunk.new(_io__raw_body, self, @_root)
       when "tIME"
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = TimeChunk.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = TimeChunk.new(_io__raw_body, self, @_root)
       when "PLTE"
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PlteChunk.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = PlteChunk.new(_io__raw_body, self, @_root)
       when "bKGD"
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = BkgdChunk.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = BkgdChunk.new(_io__raw_body, self, @_root)
       when "pHYs"
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PhysChunk.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = PhysChunk.new(_io__raw_body, self, @_root)
       when "tEXt"
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = TextChunk.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = TextChunk.new(_io__raw_body, self, @_root)
       when "cHRM"
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = ChrmChunk.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = ChrmChunk.new(_io__raw_body, self, @_root)
       when "sRGB"
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SrgbChunk.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SrgbChunk.new(_io__raw_body, self, @_root)
       when "zTXt"
         @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = CompressedTextChunk.new(io, self, @_root)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = CompressedTextChunk.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes(len)
       end
@@ -214,7 +214,7 @@ class Png < Kaitai::Struct::Struct
       @width = @_io.read_u4be
       @height = @_io.read_u4be
       @bit_depth = @_io.read_u1
-      @color_type = Kaitai::Struct::Stream::resolve_enum(COLOR_TYPE, @_io.read_u1)
+      @color_type = Kaitai::Struct::Stream::resolve_enum(Png::COLOR_TYPE, @_io.read_u1)
       @compression_method = @_io.read_u1
       @filter_method = @_io.read_u1
       @interlace_method = @_io.read_u1
@@ -285,7 +285,7 @@ class Png < Kaitai::Struct::Struct
 
     def _read
       @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
-      @compression_method = Kaitai::Struct::Stream::resolve_enum(COMPRESSION_METHODS, @_io.read_u1)
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(Png::COMPRESSION_METHODS, @_io.read_u1)
       @_raw_text_datastream = @_io.read_bytes_full
       @text_datastream = Zlib::Inflate.inflate(@_raw_text_datastream)
       self
@@ -350,16 +350,16 @@ class Png < Kaitai::Struct::Struct
 
     def _read
       case _root.ihdr.color_type
-      when :color_type_greyscale_alpha
-        @bkgd = BkgdGreyscale.new(@_io, self, @_root)
       when :color_type_indexed
         @bkgd = BkgdIndexed.new(@_io, self, @_root)
-      when :color_type_greyscale
-        @bkgd = BkgdGreyscale.new(@_io, self, @_root)
       when :color_type_truecolor_alpha
         @bkgd = BkgdTruecolor.new(@_io, self, @_root)
+      when :color_type_greyscale_alpha
+        @bkgd = BkgdGreyscale.new(@_io, self, @_root)
       when :color_type_truecolor
         @bkgd = BkgdTruecolor.new(@_io, self, @_root)
+      when :color_type_greyscale
+        @bkgd = BkgdGreyscale.new(@_io, self, @_root)
       end
       self
     end
@@ -379,7 +379,7 @@ class Png < Kaitai::Struct::Struct
     def _read
       @pixels_per_unit_x = @_io.read_u4be
       @pixels_per_unit_y = @_io.read_u4be
-      @unit = Kaitai::Struct::Stream::resolve_enum(PHYS_UNIT, @_io.read_u1)
+      @unit = Kaitai::Struct::Stream::resolve_enum(Png::PHYS_UNIT, @_io.read_u1)
       self
     end
 
@@ -410,7 +410,7 @@ class Png < Kaitai::Struct::Struct
     def _read
       @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       @compression_flag = @_io.read_u1
-      @compression_method = Kaitai::Struct::Stream::resolve_enum(COMPRESSION_METHODS, @_io.read_u1)
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(Png::COMPRESSION_METHODS, @_io.read_u1)
       @language_tag = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
       @translated_keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       @text = (@_io.read_bytes_full).force_encoding("UTF-8")

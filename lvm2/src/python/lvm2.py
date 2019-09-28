@@ -152,8 +152,8 @@ class Lvm2(KaitaiStruct):
                             _pos = self._io.pos()
                             self._io.seek(self.offset)
                             self._raw__m_data = self._io.read_bytes(self.size)
-                            io = KaitaiStream(BytesIO(self._raw__m_data))
-                            self._m_data = self._root.PhysicalVolume.Label.VolumeHeader.MetadataArea(io, self, self._root)
+                            _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                            self._m_data = self._root.PhysicalVolume.Label.VolumeHeader.MetadataArea(_io__raw__m_data, self, self._root)
                             self._io.seek(_pos)
 
                         return self._m_data if hasattr(self, '_m_data') else None
@@ -207,7 +207,7 @@ class Lvm2(KaitaiStruct):
                                 self.offset = self._io.read_u8le()
                                 self.size = self._io.read_u8le()
                                 self.checksum = self._io.read_u4le()
-                                self.flags = self._root.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor.RawLocationDescriptorFlags(self._io.read_u4le())
+                                self.flags = KaitaiStream.resolve_enum(self._root.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor.RawLocationDescriptorFlags, self._io.read_u4le())
 
 
                         @property

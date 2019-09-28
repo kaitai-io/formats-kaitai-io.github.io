@@ -144,11 +144,6 @@ radio information, but can be used for other purposes as well.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="packet_ppi parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="packet_ppi parsing C# library">C#</a></li>
                 
                 
@@ -253,7 +248,7 @@ from enum import Enum
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
     raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
 
-from ethernet_frame import EthernetFrame
+import ethernet_frame
 class PacketPpi(KaitaiStruct):
     &quot;&quot;&quot;PPI is a standard for link layer packet encapsulation, proposed as
     generic extensible container to store both captured in-band data and
@@ -388,17 +383,17 @@ class PacketPpi(KaitaiStruct):
     def _read(self):
         self.header = self._root.PacketPpiHeader(self._io, self, self._root)
         self._raw_fields = self._io.read_bytes((self.header.pph_len - 8))
-        io = KaitaiStream(BytesIO(self._raw_fields))
-        self.fields = self._root.PacketPpiFields(io, self, self._root)
+        _io__raw_fields = KaitaiStream(BytesIO(self._raw_fields))
+        self.fields = self._root.PacketPpiFields(_io__raw_fields, self, self._root)
         _on = self.header.pph_dlt
         if _on == self._root.Linktype.ppi:
             self._raw_body = self._io.read_bytes_full()
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = PacketPpi(io)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = PacketPpi(_io__raw_body)
         elif _on == self._root.Linktype.ethernet:
             self._raw_body = self._io.read_bytes_full()
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = EthernetFrame(io)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = ethernet_frame.EthernetFrame(_io__raw_body)
         else:
             self.body = self._io.read_bytes_full()
 
@@ -471,7 +466,7 @@ class PacketPpi(KaitaiStruct):
             self.pph_version = self._io.read_u1()
             self.pph_flags = self._io.read_u1()
             self.pph_len = self._io.read_u2le()
-            self.pph_dlt = self._root.Linktype(self._io.read_u4le())
+            self.pph_dlt = KaitaiStream.resolve_enum(self._root.Linktype, self._io.read_u4le())
 
 
     class Radio80211CommonBody(KaitaiStruct):
@@ -509,21 +504,21 @@ class PacketPpi(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.pfh_type = self._root.PfhType(self._io.read_u2le())
+            self.pfh_type = KaitaiStream.resolve_enum(self._root.PfhType, self._io.read_u2le())
             self.pfh_datalen = self._io.read_u2le()
             _on = self.pfh_type
             if _on == self._root.PfhType.radio_802_11_common:
                 self._raw_body = self._io.read_bytes(self.pfh_datalen)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Radio80211CommonBody(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.Radio80211CommonBody(_io__raw_body, self, self._root)
             elif _on == self._root.PfhType.radio_802_11n_mac_ext:
                 self._raw_body = self._io.read_bytes(self.pfh_datalen)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Radio80211nMacExtBody(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.Radio80211nMacExtBody(_io__raw_body, self, self._root)
             elif _on == self._root.PfhType.radio_802_11n_mac_phy_ext:
                 self._raw_body = self._io.read_bytes(self.pfh_datalen)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Radio80211nMacPhyExtBody(io, self, self._root)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.Radio80211nMacPhyExtBody(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.pfh_datalen)
 

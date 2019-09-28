@@ -58,31 +58,31 @@ class MagicavoxelVox < Kaitai::Struct::Struct
     end
 
     def _read
-      @chunk_id = Kaitai::Struct::Stream::resolve_enum(CHUNK_TYPE, @_io.read_u4be)
+      @chunk_id = Kaitai::Struct::Stream::resolve_enum(MagicavoxelVox::CHUNK_TYPE, @_io.read_u4be)
       @num_bytes_of_chunk_content = @_io.read_u4le
       @num_bytes_of_children_chunks = @_io.read_u4le
       if num_bytes_of_chunk_content != 0
         case chunk_id
         when :chunk_type_size
           @_raw_chunk_content = @_io.read_bytes(num_bytes_of_chunk_content)
-          io = Kaitai::Struct::Stream.new(@_raw_chunk_content)
-          @chunk_content = Size.new(io, self, @_root)
+          _io__raw_chunk_content = Kaitai::Struct::Stream.new(@_raw_chunk_content)
+          @chunk_content = Size.new(_io__raw_chunk_content, self, @_root)
         when :chunk_type_matt
           @_raw_chunk_content = @_io.read_bytes(num_bytes_of_chunk_content)
-          io = Kaitai::Struct::Stream.new(@_raw_chunk_content)
-          @chunk_content = Matt.new(io, self, @_root)
-        when :chunk_type_xyzi
-          @_raw_chunk_content = @_io.read_bytes(num_bytes_of_chunk_content)
-          io = Kaitai::Struct::Stream.new(@_raw_chunk_content)
-          @chunk_content = Xyzi.new(io, self, @_root)
-        when :chunk_type_pack
-          @_raw_chunk_content = @_io.read_bytes(num_bytes_of_chunk_content)
-          io = Kaitai::Struct::Stream.new(@_raw_chunk_content)
-          @chunk_content = Pack.new(io, self, @_root)
+          _io__raw_chunk_content = Kaitai::Struct::Stream.new(@_raw_chunk_content)
+          @chunk_content = Matt.new(_io__raw_chunk_content, self, @_root)
         when :chunk_type_rgba
           @_raw_chunk_content = @_io.read_bytes(num_bytes_of_chunk_content)
-          io = Kaitai::Struct::Stream.new(@_raw_chunk_content)
-          @chunk_content = Rgba.new(io, self, @_root)
+          _io__raw_chunk_content = Kaitai::Struct::Stream.new(@_raw_chunk_content)
+          @chunk_content = Rgba.new(_io__raw_chunk_content, self, @_root)
+        when :chunk_type_xyzi
+          @_raw_chunk_content = @_io.read_bytes(num_bytes_of_chunk_content)
+          _io__raw_chunk_content = Kaitai::Struct::Stream.new(@_raw_chunk_content)
+          @chunk_content = Xyzi.new(_io__raw_chunk_content, self, @_root)
+        when :chunk_type_pack
+          @_raw_chunk_content = @_io.read_bytes(num_bytes_of_chunk_content)
+          _io__raw_chunk_content = Kaitai::Struct::Stream.new(@_raw_chunk_content)
+          @chunk_content = Pack.new(_io__raw_chunk_content, self, @_root)
         else
           @chunk_content = @_io.read_bytes(num_bytes_of_chunk_content)
         end
@@ -155,7 +155,7 @@ class MagicavoxelVox < Kaitai::Struct::Struct
 
     def _read
       @id = @_io.read_u4le
-      @material_type = Kaitai::Struct::Stream::resolve_enum(MATERIAL_TYPE, @_io.read_u4le)
+      @material_type = Kaitai::Struct::Stream::resolve_enum(MagicavoxelVox::MATERIAL_TYPE, @_io.read_u4le)
       @material_weight = @_io.read_f4le
       @property_bits = @_io.read_u4le
       if has_plastic

@@ -481,44 +481,44 @@ var ShapefileMain = (function() {
       this.shapeType = this._io.readS4le();
       if (this.shapeType != ShapefileMain.ShapeType.NULL_SHAPE) {
         switch (this.shapeType) {
-        case ShapefileMain.ShapeType.POINT_M:
-          this.shapeParameters = new PointM(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.POLYGON_Z:
-          this.shapeParameters = new PolygonZ(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.MULTI_POINT_M:
-          this.shapeParameters = new MultiPointM(this._io, this, this._root);
-          break;
         case ShapefileMain.ShapeType.POLY_LINE_Z:
           this.shapeParameters = new PolyLineZ(this._io, this, this._root);
           break;
-        case ShapefileMain.ShapeType.MULTI_POINT_Z:
-          this.shapeParameters = new MultiPointZ(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.MULTI_POINT:
-          this.shapeParameters = new MultiPoint(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.POLYGON_M:
-          this.shapeParameters = new PolygonM(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.POLYGON:
-          this.shapeParameters = new Polygon(this._io, this, this._root);
-          break;
-        case ShapefileMain.ShapeType.POINT:
-          this.shapeParameters = new Point(this._io, this, this._root);
+        case ShapefileMain.ShapeType.MULTI_PATCH:
+          this.shapeParameters = new MultiPatch(this._io, this, this._root);
           break;
         case ShapefileMain.ShapeType.POLY_LINE_M:
           this.shapeParameters = new PolyLineM(this._io, this, this._root);
           break;
-        case ShapefileMain.ShapeType.POLY_LINE:
-          this.shapeParameters = new PolyLine(this._io, this, this._root);
+        case ShapefileMain.ShapeType.POLYGON:
+          this.shapeParameters = new Polygon(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.POLYGON_Z:
+          this.shapeParameters = new PolygonZ(this._io, this, this._root);
           break;
         case ShapefileMain.ShapeType.POINT_Z:
           this.shapeParameters = new PointZ(this._io, this, this._root);
           break;
-        case ShapefileMain.ShapeType.MULTI_PATCH:
-          this.shapeParameters = new MultiPatch(this._io, this, this._root);
+        case ShapefileMain.ShapeType.POLY_LINE:
+          this.shapeParameters = new PolyLine(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.POINT_M:
+          this.shapeParameters = new PointM(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.POLYGON_M:
+          this.shapeParameters = new PolygonM(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.MULTI_POINT:
+          this.shapeParameters = new MultiPoint(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.POINT:
+          this.shapeParameters = new Point(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.MULTI_POINT_M:
+          this.shapeParameters = new MultiPointM(this._io, this, this._root);
+          break;
+        case ShapefileMain.ShapeType.MULTI_POINT_Z:
+          this.shapeParameters = new MultiPointZ(this._io, this, this._root);
           break;
         }
       }

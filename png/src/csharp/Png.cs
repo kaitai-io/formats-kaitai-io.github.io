@@ -596,24 +596,24 @@ namespace Kaitai
             private void _read()
             {
                 switch (M_Root.Ihdr.ColorType) {
-                case Png.ColorType.GreyscaleAlpha: {
-                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
-                    break;
-                }
                 case Png.ColorType.Indexed: {
                     _bkgd = new BkgdIndexed(m_io, this, m_root);
-                    break;
-                }
-                case Png.ColorType.Greyscale: {
-                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
                     break;
                 }
                 case Png.ColorType.TruecolorAlpha: {
                     _bkgd = new BkgdTruecolor(m_io, this, m_root);
                     break;
                 }
+                case Png.ColorType.GreyscaleAlpha: {
+                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
+                    break;
+                }
                 case Png.ColorType.Truecolor: {
                     _bkgd = new BkgdTruecolor(m_io, this, m_root);
+                    break;
+                }
+                case Png.ColorType.Greyscale: {
+                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
                     break;
                 }
                 }

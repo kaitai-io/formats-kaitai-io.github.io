@@ -1,0 +1,54 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__java_bytecode {
+		label="JavaBytecode";
+		graph[style=dotted];
+
+		java_bytecode__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="instructions_pos">0</TD><TD PORT="instructions_size">...</TD><TD>Inst</TD><TD PORT="instructions_type">instructions</TD></TR>
+			<TR><TD COLSPAN="4" PORT="instructions__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__inst {
+			label="JavaBytecode::Inst";
+			graph[style=dotted];
+
+			inst__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="opcode_pos">0</TD><TD PORT="opcode_size">1</TD><TD>u1→Opcodes</TD><TD PORT="opcode_type">opcode</TD></TR>
+				<TR><TD PORT="arg_pos">1</TD><TD PORT="arg_size">...</TD><TD>switch (opcode)</TD><TD PORT="arg_type">arg</TD></TR>
+			</TABLE>>];
+inst__seq_arg_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:opcodes_newarray</TD><TD PORT="case0">ArgNewarray</TD></TR>
+	<TR><TD>:opcodes_invokeinterface</TD><TD PORT="case1">ArgInvokeinterface</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__arg_invokeinterface {
+			label="JavaBytecode::ArgInvokeinterface";
+			graph[style=dotted];
+
+			arg_invokeinterface__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="method_index_pos">0</TD><TD PORT="method_index_size">2</TD><TD>u2be</TD><TD PORT="method_index_type">method_index</TD></TR>
+				<TR><TD PORT="count_pos">2</TD><TD PORT="count_size">1</TD><TD>u1</TD><TD PORT="count_type">count</TD></TR>
+				<TR><TD PORT="reserved_pos">3</TD><TD PORT="reserved_size">1</TD><TD>00</TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__arg_newarray {
+			label="JavaBytecode::ArgNewarray";
+			graph[style=dotted];
+
+			arg_newarray__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="atype_pos">0</TD><TD PORT="atype_size">1</TD><TD>u1→PrimTypes</TD><TD PORT="atype_type">atype</TD></TR>
+			</TABLE>>];
+		}
+	}
+	java_bytecode__seq:instructions_type -> inst__seq [style=bold];
+	inst__seq:arg_type -> inst__seq_arg_switch [style=bold];
+	inst__seq_arg_switch:case0 -> arg_newarray__seq [style=bold];
+	inst__seq_arg_switch:case1 -> arg_invokeinterface__seq [style=bold];
+	inst__seq:opcode_type -> inst__seq:arg_type [color="#404040"];
+}

@@ -8,7 +8,7 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-from vlq_base128_be import VlqBase128Be
+import vlq_base128_be
 class Sqlite3(KaitaiStruct):
     """SQLite3 is a popular serverless SQL engine, implemented as a library
     to be used within other applications. It keeps its databases as
@@ -45,8 +45,8 @@ class Sqlite3(KaitaiStruct):
     def _read(self):
         self.magic = self._io.ensure_fixed_contents(b"\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00")
         self.len_page_mod = self._io.read_u2be()
-        self.write_version = self._root.Versions(self._io.read_u1())
-        self.read_version = self._root.Versions(self._io.read_u1())
+        self.write_version = KaitaiStream.resolve_enum(self._root.Versions, self._io.read_u1())
+        self.read_version = KaitaiStream.resolve_enum(self._root.Versions, self._io.read_u1())
         self.reserved_space = self._io.read_u1()
         self.max_payload_frac = self._io.read_u1()
         self.min_payload_frac = self._io.read_u1()
@@ -59,7 +59,7 @@ class Sqlite3(KaitaiStruct):
         self.schema_format = self._io.read_u4be()
         self.def_page_cache_size = self._io.read_u4be()
         self.largest_root_page = self._io.read_u4be()
-        self.text_encoding = self._root.Encodings(self._io.read_u4be())
+        self.text_encoding = KaitaiStream.resolve_enum(self._root.Encodings, self._io.read_u4be())
         self.user_version = self._io.read_u4be()
         self.is_incremental_vacuum = self._io.read_u4be()
         self.application_id = self._io.read_u4be()
@@ -76,7 +76,7 @@ class Sqlite3(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = VlqBase128Be(self._io)
+            self.code = vlq_base128_be.VlqBase128Be(self._io)
 
         @property
         def is_blob(self):
@@ -139,10 +139,10 @@ class Sqlite3(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.len_payload = VlqBase128Be(self._io)
+            self.len_payload = vlq_base128_be.VlqBase128Be(self._io)
             self._raw_payload = self._io.read_bytes(self.len_payload.value)
-            io = KaitaiStream(BytesIO(self._raw_payload))
-            self.payload = self._root.CellPayload(io, self, self._root)
+            _io__raw_payload = KaitaiStream(BytesIO(self._raw_payload))
+            self.payload = self._root.CellPayload(_io__raw_payload, self, self._root)
 
 
     class Serials(KaitaiStruct):
@@ -156,7 +156,7 @@ class Sqlite3(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(VlqBase128Be(self._io))
+                self.entries.append(vlq_base128_be.VlqBase128Be(self._io))
                 i += 1
 
 
@@ -173,11 +173,11 @@ class Sqlite3(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.len_payload = VlqBase128Be(self._io)
-            self.row_id = VlqBase128Be(self._io)
+            self.len_payload = vlq_base128_be.VlqBase128Be(self._io)
+            self.row_id = vlq_base128_be.VlqBase128Be(self._io)
             self._raw_payload = self._io.read_bytes(self.len_payload.value)
-            io = KaitaiStream(BytesIO(self._raw_payload))
-            self.payload = self._root.CellPayload(io, self, self._root)
+            _io__raw_payload = KaitaiStream(BytesIO(self._raw_payload))
+            self.payload = self._root.CellPayload(_io__raw_payload, self, self._root)
 
 
     class CellPayload(KaitaiStruct):
@@ -192,10 +192,10 @@ class Sqlite3(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.len_header_and_len = VlqBase128Be(self._io)
+            self.len_header_and_len = vlq_base128_be.VlqBase128Be(self._io)
             self._raw_column_serials = self._io.read_bytes((self.len_header_and_len.value - 1))
-            io = KaitaiStream(BytesIO(self._raw_column_serials))
-            self.column_serials = self._root.Serials(io, self, self._root)
+            _io__raw_column_serials = KaitaiStream(BytesIO(self._raw_column_serials))
+            self.column_serials = self._root.Serials(_io__raw_column_serials, self, self._root)
             self.column_contents = [None] * (len(self.column_serials.entries))
             for i in range(len(self.column_serials.entries)):
                 self.column_contents[i] = self._root.ColumnContent(self.column_serials.entries[i], self._io, self, self._root)
@@ -215,7 +215,7 @@ class Sqlite3(KaitaiStruct):
 
         def _read(self):
             self.left_child_page = self._io.read_u4be()
-            self.row_id = VlqBase128Be(self._io)
+            self.row_id = vlq_base128_be.VlqBase128Be(self._io)
 
 
     class CellIndexInterior(KaitaiStruct):
@@ -231,10 +231,10 @@ class Sqlite3(KaitaiStruct):
 
         def _read(self):
             self.left_child_page = self._io.read_u4be()
-            self.len_payload = VlqBase128Be(self._io)
+            self.len_payload = vlq_base128_be.VlqBase128Be(self._io)
             self._raw_payload = self._io.read_bytes(self.len_payload.value)
-            io = KaitaiStream(BytesIO(self._raw_payload))
-            self.payload = self._root.CellPayload(io, self, self._root)
+            _io__raw_payload = KaitaiStream(BytesIO(self._raw_payload))
+            self.payload = self._root.CellPayload(_io__raw_payload, self, self._root)
 
 
     class ColumnContent(KaitaiStruct):

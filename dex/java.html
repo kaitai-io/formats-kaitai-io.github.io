@@ -557,7 +557,7 @@ public class Dex extends KaitaiStruct {
         }
         private void _read() {
             this.size = this._io.readU4le();
-            list = new ArrayList&lt;MapItem&gt;((int) (size()));
+            list = new ArrayList&lt;MapItem&gt;(((Number) (size())).intValue());
             for (int i = 0; i &lt; size(); i++) {
                 this.list.add(new MapItem(this._io, this, _root));
             }
@@ -625,71 +625,76 @@ public class Dex extends KaitaiStruct {
             this.valueArg = this._io.readBitsInt(3);
             this.valueType = ValueTypeEnum.byId(this._io.readBitsInt(5));
             this._io.alignToByte();
-            switch (valueType()) {
-            case DOUBLE: {
-                this.value = (Object) (this._io.readF8le());
-                break;
-            }
-            case ANNOTATION: {
-                this.value = new EncodedAnnotation(this._io, this, _root);
-                break;
-            }
-            case TYPE: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
-            case CHAR: {
-                this.value = (Object) (this._io.readU2le());
-                break;
-            }
-            case METHOD_HANDLE: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
-            case ARRAY: {
-                this.value = new EncodedArray(this._io, this, _root);
-                break;
-            }
-            case BYTE: {
-                this.value = (Object) (this._io.readS1());
-                break;
-            }
-            case METHOD: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
-            case METHOD_TYPE: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
-            case SHORT: {
-                this.value = (Object) (this._io.readS2le());
-                break;
-            }
-            case STRING: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
-            case INT: {
-                this.value = (Object) (this._io.readS4le());
-                break;
-            }
-            case FIELD: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
-            case LONG: {
-                this.value = (Object) (this._io.readS8le());
-                break;
-            }
-            case FLOAT: {
-                this.value = (Object) (this._io.readF4le());
-                break;
-            }
-            case ENUM: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
+            {
+                ValueTypeEnum on = valueType();
+                if (on != null) {
+                    switch (valueType()) {
+                    case INT: {
+                        this.value = (Object) (this._io.readS4le());
+                        break;
+                    }
+                    case ANNOTATION: {
+                        this.value = new EncodedAnnotation(this._io, this, _root);
+                        break;
+                    }
+                    case LONG: {
+                        this.value = (Object) (this._io.readS8le());
+                        break;
+                    }
+                    case METHOD_HANDLE: {
+                        this.value = (Object) (this._io.readU4le());
+                        break;
+                    }
+                    case BYTE: {
+                        this.value = (Object) (this._io.readS1());
+                        break;
+                    }
+                    case ARRAY: {
+                        this.value = new EncodedArray(this._io, this, _root);
+                        break;
+                    }
+                    case METHOD_TYPE: {
+                        this.value = (Object) (this._io.readU4le());
+                        break;
+                    }
+                    case SHORT: {
+                        this.value = (Object) (this._io.readS2le());
+                        break;
+                    }
+                    case METHOD: {
+                        this.value = (Object) (this._io.readU4le());
+                        break;
+                    }
+                    case DOUBLE: {
+                        this.value = (Object) (this._io.readF8le());
+                        break;
+                    }
+                    case FLOAT: {
+                        this.value = (Object) (this._io.readF4le());
+                        break;
+                    }
+                    case TYPE: {
+                        this.value = (Object) (this._io.readU4le());
+                        break;
+                    }
+                    case ENUM: {
+                        this.value = (Object) (this._io.readU4le());
+                        break;
+                    }
+                    case FIELD: {
+                        this.value = (Object) (this._io.readU4le());
+                        break;
+                    }
+                    case STRING: {
+                        this.value = (Object) (this._io.readU4le());
+                        break;
+                    }
+                    case CHAR: {
+                        this.value = (Object) (this._io.readU2le());
+                        break;
+                    }
+                    }
+                }
             }
         }
         private long valueArg;
@@ -1039,19 +1044,19 @@ public class Dex extends KaitaiStruct {
             this.instanceFieldsSize = new VlqBase128Le(this._io);
             this.directMethodsSize = new VlqBase128Le(this._io);
             this.virtualMethodsSize = new VlqBase128Le(this._io);
-            staticFields = new ArrayList&lt;EncodedField&gt;((int) (staticFieldsSize().value()));
+            staticFields = new ArrayList&lt;EncodedField&gt;(((Number) (staticFieldsSize().value())).intValue());
             for (int i = 0; i &lt; staticFieldsSize().value(); i++) {
                 this.staticFields.add(new EncodedField(this._io, this, _root));
             }
-            instanceFields = new ArrayList&lt;EncodedField&gt;((int) (instanceFieldsSize().value()));
+            instanceFields = new ArrayList&lt;EncodedField&gt;(((Number) (instanceFieldsSize().value())).intValue());
             for (int i = 0; i &lt; instanceFieldsSize().value(); i++) {
                 this.instanceFields.add(new EncodedField(this._io, this, _root));
             }
-            directMethods = new ArrayList&lt;EncodedMethod&gt;((int) (directMethodsSize().value()));
+            directMethods = new ArrayList&lt;EncodedMethod&gt;(((Number) (directMethodsSize().value())).intValue());
             for (int i = 0; i &lt; directMethodsSize().value(); i++) {
                 this.directMethods.add(new EncodedMethod(this._io, this, _root));
             }
-            virtualMethods = new ArrayList&lt;EncodedMethod&gt;((int) (virtualMethodsSize().value()));
+            virtualMethods = new ArrayList&lt;EncodedMethod&gt;(((Number) (virtualMethodsSize().value())).intValue());
             for (int i = 0; i &lt; virtualMethodsSize().value(); i++) {
                 this.virtualMethods.add(new EncodedMethod(this._io, this, _root));
             }
@@ -1228,7 +1233,7 @@ public class Dex extends KaitaiStruct {
         private void _read() {
             this.typeIdx = new VlqBase128Le(this._io);
             this.size = new VlqBase128Le(this._io);
-            elements = new ArrayList&lt;AnnotationElement&gt;((int) (size().value()));
+            elements = new ArrayList&lt;AnnotationElement&gt;(((Number) (size().value())).intValue());
             for (int i = 0; i &lt; size().value(); i++) {
                 this.elements.add(new AnnotationElement(this._io, this, _root));
             }
@@ -1439,7 +1444,7 @@ public class Dex extends KaitaiStruct {
         }
         private void _read() {
             this.size = this._io.readU4le();
-            list = new ArrayList&lt;TypeItem&gt;((int) (size()));
+            list = new ArrayList&lt;TypeItem&gt;(((Number) (size())).intValue());
             for (int i = 0; i &lt; size(); i++) {
                 this.list.add(new TypeItem(this._io, this, _root));
             }
@@ -1789,7 +1794,7 @@ public class Dex extends KaitaiStruct {
         }
         private void _read() {
             this.size = new VlqBase128Le(this._io);
-            values = new ArrayList&lt;EncodedValue&gt;((int) (size().value()));
+            values = new ArrayList&lt;EncodedValue&gt;(((Number) (size().value())).intValue());
             for (int i = 0; i &lt; size().value(); i++) {
                 this.values.add(new EncodedValue(this._io, this, _root));
             }
@@ -1819,7 +1824,7 @@ public class Dex extends KaitaiStruct {
             return this.stringIds;
         long _pos = this._io.pos();
         this._io.seek(header().stringIdsOff());
-        stringIds = new ArrayList&lt;StringIdItem&gt;((int) (header().stringIdsSize()));
+        stringIds = new ArrayList&lt;StringIdItem&gt;(((Number) (header().stringIdsSize())).intValue());
         for (int i = 0; i &lt; header().stringIdsSize(); i++) {
             this.stringIds.add(new StringIdItem(this._io, this, _root));
         }
@@ -1845,7 +1850,7 @@ public class Dex extends KaitaiStruct {
             return this.methodIds;
         long _pos = this._io.pos();
         this._io.seek(header().methodIdsOff());
-        methodIds = new ArrayList&lt;MethodIdItem&gt;((int) (header().methodIdsSize()));
+        methodIds = new ArrayList&lt;MethodIdItem&gt;(((Number) (header().methodIdsSize())).intValue());
         for (int i = 0; i &lt; header().methodIdsSize(); i++) {
             this.methodIds.add(new MethodIdItem(this._io, this, _root));
         }
@@ -1897,7 +1902,7 @@ public class Dex extends KaitaiStruct {
             return this.classDefs;
         long _pos = this._io.pos();
         this._io.seek(header().classDefsOff());
-        classDefs = new ArrayList&lt;ClassDefItem&gt;((int) (header().classDefsSize()));
+        classDefs = new ArrayList&lt;ClassDefItem&gt;(((Number) (header().classDefsSize())).intValue());
         for (int i = 0; i &lt; header().classDefsSize(); i++) {
             this.classDefs.add(new ClassDefItem(this._io, this, _root));
         }
@@ -1936,7 +1941,7 @@ public class Dex extends KaitaiStruct {
             return this.typeIds;
         long _pos = this._io.pos();
         this._io.seek(header().typeIdsOff());
-        typeIds = new ArrayList&lt;TypeIdItem&gt;((int) (header().typeIdsSize()));
+        typeIds = new ArrayList&lt;TypeIdItem&gt;(((Number) (header().typeIdsSize())).intValue());
         for (int i = 0; i &lt; header().typeIdsSize(); i++) {
             this.typeIds.add(new TypeIdItem(this._io, this, _root));
         }
@@ -1959,7 +1964,7 @@ public class Dex extends KaitaiStruct {
             return this.protoIds;
         long _pos = this._io.pos();
         this._io.seek(header().protoIdsOff());
-        protoIds = new ArrayList&lt;ProtoIdItem&gt;((int) (header().protoIdsSize()));
+        protoIds = new ArrayList&lt;ProtoIdItem&gt;(((Number) (header().protoIdsSize())).intValue());
         for (int i = 0; i &lt; header().protoIdsSize(); i++) {
             this.protoIds.add(new ProtoIdItem(this._io, this, _root));
         }
@@ -1984,7 +1989,7 @@ public class Dex extends KaitaiStruct {
             return this.fieldIds;
         long _pos = this._io.pos();
         this._io.seek(header().fieldIdsOff());
-        fieldIds = new ArrayList&lt;FieldIdItem&gt;((int) (header().fieldIdsSize()));
+        fieldIds = new ArrayList&lt;FieldIdItem&gt;(((Number) (header().fieldIdsSize())).intValue());
         for (int i = 0; i &lt; header().fieldIdsSize(); i++) {
             this.fieldIds.add(new FieldIdItem(this._io, this, _root));
         }

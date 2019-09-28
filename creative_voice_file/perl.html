@@ -155,11 +155,6 @@ software due to simplicity and availability of Creative's recording
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Creative Voice File parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="Creative Voice File parsing C# library">C#</a></li>
                 
                 
@@ -516,43 +511,43 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{block_type} = $self-&gt;{_io}-&gt;read_u1();
-    if ($self-&gt;block_type() != $BLOCK_TYPES_TERMINATOR) {
+    if ($self-&gt;block_type() != $CreativeVoiceFile::BLOCK_TYPES_TERMINATOR) {
         $self-&gt;{body_size1} = $self-&gt;{_io}-&gt;read_u2le();
     }
-    if ($self-&gt;block_type() != $BLOCK_TYPES_TERMINATOR) {
+    if ($self-&gt;block_type() != $CreativeVoiceFile::BLOCK_TYPES_TERMINATOR) {
         $self-&gt;{body_size2} = $self-&gt;{_io}-&gt;read_u1();
     }
-    if ($self-&gt;block_type() != $BLOCK_TYPES_TERMINATOR) {
+    if ($self-&gt;block_type() != $CreativeVoiceFile::BLOCK_TYPES_TERMINATOR) {
         my $_on = $self-&gt;block_type();
-        if ($_on == $BLOCK_TYPES_SILENCE) {
-            $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
-            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-            $self-&gt;{body} = CreativeVoiceFile::BlockSilence-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-        }
-        elsif ($_on == $BLOCK_TYPES_SOUND_DATA) {
-            $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
-            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-            $self-&gt;{body} = CreativeVoiceFile::BlockSoundData-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-        }
-        elsif ($_on == $BLOCK_TYPES_MARKER) {
-            $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
-            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-            $self-&gt;{body} = CreativeVoiceFile::BlockMarker-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-        }
-        elsif ($_on == $BLOCK_TYPES_SOUND_DATA_NEW) {
+        if ($_on == $CreativeVoiceFile::BLOCK_TYPES_SOUND_DATA_NEW) {
             $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
             my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
             $self-&gt;{body} = CreativeVoiceFile::BlockSoundDataNew-&gt;new($io__raw_body, $self, $self-&gt;{_root});
         }
-        elsif ($_on == $BLOCK_TYPES_REPEAT_START) {
+        elsif ($_on == $CreativeVoiceFile::BLOCK_TYPES_REPEAT_START) {
             $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
             my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
             $self-&gt;{body} = CreativeVoiceFile::BlockRepeatStart-&gt;new($io__raw_body, $self, $self-&gt;{_root});
         }
-        elsif ($_on == $BLOCK_TYPES_EXTRA_INFO) {
+        elsif ($_on == $CreativeVoiceFile::BLOCK_TYPES_MARKER) {
+            $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = CreativeVoiceFile::BlockMarker-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+        }
+        elsif ($_on == $CreativeVoiceFile::BLOCK_TYPES_SOUND_DATA) {
+            $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = CreativeVoiceFile::BlockSoundData-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+        }
+        elsif ($_on == $CreativeVoiceFile::BLOCK_TYPES_EXTRA_INFO) {
             $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
             my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
             $self-&gt;{body} = CreativeVoiceFile::BlockExtraInfo-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+        }
+        elsif ($_on == $CreativeVoiceFile::BLOCK_TYPES_SILENCE) {
+            $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = CreativeVoiceFile::BlockSilence-&gt;new($io__raw_body, $self, $self-&gt;{_root});
         }
         else {
             $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
@@ -563,7 +558,7 @@ sub _read {
 sub body_size {
     my ($self) = @_;
     return $self-&gt;{body_size} if ($self-&gt;{body_size});
-    if ($self-&gt;block_type() != $BLOCK_TYPES_TERMINATOR) {
+    if ($self-&gt;block_type() != $CreativeVoiceFile::BLOCK_TYPES_TERMINATOR) {
         $self-&gt;{body_size} = ($self-&gt;body_size1() + ($self-&gt;body_size2() &lt;&lt; 16));
     }
     return $self-&gt;{body_size};

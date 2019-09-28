@@ -117,41 +117,48 @@ public class MagicavoxelVox extends KaitaiStruct {
             this.numBytesOfChunkContent = this._io.readU4le();
             this.numBytesOfChildrenChunks = this._io.readU4le();
             if (numBytesOfChunkContent() != 0) {
-                switch (chunkId()) {
-                case SIZE: {
-                    this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                    this.chunkContent = new Size(_io__raw_chunkContent, this, _root);
-                    break;
-                }
-                case MATT: {
-                    this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                    this.chunkContent = new Matt(_io__raw_chunkContent, this, _root);
-                    break;
-                }
-                case XYZI: {
-                    this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                    this.chunkContent = new Xyzi(_io__raw_chunkContent, this, _root);
-                    break;
-                }
-                case PACK: {
-                    this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                    this.chunkContent = new Pack(_io__raw_chunkContent, this, _root);
-                    break;
-                }
-                case RGBA: {
-                    this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                    this.chunkContent = new Rgba(_io__raw_chunkContent, this, _root);
-                    break;
-                }
-                default: {
-                    this.chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    break;
-                }
+                {
+                    ChunkType on = chunkId();
+                    if (on != null) {
+                        switch (chunkId()) {
+                        case SIZE: {
+                            this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
+                            KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
+                            this.chunkContent = new Size(_io__raw_chunkContent, this, _root);
+                            break;
+                        }
+                        case MATT: {
+                            this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
+                            KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
+                            this.chunkContent = new Matt(_io__raw_chunkContent, this, _root);
+                            break;
+                        }
+                        case RGBA: {
+                            this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
+                            KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
+                            this.chunkContent = new Rgba(_io__raw_chunkContent, this, _root);
+                            break;
+                        }
+                        case XYZI: {
+                            this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
+                            KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
+                            this.chunkContent = new Xyzi(_io__raw_chunkContent, this, _root);
+                            break;
+                        }
+                        case PACK: {
+                            this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
+                            KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
+                            this.chunkContent = new Pack(_io__raw_chunkContent, this, _root);
+                            break;
+                        }
+                        default: {
+                            this.chunkContent = this._io.readBytes(numBytesOfChunkContent());
+                            break;
+                        }
+                        }
+                    } else {
+                        this.chunkContent = this._io.readBytes(numBytesOfChunkContent());
+                    }
                 }
             }
             if (numBytesOfChildrenChunks() != 0) {
@@ -237,7 +244,7 @@ public class MagicavoxelVox extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            colors = new ArrayList<Color>((int) (256));
+            colors = new ArrayList<Color>(((Number) (256)).intValue());
             for (int i = 0; i < 256; i++) {
                 this.colors.add(new Color(this._io, this, _root));
             }
@@ -441,7 +448,7 @@ public class MagicavoxelVox extends KaitaiStruct {
         }
         private void _read() {
             this.numVoxels = this._io.readU4le();
-            voxels = new ArrayList<Voxel>((int) (numVoxels()));
+            voxels = new ArrayList<Voxel>(((Number) (numVoxels())).intValue());
             for (int i = 0; i < numVoxels(); i++) {
                 this.voxels.add(new Voxel(this._io, this, _root));
             }

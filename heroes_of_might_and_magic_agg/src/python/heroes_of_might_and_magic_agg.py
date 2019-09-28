@@ -72,8 +72,8 @@ class HeroesOfMightAndMagicAgg(KaitaiStruct):
         self._m_filenames = [None] * (self.num_files)
         for i in range(self.num_files):
             self._raw__m_filenames[i] = self._io.read_bytes(15)
-            io = KaitaiStream(BytesIO(self._raw__m_filenames[i]))
-            self._m_filenames[i] = self._root.Filename(io, self, self._root)
+            _io__raw__m_filenames = KaitaiStream(BytesIO(self._raw__m_filenames[i]))
+            self._m_filenames[i] = self._root.Filename(_io__raw__m_filenames, self, self._root)
 
         self._io.seek(_pos)
         return self._m_filenames if hasattr(self, '_m_filenames') else None

@@ -46,7 +46,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     private void _read() {
         this.hdr = new Header(this._io, this, _root);
-        tracks = new ArrayList<Track>((int) (hdr().numTracks()));
+        tracks = new ArrayList<Track>(((Number) (hdr().numTracks())).intValue());
         for (int i = 0; i < hdr().numTracks(); i++) {
             this.tracks.add(new Track(this._io, this, _root));
         }

@@ -274,26 +274,26 @@ class RubyMarshal < Kaitai::Struct::Struct
     end
 
     def _read
-      @code = Kaitai::Struct::Stream::resolve_enum(CODES, @_io.read_u1)
+      @code = Kaitai::Struct::Stream::resolve_enum(RubyMarshal::CODES, @_io.read_u1)
       case code
+      when :codes_packed_int
+        @body = PackedInt.new(@_io, self, @_root)
       when :codes_bignum
         @body = Bignum.new(@_io, self, @_root)
-      when :codes_ruby_hash
-        @body = RubyHash.new(@_io, self, @_root)
       when :codes_ruby_array
         @body = RubyArray.new(@_io, self, @_root)
-      when :codes_ruby_symbol
-        @body = RubySymbol.new(@_io, self, @_root)
-      when :codes_instance_var
-        @body = InstanceVar.new(@_io, self, @_root)
-      when :codes_ruby_string
-        @body = RubyString.new(@_io, self, @_root)
-      when :codes_packed_int
+      when :codes_ruby_symbol_link
         @body = PackedInt.new(@_io, self, @_root)
       when :codes_ruby_struct
         @body = RubyStruct.new(@_io, self, @_root)
-      when :codes_ruby_symbol_link
-        @body = PackedInt.new(@_io, self, @_root)
+      when :codes_ruby_string
+        @body = RubyString.new(@_io, self, @_root)
+      when :codes_instance_var
+        @body = InstanceVar.new(@_io, self, @_root)
+      when :codes_ruby_hash
+        @body = RubyHash.new(@_io, self, @_root)
+      when :codes_ruby_symbol
+        @body = RubySymbol.new(@_io, self, @_root)
       end
       self
     end

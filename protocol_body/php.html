@@ -153,11 +153,6 @@ on that parameter.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="protocol_body parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="protocol_body parsing C# library">C#</a></li>
                 
                 
@@ -255,17 +250,17 @@ class ProtocolBody extends \Kaitai\Struct\Struct {
 
     private function _read() {
         switch ($this-&gt;protocol()) {
-            case \ProtocolBody\ProtocolEnum::TCP:
-                $this-&gt;_m_body = new \TcpSegment($this-&gt;_io);
-                break;
             case \ProtocolBody\ProtocolEnum::IPV6_NONXT:
                 $this-&gt;_m_body = new \ProtocolBody\NoNextHeader($this-&gt;_io, $this, $this-&gt;_root);
                 break;
-            case \ProtocolBody\ProtocolEnum::ICMP:
-                $this-&gt;_m_body = new \IcmpPacket($this-&gt;_io);
+            case \ProtocolBody\ProtocolEnum::IPV4:
+                $this-&gt;_m_body = new \Ipv4Packet($this-&gt;_io);
                 break;
             case \ProtocolBody\ProtocolEnum::UDP:
                 $this-&gt;_m_body = new \UdpDatagram($this-&gt;_io);
+                break;
+            case \ProtocolBody\ProtocolEnum::ICMP:
+                $this-&gt;_m_body = new \IcmpPacket($this-&gt;_io);
                 break;
             case \ProtocolBody\ProtocolEnum::HOPOPT:
                 $this-&gt;_m_body = new \ProtocolBody\OptionHopByHop($this-&gt;_io, $this, $this-&gt;_root);
@@ -273,8 +268,8 @@ class ProtocolBody extends \Kaitai\Struct\Struct {
             case \ProtocolBody\ProtocolEnum::IPV6:
                 $this-&gt;_m_body = new \Ipv6Packet($this-&gt;_io);
                 break;
-            case \ProtocolBody\ProtocolEnum::IPV4:
-                $this-&gt;_m_body = new \Ipv4Packet($this-&gt;_io);
+            case \ProtocolBody\ProtocolEnum::TCP:
+                $this-&gt;_m_body = new \TcpSegment($this-&gt;_io);
                 break;
         }
     }

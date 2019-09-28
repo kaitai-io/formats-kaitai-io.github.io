@@ -414,20 +414,20 @@ var Png = (function() {
     }
     BkgdChunk.prototype._read = function() {
       switch (this._root.ihdr.colorType) {
-      case Png.ColorType.GREYSCALE_ALPHA:
-        this.bkgd = new BkgdGreyscale(this._io, this, this._root);
-        break;
       case Png.ColorType.INDEXED:
         this.bkgd = new BkgdIndexed(this._io, this, this._root);
-        break;
-      case Png.ColorType.GREYSCALE:
-        this.bkgd = new BkgdGreyscale(this._io, this, this._root);
         break;
       case Png.ColorType.TRUECOLOR_ALPHA:
         this.bkgd = new BkgdTruecolor(this._io, this, this._root);
         break;
+      case Png.ColorType.GREYSCALE_ALPHA:
+        this.bkgd = new BkgdGreyscale(this._io, this, this._root);
+        break;
       case Png.ColorType.TRUECOLOR:
         this.bkgd = new BkgdTruecolor(this._io, this, this._root);
+        break;
+      case Png.ColorType.GREYSCALE:
+        this.bkgd = new BkgdGreyscale(this._io, this, this._root);
         break;
       }
     }

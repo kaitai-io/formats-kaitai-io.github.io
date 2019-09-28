@@ -52,7 +52,7 @@ class AixUtmp(KaitaiStruct):
             self.inittab_id = (self._io.read_bytes(14)).decode(u"ascii")
             self.device = (self._io.read_bytes(64)).decode(u"ascii")
             self.pid = self._io.read_u8be()
-            self.type = self._root.EntryType(self._io.read_s2be())
+            self.type = KaitaiStream.resolve_enum(self._root.EntryType, self._io.read_s2be())
             self.timestamp = self._io.read_s8be()
             self.exit_status = self._root.ExitStatus(self._io, self, self._root)
             self.hostname = (self._io.read_bytes(256)).decode(u"ascii")

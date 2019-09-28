@@ -208,8 +208,8 @@ class Inode extends \Kaitai\Struct\Struct {
         $_pos = $io->pos();
         $io->seek($this->offset());
         $this->_m__raw_asDir = $io->readBytes($this->size());
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_asDir);
-        $this->_m_asDir = new \Cramfs\DirInode($io, $this, $this->_root);
+        $_io__raw_asDir = new \Kaitai\Struct\Stream($this->_m__raw_asDir);
+        $this->_m_asDir = new \Cramfs\DirInode($_io__raw_asDir, $this, $this->_root);
         $io->seek($_pos);
         return $this->_m_asDir;
     }

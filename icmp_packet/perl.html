@@ -163,11 +163,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="ICMP network packet parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
                 <a href="csharp.html" title="ICMP network packet parsing C# library">C#</a></li>
                 
                 
@@ -282,13 +277,13 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{icmp_type} = $self-&gt;{_io}-&gt;read_u1();
-    if ($self-&gt;icmp_type() == $ICMP_TYPE_ENUM_DESTINATION_UNREACHABLE) {
+    if ($self-&gt;icmp_type() == $IcmpPacket::ICMP_TYPE_ENUM_DESTINATION_UNREACHABLE) {
         $self-&gt;{destination_unreachable} = IcmpPacket::DestinationUnreachableMsg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    if ($self-&gt;icmp_type() == $ICMP_TYPE_ENUM_TIME_EXCEEDED) {
+    if ($self-&gt;icmp_type() == $IcmpPacket::ICMP_TYPE_ENUM_TIME_EXCEEDED) {
         $self-&gt;{time_exceeded} = IcmpPacket::TimeExceededMsg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    if ( (($self-&gt;icmp_type() == $ICMP_TYPE_ENUM_ECHO) || ($self-&gt;icmp_type() == $ICMP_TYPE_ENUM_ECHO_REPLY)) ) {
+    if ( (($self-&gt;icmp_type() == $IcmpPacket::ICMP_TYPE_ENUM_ECHO) || ($self-&gt;icmp_type() == $IcmpPacket::ICMP_TYPE_ENUM_ECHO_REPLY)) ) {
         $self-&gt;{echo} = IcmpPacket::EchoMsg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
 }

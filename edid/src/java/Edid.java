@@ -43,7 +43,7 @@ public class Edid extends KaitaiStruct {
         this.featuresFlags = this._io.readU1();
         this.chromacity = new ChromacityInfo(this._io, this, _root);
         this.estTimings = new EstTimingsInfo(this._io, this, _root);
-        stdTimings = new ArrayList<StdTiming>((int) (8));
+        stdTimings = new ArrayList<StdTiming>(((Number) (8)).intValue());
         for (int i = 0; i < 8; i++) {
             this.stdTimings.add(new StdTiming(this._io, this, _root));
         }

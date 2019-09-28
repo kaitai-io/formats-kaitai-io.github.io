@@ -65,30 +65,30 @@ class Asn1Der < Kaitai::Struct::Struct
     @type_tag = Kaitai::Struct::Stream::resolve_enum(TYPE_TAG, @_io.read_u1)
     @len = LenEncoded.new(@_io, self, @_root)
     case type_tag
-    when :type_tag_sequence_30
-      @_raw_body = @_io.read_bytes(len.result)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodySequence.new(io, self, @_root)
-    when :type_tag_sequence_10
-      @_raw_body = @_io.read_bytes(len.result)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodySequence.new(io, self, @_root)
-    when :type_tag_utf8string
-      @_raw_body = @_io.read_bytes(len.result)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodyUtf8string.new(io, self, @_root)
     when :type_tag_printable_string
       @_raw_body = @_io.read_bytes(len.result)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodyPrintableString.new(io, self, @_root)
-    when :type_tag_object_id
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = BodyPrintableString.new(_io__raw_body, self, @_root)
+    when :type_tag_sequence_10
       @_raw_body = @_io.read_bytes(len.result)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodyObjectId.new(io, self, @_root)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = BodySequence.new(_io__raw_body, self, @_root)
     when :type_tag_set
       @_raw_body = @_io.read_bytes(len.result)
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodySequence.new(io, self, @_root)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = BodySequence.new(_io__raw_body, self, @_root)
+    when :type_tag_sequence_30
+      @_raw_body = @_io.read_bytes(len.result)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = BodySequence.new(_io__raw_body, self, @_root)
+    when :type_tag_utf8string
+      @_raw_body = @_io.read_bytes(len.result)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = BodyUtf8string.new(_io__raw_body, self, @_root)
+    when :type_tag_object_id
+      @_raw_body = @_io.read_bytes(len.result)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = BodyObjectId.new(_io__raw_body, self, @_root)
     else
       @body = @_io.read_bytes(len.result)
     end

@@ -37,35 +37,35 @@ class Asn1Der extends \Kaitai\Struct\Struct {
         $this->_m_typeTag = $this->_io->readU1();
         $this->_m_len = new \Asn1Der\LenEncoded($this->_io, $this, $this->_root);
         switch ($this->typeTag()) {
-            case \Asn1Der\TypeTag::SEQUENCE_30:
+            case \Asn1Der\TypeTag::PRINTABLE_STRING:
                 $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Asn1Der\BodySequence($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Asn1Der\BodyPrintableString($_io__raw_body, $this, $this->_root);
                 break;
             case \Asn1Der\TypeTag::SEQUENCE_10:
                 $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Asn1Der\BodySequence($io, $this, $this->_root);
-                break;
-            case \Asn1Der\TypeTag::UTF8STRING:
-                $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Asn1Der\BodyUtf8string($io, $this, $this->_root);
-                break;
-            case \Asn1Der\TypeTag::PRINTABLE_STRING:
-                $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Asn1Der\BodyPrintableString($io, $this, $this->_root);
-                break;
-            case \Asn1Der\TypeTag::OBJECT_ID:
-                $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Asn1Der\BodyObjectId($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Asn1Der\BodySequence($_io__raw_body, $this, $this->_root);
                 break;
             case \Asn1Der\TypeTag::SET:
                 $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Asn1Der\BodySequence($io, $this, $this->_root);
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Asn1Der\BodySequence($_io__raw_body, $this, $this->_root);
+                break;
+            case \Asn1Der\TypeTag::SEQUENCE_30:
+                $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Asn1Der\BodySequence($_io__raw_body, $this, $this->_root);
+                break;
+            case \Asn1Der\TypeTag::UTF8STRING:
+                $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Asn1Der\BodyUtf8string($_io__raw_body, $this, $this->_root);
+                break;
+            case \Asn1Der\TypeTag::OBJECT_ID:
+                $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
+                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Asn1Der\BodyObjectId($_io__raw_body, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->len()->result());
