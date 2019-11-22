@@ -162,18 +162,18 @@ class DatObject extends \Kaitai\Struct\Struct {
         switch ($this->type()) {
             case "BMP ":
                 $this->_m__raw_body = $this->_io->readBytes($this->lenCompressed());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \AllegroDat\DatBitmap($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \AllegroDat\DatBitmap($io, $this, $this->_root);
                 break;
             case "RLE ":
                 $this->_m__raw_body = $this->_io->readBytes($this->lenCompressed());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \AllegroDat\DatRleSprite($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \AllegroDat\DatRleSprite($io, $this, $this->_root);
                 break;
             case "FONT":
                 $this->_m__raw_body = $this->_io->readBytes($this->lenCompressed());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \AllegroDat\DatFont($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \AllegroDat\DatFont($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->lenCompressed());

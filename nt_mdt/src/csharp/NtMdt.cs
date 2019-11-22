@@ -488,10 +488,10 @@ namespace Kaitai
                     _dateTime = new DateTime(m_io, this, m_root);
                     _varSize = m_io.ReadU2le();
                     switch (Type) {
-                    case NtMdt.Frame.FrameType.Mda: {
+                    case NtMdt.Frame.FrameType.Scanned: {
                         __raw_frameData = m_io.ReadBytesFull();
                         var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdMetaData(io___raw_frameData, this, m_root);
+                        _frameData = new FdScanned(io___raw_frameData, this, m_root);
                         break;
                     }
                     case NtMdt.Frame.FrameType.CurvesNew: {
@@ -500,10 +500,10 @@ namespace Kaitai
                         _frameData = new FdCurvesNew(io___raw_frameData, this, m_root);
                         break;
                     }
-                    case NtMdt.Frame.FrameType.Curves: {
+                    case NtMdt.Frame.FrameType.Mda: {
                         __raw_frameData = m_io.ReadBytesFull();
                         var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdSpectroscopy(io___raw_frameData, this, m_root);
+                        _frameData = new FdMetaData(io___raw_frameData, this, m_root);
                         break;
                     }
                     case NtMdt.Frame.FrameType.Spectroscopy: {
@@ -512,10 +512,10 @@ namespace Kaitai
                         _frameData = new FdSpectroscopy(io___raw_frameData, this, m_root);
                         break;
                     }
-                    case NtMdt.Frame.FrameType.Scanned: {
+                    case NtMdt.Frame.FrameType.Curves: {
                         __raw_frameData = m_io.ReadBytesFull();
                         var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdScanned(io___raw_frameData, this, m_root);
+                        _frameData = new FdSpectroscopy(io___raw_frameData, this, m_root);
                         break;
                     }
                     default: {
@@ -718,20 +718,32 @@ namespace Kaitai
                             for (var i = 0; i < M_Parent.M_Parent.NMesurands; i++)
                             {
                                 switch (M_Parent.M_Parent.Mesurands[i].DataType) {
-                                case NtMdt.DataType.Uint64: {
-                                    _items.Add(m_io.ReadU8le());
-                                    break;
-                                }
                                 case NtMdt.DataType.Uint8: {
                                     _items.Add(m_io.ReadU1());
                                     break;
                                 }
-                                case NtMdt.DataType.Float32: {
-                                    _items.Add(m_io.ReadF4le());
-                                    break;
-                                }
                                 case NtMdt.DataType.Int8: {
                                     _items.Add(m_io.ReadS1());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int16: {
+                                    _items.Add(m_io.ReadS2le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Uint64: {
+                                    _items.Add(m_io.ReadU8le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Float64: {
+                                    _items.Add(m_io.ReadF8le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int32: {
+                                    _items.Add(m_io.ReadS4le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Float32: {
+                                    _items.Add(m_io.ReadF4le());
                                     break;
                                 }
                                 case NtMdt.DataType.Uint16: {
@@ -744,18 +756,6 @@ namespace Kaitai
                                 }
                                 case NtMdt.DataType.Uint32: {
                                     _items.Add(m_io.ReadU4le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Float64: {
-                                    _items.Add(m_io.ReadF8le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Int16: {
-                                    _items.Add(m_io.ReadS2le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Int32: {
-                                    _items.Add(m_io.ReadS4le());
                                     break;
                                 }
                                 }

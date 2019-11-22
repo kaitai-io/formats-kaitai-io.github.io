@@ -138,8 +138,8 @@ class Sqlite3 < Kaitai::Struct::Struct
     def _read
       @len_payload = VlqBase128Be.new(@_io)
       @_raw_payload = @_io.read_bytes(len_payload.value)
-      _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(_io__raw_payload, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_payload)
+      @payload = CellPayload.new(io, self, @_root)
       self
     end
     attr_reader :len_payload
@@ -176,8 +176,8 @@ class Sqlite3 < Kaitai::Struct::Struct
       @len_payload = VlqBase128Be.new(@_io)
       @row_id = VlqBase128Be.new(@_io)
       @_raw_payload = @_io.read_bytes(len_payload.value)
-      _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(_io__raw_payload, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_payload)
+      @payload = CellPayload.new(io, self, @_root)
       self
     end
     attr_reader :len_payload
@@ -197,8 +197,8 @@ class Sqlite3 < Kaitai::Struct::Struct
     def _read
       @len_header_and_len = VlqBase128Be.new(@_io)
       @_raw_column_serials = @_io.read_bytes((len_header_and_len.value - 1))
-      _io__raw_column_serials = Kaitai::Struct::Stream.new(@_raw_column_serials)
-      @column_serials = Serials.new(_io__raw_column_serials, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_column_serials)
+      @column_serials = Serials.new(io, self, @_root)
       @column_contents = Array.new(column_serials.entries.length)
       (column_serials.entries.length).times { |i|
         @column_contents[i] = ColumnContent.new(@_io, self, @_root, column_serials.entries[i])
@@ -240,8 +240,8 @@ class Sqlite3 < Kaitai::Struct::Struct
       @left_child_page = @_io.read_u4be
       @len_payload = VlqBase128Be.new(@_io)
       @_raw_payload = @_io.read_bytes(len_payload.value)
-      _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(_io__raw_payload, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_payload)
+      @payload = CellPayload.new(io, self, @_root)
       self
     end
     attr_reader :left_child_page

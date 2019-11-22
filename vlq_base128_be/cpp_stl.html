@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Variable length quantity, unsigned integer, base128, big-endian: C++/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Commonly Used Data Types</li>
+        <li class="active">Variable length quantity, unsigned integer, base128, big-endian</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Variable length quantity, unsigned integer, base128, big-endian:
+            
+            C++/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A variable-length unsigned integer using base128 encoding. 1-byte groups
+consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
+&quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.</p>
+<p>This particular encoding is specified and used in:</p>
+<ul>
+<li>Standard MIDI file format</li>
+<li>ASN.1 BER encoding</li>
+</ul>
+<p>More information on this encoding is available at
+https://en.wikipedia.org/wiki/Variable-length_quantity</p>
+<p>This particular implementation supports serialized values to up 8 bytes long.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Variable length quantity, unsigned integer, base128, big-endian
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>). One can open local file for that, or use existing <code>std::string</code> or <code>char*</code> buffer.
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#example-local-file" role="tab" data-toggle="tab">From local file</a></li>
+            <li role="presentation"><a href="#example-std-string" role="tab" data-toggle="tab">From std::string</a></li>
+            <li role="presentation"><a href="#example-char-ptr" role="tab" data-toggle="tab">From char*</a></li>
+        </ul>
+        <div class="tab-content" style="margin-top: 6px">
+            <div role="tabpanel" class="tab-pane active" id="example-local-file">
+<pre><code class="cpp">#include &lt;fstream&gt;
+
+std::ifstream is("path/to/local/file.vlq_base128_be", std::ifstream::binary);</code></pre>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-std-string">
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+std::istringstream is(str);</code></pre>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-char-ptr">
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+const char buf[] = { ... };
+std::string str(buf, sizeof buf);
+std::istringstream is(str);</code></pre>
+            </div>
+        </div>
+
+    </li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<pre><code class="cpp">#include &lt;kaitai/kaitaistream.h&gt;
+
+kaitai::kstream ks(&amp;is);</code></pre></li>
+
+    <li>And finally, we can invoke the parsing:
+
+<pre><code class="cpp">vlq_base128_be_t data(&amp;ks);</code></pre></li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="cpp">data.value() // => Resulting value as normal integer</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++/STL source code to parse Variable length quantity, unsigned integer, base128, big-endian
+            
+        </h2>
+
+        
+
+        <h3>vlq_base128_be.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/vlq_base128_be.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">#ifndef VLQ_BASE128_BE_H_
+#define VLQ_BASE128_BE_H_
+
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;kaitai/kaitaistruct.h&quot;
+
+#include &lt;stdint.h&gt;
+#include &lt;vector&gt;
+
+#if KAITAI_STRUCT_VERSION &lt; 7000L
+#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
+#endif
+
+/**
+ * A variable-length unsigned integer using base128 encoding. 1-byte groups
+ * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
+ * &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.
+ * 
+ * This particular encoding is specified and used in:
+ * 
+ * * Standard MIDI file format
+ * * ASN.1 BER encoding
+ * 
+ * More information on this encoding is available at
+ * https://en.wikipedia.org/wiki/Variable-length_quantity
+ * 
+ * This particular implementation supports serialized values to up 8 bytes long.
+ */
+
+class vlq_base128_be_t : public kaitai::kstruct {
+
+public:
+    class group_t;
+
+    vlq_base128_be_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, vlq_base128_be_t* p__root = 0);
+
+private:
+    void _read();
+
+public:
+    ~vlq_base128_be_t();
+
+    /**
+     * One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.
+     */
+
+    class group_t : public kaitai::kstruct {
+
+    public:
+
+        group_t(kaitai::kstream* p__io, vlq_base128_be_t* p__parent = 0, vlq_base128_be_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~group_t();
+
+    private:
+        bool f_has_next;
+        bool m_has_next;
+
+    public:
+
+        /**
+         * If true, then we have more bytes to read
+         */
+        bool has_next();
+
+    private:
+        bool f_value;
+        int32_t m_value;
+
+    public:
+
+        /**
+         * The 7-bit (base128) numeric value chunk of this group
+         */
+        int32_t value();
+
+    private:
+        uint8_t m_b;
+        vlq_base128_be_t* m__root;
+        vlq_base128_be_t* m__parent;
+
+    public:
+        uint8_t b() const { return m_b; }
+        vlq_base128_be_t* _root() const { return m__root; }
+        vlq_base128_be_t* _parent() const { return m__parent; }
+    };
+
+private:
+    bool f_last;
+    int32_t m_last;
+
+public:
+    int32_t last();
+
+private:
+    bool f_value;
+    int32_t m_value;
+
+public:
+
+    /**
+     * Resulting value as normal integer
+     */
+    int32_t value();
+
+private:
+    std::vector&lt;group_t*&gt;* m_groups;
+    vlq_base128_be_t* m__root;
+    kaitai::kstruct* m__parent;
+
+public:
+    std::vector&lt;group_t*&gt;* groups() const { return m_groups; }
+    vlq_base128_be_t* _root() const { return m__root; }
+    kaitai::kstruct* _parent() const { return m__parent; }
+};
+
+#endif  // VLQ_BASE128_BE_H_
+</code></pre>
+            
+        </div>
+        
+
+        <h3>vlq_base128_be.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/vlq_base128_be.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;vlq_base128_be.h&quot;
+
+
+
+vlq_base128_be_t::vlq_base128_be_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, vlq_base128_be_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = this;
+    f_last = false;
+    f_value = false;
+    _read();
+}
+
+void vlq_base128_be_t::_read() {
+    m_groups = new std::vector&lt;group_t*&gt;();
+    {
+        int i = 0;
+        group_t* _;
+        do {
+            _ = new group_t(m__io, this, m__root);
+            m_groups-&gt;push_back(_);
+            i++;
+        } while (!(!(_-&gt;has_next())));
+    }
+}
+
+vlq_base128_be_t::~vlq_base128_be_t() {
+    for (std::vector&lt;group_t*&gt;::iterator it = m_groups-&gt;begin(); it != m_groups-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_groups;
+}
+
+vlq_base128_be_t::group_t::group_t(kaitai::kstream* p__io, vlq_base128_be_t* p__parent, vlq_base128_be_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_has_next = false;
+    f_value = false;
+    _read();
+}
+
+void vlq_base128_be_t::group_t::_read() {
+    m_b = m__io-&gt;read_u1();
+}
+
+vlq_base128_be_t::group_t::~group_t() {
+}
+
+bool vlq_base128_be_t::group_t::has_next() {
+    if (f_has_next)
+        return m_has_next;
+    m_has_next = (b() &amp; 128) != 0;
+    f_has_next = true;
+    return m_has_next;
+}
+
+int32_t vlq_base128_be_t::group_t::value() {
+    if (f_value)
+        return m_value;
+    m_value = (b() &amp; 127);
+    f_value = true;
+    return m_value;
+}
+
+int32_t vlq_base128_be_t::last() {
+    if (f_last)
+        return m_last;
+    m_last = (groups()-&gt;size() - 1);
+    f_last = true;
+    return m_last;
+}
+
+int32_t vlq_base128_be_t::value() {
+    if (f_value)
+        return m_value;
+    m_value = (((((((groups()-&gt;at(last())-&gt;value() + ((last() &gt;= 1) ? ((groups()-&gt;at((last() - 1))-&gt;value() &lt;&lt; 7)) : (0))) + ((last() &gt;= 2) ? ((groups()-&gt;at((last() - 2))-&gt;value() &lt;&lt; 14)) : (0))) + ((last() &gt;= 3) ? ((groups()-&gt;at((last() - 3))-&gt;value() &lt;&lt; 21)) : (0))) + ((last() &gt;= 4) ? ((groups()-&gt;at((last() - 4))-&gt;value() &lt;&lt; 28)) : (0))) + ((last() &gt;= 5) ? ((groups()-&gt;at((last() - 5))-&gt;value() &lt;&lt; 35)) : (0))) + ((last() &gt;= 6) ? ((groups()-&gt;at((last() - 6))-&gt;value() &lt;&lt; 42)) : (0))) + ((last() &gt;= 7) ? ((groups()-&gt;at((last() - 7))-&gt;value() &lt;&lt; 49)) : (0)));
+    f_value = true;
+    return m_value;
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

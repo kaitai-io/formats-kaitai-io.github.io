@@ -163,6 +163,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="cramfs parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="cramfs parsing C# library">C#</a></li>
                 
                 
@@ -462,8 +467,8 @@ class Cramfs(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.offset)
             self._raw__m_as_dir = io.read_bytes(self.size)
-            _io__raw__m_as_dir = KaitaiStream(BytesIO(self._raw__m_as_dir))
-            self._m_as_dir = self._root.DirInode(_io__raw__m_as_dir, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw__m_as_dir))
+            self._m_as_dir = self._root.DirInode(io, self, self._root)
             io.seek(_pos)
             return self._m_as_dir if hasattr(self, &#39;_m_as_dir&#39;) else None
 
@@ -472,7 +477,7 @@ class Cramfs(KaitaiStruct):
             if hasattr(self, &#39;_m_type&#39;):
                 return self._m_type if hasattr(self, &#39;_m_type&#39;) else None
 
-            self._m_type = KaitaiStream.resolve_enum(self._root.Inode.FileType, ((self.mode &gt;&gt; 12) &amp; 15))
+            self._m_type = self._root.Inode.FileType(((self.mode &gt;&gt; 12) &amp; 15))
             return self._m_type if hasattr(self, &#39;_m_type&#39;) else None
 
         @property

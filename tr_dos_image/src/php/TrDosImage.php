@@ -244,8 +244,8 @@ class File extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_name = $this->_io->readBytes(8);
-        $_io__raw_name = new \Kaitai\Struct\Stream($this->_m__raw_name);
-        $this->_m_name = new \TrDosImage\Filename($_io__raw_name, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_name);
+        $this->_m_name = new \TrDosImage\Filename($io, $this, $this->_root);
         $this->_m_extension = $this->_io->readU1();
         switch ($this->extension()) {
             case 66:

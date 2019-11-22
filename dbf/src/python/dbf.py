@@ -17,8 +17,8 @@ class Dbf(KaitaiStruct):
     def _read(self):
         self.header1 = self._root.Header1(self._io, self, self._root)
         self._raw_header2 = self._io.read_bytes((self.header1.len_header - 12))
-        _io__raw_header2 = KaitaiStream(BytesIO(self._raw_header2))
-        self.header2 = self._root.Header2(_io__raw_header2, self, self._root)
+        io = KaitaiStream(BytesIO(self._raw_header2))
+        self.header2 = self._root.Header2(io, self, self._root)
         self.records = [None] * (self.header1.num_records)
         for i in range(self.header1.num_records):
             self.records[i] = self._io.read_bytes(self.header1.len_record)

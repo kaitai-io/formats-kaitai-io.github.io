@@ -726,138 +726,138 @@ class PythonPickle &lt; Kaitai::Struct::Struct
     end
 
     def _read
-      @code = Kaitai::Struct::Stream::resolve_enum(PythonPickle::OPCODE, @_io.read_u1)
+      @code = Kaitai::Struct::Stream::resolve_enum(OPCODE, @_io.read_u1)
       case code
-      when :opcode_ext4
-        @arg = @_io.read_u4le
-      when :opcode_tuple1
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_setitem
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_stop
+      when :opcode_list
         @arg = NoArg.new(@_io, self, @_root)
       when :opcode_ext2
         @arg = @_io.read_u2le
-      when :opcode_empty_tuple
+      when :opcode_stop
         @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_newtrue
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_long
-        @arg = DecimalnlLong.new(@_io, self, @_root)
-      when :opcode_newobj
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_put
-        @arg = DecimalnlShort.new(@_io, self, @_root)
-      when :opcode_stack_global
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_pop_mark
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_append
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_newfalse
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binpersid
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_build
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_empty_dict
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_tuple2
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_long4
-        @arg = Long4.new(@_io, self, @_root)
-      when :opcode_appends
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binbytes
-        @arg = Bytes4.new(@_io, self, @_root)
-      when :opcode_dup
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_list
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_proto
-        @arg = @_io.read_u1
-      when :opcode_pop
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_frame
-        @arg = @_io.read_u8le
-      when :opcode_string
-        @arg = Stringnl.new(@_io, self, @_root)
       when :opcode_binunicode
         @arg = Unicodestring4.new(@_io, self, @_root)
-      when :opcode_float
-        @arg = Floatnl.new(@_io, self, @_root)
-      when :opcode_reduce
+      when :opcode_put
+        @arg = DecimalnlShort.new(@_io, self, @_root)
+      when :opcode_newfalse
         @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binput
-        @arg = @_io.read_u1
-      when :opcode_memoize
+      when :opcode_long1
+        @arg = Long1.new(@_io, self, @_root)
+      when :opcode_unicode
+        @arg = Unicodestringnl.new(@_io, self, @_root)
+      when :opcode_empty_list
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_mark
         @arg = NoArg.new(@_io, self, @_root)
       when :opcode_persid
         @arg = StringnlNoescape.new(@_io, self, @_root)
-      when :opcode_ext1
-        @arg = @_io.read_u1
-      when :opcode_none
+      when :opcode_stack_global
         @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_short_binunicode
-        @arg = Unicodestring1.new(@_io, self, @_root)
-      when :opcode_obj
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binfloat
-        @arg = @_io.read_f8be
-      when :opcode_newobj_ex
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_empty_list
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_tuple
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binunicode8
-        @arg = Unicodestring8.new(@_io, self, @_root)
-      when :opcode_binget
-        @arg = @_io.read_u1
-      when :opcode_global
-        @arg = StringnlNoescapePair.new(@_io, self, @_root)
-      when :opcode_dict
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binstring
-        @arg = String4.new(@_io, self, @_root)
-      when :opcode_setitems
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binint2
-        @arg = @_io.read_u2le
-      when :opcode_binbytes8
-        @arg = Bytes8.new(@_io, self, @_root)
-      when :opcode_binint1
-        @arg = @_io.read_u1
-      when :opcode_inst
-        @arg = StringnlNoescapePair.new(@_io, self, @_root)
-      when :opcode_long_binget
-        @arg = @_io.read_u4le
-      when :opcode_long_binput
-        @arg = @_io.read_u4le
-      when :opcode_int
-        @arg = DecimalnlShort.new(@_io, self, @_root)
       when :opcode_binint
         @arg = @_io.read_s4le
-      when :opcode_unicode
-        @arg = Unicodestringnl.new(@_io, self, @_root)
-      when :opcode_long1
-        @arg = Long1.new(@_io, self, @_root)
+      when :opcode_binput
+        @arg = @_io.read_u1
+      when :opcode_binint1
+        @arg = @_io.read_u1
+      when :opcode_binint2
+        @arg = @_io.read_u2le
+      when :opcode_tuple
+        @arg = NoArg.new(@_io, self, @_root)
       when :opcode_short_binstring
         @arg = String1.new(@_io, self, @_root)
-      when :opcode_mark
+      when :opcode_empty_set
         @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_frozenset
+      when :opcode_string
+        @arg = Stringnl.new(@_io, self, @_root)
+      when :opcode_empty_dict
         @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_tuple3
+      when :opcode_binget
+        @arg = @_io.read_u1
+      when :opcode_append
         @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_additems
+      when :opcode_pop_mark
         @arg = NoArg.new(@_io, self, @_root)
       when :opcode_get
         @arg = DecimalnlShort.new(@_io, self, @_root)
-      when :opcode_empty_set
+      when :opcode_newobj
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_reduce
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_binbytes
+        @arg = Bytes4.new(@_io, self, @_root)
+      when :opcode_binbytes8
+        @arg = Bytes8.new(@_io, self, @_root)
+      when :opcode_setitem
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_frame
+        @arg = @_io.read_u8le
+      when :opcode_float
+        @arg = Floatnl.new(@_io, self, @_root)
+      when :opcode_binunicode8
+        @arg = Unicodestring8.new(@_io, self, @_root)
+      when :opcode_int
+        @arg = DecimalnlShort.new(@_io, self, @_root)
+      when :opcode_long_binput
+        @arg = @_io.read_u4le
+      when :opcode_empty_tuple
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_long
+        @arg = DecimalnlLong.new(@_io, self, @_root)
+      when :opcode_frozenset
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_global
+        @arg = StringnlNoescapePair.new(@_io, self, @_root)
+      when :opcode_obj
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_additems
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_tuple1
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_setitems
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_none
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_build
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_ext4
+        @arg = @_io.read_u4le
+      when :opcode_newobj_ex
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_binfloat
+        @arg = @_io.read_f8be
+      when :opcode_dup
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_long4
+        @arg = Long4.new(@_io, self, @_root)
+      when :opcode_short_binunicode
+        @arg = Unicodestring1.new(@_io, self, @_root)
+      when :opcode_tuple3
         @arg = NoArg.new(@_io, self, @_root)
       when :opcode_short_binbytes
         @arg = Bytes1.new(@_io, self, @_root)
+      when :opcode_ext1
+        @arg = @_io.read_u1
+      when :opcode_dict
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_appends
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_inst
+        @arg = StringnlNoescapePair.new(@_io, self, @_root)
+      when :opcode_binpersid
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_memoize
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_proto
+        @arg = @_io.read_u1
+      when :opcode_newtrue
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_binstring
+        @arg = String4.new(@_io, self, @_root)
+      when :opcode_tuple2
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_pop
+        @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_long_binget
+        @arg = @_io.read_u4le
       end
       self
     end

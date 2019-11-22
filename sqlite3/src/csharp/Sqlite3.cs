@@ -464,7 +464,7 @@ namespace Kaitai
                 {
                     if (f_serialType)
                         return _serialType;
-                    _serialType = (Sqlite3.Serial) (((Sqlite3.Serial) (Ser)));
+                    _serialType = (Sqlite3.Serial) (((Serial) (Ser)));
                     f_serialType = true;
                     return _serialType;
                 }

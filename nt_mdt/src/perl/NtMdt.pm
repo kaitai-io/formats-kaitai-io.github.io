@@ -685,30 +685,30 @@ sub _read {
     $self->{date_time} = NtMdt::Frame::DateTime->new($self->{_io}, $self, $self->{_root});
     $self->{var_size} = $self->{_io}->read_u2le();
     my $_on = $self->type();
-    if ($_on == $NtMdt::Frame::FRAME_TYPE_MDA) {
+    if ($_on == $FRAME_TYPE_SCANNED) {
         $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
         my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
-        $self->{frame_data} = NtMdt::Frame::FdMetaData->new($io__raw_frame_data, $self, $self->{_root});
+        $self->{frame_data} = NtMdt::Frame::FdScanned->new($io__raw_frame_data, $self, $self->{_root});
     }
-    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_CURVES_NEW) {
+    elsif ($_on == $FRAME_TYPE_CURVES_NEW) {
         $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
         my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
         $self->{frame_data} = NtMdt::Frame::FdCurvesNew->new($io__raw_frame_data, $self, $self->{_root});
     }
-    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_CURVES) {
+    elsif ($_on == $FRAME_TYPE_MDA) {
+        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
+        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
+        $self->{frame_data} = NtMdt::Frame::FdMetaData->new($io__raw_frame_data, $self, $self->{_root});
+    }
+    elsif ($_on == $FRAME_TYPE_SPECTROSCOPY) {
         $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
         my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
         $self->{frame_data} = NtMdt::Frame::FdSpectroscopy->new($io__raw_frame_data, $self, $self->{_root});
     }
-    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_SPECTROSCOPY) {
+    elsif ($_on == $FRAME_TYPE_CURVES) {
         $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
         my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
         $self->{frame_data} = NtMdt::Frame::FdSpectroscopy->new($io__raw_frame_data, $self, $self->{_root});
-    }
-    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_SCANNED) {
-        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
-        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
-        $self->{frame_data} = NtMdt::Frame::FdScanned->new($io__raw_frame_data, $self, $self->{_root});
     }
     else {
         $self->{frame_data} = $self->{_io}->read_bytes_full();
@@ -1119,35 +1119,35 @@ sub _read {
     my $n_items = $self->_parent()->_parent()->n_mesurands();
     for (my $i = 0; $i < $n_items; $i++) {
         my $_on = @{$self->_parent()->_parent()->mesurands()}[$i]->data_type();
-        if ($_on == $NtMdt::DATA_TYPE_UINT64) {
-            $self->{items}[$i] = $self->{_io}->read_u8le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_UINT8) {
+        if ($_on == $DATA_TYPE_UINT8) {
             $self->{items}[$i] = $self->{_io}->read_u1();
         }
-        elsif ($_on == $NtMdt::DATA_TYPE_FLOAT32) {
-            $self->{items}[$i] = $self->{_io}->read_f4le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_INT8) {
+        elsif ($_on == $DATA_TYPE_INT8) {
             $self->{items}[$i] = $self->{_io}->read_s1();
         }
-        elsif ($_on == $NtMdt::DATA_TYPE_UINT16) {
-            $self->{items}[$i] = $self->{_io}->read_u2le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_INT64) {
-            $self->{items}[$i] = $self->{_io}->read_s8le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_UINT32) {
-            $self->{items}[$i] = $self->{_io}->read_u4le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_FLOAT64) {
-            $self->{items}[$i] = $self->{_io}->read_f8le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_INT16) {
+        elsif ($_on == $DATA_TYPE_INT16) {
             $self->{items}[$i] = $self->{_io}->read_s2le();
         }
-        elsif ($_on == $NtMdt::DATA_TYPE_INT32) {
+        elsif ($_on == $DATA_TYPE_UINT64) {
+            $self->{items}[$i] = $self->{_io}->read_u8le();
+        }
+        elsif ($_on == $DATA_TYPE_FLOAT64) {
+            $self->{items}[$i] = $self->{_io}->read_f8le();
+        }
+        elsif ($_on == $DATA_TYPE_INT32) {
             $self->{items}[$i] = $self->{_io}->read_s4le();
+        }
+        elsif ($_on == $DATA_TYPE_FLOAT32) {
+            $self->{items}[$i] = $self->{_io}->read_f4le();
+        }
+        elsif ($_on == $DATA_TYPE_UINT16) {
+            $self->{items}[$i] = $self->{_io}->read_u2le();
+        }
+        elsif ($_on == $DATA_TYPE_INT64) {
+            $self->{items}[$i] = $self->{_io}->read_s8le();
+        }
+        elsif ($_on == $DATA_TYPE_UINT32) {
+            $self->{items}[$i] = $self->{_io}->read_u4le();
         }
     }
 }

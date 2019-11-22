@@ -72,18 +72,18 @@ class ExtraField extends \Kaitai\Struct\Struct {
         switch ($this->code()) {
             case \Zip\ExtraCodes::NTFS:
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Zip\ExtraField\Ntfs($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Zip\ExtraField\Ntfs($io, $this, $this->_root);
                 break;
             case \Zip\ExtraCodes::EXTENDED_TIMESTAMP:
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Zip\ExtraField\ExtendedTimestamp($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Zip\ExtraField\ExtendedTimestamp($io, $this, $this->_root);
                 break;
             case \Zip\ExtraCodes::INFOZIP_UNIX_VAR_SIZE:
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Zip\ExtraField\InfozipUnixVarSize($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Zip\ExtraField\InfozipUnixVarSize($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->size());
@@ -137,8 +137,8 @@ class Attribute extends \Kaitai\Struct\Struct {
         switch ($this->tag()) {
             case 1:
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Zip\ExtraField\Ntfs\Attribute1($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Zip\ExtraField\Ntfs\Attribute1($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->size());
@@ -278,8 +278,8 @@ class CentralDirEntry extends \Kaitai\Struct\Struct {
         $this->_m_localHeaderOffset = $this->_io->readS4le();
         $this->_m_fileName = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->fileNameLen()), "UTF-8");
         $this->_m__raw_extra = $this->_io->readBytes($this->extraLen());
-        $_io__raw_extra = new \Kaitai\Struct\Stream($this->_m__raw_extra);
-        $this->_m_extra = new \Zip\Extras($_io__raw_extra, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_extra);
+        $this->_m_extra = new \Zip\Extras($io, $this, $this->_root);
         $this->_m_comment = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->commentLen()), "UTF-8");
     }
     protected $_m_localHeader;
@@ -409,8 +409,8 @@ class LocalFileHeader extends \Kaitai\Struct\Struct {
         $this->_m_extraLen = $this->_io->readU2le();
         $this->_m_fileName = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->fileNameLen()), "UTF-8");
         $this->_m__raw_extra = $this->_io->readBytes($this->extraLen());
-        $_io__raw_extra = new \Kaitai\Struct\Stream($this->_m__raw_extra);
-        $this->_m_extra = new \Zip\Extras($_io__raw_extra, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_extra);
+        $this->_m_extra = new \Zip\Extras($io, $this, $this->_root);
     }
     protected $_m_version;
     protected $_m_flags;

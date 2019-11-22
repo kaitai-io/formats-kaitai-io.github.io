@@ -28,7 +28,7 @@ public class FtlDat extends KaitaiStruct {
     }
     private void _read() {
         this.numFiles = this._io.readU4le();
-        files = new ArrayList<File>(((Number) (numFiles())).intValue());
+        files = new ArrayList<File>((int) (numFiles()));
         for (int i = 0; i < numFiles(); i++) {
             this.files.add(new File(this._io, this, _root));
         }

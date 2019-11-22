@@ -8,7 +8,7 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-import vlq_base128_be
+from vlq_base128_be import VlqBase128Be
 class StandardMidiFile(KaitaiStruct):
     """Standard MIDI file, typically knows just as "MID", is a standard way
     to serialize series of MIDI events, which is a protocol used in many
@@ -62,7 +62,7 @@ class StandardMidiFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.v_time = vlq_base128_be.VlqBase128Be(self._io)
+            self.v_time = VlqBase128Be(self._io)
             self.event_header = self._io.read_u1()
             if self.event_header == 255:
                 self.meta_event_body = self._root.MetaEventBody(self._io, self, self._root)
@@ -179,8 +179,8 @@ class StandardMidiFile(KaitaiStruct):
             self.magic = self._io.ensure_fixed_contents(b"\x4D\x54\x72\x6B")
             self.len_events = self._io.read_u4be()
             self._raw_events = self._io.read_bytes(self.len_events)
-            _io__raw_events = KaitaiStream(BytesIO(self._raw_events))
-            self.events = self._root.TrackEvents(_io__raw_events, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_events))
+            self.events = self._root.TrackEvents(io, self, self._root)
 
 
     class MetaEventBody(KaitaiStruct):
@@ -208,8 +208,8 @@ class StandardMidiFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.meta_type = KaitaiStream.resolve_enum(self._root.MetaEventBody.MetaTypeEnum, self._io.read_u1())
-            self.len = vlq_base128_be.VlqBase128Be(self._io)
+            self.meta_type = self._root.MetaEventBody.MetaTypeEnum(self._io.read_u1())
+            self.len = VlqBase128Be(self._io)
             self.body = self._io.read_bytes(self.len.value)
 
 
@@ -248,7 +248,7 @@ class StandardMidiFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.len = vlq_base128_be.VlqBase128Be(self._io)
+            self.len = VlqBase128Be(self._io)
             self.data = self._io.read_bytes(self.len.value)
 
 

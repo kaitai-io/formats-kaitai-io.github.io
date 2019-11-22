@@ -112,8 +112,8 @@ class PythonPyc27 < Kaitai::Struct::Struct
       @string_magic = @_io.ensure_fixed_contents([115].pack('C*'))
       @length = @_io.read_u4le
       @_raw_items = @_io.read_bytes(length)
-      _io__raw_items = Kaitai::Struct::Stream.new(@_raw_items)
-      @items = OpArgs.new(_io__raw_items, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_items)
+      @items = OpArgs.new(io, self, @_root)
       self
     end
     attr_reader :string_magic
@@ -283,24 +283,24 @@ class PythonPyc27 < Kaitai::Struct::Struct
     def _read
       @type = Kaitai::Struct::Stream::resolve_enum(OBJECT_TYPE, @_io.read_u1)
       case type
-      when :object_type_string
-        @value = PyString.new(@_io, self, @_root)
-      when :object_type_tuple
-        @value = Tuple.new(@_io, self, @_root)
-      when :object_type_int
-        @value = @_io.read_u4le
-      when :object_type_py_true
-        @value = PyTrue.new(@_io, self, @_root)
-      when :object_type_py_false
-        @value = PyFalse.new(@_io, self, @_root)
       when :object_type_none
         @value = PyNone.new(@_io, self, @_root)
-      when :object_type_string_ref
-        @value = StringRef.new(@_io, self, @_root)
       when :object_type_code_object
         @value = CodeObject.new(@_io, self, @_root)
+      when :object_type_int
+        @value = @_io.read_u4le
+      when :object_type_string_ref
+        @value = StringRef.new(@_io, self, @_root)
+      when :object_type_string
+        @value = PyString.new(@_io, self, @_root)
+      when :object_type_py_false
+        @value = PyFalse.new(@_io, self, @_root)
       when :object_type_interned
         @value = InternedString.new(@_io, self, @_root)
+      when :object_type_tuple
+        @value = Tuple.new(@_io, self, @_root)
+      when :object_type_py_true
+        @value = PyTrue.new(@_io, self, @_root)
       end
       self
     end

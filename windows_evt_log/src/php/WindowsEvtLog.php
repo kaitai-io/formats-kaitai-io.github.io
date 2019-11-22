@@ -181,13 +181,13 @@ class Record extends \Kaitai\Struct\Struct {
         switch ($this->type()) {
             case 1699505740:
                 $this->_m__raw_body = $this->_io->readBytes(($this->lenRecord() - 12));
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \WindowsEvtLog\RecordBody($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \WindowsEvtLog\RecordBody($io, $this, $this->_root);
                 break;
             case 286331153:
                 $this->_m__raw_body = $this->_io->readBytes(($this->lenRecord() - 12));
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \WindowsEvtLog\CursorRecordBody($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \WindowsEvtLog\CursorRecordBody($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes(($this->lenRecord() - 12));

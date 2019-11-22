@@ -68,7 +68,7 @@ public class MicrosoftCfb extends KaitaiStruct {
             this.sizeMiniFat = this._io.readS4le();
             this.ofsDifat = this._io.readS4le();
             this.sizeDifat = this._io.readS4le();
-            difat = new ArrayList<Integer>(((Number) (109)).intValue());
+            difat = new ArrayList<Integer>((int) (109));
             for (int i = 0; i < 109; i++) {
                 this.difat.add(this._io.readS4le());
             }

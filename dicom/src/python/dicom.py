@@ -4151,7 +4151,7 @@ class Dicom(KaitaiStruct):
             if hasattr(self, '_m_tag'):
                 return self._m_tag if hasattr(self, '_m_tag') else None
 
-            self._m_tag = KaitaiStream.resolve_enum(self._root.Tags, ((self.tag_group << 16) | self.tag_elem))
+            self._m_tag = self._root.Tags(((self.tag_group << 16) | self.tag_elem))
             return self._m_tag if hasattr(self, '_m_tag') else None
 
 
@@ -4207,7 +4207,7 @@ class Dicom(KaitaiStruct):
             if hasattr(self, '_m_tag'):
                 return self._m_tag if hasattr(self, '_m_tag') else None
 
-            self._m_tag = KaitaiStream.resolve_enum(self._root.Tags, ((self.tag_group << 16) | self.tag_elem))
+            self._m_tag = self._root.Tags(((self.tag_group << 16) | self.tag_elem))
             return self._m_tag if hasattr(self, '_m_tag') else None
 
         @property

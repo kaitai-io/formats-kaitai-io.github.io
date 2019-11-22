@@ -176,12 +176,12 @@ class TlsClientHello(KaitaiStruct):
             _on = self.type
             if _on == 0:
                 self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Sni(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.Sni(io, self, self._root)
             elif _on == 16:
                 self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Alpn(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.Alpn(io, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.len)
 

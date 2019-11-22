@@ -153,7 +153,7 @@ class Pcap < Kaitai::Struct::Struct
       @thiszone = @_io.read_s4le
       @sigfigs = @_io.read_u4le
       @snaplen = @_io.read_u4le
-      @network = Kaitai::Struct::Stream::resolve_enum(Pcap::LINKTYPE, @_io.read_u4le)
+      @network = Kaitai::Struct::Stream::resolve_enum(LINKTYPE, @_io.read_u4le)
       self
     end
     attr_reader :magic_number
@@ -198,12 +198,12 @@ class Pcap < Kaitai::Struct::Struct
       case _root.hdr.network
       when :linktype_ppi
         @_raw_body = @_io.read_bytes(incl_len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PacketPpi.new(_io__raw_body)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = PacketPpi.new(io)
       when :linktype_ethernet
         @_raw_body = @_io.read_bytes(incl_len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = EthernetFrame.new(_io__raw_body)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = EthernetFrame.new(io)
       else
         @body = @_io.read_bytes(incl_len)
       end

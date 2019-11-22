@@ -153,6 +153,11 @@ on that parameter.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="protocol_body parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="protocol_body parsing C# library">C#</a></li>
                 
                 
@@ -229,8 +234,8 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
 use TcpSegment;
-use Ipv4Packet;
 use IcmpPacket;
+use Ipv4Packet;
 use UdpDatagram;
 use Ipv6Packet;
 
@@ -410,26 +415,26 @@ sub _read {
     my ($self) = @_;
 
     my $_on = $self-&gt;protocol();
-    if ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV6_NONXT) {
+    if ($_on == $PROTOCOL_ENUM_TCP) {
+        $self-&gt;{body} = TcpSegment-&gt;new($self-&gt;{_io});
+    }
+    elsif ($_on == $PROTOCOL_ENUM_IPV6_NONXT) {
         $self-&gt;{body} = ProtocolBody::NoNextHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV4) {
-        $self-&gt;{body} = Ipv4Packet-&gt;new($self-&gt;{_io});
-    }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_UDP) {
-        $self-&gt;{body} = UdpDatagram-&gt;new($self-&gt;{_io});
-    }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_ICMP) {
+    elsif ($_on == $PROTOCOL_ENUM_ICMP) {
         $self-&gt;{body} = IcmpPacket-&gt;new($self-&gt;{_io});
     }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_HOPOPT) {
+    elsif ($_on == $PROTOCOL_ENUM_UDP) {
+        $self-&gt;{body} = UdpDatagram-&gt;new($self-&gt;{_io});
+    }
+    elsif ($_on == $PROTOCOL_ENUM_HOPOPT) {
         $self-&gt;{body} = ProtocolBody::OptionHopByHop-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV6) {
+    elsif ($_on == $PROTOCOL_ENUM_IPV6) {
         $self-&gt;{body} = Ipv6Packet-&gt;new($self-&gt;{_io});
     }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_TCP) {
-        $self-&gt;{body} = TcpSegment-&gt;new($self-&gt;{_io});
+    elsif ($_on == $PROTOCOL_ENUM_IPV4) {
+        $self-&gt;{body} = Ipv4Packet-&gt;new($self-&gt;{_io});
     }
 }
 

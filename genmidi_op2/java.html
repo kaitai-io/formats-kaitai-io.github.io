@@ -155,6 +155,11 @@ Blaster sound cards).</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="GENMIDI.OP2 OPL2 sound bank parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="GENMIDI.OP2 OPL2 sound bank parsing C# library">C#</a></li>
                 
                 
@@ -290,11 +295,11 @@ public class GenmidiOp2 extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.ensureFixedContents(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 });
-        instruments = new ArrayList&lt;InstrumentEntry&gt;(((Number) (175)).intValue());
+        instruments = new ArrayList&lt;InstrumentEntry&gt;((int) (175));
         for (int i = 0; i &lt; 175; i++) {
             this.instruments.add(new InstrumentEntry(this._io, this, _root));
         }
-        instrumentNames = new ArrayList&lt;String&gt;(((Number) (175)).intValue());
+        instrumentNames = new ArrayList&lt;String&gt;((int) (175));
         for (int i = 0; i &lt; 175; i++) {
             this.instrumentNames.add(new String(KaitaiStream.bytesTerminate(KaitaiStream.bytesStripRight(this._io.readBytes(32), (byte) 0), (byte) 0, false), Charset.forName(&quot;ASCII&quot;)));
         }
@@ -322,7 +327,7 @@ public class GenmidiOp2 extends KaitaiStruct {
             this.flags = this._io.readU2le();
             this.finetune = this._io.readU1();
             this.note = this._io.readU1();
-            instruments = new ArrayList&lt;Instrument&gt;(((Number) (2)).intValue());
+            instruments = new ArrayList&lt;Instrument&gt;((int) (2));
             for (int i = 0; i &lt; 2; i++) {
                 this.instruments.add(new Instrument(this._io, this, _root));
             }

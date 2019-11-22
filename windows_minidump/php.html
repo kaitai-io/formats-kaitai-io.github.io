@@ -146,6 +146,11 @@ used for that purpose in Windows and Google Chrome projects.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Windows MiniDump parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Windows MiniDump parsing C# library">C#</a></li>
                 
                 
@@ -543,30 +548,30 @@ class Dir extends \Kaitai\Struct\Struct {
         $_pos = $this-&gt;_io-&gt;pos();
         $this-&gt;_io-&gt;seek($this-&gt;ofsData());
         switch ($this-&gt;streamType()) {
-            case \WindowsMinidump\StreamTypes::MEMORY_LIST:
-                $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;lenData());
-                $_io__raw_data = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
-                $this-&gt;_m_data = new \WindowsMinidump\MemoryList($_io__raw_data, $this, $this-&gt;_root);
-                break;
             case \WindowsMinidump\StreamTypes::MISC_INFO:
                 $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;lenData());
-                $_io__raw_data = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
-                $this-&gt;_m_data = new \WindowsMinidump\MiscInfo($_io__raw_data, $this, $this-&gt;_root);
-                break;
-            case \WindowsMinidump\StreamTypes::THREAD_LIST:
-                $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;lenData());
-                $_io__raw_data = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
-                $this-&gt;_m_data = new \WindowsMinidump\ThreadList($_io__raw_data, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
+                $this-&gt;_m_data = new \WindowsMinidump\MiscInfo($io, $this, $this-&gt;_root);
                 break;
             case \WindowsMinidump\StreamTypes::EXCEPTION:
                 $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;lenData());
-                $_io__raw_data = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
-                $this-&gt;_m_data = new \WindowsMinidump\ExceptionStream($_io__raw_data, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
+                $this-&gt;_m_data = new \WindowsMinidump\ExceptionStream($io, $this, $this-&gt;_root);
+                break;
+            case \WindowsMinidump\StreamTypes::MEMORY_LIST:
+                $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;lenData());
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
+                $this-&gt;_m_data = new \WindowsMinidump\MemoryList($io, $this, $this-&gt;_root);
                 break;
             case \WindowsMinidump\StreamTypes::SYSTEM_INFO:
                 $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;lenData());
-                $_io__raw_data = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
-                $this-&gt;_m_data = new \WindowsMinidump\SystemInfo($_io__raw_data, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
+                $this-&gt;_m_data = new \WindowsMinidump\SystemInfo($io, $this, $this-&gt;_root);
+                break;
+            case \WindowsMinidump\StreamTypes::THREAD_LIST:
+                $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;lenData());
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
+                $this-&gt;_m_data = new \WindowsMinidump\ThreadList($io, $this, $this-&gt;_root);
                 break;
             default:
                 $this-&gt;_m_data = $this-&gt;_io-&gt;readBytes($this-&gt;lenData());

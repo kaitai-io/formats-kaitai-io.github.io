@@ -74,25 +74,13 @@ namespace Kaitai
             _typeTag = ((TypeTag) m_io.ReadU1());
             _len = new LenEncoded(m_io, this, m_root);
             switch (TypeTag) {
-            case TypeTag.PrintableString: {
+            case TypeTag.Sequence30: {
                 __raw_body = m_io.ReadBytes(Len.Result);
                 var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new BodyPrintableString(io___raw_body, this, m_root);
+                _body = new BodySequence(io___raw_body, this, m_root);
                 break;
             }
             case TypeTag.Sequence10: {
-                __raw_body = m_io.ReadBytes(Len.Result);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new BodySequence(io___raw_body, this, m_root);
-                break;
-            }
-            case TypeTag.Set: {
-                __raw_body = m_io.ReadBytes(Len.Result);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new BodySequence(io___raw_body, this, m_root);
-                break;
-            }
-            case TypeTag.Sequence30: {
                 __raw_body = m_io.ReadBytes(Len.Result);
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new BodySequence(io___raw_body, this, m_root);
@@ -104,10 +92,22 @@ namespace Kaitai
                 _body = new BodyUtf8string(io___raw_body, this, m_root);
                 break;
             }
+            case TypeTag.PrintableString: {
+                __raw_body = m_io.ReadBytes(Len.Result);
+                var io___raw_body = new KaitaiStream(__raw_body);
+                _body = new BodyPrintableString(io___raw_body, this, m_root);
+                break;
+            }
             case TypeTag.ObjectId: {
                 __raw_body = m_io.ReadBytes(Len.Result);
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new BodyObjectId(io___raw_body, this, m_root);
+                break;
+            }
+            case TypeTag.Set: {
+                __raw_body = m_io.ReadBytes(Len.Result);
+                var io___raw_body = new KaitaiStream(__raw_body);
+                _body = new BodySequence(io___raw_body, this, m_root);
                 break;
             }
             default: {

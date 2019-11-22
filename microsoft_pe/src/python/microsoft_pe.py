@@ -50,8 +50,8 @@ class MicrosoftPe(KaitaiStruct):
 
         def _read(self):
             self.length = self._io.read_u4le()
-            self.revision = KaitaiStream.resolve_enum(self._root.CertificateEntry.CertificateRevision, self._io.read_u2le())
-            self.certificate_type = KaitaiStream.resolve_enum(self._root.CertificateEntry.CertificateType, self._io.read_u2le())
+            self.revision = self._root.CertificateEntry.CertificateRevision(self._io.read_u2le())
+            self.certificate_type = self._root.CertificateEntry.CertificateType(self._io.read_u2le())
             self.certificate_bytes = self._io.read_bytes((self.length - 8))
 
 
@@ -95,7 +95,7 @@ class MicrosoftPe(KaitaiStruct):
             self.size_of_image = self._io.read_u4le()
             self.size_of_headers = self._io.read_u4le()
             self.check_sum = self._io.read_u4le()
-            self.subsystem = KaitaiStream.resolve_enum(self._root.OptionalHeaderWindows.SubsystemEnum, self._io.read_u2le())
+            self.subsystem = self._root.OptionalHeaderWindows.SubsystemEnum(self._io.read_u2le())
             self.dll_characteristics = self._io.read_u2le()
             if self._parent.std.format == self._root.PeFormat.pe32:
                 self.size_of_stack_reserve_32 = self._io.read_u4le()
@@ -171,8 +171,8 @@ class MicrosoftPe(KaitaiStruct):
 
         def _read(self):
             self._raw_name_annoying = self._io.read_bytes(8)
-            _io__raw_name_annoying = KaitaiStream(BytesIO(self._raw_name_annoying))
-            self.name_annoying = self._root.Annoyingstring(_io__raw_name_annoying, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_name_annoying))
+            self.name_annoying = self._root.Annoyingstring(io, self, self._root)
             self.value = self._io.read_u4le()
             self.section_number = self._io.read_u2le()
             self.type = self._io.read_u2le()
@@ -210,8 +210,8 @@ class MicrosoftPe(KaitaiStruct):
             self.pe_signature = self._io.ensure_fixed_contents(b"\x50\x45\x00\x00")
             self.coff_hdr = self._root.CoffHeader(self._io, self, self._root)
             self._raw_optional_hdr = self._io.read_bytes(self.coff_hdr.size_of_optional_header)
-            _io__raw_optional_hdr = KaitaiStream(BytesIO(self._raw_optional_hdr))
-            self.optional_hdr = self._root.OptionalHeader(_io__raw_optional_hdr, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_optional_hdr))
+            self.optional_hdr = self._root.OptionalHeader(io, self, self._root)
             self.sections = [None] * (self.coff_hdr.number_of_sections)
             for i in range(self.coff_hdr.number_of_sections):
                 self.sections[i] = self._root.Section(self._io, self, self._root)
@@ -226,8 +226,8 @@ class MicrosoftPe(KaitaiStruct):
                 _pos = self._io.pos()
                 self._io.seek(self.optional_hdr.data_dirs.certificate_table.virtual_address)
                 self._raw__m_certificate_table = self._io.read_bytes(self.optional_hdr.data_dirs.certificate_table.size)
-                _io__raw__m_certificate_table = KaitaiStream(BytesIO(self._raw__m_certificate_table))
-                self._m_certificate_table = self._root.CertificateTable(_io__raw__m_certificate_table, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_certificate_table))
+                self._m_certificate_table = self._root.CertificateTable(io, self, self._root)
                 self._io.seek(_pos)
 
             return self._m_certificate_table if hasattr(self, '_m_certificate_table') else None
@@ -314,7 +314,7 @@ class MicrosoftPe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.format = KaitaiStream.resolve_enum(self._root.PeFormat, self._io.read_u2le())
+            self.format = self._root.PeFormat(self._io.read_u2le())
             self.major_linker_version = self._io.read_u1()
             self.minor_linker_version = self._io.read_u1()
             self.size_of_code = self._io.read_u4le()
@@ -367,7 +367,7 @@ class MicrosoftPe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.machine = KaitaiStream.resolve_enum(self._root.CoffHeader.MachineType, self._io.read_u2le())
+            self.machine = self._root.CoffHeader.MachineType(self._io.read_u2le())
             self.number_of_sections = self._io.read_u2le()
             self.time_date_stamp = self._io.read_u4le()
             self.pointer_to_symbol_table = self._io.read_u4le()

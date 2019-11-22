@@ -2126,12 +2126,6 @@ namespace Kaitai
                         _value = new ByteEncodingTable(io___raw_value, this, m_root);
                         break;
                     }
-                    case SubtableFormat.SegmentMappingToDeltaValues: {
-                        __raw_value = m_io.ReadBytes((Length - 6));
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new SegmentMappingToDeltaValues(io___raw_value, this, m_root);
-                        break;
-                    }
                     case SubtableFormat.HighByteMappingThroughTable: {
                         __raw_value = m_io.ReadBytes((Length - 6));
                         var io___raw_value = new KaitaiStream(__raw_value);
@@ -2142,6 +2136,12 @@ namespace Kaitai
                         __raw_value = m_io.ReadBytes((Length - 6));
                         var io___raw_value = new KaitaiStream(__raw_value);
                         _value = new TrimmedTableMapping(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case SubtableFormat.SegmentMappingToDeltaValues: {
+                        __raw_value = m_io.ReadBytes((Length - 6));
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new SegmentMappingToDeltaValues(io___raw_value, this, m_root);
                         break;
                     }
                     default: {

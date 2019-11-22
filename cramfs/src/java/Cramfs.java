@@ -141,7 +141,7 @@ public class Cramfs extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            blockEndIndex = new ArrayList<Long>(((Number) ((((_parent().size() + _root.pageSize()) - 1) / _root.pageSize()))).intValue());
+            blockEndIndex = new ArrayList<Long>((int) ((((_parent().size() + _root.pageSize()) - 1) / _root.pageSize())));
             for (int i = 0; i < (((_parent().size() + _root.pageSize()) - 1) / _root.pageSize()); i++) {
                 this.blockEndIndex.add(this._io.readU4le());
             }

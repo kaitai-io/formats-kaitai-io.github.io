@@ -140,8 +140,8 @@ class ApmPartitionTable < Kaitai::Struct::Struct
     _pos = io.pos
     io.seek(_root.sector_size)
     @_raw_partition_lookup = io.read_bytes(sector_size)
-    _io__raw_partition_lookup = Kaitai::Struct::Stream.new(@_raw_partition_lookup)
-    @partition_lookup = PartitionEntry.new(_io__raw_partition_lookup, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_partition_lookup)
+    @partition_lookup = PartitionEntry.new(io, self, @_root)
     io.seek(_pos)
     @partition_lookup
   end
@@ -154,8 +154,8 @@ class ApmPartitionTable < Kaitai::Struct::Struct
     @partition_entries = Array.new(_root.partition_lookup.number_of_partitions)
     (_root.partition_lookup.number_of_partitions).times { |i|
       @_raw_partition_entries[i] = io.read_bytes(sector_size)
-      _io__raw_partition_entries = Kaitai::Struct::Stream.new(@_raw_partition_entries[i])
-      @partition_entries[i] = PartitionEntry.new(_io__raw_partition_entries, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_partition_entries[i])
+      @partition_entries[i] = PartitionEntry.new(io, self, @_root)
     }
     io.seek(_pos)
     @partition_entries

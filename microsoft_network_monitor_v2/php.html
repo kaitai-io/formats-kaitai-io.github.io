@@ -164,6 +164,11 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C# library">C#</a></li>
                 
                 
@@ -284,8 +289,8 @@ class MicrosoftNetworkMonitorV2 extends \Kaitai\Struct\Struct {
         $_pos = $this-&gt;_io-&gt;pos();
         $this-&gt;_io-&gt;seek($this-&gt;frameTableOfs());
         $this-&gt;_m__raw_frameTable = $this-&gt;_io-&gt;readBytes($this-&gt;frameTableLen());
-        $_io__raw_frameTable = new \Kaitai\Struct\Stream($this-&gt;_m__raw_frameTable);
-        $this-&gt;_m_frameTable = new \MicrosoftNetworkMonitorV2\FrameIndex($_io__raw_frameTable, $this, $this-&gt;_root);
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_frameTable);
+        $this-&gt;_m_frameTable = new \MicrosoftNetworkMonitorV2\FrameIndex($io, $this, $this-&gt;_root);
         $this-&gt;_io-&gt;seek($_pos);
         return $this-&gt;_m_frameTable;
     }
@@ -423,8 +428,8 @@ class Frame extends \Kaitai\Struct\Struct {
         switch ($this-&gt;_root()-&gt;macType()) {
             case \MicrosoftNetworkMonitorV2\Linktype::ETHERNET:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;incLen());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \EthernetFrame($_io__raw_body);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \EthernetFrame($io);
                 break;
             default:
                 $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;incLen());

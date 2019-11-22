@@ -526,8 +526,8 @@ class ExifLe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.tag = KaitaiStream.resolve_enum(self._root.IfdField.TagEnum, self._io.read_u2le())
-            self.field_type = KaitaiStream.resolve_enum(self._root.IfdField.FieldTypeEnum, self._io.read_u2le())
+            self.tag = self._root.IfdField.TagEnum(self._io.read_u2le())
+            self.field_type = self._root.IfdField.FieldTypeEnum(self._io.read_u2le())
             self.length = self._io.read_u4le()
             self.ofs_or_data = self._io.read_u4le()
 

@@ -34,8 +34,8 @@ class SystemdJournal(KaitaiStruct):
 
     def _read(self):
         self._raw_header = self._io.read_bytes(self.len_header)
-        _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
-        self.header = self._root.Header(_io__raw_header, self, self._root)
+        io = KaitaiStream(BytesIO(self._raw_header))
+        self.header = self._root.Header(io, self, self._root)
         self.objects = [None] * (self.header.num_objects)
         for i in range(self.header.num_objects):
             self.objects[i] = self._root.JournalObject(self._io, self, self._root)
@@ -52,7 +52,7 @@ class SystemdJournal(KaitaiStruct):
             self.signature = self._io.ensure_fixed_contents(b"\x4C\x50\x4B\x53\x48\x48\x52\x48")
             self.compatible_flags = self._io.read_u4le()
             self.incompatible_flags = self._io.read_u4le()
-            self.state = KaitaiStream.resolve_enum(self._root.State, self._io.read_u1())
+            self.state = self._root.State(self._io.read_u1())
             self.reserved = self._io.read_bytes(7)
             self.file_id = self._io.read_bytes(16)
             self.machine_id = self._io.read_bytes(16)
@@ -110,15 +110,15 @@ class SystemdJournal(KaitaiStruct):
 
         def _read(self):
             self.padding = self._io.read_bytes(((8 - self._io.pos()) % 8))
-            self.object_type = KaitaiStream.resolve_enum(self._root.JournalObject.ObjectTypes, self._io.read_u1())
+            self.object_type = self._root.JournalObject.ObjectTypes(self._io.read_u1())
             self.flags = self._io.read_u1()
             self.reserved = self._io.read_bytes(6)
             self.len_object = self._io.read_u8le()
             _on = self.object_type
             if _on == self._root.JournalObject.ObjectTypes.data:
                 self._raw_payload = self._io.read_bytes((self.len_object - 16))
-                _io__raw_payload = KaitaiStream(BytesIO(self._raw_payload))
-                self.payload = self._root.DataObject(_io__raw_payload, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_payload))
+                self.payload = self._root.DataObject(io, self, self._root)
             else:
                 self.payload = self._io.read_bytes((self.len_object - 16))
 

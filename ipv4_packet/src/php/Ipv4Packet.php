@@ -19,11 +19,11 @@ class Ipv4Packet extends \Kaitai\Struct\Struct {
         $this->_m_srcIpAddr = $this->_io->readBytes(4);
         $this->_m_dstIpAddr = $this->_io->readBytes(4);
         $this->_m__raw_options = $this->_io->readBytes(($this->ihlBytes() - 20));
-        $_io__raw_options = new \Kaitai\Struct\Stream($this->_m__raw_options);
-        $this->_m_options = new \Ipv4Packet\Ipv4Options($_io__raw_options, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_options);
+        $this->_m_options = new \Ipv4Packet\Ipv4Options($io, $this, $this->_root);
         $this->_m__raw_body = $this->_io->readBytes(($this->totalLength() - $this->ihlBytes()));
-        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-        $this->_m_body = new \ProtocolBody($this->protocol(), $_io__raw_body);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+        $this->_m_body = new \ProtocolBody($this->protocol(), $io);
     }
     protected $_m_version;
     public function version() {

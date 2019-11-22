@@ -7,7 +7,7 @@ from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, 
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-import protocol_body
+from protocol_body import ProtocolBody
 class Ipv4Packet(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -27,11 +27,11 @@ class Ipv4Packet(KaitaiStruct):
         self.src_ip_addr = self._io.read_bytes(4)
         self.dst_ip_addr = self._io.read_bytes(4)
         self._raw_options = self._io.read_bytes((self.ihl_bytes - 20))
-        _io__raw_options = KaitaiStream(BytesIO(self._raw_options))
-        self.options = self._root.Ipv4Options(_io__raw_options, self, self._root)
+        io = KaitaiStream(BytesIO(self._raw_options))
+        self.options = self._root.Ipv4Options(io, self, self._root)
         self._raw_body = self._io.read_bytes((self.total_length - self.ihl_bytes))
-        _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-        self.body = protocol_body.ProtocolBody(self.protocol, _io__raw_body)
+        io = KaitaiStream(BytesIO(self._raw_body))
+        self.body = ProtocolBody(self.protocol, io)
 
     class Ipv4Options(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):

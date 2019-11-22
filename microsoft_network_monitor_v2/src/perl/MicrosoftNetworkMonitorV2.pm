@@ -386,7 +386,7 @@ sub _read {
     $self->{orig_len} = $self->{_io}->read_u4le();
     $self->{inc_len} = $self->{_io}->read_u4le();
     my $_on = $self->_root()->mac_type();
-    if ($_on == $MicrosoftNetworkMonitorV2::LINKTYPE_ETHERNET) {
+    if ($_on == $LINKTYPE_ETHERNET) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->inc_len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = EthernetFrame->new($io__raw_body);

@@ -394,10 +394,10 @@ sub _read {
     $self->{answer_class} = $self->{_io}->read_u2be();
     $self->{ttl} = $self->{_io}->read_s4be();
     $self->{rdlength} = $self->{_io}->read_u2be();
-    if ($self->type() == $DnsPacket::TYPE_TYPE_PTR) {
+    if ($self->type() == $TYPE_TYPE_PTR) {
         $self->{ptrdname} = DnsPacket::DomainName->new($self->{_io}, $self, $self->{_root});
     }
-    if ($self->type() == $DnsPacket::TYPE_TYPE_A) {
+    if ($self->type() == $TYPE_TYPE_A) {
         $self->{address} = DnsPacket::Address->new($self->{_io}, $self, $self->{_root});
     }
 }

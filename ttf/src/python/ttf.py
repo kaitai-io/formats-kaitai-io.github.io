@@ -149,10 +149,10 @@ class Ttf(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.platform_id = KaitaiStream.resolve_enum(self._root.Name.Platforms, self._io.read_u2be())
+                self.platform_id = self._root.Name.Platforms(self._io.read_u2be())
                 self.encoding_id = self._io.read_u2be()
                 self.language_id = self._io.read_u2be()
-                self.name_id = KaitaiStream.resolve_enum(self._root.Name.Names, self._io.read_u2be())
+                self.name_id = self._root.Name.Names(self._io.read_u2be())
                 self.len_str = self._io.read_u2be()
                 self.ofs_str = self._io.read_u2be()
 
@@ -206,7 +206,7 @@ class Ttf(KaitaiStruct):
             self.font_revision = self._root.Fixed(self._io, self, self._root)
             self.checksum_adjustment = self._io.read_u4be()
             self.magic_number = self._io.ensure_fixed_contents(b"\x5F\x0F\x3C\xF5")
-            self.flags = KaitaiStream.resolve_enum(self._root.Head.Flags, self._io.read_u2be())
+            self.flags = self._root.Head.Flags(self._io.read_u2be())
             self.units_per_em = self._io.read_u2be()
             self.created = self._io.read_u8be()
             self.modified = self._io.read_u8be()
@@ -216,7 +216,7 @@ class Ttf(KaitaiStruct):
             self.y_max = self._io.read_s2be()
             self.mac_style = self._io.read_u2be()
             self.lowest_rec_ppem = self._io.read_u2be()
-            self.font_direction_hint = KaitaiStream.resolve_enum(self._root.Head.FontDirectionHint, self._io.read_s2be())
+            self.font_direction_hint = self._root.Head.FontDirectionHint(self._io.read_s2be())
             self.index_to_loc_format = self._io.read_s2be()
             self.glyph_data_format = self._io.read_s2be()
 
@@ -359,52 +359,52 @@ class Ttf(KaitaiStruct):
             _on = self.tag
             if _on == u"head":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Head(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Head(io, self, self._root)
             elif _on == u"cvt ":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Cvt(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Cvt(io, self, self._root)
             elif _on == u"prep":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Prep(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Prep(io, self, self._root)
             elif _on == u"kern":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Kern(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Kern(io, self, self._root)
             elif _on == u"hhea":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Hhea(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Hhea(io, self, self._root)
             elif _on == u"post":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Post(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Post(io, self, self._root)
             elif _on == u"OS/2":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Os2(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Os2(io, self, self._root)
             elif _on == u"name":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Name(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Name(io, self, self._root)
             elif _on == u"maxp":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Maxp(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Maxp(io, self, self._root)
             elif _on == u"glyf":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Glyf(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Glyf(io, self, self._root)
             elif _on == u"fpgm":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Fpgm(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Fpgm(io, self, self._root)
             elif _on == u"cmap":
                 self._raw__m_value = io.read_bytes(self.length)
-                _io__raw__m_value = KaitaiStream(BytesIO(self._raw__m_value))
-                self._m_value = self._root.Cmap(_io__raw__m_value, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_value))
+                self._m_value = self._root.Cmap(io, self, self._root)
             else:
                 self._m_value = io.read_bytes(self.length)
             io.seek(_pos)
@@ -458,9 +458,9 @@ class Ttf(KaitaiStruct):
         def _read(self):
             self.version = self._io.read_u2be()
             self.x_avg_char_width = self._io.read_s2be()
-            self.weight_class = KaitaiStream.resolve_enum(self._root.Os2.WeightClass, self._io.read_u2be())
-            self.width_class = KaitaiStream.resolve_enum(self._root.Os2.WidthClass, self._io.read_u2be())
-            self.fs_type = KaitaiStream.resolve_enum(self._root.Os2.FsType, self._io.read_s2be())
+            self.weight_class = self._root.Os2.WeightClass(self._io.read_u2be())
+            self.width_class = self._root.Os2.WidthClass(self._io.read_u2be())
+            self.fs_type = self._root.Os2.FsType(self._io.read_s2be())
             self.y_subscript_x_size = self._io.read_s2be()
             self.y_subscript_y_size = self._io.read_s2be()
             self.y_subscript_x_offset = self._io.read_s2be()
@@ -475,7 +475,7 @@ class Ttf(KaitaiStruct):
             self.panose = self._root.Os2.Panose(self._io, self, self._root)
             self.unicode_range = self._root.Os2.UnicodeRange(self._io, self, self._root)
             self.ach_vend_id = (self._io.read_bytes(4)).decode(u"ascii")
-            self.selection = KaitaiStream.resolve_enum(self._root.Os2.FsSelection, self._io.read_u2be())
+            self.selection = self._root.Os2.FsSelection(self._io.read_u2be())
             self.first_char_index = self._io.read_u2be()
             self.last_char_index = self._io.read_u2be()
             self.typo_ascender = self._io.read_s2be()
@@ -626,16 +626,16 @@ class Ttf(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.family_type = KaitaiStream.resolve_enum(self._root.Os2.Panose.FamilyKind, self._io.read_u1())
-                self.serif_style = KaitaiStream.resolve_enum(self._root.Os2.Panose.SerifStyle, self._io.read_u1())
-                self.weight = KaitaiStream.resolve_enum(self._root.Os2.Panose.Weight, self._io.read_u1())
-                self.proportion = KaitaiStream.resolve_enum(self._root.Os2.Panose.Proportion, self._io.read_u1())
-                self.contrast = KaitaiStream.resolve_enum(self._root.Os2.Panose.Contrast, self._io.read_u1())
-                self.stroke_variation = KaitaiStream.resolve_enum(self._root.Os2.Panose.StrokeVariation, self._io.read_u1())
-                self.arm_style = KaitaiStream.resolve_enum(self._root.Os2.Panose.ArmStyle, self._io.read_u1())
-                self.letter_form = KaitaiStream.resolve_enum(self._root.Os2.Panose.LetterForm, self._io.read_u1())
-                self.midline = KaitaiStream.resolve_enum(self._root.Os2.Panose.Midline, self._io.read_u1())
-                self.x_height = KaitaiStream.resolve_enum(self._root.Os2.Panose.XHeight, self._io.read_u1())
+                self.family_type = self._root.Os2.Panose.FamilyKind(self._io.read_u1())
+                self.serif_style = self._root.Os2.Panose.SerifStyle(self._io.read_u1())
+                self.weight = self._root.Os2.Panose.Weight(self._io.read_u1())
+                self.proportion = self._root.Os2.Panose.Proportion(self._io.read_u1())
+                self.contrast = self._root.Os2.Panose.Contrast(self._io.read_u1())
+                self.stroke_variation = self._root.Os2.Panose.StrokeVariation(self._io.read_u1())
+                self.arm_style = self._root.Os2.Panose.ArmStyle(self._io.read_u1())
+                self.letter_form = self._root.Os2.Panose.LetterForm(self._io.read_u1())
+                self.midline = self._root.Os2.Panose.Midline(self._io.read_u1())
+                self.x_height = self._root.Os2.Panose.XHeight(self._io.read_u1())
 
 
         class UnicodeRange(KaitaiStruct):
@@ -960,26 +960,26 @@ class Ttf(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.format = KaitaiStream.resolve_enum(self._root.Cmap.Subtable.SubtableFormat, self._io.read_u2be())
+                self.format = self._root.Cmap.Subtable.SubtableFormat(self._io.read_u2be())
                 self.length = self._io.read_u2be()
                 self.version = self._io.read_u2be()
                 _on = self.format
                 if _on == self._root.Cmap.Subtable.SubtableFormat.byte_encoding_table:
                     self._raw_value = self._io.read_bytes((self.length - 6))
-                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.Cmap.Subtable.ByteEncodingTable(_io__raw_value, self, self._root)
-                elif _on == self._root.Cmap.Subtable.SubtableFormat.segment_mapping_to_delta_values:
-                    self._raw_value = self._io.read_bytes((self.length - 6))
-                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.Cmap.Subtable.SegmentMappingToDeltaValues(_io__raw_value, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = self._root.Cmap.Subtable.ByteEncodingTable(io, self, self._root)
                 elif _on == self._root.Cmap.Subtable.SubtableFormat.high_byte_mapping_through_table:
                     self._raw_value = self._io.read_bytes((self.length - 6))
-                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.Cmap.Subtable.HighByteMappingThroughTable(_io__raw_value, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = self._root.Cmap.Subtable.HighByteMappingThroughTable(io, self, self._root)
                 elif _on == self._root.Cmap.Subtable.SubtableFormat.trimmed_table_mapping:
                     self._raw_value = self._io.read_bytes((self.length - 6))
-                    _io__raw_value = KaitaiStream(BytesIO(self._raw_value))
-                    self.value = self._root.Cmap.Subtable.TrimmedTableMapping(_io__raw_value, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = self._root.Cmap.Subtable.TrimmedTableMapping(io, self, self._root)
+                elif _on == self._root.Cmap.Subtable.SubtableFormat.segment_mapping_to_delta_values:
+                    self._raw_value = self._io.read_bytes((self.length - 6))
+                    io = KaitaiStream(BytesIO(self._raw_value))
+                    self.value = self._root.Cmap.Subtable.SegmentMappingToDeltaValues(io, self, self._root)
                 else:
                     self.value = self._io.read_bytes((self.length - 6))
 

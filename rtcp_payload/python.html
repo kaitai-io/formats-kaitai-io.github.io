@@ -144,6 +144,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="rtcp network payload (single udp packet) parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="rtcp network payload (single udp packet) parsing C# library">C#</a></li>
                 
                 
@@ -392,29 +397,29 @@ class RtcpPayload(KaitaiStruct):
             self.padding = self._io.read_bits_int(1) != 0
             self.subtype = self._io.read_bits_int(5)
             self._io.align_to_byte()
-            self.payload_type = KaitaiStream.resolve_enum(self._root.PayloadType, self._io.read_u1())
+            self.payload_type = self._root.PayloadType(self._io.read_u1())
             self.length = self._io.read_u2be()
             _on = self.payload_type
-            if _on == self._root.PayloadType.sr:
+            if _on == self._root.PayloadType.sdes:
                 self._raw_body = self._io.read_bytes((4 * self.length))
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SrPacket(_io__raw_body, self, self._root)
-            elif _on == self._root.PayloadType.psfb:
-                self._raw_body = self._io.read_bytes((4 * self.length))
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.PsfbPacket(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SdesPacket(io, self, self._root)
             elif _on == self._root.PayloadType.rr:
                 self._raw_body = self._io.read_bytes((4 * self.length))
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.RrPacket(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.RrPacket(io, self, self._root)
             elif _on == self._root.PayloadType.rtpfb:
                 self._raw_body = self._io.read_bytes((4 * self.length))
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.RtpfbPacket(_io__raw_body, self, self._root)
-            elif _on == self._root.PayloadType.sdes:
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.RtpfbPacket(io, self, self._root)
+            elif _on == self._root.PayloadType.psfb:
                 self._raw_body = self._io.read_bytes((4 * self.length))
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.SdesPacket(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.PsfbPacket(io, self, self._root)
+            elif _on == self._root.PayloadType.sr:
+                self._raw_body = self._io.read_bytes((4 * self.length))
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SrPacket(io, self, self._root)
             else:
                 self.body = self._io.read_bytes((4 * self.length))
 
@@ -427,7 +432,7 @@ class RtcpPayload(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = KaitaiStream.resolve_enum(self._root.SdesSubtype, self._io.read_u1())
+            self.type = self._root.SdesSubtype(self._io.read_u1())
             if self.type != self._root.SdesSubtype.pad:
                 self.length = self._io.read_u1()
 
@@ -527,8 +532,8 @@ class RtcpPayload(KaitaiStruct):
             _on = self.fmt
             if _on == self._root.PsfbSubtype.afb:
                 self._raw_fci_block = self._io.read_bytes_full()
-                _io__raw_fci_block = KaitaiStream(BytesIO(self._raw_fci_block))
-                self.fci_block = self._root.PsfbAfbPacket(_io__raw_fci_block, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_fci_block))
+                self.fci_block = self._root.PsfbAfbPacket(io, self, self._root)
             else:
                 self.fci_block = self._io.read_bytes_full()
 
@@ -537,7 +542,7 @@ class RtcpPayload(KaitaiStruct):
             if hasattr(self, &#39;_m_fmt&#39;):
                 return self._m_fmt if hasattr(self, &#39;_m_fmt&#39;) else None
 
-            self._m_fmt = KaitaiStream.resolve_enum(self._root.PsfbSubtype, self._parent.subtype)
+            self._m_fmt = self._root.PsfbSubtype(self._parent.subtype)
             return self._m_fmt if hasattr(self, &#39;_m_fmt&#39;) else None
 
 
@@ -593,8 +598,8 @@ class RtcpPayload(KaitaiStruct):
             _on = self.fmt
             if _on == self._root.RtpfbSubtype.transport_feedback:
                 self._raw_fci_block = self._io.read_bytes_full()
-                _io__raw_fci_block = KaitaiStream(BytesIO(self._raw_fci_block))
-                self.fci_block = self._root.RtpfbTransportFeedbackPacket(_io__raw_fci_block, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_fci_block))
+                self.fci_block = self._root.RtpfbTransportFeedbackPacket(io, self, self._root)
             else:
                 self.fci_block = self._io.read_bytes_full()
 
@@ -603,7 +608,7 @@ class RtcpPayload(KaitaiStruct):
             if hasattr(self, &#39;_m_fmt&#39;):
                 return self._m_fmt if hasattr(self, &#39;_m_fmt&#39;) else None
 
-            self._m_fmt = KaitaiStream.resolve_enum(self._root.RtpfbSubtype, self._parent.subtype)
+            self._m_fmt = self._root.RtpfbSubtype(self._parent.subtype)
             return self._m_fmt if hasattr(self, &#39;_m_fmt&#39;) else None
 
 
@@ -650,8 +655,8 @@ class RtcpPayload(KaitaiStruct):
             _on = self.uid
             if _on == 1380273474:
                 self._raw_contents = self._io.read_bytes_full()
-                _io__raw_contents = KaitaiStream(BytesIO(self._raw_contents))
-                self.contents = self._root.PsfbAfbRembPacket(_io__raw_contents, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_contents))
+                self.contents = self._root.PsfbAfbRembPacket(io, self, self._root)
             else:
                 self.contents = self._io.read_bytes_full()
 

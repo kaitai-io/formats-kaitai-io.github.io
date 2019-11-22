@@ -150,6 +150,11 @@ reached via the links starting from the first page. First page type
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="SQLite3 database file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="SQLite3 database file parsing C# library">C#</a></li>
                 
                 
@@ -427,7 +432,7 @@ public class Sqlite3 extends KaitaiStruct {
             if ( ((pageType() == 2) || (pageType() == 5)) ) {
                 this.rightPtr = this._io.readU4be();
             }
-            cells = new ArrayList&lt;RefCell&gt;(((Number) (numCells())).intValue());
+            cells = new ArrayList&lt;RefCell&gt;((int) (numCells()));
             for (int i = 0; i &lt; numCells(); i++) {
                 this.cells.add(new RefCell(this._io, this, _root));
             }
@@ -598,7 +603,7 @@ public class Sqlite3 extends KaitaiStruct {
             this._raw_columnSerials = this._io.readBytes((lenHeaderAndLen().value() - 1));
             KaitaiStream _io__raw_columnSerials = new ByteBufferKaitaiStream(_raw_columnSerials);
             this.columnSerials = new Serials(_io__raw_columnSerials, this, _root);
-            columnContents = new ArrayList&lt;ColumnContent&gt;(((Number) (columnSerials().entries().size())).intValue());
+            columnContents = new ArrayList&lt;ColumnContent&gt;((int) (columnSerials().entries().size()));
             for (int i = 0; i &lt; columnSerials().entries().size(); i++) {
                 this.columnContents.add(new ColumnContent(this._io, this, _root, columnSerials().entries().get((int) i)));
             }
@@ -749,11 +754,12 @@ public class Sqlite3 extends KaitaiStruct {
             }
             this.asStr = new String(this._io.readBytes(serialType().lenContent()), Charset.forName(&quot;UTF-8&quot;));
         }
-        private Sqlite3.Serial serialType;
-        public Sqlite3.Serial serialType() {
+        private Serial serialType;
+        public Serial serialType() {
             if (this.serialType != null)
                 return this.serialType;
-            this.serialType = ((Sqlite3.Serial) (ser()));
+            Sqlite3.Serial _tmp = (Sqlite3.Serial) (((Serial) (ser())));
+            this.serialType = _tmp;
             return this.serialType;
         }
         private Integer asInt;

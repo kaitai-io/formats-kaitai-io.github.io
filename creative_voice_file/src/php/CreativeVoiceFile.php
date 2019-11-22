@@ -167,35 +167,35 @@ class Block extends \Kaitai\Struct\Struct {
         }
         if ($this->blockType() != \CreativeVoiceFile\BlockTypes::TERMINATOR) {
             switch ($this->blockType()) {
-                case \CreativeVoiceFile\BlockTypes::SOUND_DATA_NEW:
+                case \CreativeVoiceFile\BlockTypes::SILENCE:
                     $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \CreativeVoiceFile\BlockSoundDataNew($_io__raw_body, $this, $this->_root);
-                    break;
-                case \CreativeVoiceFile\BlockTypes::REPEAT_START:
-                    $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \CreativeVoiceFile\BlockRepeatStart($_io__raw_body, $this, $this->_root);
-                    break;
-                case \CreativeVoiceFile\BlockTypes::MARKER:
-                    $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \CreativeVoiceFile\BlockMarker($_io__raw_body, $this, $this->_root);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \CreativeVoiceFile\BlockSilence($io, $this, $this->_root);
                     break;
                 case \CreativeVoiceFile\BlockTypes::SOUND_DATA:
                     $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \CreativeVoiceFile\BlockSoundData($_io__raw_body, $this, $this->_root);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \CreativeVoiceFile\BlockSoundData($io, $this, $this->_root);
+                    break;
+                case \CreativeVoiceFile\BlockTypes::MARKER:
+                    $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \CreativeVoiceFile\BlockMarker($io, $this, $this->_root);
+                    break;
+                case \CreativeVoiceFile\BlockTypes::SOUND_DATA_NEW:
+                    $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \CreativeVoiceFile\BlockSoundDataNew($io, $this, $this->_root);
+                    break;
+                case \CreativeVoiceFile\BlockTypes::REPEAT_START:
+                    $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \CreativeVoiceFile\BlockRepeatStart($io, $this, $this->_root);
                     break;
                 case \CreativeVoiceFile\BlockTypes::EXTRA_INFO:
                     $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \CreativeVoiceFile\BlockExtraInfo($_io__raw_body, $this, $this->_root);
-                    break;
-                case \CreativeVoiceFile\BlockTypes::SILENCE:
-                    $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \CreativeVoiceFile\BlockSilence($_io__raw_body, $this, $this->_root);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \CreativeVoiceFile\BlockExtraInfo($io, $this, $this->_root);
                     break;
                 default:
                     $this->_m_body = $this->_io->readBytes($this->bodySize());

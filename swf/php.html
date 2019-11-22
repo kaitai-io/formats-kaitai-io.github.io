@@ -181,6 +181,11 @@ documented by Adobe.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Adobe Flash (AKA Shockwave Flash, Macromedia Flash) parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Adobe Flash (AKA Shockwave Flash, Macromedia Flash) parsing C# library">C#</a></li>
                 
                 
@@ -282,14 +287,14 @@ class Swf extends \Kaitai\Struct\Struct {
         $this-&gt;_m_lenFile = $this-&gt;_io-&gt;readU4le();
         if ($this-&gt;compression() == \Swf\Compressions::NONE) {
             $this-&gt;_m__raw_plainBody = $this-&gt;_io-&gt;readBytesFull();
-            $_io__raw_plainBody = new \Kaitai\Struct\Stream($this-&gt;_m__raw_plainBody);
-            $this-&gt;_m_plainBody = new \Swf\SwfBody($_io__raw_plainBody, $this, $this-&gt;_root);
+            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_plainBody);
+            $this-&gt;_m_plainBody = new \Swf\SwfBody($io, $this, $this-&gt;_root);
         }
         if ($this-&gt;compression() == \Swf\Compressions::ZLIB) {
             $this-&gt;_m__raw__raw_zlibBody = $this-&gt;_io-&gt;readBytesFull();
             $this-&gt;_m__raw_zlibBody = \Kaitai\Struct\Stream::processZlib($this-&gt;_m__raw__raw_zlibBody);
-            $_io__raw_zlibBody = new \Kaitai\Struct\Stream($this-&gt;_m__raw_zlibBody);
-            $this-&gt;_m_zlibBody = new \Swf\SwfBody($_io__raw_zlibBody, $this, $this-&gt;_root);
+            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_zlibBody);
+            $this-&gt;_m_zlibBody = new \Swf\SwfBody($io, $this, $this-&gt;_root);
         }
     }
     protected $_m_compression;
@@ -299,8 +304,8 @@ class Swf extends \Kaitai\Struct\Struct {
     protected $_m_plainBody;
     protected $_m_zlibBody;
     protected $_m__raw_plainBody;
-    protected $_m__raw_zlibBody;
     protected $_m__raw__raw_zlibBody;
+    protected $_m__raw_zlibBody;
     public function compression() { return $this-&gt;_m_compression; }
     public function signature() { return $this-&gt;_m_signature; }
     public function version() { return $this-&gt;_m_version; }
@@ -308,8 +313,8 @@ class Swf extends \Kaitai\Struct\Struct {
     public function plainBody() { return $this-&gt;_m_plainBody; }
     public function zlibBody() { return $this-&gt;_m_zlibBody; }
     public function _raw_plainBody() { return $this-&gt;_m__raw_plainBody; }
-    public function _raw_zlibBody() { return $this-&gt;_m__raw_zlibBody; }
     public function _raw__raw_zlibBody() { return $this-&gt;_m__raw__raw_zlibBody; }
+    public function _raw_zlibBody() { return $this-&gt;_m__raw_zlibBody; }
 }
 
 namespace \Swf;
@@ -431,35 +436,35 @@ class Tag extends \Kaitai\Struct\Struct {
     private function _read() {
         $this-&gt;_m_recordHeader = new \Swf\RecordHeader($this-&gt;_io, $this, $this-&gt;_root);
         switch ($this-&gt;recordHeader()-&gt;tagType()) {
-            case \Swf\TagType::DEFINE_SOUND:
-                $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $_io__raw_tagBody = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\DefineSoundBody($_io__raw_tagBody, $this, $this-&gt;_root);
-                break;
             case \Swf\TagType::SET_BACKGROUND_COLOR:
                 $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $_io__raw_tagBody = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\Rgb($_io__raw_tagBody, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
+                $this-&gt;_m_tagBody = new \Swf\Rgb($io, $this, $this-&gt;_root);
                 break;
             case \Swf\TagType::SCRIPT_LIMITS:
                 $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $_io__raw_tagBody = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\ScriptLimitsBody($_io__raw_tagBody, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
+                $this-&gt;_m_tagBody = new \Swf\ScriptLimitsBody($io, $this, $this-&gt;_root);
                 break;
-            case \Swf\TagType::DO_ABC:
+            case \Swf\TagType::DEFINE_SOUND:
                 $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $_io__raw_tagBody = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\DoAbcBody($_io__raw_tagBody, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
+                $this-&gt;_m_tagBody = new \Swf\DefineSoundBody($io, $this, $this-&gt;_root);
                 break;
             case \Swf\TagType::EXPORT_ASSETS:
                 $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $_io__raw_tagBody = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\SymbolClassBody($_io__raw_tagBody, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
+                $this-&gt;_m_tagBody = new \Swf\SymbolClassBody($io, $this, $this-&gt;_root);
                 break;
             case \Swf\TagType::SYMBOL_CLASS:
                 $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $_io__raw_tagBody = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\SymbolClassBody($_io__raw_tagBody, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
+                $this-&gt;_m_tagBody = new \Swf\SymbolClassBody($io, $this, $this-&gt;_root);
+                break;
+            case \Swf\TagType::DO_ABC:
+                $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
+                $this-&gt;_m_tagBody = new \Swf\DoAbcBody($io, $this, $this-&gt;_root);
                 break;
             default:
                 $this-&gt;_m_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());

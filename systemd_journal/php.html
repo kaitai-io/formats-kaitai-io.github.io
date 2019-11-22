@@ -154,6 +154,11 @@ format.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="systemd journal file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="systemd journal file parsing C# library">C#</a></li>
                 
                 
@@ -246,8 +251,8 @@ class SystemdJournal extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this-&gt;_m__raw_header = $this-&gt;_io-&gt;readBytes($this-&gt;lenHeader());
-        $_io__raw_header = new \Kaitai\Struct\Stream($this-&gt;_m__raw_header);
-        $this-&gt;_m_header = new \SystemdJournal\Header($_io__raw_header, $this, $this-&gt;_root);
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_header);
+        $this-&gt;_m_header = new \SystemdJournal\Header($io, $this, $this-&gt;_root);
         $this-&gt;_m_objects = [];
         $n = $this-&gt;header()-&gt;numObjects();
         for ($i = 0; $i &lt; $n; $i++) {
@@ -418,8 +423,8 @@ class JournalObject extends \Kaitai\Struct\Struct {
         switch ($this-&gt;objectType()) {
             case \SystemdJournal\JournalObject\ObjectTypes::DATA:
                 $this-&gt;_m__raw_payload = $this-&gt;_io-&gt;readBytes(($this-&gt;lenObject() - 16));
-                $_io__raw_payload = new \Kaitai\Struct\Stream($this-&gt;_m__raw_payload);
-                $this-&gt;_m_payload = new \SystemdJournal\DataObject($_io__raw_payload, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_payload);
+                $this-&gt;_m_payload = new \SystemdJournal\DataObject($io, $this, $this-&gt;_root);
                 break;
             default:
                 $this-&gt;_m_payload = $this-&gt;_io-&gt;readBytes(($this-&gt;lenObject() - 16));

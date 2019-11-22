@@ -23,7 +23,7 @@ class UdpDatagram < Kaitai::Struct::Struct
     @dst_port = @_io.read_u2be
     @length = @_io.read_u2be
     @checksum = @_io.read_u2be
-    @body = @_io.read_bytes_full
+    @body = @_io.read_bytes((length - 8))
     self
   end
   attr_reader :src_port

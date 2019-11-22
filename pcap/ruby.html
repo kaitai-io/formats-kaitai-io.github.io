@@ -178,6 +178,11 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
                 
                 <li>
                 
+                <a href="cpp_stl.html" title=".pcap / .pcapdump file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".pcap / .pcapdump file format parsing C# library">C#</a></li>
                 
                 
@@ -425,7 +430,7 @@ class Pcap &lt; Kaitai::Struct::Struct
       @thiszone = @_io.read_s4le
       @sigfigs = @_io.read_u4le
       @snaplen = @_io.read_u4le
-      @network = Kaitai::Struct::Stream::resolve_enum(Pcap::LINKTYPE, @_io.read_u4le)
+      @network = Kaitai::Struct::Stream::resolve_enum(LINKTYPE, @_io.read_u4le)
       self
     end
     attr_reader :magic_number
@@ -470,12 +475,12 @@ class Pcap &lt; Kaitai::Struct::Struct
       case _root.hdr.network
       when :linktype_ppi
         @_raw_body = @_io.read_bytes(incl_len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PacketPpi.new(_io__raw_body)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = PacketPpi.new(io)
       when :linktype_ethernet
         @_raw_body = @_io.read_bytes(incl_len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = EthernetFrame.new(_io__raw_body)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = EthernetFrame.new(io)
       else
         @body = @_io.read_bytes(incl_len)
       end

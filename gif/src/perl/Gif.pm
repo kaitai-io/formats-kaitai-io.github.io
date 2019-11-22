@@ -54,7 +54,7 @@ sub _read {
     do {
         $_ = Gif::Block->new($self->{_io}, $self, $self->{_root});
         push @{$self->{blocks}}, $_;
-    } until ( (($self->_io()->is_eof()) || ($_->block_type() == $Gif::BLOCK_TYPE_END_OF_FILE)) );
+    } until ( (($self->_io()->is_eof()) || ($_->block_type() == $BLOCK_TYPE_END_OF_FILE)) );
 }
 
 sub hdr {
@@ -395,10 +395,10 @@ sub _read {
 
     $self->{block_type} = $self->{_io}->read_u1();
     my $_on = $self->block_type();
-    if ($_on == $Gif::BLOCK_TYPE_EXTENSION) {
+    if ($_on == $BLOCK_TYPE_EXTENSION) {
         $self->{body} = Gif::Extension->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $Gif::BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR) {
+    elsif ($_on == $BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR) {
         $self->{body} = Gif::LocalImageDescriptor->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -740,13 +740,13 @@ sub _read {
 
     $self->{label} = $self->{_io}->read_u1();
     my $_on = $self->label();
-    if ($_on == $Gif::EXTENSION_LABEL_APPLICATION) {
+    if ($_on == $EXTENSION_LABEL_APPLICATION) {
         $self->{body} = Gif::ExtApplication->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $Gif::EXTENSION_LABEL_COMMENT) {
+    elsif ($_on == $EXTENSION_LABEL_COMMENT) {
         $self->{body} = Gif::Subblocks->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $Gif::EXTENSION_LABEL_GRAPHIC_CONTROL) {
+    elsif ($_on == $EXTENSION_LABEL_GRAPHIC_CONTROL) {
         $self->{body} = Gif::ExtGraphicControl->new($self->{_io}, $self, $self->{_root});
     }
     else {

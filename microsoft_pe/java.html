@@ -183,6 +183,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Microsoft PE (Portable Executable) file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Microsoft PE (Portable Executable) file format parsing C# library">C#</a></li>
                 
                 
@@ -760,7 +765,7 @@ public class MicrosoftPe extends KaitaiStruct {
             this._raw_optionalHdr = this._io.readBytes(coffHdr().sizeOfOptionalHeader());
             KaitaiStream _io__raw_optionalHdr = new ByteBufferKaitaiStream(_raw_optionalHdr);
             this.optionalHdr = new OptionalHeader(_io__raw_optionalHdr, this, _root);
-            sections = new ArrayList&lt;Section&gt;(((Number) (coffHdr().numberOfSections())).intValue());
+            sections = new ArrayList&lt;Section&gt;((int) (coffHdr().numberOfSections()));
             for (int i = 0; i &lt; coffHdr().numberOfSections(); i++) {
                 this.sections.add(new Section(this._io, this, _root));
             }
@@ -1130,7 +1135,7 @@ public class MicrosoftPe extends KaitaiStruct {
                 return this.symbolTable;
             long _pos = this._io.pos();
             this._io.seek(pointerToSymbolTable());
-            symbolTable = new ArrayList&lt;CoffSymbol&gt;(((Number) (numberOfSymbols())).intValue());
+            symbolTable = new ArrayList&lt;CoffSymbol&gt;((int) (numberOfSymbols()));
             for (int i = 0; i &lt; numberOfSymbols(); i++) {
                 this.symbolTable.add(new CoffSymbol(this._io, this, _root));
             }

@@ -141,30 +141,30 @@ class RtcpPacket extends \Kaitai\Struct\Struct {
         $this->_m_payloadType = $this->_io->readU1();
         $this->_m_length = $this->_io->readU2be();
         switch ($this->payloadType()) {
-            case \RtcpPayload\PayloadType::SR:
+            case \RtcpPayload\PayloadType::SDES:
                 $this->_m__raw_body = $this->_io->readBytes((4 * $this->length()));
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \RtcpPayload\SrPacket($_io__raw_body, $this, $this->_root);
-                break;
-            case \RtcpPayload\PayloadType::PSFB:
-                $this->_m__raw_body = $this->_io->readBytes((4 * $this->length()));
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \RtcpPayload\PsfbPacket($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \RtcpPayload\SdesPacket($io, $this, $this->_root);
                 break;
             case \RtcpPayload\PayloadType::RR:
                 $this->_m__raw_body = $this->_io->readBytes((4 * $this->length()));
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \RtcpPayload\RrPacket($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \RtcpPayload\RrPacket($io, $this, $this->_root);
                 break;
             case \RtcpPayload\PayloadType::RTPFB:
                 $this->_m__raw_body = $this->_io->readBytes((4 * $this->length()));
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \RtcpPayload\RtpfbPacket($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \RtcpPayload\RtpfbPacket($io, $this, $this->_root);
                 break;
-            case \RtcpPayload\PayloadType::SDES:
+            case \RtcpPayload\PayloadType::PSFB:
                 $this->_m__raw_body = $this->_io->readBytes((4 * $this->length()));
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \RtcpPayload\SdesPacket($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \RtcpPayload\PsfbPacket($io, $this, $this->_root);
+                break;
+            case \RtcpPayload\PayloadType::SR:
+                $this->_m__raw_body = $this->_io->readBytes((4 * $this->length()));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \RtcpPayload\SrPacket($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes((4 * $this->length()));
@@ -322,8 +322,8 @@ class PsfbPacket extends \Kaitai\Struct\Struct {
         switch ($this->fmt()) {
             case \RtcpPayload\PsfbSubtype::AFB:
                 $this->_m__raw_fciBlock = $this->_io->readBytesFull();
-                $_io__raw_fciBlock = new \Kaitai\Struct\Stream($this->_m__raw_fciBlock);
-                $this->_m_fciBlock = new \RtcpPayload\PsfbAfbPacket($_io__raw_fciBlock, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_fciBlock);
+                $this->_m_fciBlock = new \RtcpPayload\PsfbAfbPacket($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_fciBlock = $this->_io->readBytesFull();
@@ -410,8 +410,8 @@ class RtpfbPacket extends \Kaitai\Struct\Struct {
         switch ($this->fmt()) {
             case \RtcpPayload\RtpfbSubtype::TRANSPORT_FEEDBACK:
                 $this->_m__raw_fciBlock = $this->_io->readBytesFull();
-                $_io__raw_fciBlock = new \Kaitai\Struct\Stream($this->_m__raw_fciBlock);
-                $this->_m_fciBlock = new \RtcpPayload\RtpfbTransportFeedbackPacket($_io__raw_fciBlock, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_fciBlock);
+                $this->_m_fciBlock = new \RtcpPayload\RtpfbTransportFeedbackPacket($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_fciBlock = $this->_io->readBytesFull();
@@ -490,8 +490,8 @@ class PsfbAfbPacket extends \Kaitai\Struct\Struct {
         switch ($this->uid()) {
             case 1380273474:
                 $this->_m__raw_contents = $this->_io->readBytesFull();
-                $_io__raw_contents = new \Kaitai\Struct\Stream($this->_m__raw_contents);
-                $this->_m_contents = new \RtcpPayload\PsfbAfbRembPacket($_io__raw_contents, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \RtcpPayload\PsfbAfbRembPacket($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_contents = $this->_io->readBytesFull();

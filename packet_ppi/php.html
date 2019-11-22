@@ -144,6 +144,11 @@ radio information, but can be used for other purposes as well.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="packet_ppi parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="packet_ppi parsing C# library">C#</a></li>
                 
                 
@@ -235,18 +240,18 @@ class PacketPpi extends \Kaitai\Struct\Struct {
     private function _read() {
         $this-&gt;_m_header = new \PacketPpi\PacketPpiHeader($this-&gt;_io, $this, $this-&gt;_root);
         $this-&gt;_m__raw_fields = $this-&gt;_io-&gt;readBytes(($this-&gt;header()-&gt;pphLen() - 8));
-        $_io__raw_fields = new \Kaitai\Struct\Stream($this-&gt;_m__raw_fields);
-        $this-&gt;_m_fields = new \PacketPpi\PacketPpiFields($_io__raw_fields, $this, $this-&gt;_root);
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_fields);
+        $this-&gt;_m_fields = new \PacketPpi\PacketPpiFields($io, $this, $this-&gt;_root);
         switch ($this-&gt;header()-&gt;pphDlt()) {
             case \PacketPpi\Linktype::PPI:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytesFull();
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \PacketPpi($_io__raw_body);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \PacketPpi($io);
                 break;
             case \PacketPpi\Linktype::ETHERNET:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytesFull();
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \EthernetFrame($_io__raw_body);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \EthernetFrame($io);
                 break;
             default:
                 $this-&gt;_m_body = $this-&gt;_io-&gt;readBytesFull();
@@ -454,18 +459,18 @@ class PacketPpiField extends \Kaitai\Struct\Struct {
         switch ($this-&gt;pfhType()) {
             case \PacketPpi\PfhType::RADIO_802_11_COMMON:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;pfhDatalen());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \PacketPpi\Radio80211CommonBody($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \PacketPpi\Radio80211CommonBody($io, $this, $this-&gt;_root);
                 break;
             case \PacketPpi\PfhType::RADIO_802_11N_MAC_EXT:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;pfhDatalen());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \PacketPpi\Radio80211nMacExtBody($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \PacketPpi\Radio80211nMacExtBody($io, $this, $this-&gt;_root);
                 break;
             case \PacketPpi\PfhType::RADIO_802_11N_MAC_PHY_EXT:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;pfhDatalen());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \PacketPpi\Radio80211nMacPhyExtBody($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \PacketPpi\Radio80211nMacPhyExtBody($io, $this, $this-&gt;_root);
                 break;
             default:
                 $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;pfhDatalen());

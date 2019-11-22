@@ -61,7 +61,7 @@ public class AllegroDat extends KaitaiStruct {
         this.packMagic = PackEnum.byId(this._io.readU4be());
         this.datMagic = this._io.ensureFixedContents(new byte[] { 65, 76, 76, 46 });
         this.numObjects = this._io.readU4be();
-        objects = new ArrayList<DatObject>(((Number) (numObjects())).intValue());
+        objects = new ArrayList<DatObject>((int) (numObjects()));
         for (int i = 0; i < numObjects(); i++) {
             this.objects.add(new DatObject(this._io, this, _root));
         }
@@ -91,7 +91,7 @@ public class AllegroDat extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            chars = new ArrayList<byte[]>(((Number) (95)).intValue());
+            chars = new ArrayList<byte[]>((int) (95));
             for (int i = 0; i < 95; i++) {
                 this.chars.add(this._io.readBytes(16));
             }
@@ -211,7 +211,7 @@ public class AllegroDat extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            chars = new ArrayList<byte[]>(((Number) (95)).intValue());
+            chars = new ArrayList<byte[]>((int) (95));
             for (int i = 0; i < 95; i++) {
                 this.chars.add(this._io.readBytes(8));
             }
@@ -329,7 +329,7 @@ public class AllegroDat extends KaitaiStruct {
         }
         private void _read() {
             this.numRanges = this._io.readS2be();
-            ranges = new ArrayList<Range>(((Number) (numRanges())).intValue());
+            ranges = new ArrayList<Range>((int) (numRanges()));
             for (int i = 0; i < numRanges(); i++) {
                 this.ranges.add(new Range(this._io, this, _root));
             }
@@ -357,7 +357,7 @@ public class AllegroDat extends KaitaiStruct {
                 this.mono = this._io.readU1();
                 this.startChar = this._io.readU4be();
                 this.endChar = this._io.readU4be();
-                chars = new ArrayList<FontChar>(((Number) (((endChar() - startChar()) + 1))).intValue());
+                chars = new ArrayList<FontChar>((int) (((endChar() - startChar()) + 1)));
                 for (int i = 0; i < ((endChar() - startChar()) + 1); i++) {
                     this.chars.add(new FontChar(this._io, this, _root));
                 }

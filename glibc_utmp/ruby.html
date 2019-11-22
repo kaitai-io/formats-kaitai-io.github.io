@@ -139,6 +139,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="utmp log file, Linux/glibc version parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="utmp log file, Linux/glibc version parsing C# library">C#</a></li>
                 
                 
@@ -265,8 +270,8 @@ class GlibcUtmp &lt; Kaitai::Struct::Struct
     i = 0
     while not @_io.eof?
       @_raw_records &lt;&lt; @_io.read_bytes(384)
-      _io__raw_records = Kaitai::Struct::Stream.new(@_raw_records.last)
-      @records &lt;&lt; Record.new(_io__raw_records, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_records.last)
+      @records &lt;&lt; Record.new(io, self, @_root)
       i += 1
     end
     self
@@ -278,7 +283,7 @@ class GlibcUtmp &lt; Kaitai::Struct::Struct
     end
 
     def _read
-      @ut_type = Kaitai::Struct::Stream::resolve_enum(GlibcUtmp::ENTRY_TYPE, @_io.read_s4le)
+      @ut_type = Kaitai::Struct::Stream::resolve_enum(ENTRY_TYPE, @_io.read_s4le)
       @pid = @_io.read_u4le
       @line = (@_io.read_bytes(32)).force_encoding(&quot;UTF-8&quot;)
       @id = (@_io.read_bytes(4)).force_encoding(&quot;UTF-8&quot;)

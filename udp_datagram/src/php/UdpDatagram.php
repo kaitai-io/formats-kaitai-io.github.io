@@ -19,7 +19,7 @@ class UdpDatagram extends \Kaitai\Struct\Struct {
         $this->_m_dstPort = $this->_io->readU2be();
         $this->_m_length = $this->_io->readU2be();
         $this->_m_checksum = $this->_io->readU2be();
-        $this->_m_body = $this->_io->readBytesFull();
+        $this->_m_body = $this->_io->readBytes(($this->length() - 8));
     }
     protected $_m_srcPort;
     protected $_m_dstPort;

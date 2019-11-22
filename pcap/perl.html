@@ -178,6 +178,11 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
                 
                 <li>
                 
+                <a href="cpp_stl.html" title=".pcap / .pcapdump file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".pcap / .pcapdump file format parsing C# library">C#</a></li>
                 
                 
@@ -253,8 +258,8 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
-use PacketPpi;
 use EthernetFrame;
+use PacketPpi;
 
 ########################################################################
 package Pcap;
@@ -517,12 +522,12 @@ sub _read {
     $self-&gt;{incl_len} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{orig_len} = $self-&gt;{_io}-&gt;read_u4le();
     my $_on = $self-&gt;_root()-&gt;hdr()-&gt;network();
-    if ($_on == $Pcap::LINKTYPE_PPI) {
+    if ($_on == $LINKTYPE_PPI) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;incl_len());
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = PacketPpi-&gt;new($io__raw_body);
     }
-    elsif ($_on == $Pcap::LINKTYPE_ETHERNET) {
+    elsif ($_on == $LINKTYPE_ETHERNET) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;incl_len());
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = EthernetFrame-&gt;new($io__raw_body);

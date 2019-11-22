@@ -390,8 +390,8 @@ class Vfat < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(boot_sector.pos_root_dir)
     @_raw_root_dir = @_io.read_bytes(boot_sector.size_root_dir)
-    _io__raw_root_dir = Kaitai::Struct::Stream.new(@_raw_root_dir)
-    @root_dir = RootDirectory.new(_io__raw_root_dir, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_root_dir)
+    @root_dir = RootDirectory.new(io, self, @_root)
     @_io.seek(_pos)
     @root_dir
   end

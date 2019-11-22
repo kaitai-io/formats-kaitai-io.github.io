@@ -263,30 +263,23 @@ public class Pcap extends KaitaiStruct {
             this.tsUsec = this._io.readU4le();
             this.inclLen = this._io.readU4le();
             this.origLen = this._io.readU4le();
-            {
-                Linktype on = _root.hdr().network();
-                if (on != null) {
-                    switch (_root.hdr().network()) {
-                    case PPI: {
-                        this._raw_body = this._io.readBytes(inclLen());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new PacketPpi(_io__raw_body);
-                        break;
-                    }
-                    case ETHERNET: {
-                        this._raw_body = this._io.readBytes(inclLen());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new EthernetFrame(_io__raw_body);
-                        break;
-                    }
-                    default: {
-                        this.body = this._io.readBytes(inclLen());
-                        break;
-                    }
-                    }
-                } else {
-                    this.body = this._io.readBytes(inclLen());
-                }
+            switch (_root.hdr().network()) {
+            case PPI: {
+                this._raw_body = this._io.readBytes(inclLen());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new PacketPpi(_io__raw_body);
+                break;
+            }
+            case ETHERNET: {
+                this._raw_body = this._io.readBytes(inclLen());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new EthernetFrame(_io__raw_body);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(inclLen());
+                break;
+            }
             }
         }
         private long tsSec;

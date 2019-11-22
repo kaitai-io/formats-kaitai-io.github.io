@@ -32,20 +32,20 @@ class Bmp(KaitaiStruct):
         _on = self.len_dib_header
         if _on == 104:
             self._raw_dib_header = self._io.read_bytes((self.len_dib_header - 4))
-            _io__raw_dib_header = KaitaiStream(BytesIO(self._raw_dib_header))
-            self.dib_header = self._root.BitmapCoreHeader(_io__raw_dib_header, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_dib_header))
+            self.dib_header = self._root.BitmapCoreHeader(io, self, self._root)
         elif _on == 12:
             self._raw_dib_header = self._io.read_bytes((self.len_dib_header - 4))
-            _io__raw_dib_header = KaitaiStream(BytesIO(self._raw_dib_header))
-            self.dib_header = self._root.BitmapCoreHeader(_io__raw_dib_header, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_dib_header))
+            self.dib_header = self._root.BitmapCoreHeader(io, self, self._root)
         elif _on == 40:
             self._raw_dib_header = self._io.read_bytes((self.len_dib_header - 4))
-            _io__raw_dib_header = KaitaiStream(BytesIO(self._raw_dib_header))
-            self.dib_header = self._root.BitmapInfoHeader(_io__raw_dib_header, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_dib_header))
+            self.dib_header = self._root.BitmapInfoHeader(io, self, self._root)
         elif _on == 124:
             self._raw_dib_header = self._io.read_bytes((self.len_dib_header - 4))
-            _io__raw_dib_header = KaitaiStream(BytesIO(self._raw_dib_header))
-            self.dib_header = self._root.BitmapCoreHeader(_io__raw_dib_header, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_dib_header))
+            self.dib_header = self._root.BitmapCoreHeader(io, self, self._root)
         else:
             self.dib_header = self._io.read_bytes((self.len_dib_header - 4))
 
@@ -102,7 +102,7 @@ class Bmp(KaitaiStruct):
             self.image_height = self._io.read_u4le()
             self.num_planes = self._io.read_u2le()
             self.bits_per_pixel = self._io.read_u2le()
-            self.compression = KaitaiStream.resolve_enum(self._root.Compressions, self._io.read_u4le())
+            self.compression = self._root.Compressions(self._io.read_u4le())
             self.len_image = self._io.read_u4le()
             self.x_px_per_m = self._io.read_u4le()
             self.y_px_per_m = self._io.read_u4le()

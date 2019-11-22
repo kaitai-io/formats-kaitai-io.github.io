@@ -646,7 +646,7 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{op_code} = $self-&gt;{_io}-&gt;read_u1();
-    if ($self-&gt;op_code() &gt;= $PythonPyc27::OpArg::OP_CODE_ENUM_STORE_NAME) {
+    if ($self-&gt;op_code() &gt;= $OP_CODE_ENUM_STORE_NAME) {
         $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2le();
     }
 }
@@ -704,32 +704,32 @@ sub _read {
 
     $self-&gt;{type} = $self-&gt;{_io}-&gt;read_u1();
     my $_on = $self-&gt;type();
-    if ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_STRING) {
-        $self-&gt;{value} = PythonPyc27::PyObject::PyString-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_TUPLE) {
-        $self-&gt;{value} = PythonPyc27::PyObject::Tuple-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_INT) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
-    }
-    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_PY_TRUE) {
-        $self-&gt;{value} = PythonPyc27::PyObject::PyTrue-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_PY_FALSE) {
-        $self-&gt;{value} = PythonPyc27::PyObject::PyFalse-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_NONE) {
+    if ($_on == $OBJECT_TYPE_NONE) {
         $self-&gt;{value} = PythonPyc27::PyObject::PyNone-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_STRING_REF) {
-        $self-&gt;{value} = PythonPyc27::PyObject::StringRef-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_CODE_OBJECT) {
+    elsif ($_on == $OBJECT_TYPE_CODE_OBJECT) {
         $self-&gt;{value} = PythonPyc27::CodeObject-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $PythonPyc27::PyObject::OBJECT_TYPE_INTERNED) {
+    elsif ($_on == $OBJECT_TYPE_INT) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    elsif ($_on == $OBJECT_TYPE_STRING_REF) {
+        $self-&gt;{value} = PythonPyc27::PyObject::StringRef-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OBJECT_TYPE_STRING) {
+        $self-&gt;{value} = PythonPyc27::PyObject::PyString-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OBJECT_TYPE_PY_FALSE) {
+        $self-&gt;{value} = PythonPyc27::PyObject::PyFalse-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OBJECT_TYPE_INTERNED) {
         $self-&gt;{value} = PythonPyc27::PyObject::InternedString-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OBJECT_TYPE_TUPLE) {
+        $self-&gt;{value} = PythonPyc27::PyObject::Tuple-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OBJECT_TYPE_PY_TRUE) {
+        $self-&gt;{value} = PythonPyc27::PyObject::PyTrue-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
 }
 

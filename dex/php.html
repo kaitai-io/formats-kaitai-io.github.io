@@ -673,23 +673,29 @@ class EncodedValue extends \Kaitai\Struct\Struct {
         $this-&gt;_m_valueType = $this-&gt;_io-&gt;readBitsInt(5);
         $this-&gt;_io-&gt;alignToByte();
         switch ($this-&gt;valueType()) {
-            case \Dex\EncodedValue\ValueTypeEnum::INT:
-                $this-&gt;_m_value = $this-&gt;_io-&gt;readS4le();
+            case \Dex\EncodedValue\ValueTypeEnum::DOUBLE:
+                $this-&gt;_m_value = $this-&gt;_io-&gt;readF8le();
                 break;
             case \Dex\EncodedValue\ValueTypeEnum::ANNOTATION:
                 $this-&gt;_m_value = new \Dex\EncodedAnnotation($this-&gt;_io, $this, $this-&gt;_root);
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::LONG:
-                $this-&gt;_m_value = $this-&gt;_io-&gt;readS8le();
+            case \Dex\EncodedValue\ValueTypeEnum::TYPE:
+                $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
+                break;
+            case \Dex\EncodedValue\ValueTypeEnum::CHAR:
+                $this-&gt;_m_value = $this-&gt;_io-&gt;readU2le();
                 break;
             case \Dex\EncodedValue\ValueTypeEnum::METHOD_HANDLE:
                 $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
                 break;
+            case \Dex\EncodedValue\ValueTypeEnum::ARRAY:
+                $this-&gt;_m_value = new \Dex\EncodedArray($this-&gt;_io, $this, $this-&gt;_root);
+                break;
             case \Dex\EncodedValue\ValueTypeEnum::BYTE:
                 $this-&gt;_m_value = $this-&gt;_io-&gt;readS1();
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::ARRAY:
-                $this-&gt;_m_value = new \Dex\EncodedArray($this-&gt;_io, $this, $this-&gt;_root);
+            case \Dex\EncodedValue\ValueTypeEnum::METHOD:
+                $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
                 break;
             case \Dex\EncodedValue\ValueTypeEnum::METHOD_TYPE:
                 $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
@@ -697,29 +703,23 @@ class EncodedValue extends \Kaitai\Struct\Struct {
             case \Dex\EncodedValue\ValueTypeEnum::SHORT:
                 $this-&gt;_m_value = $this-&gt;_io-&gt;readS2le();
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::METHOD:
+            case \Dex\EncodedValue\ValueTypeEnum::STRING:
                 $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::DOUBLE:
-                $this-&gt;_m_value = $this-&gt;_io-&gt;readF8le();
-                break;
-            case \Dex\EncodedValue\ValueTypeEnum::FLOAT:
-                $this-&gt;_m_value = $this-&gt;_io-&gt;readF4le();
-                break;
-            case \Dex\EncodedValue\ValueTypeEnum::TYPE:
-                $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
-                break;
-            case \Dex\EncodedValue\ValueTypeEnum::ENUM:
-                $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
+            case \Dex\EncodedValue\ValueTypeEnum::INT:
+                $this-&gt;_m_value = $this-&gt;_io-&gt;readS4le();
                 break;
             case \Dex\EncodedValue\ValueTypeEnum::FIELD:
                 $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::STRING:
-                $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
+            case \Dex\EncodedValue\ValueTypeEnum::LONG:
+                $this-&gt;_m_value = $this-&gt;_io-&gt;readS8le();
                 break;
-            case \Dex\EncodedValue\ValueTypeEnum::CHAR:
-                $this-&gt;_m_value = $this-&gt;_io-&gt;readU2le();
+            case \Dex\EncodedValue\ValueTypeEnum::FLOAT:
+                $this-&gt;_m_value = $this-&gt;_io-&gt;readF4le();
+                break;
+            case \Dex\EncodedValue\ValueTypeEnum::ENUM:
+                $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
                 break;
         }
     }

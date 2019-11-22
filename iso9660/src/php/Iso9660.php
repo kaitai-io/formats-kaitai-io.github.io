@@ -64,8 +64,8 @@ class VolDescPrimary extends \Kaitai\Struct\Struct {
         $this->_m_lbaPathTableBe = $this->_io->readU4be();
         $this->_m_lbaOptPathTableBe = $this->_io->readU4be();
         $this->_m__raw_rootDir = $this->_io->readBytes(34);
-        $_io__raw_rootDir = new \Kaitai\Struct\Stream($this->_m__raw_rootDir);
-        $this->_m_rootDir = new \Iso9660\DirEntry($_io__raw_rootDir, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_rootDir);
+        $this->_m_rootDir = new \Iso9660\DirEntry($io, $this, $this->_root);
         $this->_m_volSetId = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(128), "UTF-8");
         $this->_m_publisherId = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(128), "UTF-8");
         $this->_m_dataPreparerId = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(128), "UTF-8");
@@ -88,8 +88,8 @@ class VolDescPrimary extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek(($this->lbaPathTableLe() * $this->_root()->sectorSize()));
         $this->_m__raw_pathTable = $this->_io->readBytes($this->pathTableSize()->le());
-        $_io__raw_pathTable = new \Kaitai\Struct\Stream($this->_m__raw_pathTable);
-        $this->_m_pathTable = new \Iso9660\PathTableLe($_io__raw_pathTable, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_pathTable);
+        $this->_m_pathTable = new \Iso9660\PathTableLe($io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_pathTable;
     }
@@ -220,8 +220,8 @@ class DirEntry extends \Kaitai\Struct\Struct {
         $this->_m_len = $this->_io->readU1();
         if ($this->len() > 0) {
             $this->_m__raw_body = $this->_io->readBytes(($this->len() - 1));
-            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-            $this->_m_body = new \Iso9660\DirEntryBody($_io__raw_body, $this, $this->_root);
+            $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+            $this->_m_body = new \Iso9660\DirEntryBody($io, $this, $this->_root);
         }
     }
     protected $_m_len;
@@ -441,8 +441,8 @@ class DirEntryBody extends \Kaitai\Struct\Struct {
             $_pos = $io->pos();
             $io->seek(($this->lbaExtent()->le() * $this->_root()->sectorSize()));
             $this->_m__raw_extentAsDir = $io->readBytes($this->sizeExtent()->le());
-            $_io__raw_extentAsDir = new \Kaitai\Struct\Stream($this->_m__raw_extentAsDir);
-            $this->_m_extentAsDir = new \Iso9660\DirEntries($_io__raw_extentAsDir, $this, $this->_root);
+            $io = new \Kaitai\Struct\Stream($this->_m__raw_extentAsDir);
+            $this->_m_extentAsDir = new \Iso9660\DirEntries($io, $this, $this->_root);
             $io->seek($_pos);
         }
         return $this->_m_extentAsDir;

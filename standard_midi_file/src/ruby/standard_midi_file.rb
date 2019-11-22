@@ -178,8 +178,8 @@ class StandardMidiFile < Kaitai::Struct::Struct
       @magic = @_io.ensure_fixed_contents([77, 84, 114, 107].pack('C*'))
       @len_events = @_io.read_u4be
       @_raw_events = @_io.read_bytes(len_events)
-      _io__raw_events = Kaitai::Struct::Stream.new(@_raw_events)
-      @events = TrackEvents.new(_io__raw_events, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_events)
+      @events = TrackEvents.new(io, self, @_root)
       self
     end
     attr_reader :magic

@@ -57,7 +57,7 @@ sub _read {
     $self->{flags} = Gzip::Flags->new($self->{_io}, $self, $self->{_root});
     $self->{mod_time} = $self->{_io}->read_u4le();
     my $_on = $self->compression_method();
-    if ($_on == $Gzip::COMPRESSION_METHODS_DEFLATE) {
+    if ($_on == $COMPRESSION_METHODS_DEFLATE) {
         $self->{extra_flags} = Gzip::ExtraFlagsDeflate->new($self->{_io}, $self, $self->{_root});
     }
     $self->{os} = $self->{_io}->read_u1();

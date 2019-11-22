@@ -185,6 +185,11 @@ for repetitive musical phrases.</li>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Scream Tracker 3 module parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Scream Tracker 3 module parsing C# library">C#</a></li>
                 
                 
@@ -347,21 +352,21 @@ public class S3m extends KaitaiStruct {
         this.hasCustomPan = this._io.readU1();
         this.reserved2 = this._io.readBytes(8);
         this.ofsSpecial = this._io.readU2le();
-        channels = new ArrayList&lt;Channel&gt;(((Number) (32)).intValue());
+        channels = new ArrayList&lt;Channel&gt;((int) (32));
         for (int i = 0; i &lt; 32; i++) {
             this.channels.add(new Channel(this._io, this, _root));
         }
         this.orders = this._io.readBytes(numOrders());
-        instruments = new ArrayList&lt;InstrumentPtr&gt;(((Number) (numInstruments())).intValue());
+        instruments = new ArrayList&lt;InstrumentPtr&gt;((int) (numInstruments()));
         for (int i = 0; i &lt; numInstruments(); i++) {
             this.instruments.add(new InstrumentPtr(this._io, this, _root));
         }
-        patterns = new ArrayList&lt;PatternPtr&gt;(((Number) (numPatterns())).intValue());
+        patterns = new ArrayList&lt;PatternPtr&gt;((int) (numPatterns()));
         for (int i = 0; i &lt; numPatterns(); i++) {
             this.patterns.add(new PatternPtr(this._io, this, _root));
         }
         if (hasCustomPan() == 252) {
-            channelPans = new ArrayList&lt;ChannelPan&gt;(((Number) (32)).intValue());
+            channelPans = new ArrayList&lt;ChannelPan&gt;((int) (32));
             for (int i = 0; i &lt; 32; i++) {
                 this.channelPans.add(new ChannelPan(this._io, this, _root));
             }
@@ -747,22 +752,15 @@ public class S3m extends KaitaiStruct {
         private void _read() {
             this.type = InstTypes.byId(this._io.readU1());
             this.filename = KaitaiStream.bytesTerminate(this._io.readBytes(12), (byte) 0, false);
-            {
-                InstTypes on = type();
-                if (on != null) {
-                    switch (type()) {
-                    case SAMPLE: {
-                        this.body = new Sampled(this._io, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.body = new Adlib(this._io, this, _root);
-                        break;
-                    }
-                    }
-                } else {
-                    this.body = new Adlib(this._io, this, _root);
-                }
+            switch (type()) {
+            case SAMPLE: {
+                this.body = new Sampled(this._io, this, _root);
+                break;
+            }
+            default: {
+                this.body = new Adlib(this._io, this, _root);
+                break;
+            }
             }
             this.tuningHz = this._io.readU4le();
             this.reserved2 = this._io.readBytes(12);

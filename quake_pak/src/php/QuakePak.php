@@ -19,8 +19,8 @@ class QuakePak extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->ofsIndex());
         $this->_m__raw_index = $this->_io->readBytes($this->lenIndex());
-        $_io__raw_index = new \Kaitai\Struct\Stream($this->_m__raw_index);
-        $this->_m_index = new \QuakePak\IndexStruct($_io__raw_index, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_index);
+        $this->_m_index = new \QuakePak\IndexStruct($io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_index;
     }

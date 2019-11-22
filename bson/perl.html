@@ -395,7 +395,7 @@ sub _read {
     $self-&gt;{len} = $self-&gt;{_io}-&gt;read_s4le();
     $self-&gt;{subtype} = $self-&gt;{_io}-&gt;read_u1();
     my $_on = $self-&gt;subtype();
-    if ($_on == $Bson::BinData::SUBTYPE_BYTE_ARRAY_DEPRECATED) {
+    if ($_on == $SUBTYPE_BYTE_ARRAY_DEPRECATED) {
         $self-&gt;{_raw_content} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len());
         my $io__raw_content = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_content});
         $self-&gt;{content} = Bson::BinData::ByteArrayDeprecated-&gt;new($io__raw_content, $self, $self-&gt;{_root});
@@ -654,56 +654,56 @@ sub _read {
     $self-&gt;{type_byte} = $self-&gt;{_io}-&gt;read_u1();
     $self-&gt;{name} = Bson::Cstring-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     my $_on = $self-&gt;type_byte();
-    if ($_on == $Bson::Element::BSON_TYPE_CODE_WITH_SCOPE) {
-        $self-&gt;{content} = Bson::CodeWithScope-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_REG_EX) {
-        $self-&gt;{content} = Bson::RegEx-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_DOUBLE) {
+    if ($_on == $BSON_TYPE_NUMBER_DOUBLE) {
         $self-&gt;{content} = $self-&gt;{_io}-&gt;read_f8le();
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_SYMBOL) {
-        $self-&gt;{content} = Bson::String-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    elsif ($_on == $BSON_TYPE_CODE_WITH_SCOPE) {
+        $self-&gt;{content} = Bson::CodeWithScope-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_TIMESTAMP) {
-        $self-&gt;{content} = Bson::Timestamp-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_INT) {
-        $self-&gt;{content} = $self-&gt;{_io}-&gt;read_s4le();
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_DOCUMENT) {
-        $self-&gt;{content} = Bson-&gt;new($self-&gt;{_io});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_OBJECT_ID) {
+    elsif ($_on == $BSON_TYPE_OBJECT_ID) {
         $self-&gt;{content} = Bson::ObjectId-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_JAVASCRIPT) {
+    elsif ($_on == $BSON_TYPE_STRING) {
         $self-&gt;{content} = Bson::String-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_UTC_DATETIME) {
+    elsif ($_on == $BSON_TYPE_REG_EX) {
+        $self-&gt;{content} = Bson::RegEx-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $BSON_TYPE_NUMBER_DECIMAL) {
+        $self-&gt;{content} = Bson::F16-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $BSON_TYPE_UTC_DATETIME) {
         $self-&gt;{content} = $self-&gt;{_io}-&gt;read_s8le();
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_BOOLEAN) {
-        $self-&gt;{content} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_LONG) {
+    elsif ($_on == $BSON_TYPE_NUMBER_LONG) {
         $self-&gt;{content} = $self-&gt;{_io}-&gt;read_s8le();
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_BIN_DATA) {
-        $self-&gt;{content} = Bson::BinData-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    elsif ($_on == $BSON_TYPE_TIMESTAMP) {
+        $self-&gt;{content} = Bson::Timestamp-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_STRING) {
-        $self-&gt;{content} = Bson::String-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_DB_POINTER) {
+    elsif ($_on == $BSON_TYPE_DB_POINTER) {
         $self-&gt;{content} = Bson::DbPointer-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_ARRAY) {
+    elsif ($_on == $BSON_TYPE_ARRAY) {
         $self-&gt;{content} = Bson-&gt;new($self-&gt;{_io});
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_DECIMAL) {
-        $self-&gt;{content} = Bson::F16-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    elsif ($_on == $BSON_TYPE_JAVASCRIPT) {
+        $self-&gt;{content} = Bson::String-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $BSON_TYPE_BOOLEAN) {
+        $self-&gt;{content} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $BSON_TYPE_DOCUMENT) {
+        $self-&gt;{content} = Bson-&gt;new($self-&gt;{_io});
+    }
+    elsif ($_on == $BSON_TYPE_SYMBOL) {
+        $self-&gt;{content} = Bson::String-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $BSON_TYPE_NUMBER_INT) {
+        $self-&gt;{content} = $self-&gt;{_io}-&gt;read_s4le();
+    }
+    elsif ($_on == $BSON_TYPE_BIN_DATA) {
+        $self-&gt;{content} = Bson::BinData-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
 }
 

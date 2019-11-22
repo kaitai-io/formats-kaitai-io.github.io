@@ -60,7 +60,7 @@ class Icc4(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.standard_illuminant_encoding = KaitaiStream.resolve_enum(self._root.StandardIlluminantEncoding.StandardIlluminantEncodings, self._io.read_u4be())
+            self.standard_illuminant_encoding = self._root.StandardIlluminantEncoding.StandardIlluminantEncodings(self._io.read_u4be())
 
 
     class ProfileHeader(KaitaiStruct):
@@ -146,19 +146,19 @@ class Icc4(KaitaiStruct):
 
         def _read(self):
             self.size = self._io.read_u4be()
-            self.preferred_cmm_type = KaitaiStream.resolve_enum(self._root.ProfileHeader.CmmSignatures, self._io.read_u4be())
+            self.preferred_cmm_type = self._root.ProfileHeader.CmmSignatures(self._io.read_u4be())
             self.version = self._root.ProfileHeader.VersionField(self._io, self, self._root)
-            self.device_class = KaitaiStream.resolve_enum(self._root.ProfileHeader.ProfileClasses, self._io.read_u4be())
-            self.color_space = KaitaiStream.resolve_enum(self._root.ProfileHeader.DataColourSpaces, self._io.read_u4be())
+            self.device_class = self._root.ProfileHeader.ProfileClasses(self._io.read_u4be())
+            self.color_space = self._root.ProfileHeader.DataColourSpaces(self._io.read_u4be())
             self.pcs = (self._io.read_bytes(4)).decode(u"ASCII")
             self.creation_date_time = self._root.DateTimeNumber(self._io, self, self._root)
             self.file_signature = self._io.ensure_fixed_contents(b"\x61\x63\x73\x70")
-            self.primary_platform = KaitaiStream.resolve_enum(self._root.ProfileHeader.PrimaryPlatforms, self._io.read_u4be())
+            self.primary_platform = self._root.ProfileHeader.PrimaryPlatforms(self._io.read_u4be())
             self.profile_flags = self._root.ProfileHeader.ProfileFlags(self._io, self, self._root)
             self.device_manufacturer = self._root.DeviceManufacturer(self._io, self, self._root)
             self.device_model = (self._io.read_bytes(4)).decode(u"ASCII")
             self.device_attributes = self._root.DeviceAttributes(self._io, self, self._root)
-            self.rendering_intent = KaitaiStream.resolve_enum(self._root.ProfileHeader.RenderingIntents, self._io.read_u4be())
+            self.rendering_intent = self._root.ProfileHeader.RenderingIntents(self._io.read_u4be())
             self.nciexyz_values_of_illuminant_of_pcs = self._root.XyzNumber(self._io, self, self._root)
             self.creator = self._root.DeviceManufacturer(self._io, self, self._root)
             self.identifier = self._io.read_bytes(16)
@@ -357,7 +357,7 @@ class Icc4(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.tag_signature = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagSignatures, self._io.read_u4be())
+                self.tag_signature = self._root.TagTable.TagDefinition.TagSignatures(self._io.read_u4be())
                 self.offset_to_data_element = self._io.read_u4be()
                 self.size_of_data_element = self._io.read_u4be()
 
@@ -369,7 +369,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.xyz_type:
                         self.tag_data = self._root.TagTable.TagDefinition.XyzType(self._io, self, self._root)
@@ -383,7 +383,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_localized_unicode_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
@@ -447,7 +447,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.viewing_conditions_type:
                         self.tag_data = self._root.TagTable.TagDefinition.ViewingConditionsType(self._io, self, self._root)
@@ -461,7 +461,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.curve_type:
                         self.tag_data = self._root.TagTable.TagDefinition.CurveType(self._io, self, self._root)
@@ -516,7 +516,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.signature_type:
                         self.tag_data = self._root.TagTable.TagDefinition.SignatureType(self._io, self, self._root)
@@ -571,7 +571,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type:
                         self.tag_data = self._root.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
@@ -609,7 +609,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type:
                         self.tag_data = self._root.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
@@ -627,7 +627,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.xyz_type:
                         self.tag_data = self._root.TagTable.TagDefinition.XyzType(self._io, self, self._root)
@@ -665,7 +665,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.signature_type:
                         self.tag_data = self._root.TagTable.TagDefinition.SignatureType(self._io, self, self._root)
@@ -696,7 +696,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.colorant_table_type:
                         self.tag_data = self._root.TagTable.TagDefinition.ColorantTableType(self._io, self, self._root)
@@ -710,7 +710,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.measurement_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MeasurementType(self._io, self, self._root)
@@ -724,7 +724,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.profile_sequence_desc_type:
                         self.tag_data = self._root.TagTable.TagDefinition.ProfileSequenceDescType(self._io, self, self._root)
@@ -738,7 +738,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.signature_type:
                         self.tag_data = self._root.TagTable.TagDefinition.SignatureType(self._io, self, self._root)
@@ -752,7 +752,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type:
                         self.tag_data = self._root.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
@@ -770,7 +770,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
@@ -784,7 +784,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.response_curve_set_16_type:
                         self.tag_data = self._root.TagTable.TagDefinition.ResponseCurveSet16Type(self._io, self, self._root)
@@ -798,7 +798,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.xyz_type:
                         self.tag_data = self._root.TagTable.TagDefinition.XyzType(self._io, self, self._root)
@@ -812,7 +812,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_localized_unicode_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
@@ -826,7 +826,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type:
                         self.tag_data = self._root.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
@@ -844,7 +844,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.curve_type:
                         self.tag_data = self._root.TagTable.TagDefinition.CurveType(self._io, self, self._root)
@@ -860,7 +860,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
@@ -874,7 +874,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
@@ -888,7 +888,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type:
                         self.tag_data = self._root.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
@@ -914,19 +914,19 @@ class Icc4(KaitaiStruct):
 
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
-                    self.function_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions, self._io.read_u2be())
+                    self.function_type = self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions(self._io.read_u2be())
                     self.reserved_2 = self._io.ensure_fixed_contents(b"\x00\x00")
                     _on = self.function_type
-                    if _on == self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.cie_122_1996:
+                    if _on == self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.y_equals_x_to_power_of_g:
+                        self.parameters = self._root.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsXToPowerOfG(self._io, self, self._root)
+                    elif _on == self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.cie_122_1996:
                         self.parameters = self._root.TagTable.TagDefinition.ParametricCurveType.ParamsCie1221996(self._io, self, self._root)
-                    elif _on == self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.iec_61966_3:
-                        self.parameters = self._root.TagTable.TagDefinition.ParametricCurveType.ParamsIec619663(self._io, self, self._root)
                     elif _on == self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.iec_61966_2_1:
                         self.parameters = self._root.TagTable.TagDefinition.ParametricCurveType.ParamsIec6196621(self._io, self, self._root)
                     elif _on == self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c:
                         self.parameters = self._root.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(self._io, self, self._root)
-                    elif _on == self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.y_equals_x_to_power_of_g:
-                        self.parameters = self._root.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsXToPowerOfG(self._io, self, self._root)
+                    elif _on == self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.iec_61966_3:
+                        self.parameters = self._root.TagTable.TagDefinition.ParametricCurveType.ParamsIec619663(self._io, self, self._root)
 
                 class ParamsIec619663(KaitaiStruct):
                     def __init__(self, _io, _parent=None, _root=None):
@@ -1007,7 +1007,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.chromaticity_type:
                         self.tag_data = self._root.TagTable.TagDefinition.ChromaticityType(self._io, self, self._root)
@@ -1021,7 +1021,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.s_15_fixed_16_array_type:
                         self.tag_data = self._root.TagTable.TagDefinition.S15Fixed16ArrayType(self._io, self, self._root)
@@ -1050,10 +1050,10 @@ class Icc4(KaitaiStruct):
 
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
-                    self.standard_observer_encoding = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.MeasurementType.StandardObserverEncodings, self._io.read_u4be())
+                    self.standard_observer_encoding = self._root.TagTable.TagDefinition.MeasurementType.StandardObserverEncodings(self._io.read_u4be())
                     self.nciexyz_tristimulus_values_for_measurement_backing = self._root.XyzNumber(self._io, self, self._root)
-                    self.measurement_geometry_encoding = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.MeasurementType.MeasurementGeometryEncodings, self._io.read_u4be())
-                    self.measurement_flare_encoding = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.MeasurementType.MeasurementFlareEncodings, self._io.read_u4be())
+                    self.measurement_geometry_encoding = self._root.TagTable.TagDefinition.MeasurementType.MeasurementGeometryEncodings(self._io.read_u4be())
+                    self.measurement_flare_encoding = self._root.TagTable.TagDefinition.MeasurementType.MeasurementFlareEncodings(self._io.read_u4be())
                     self.standard_illuminant_encoding = self._root.StandardIlluminantEncoding(self._io, self, self._root)
 
 
@@ -1153,7 +1153,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_localized_unicode_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
@@ -1167,7 +1167,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type:
                         self.tag_data = self._root.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
@@ -1199,7 +1199,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
@@ -1213,7 +1213,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type:
                         self.tag_data = self._root.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
@@ -1231,7 +1231,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_localized_unicode_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
@@ -1281,7 +1281,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.colorant_order_type:
                         self.tag_data = self._root.TagTable.TagDefinition.ColorantOrderType(self._io, self, self._root)
@@ -1299,7 +1299,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.data_flag = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.DataType.DataTypes, self._io.read_u4be())
+                    self.data_flag = self._root.TagTable.TagDefinition.DataType.DataTypes(self._io.read_u4be())
 
 
             class ChromaticityType(KaitaiStruct):
@@ -1319,7 +1319,7 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_device_channels = self._io.read_u2be()
-                    self.colorant_and_phosphor_encoding = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.ChromaticityType.ColorantAndPhosphorEncodings, self._io.read_u2be())
+                    self.colorant_and_phosphor_encoding = self._root.TagTable.TagDefinition.ChromaticityType.ColorantAndPhosphorEncodings(self._io.read_u2be())
                     self.ciexy_coordinates_per_channel = [None] * (self.number_of_device_channels)
                     for i in range(self.number_of_device_channels):
                         self.ciexy_coordinates_per_channel[i] = self._root.TagTable.TagDefinition.ChromaticityType.CiexyCoordinateValues(self._io, self, self._root)
@@ -1346,7 +1346,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.xyz_type:
                         self.tag_data = self._root.TagTable.TagDefinition.XyzType(self._io, self, self._root)
@@ -1419,7 +1419,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type:
                         self.tag_data = self._root.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
@@ -1437,7 +1437,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type:
                         self.tag_data = self._root.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
@@ -1455,7 +1455,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.signature_type:
                         self.tag_data = self._root.TagTable.TagDefinition.SignatureType(self._io, self, self._root)
@@ -1469,7 +1469,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.text_type:
                         self.tag_data = self._root.TagTable.TagDefinition.TextType(self._io, self, self._root)
@@ -1483,7 +1483,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.colorant_table_type:
                         self.tag_data = self._root.TagTable.TagDefinition.ColorantTableType(self._io, self, self._root)
@@ -1497,7 +1497,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.date_time_type:
                         self.tag_data = self._root.TagTable.TagDefinition.DateTimeType(self._io, self, self._root)
@@ -1511,7 +1511,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.named_color_2_type:
                         self.tag_data = self._root.TagTable.TagDefinition.NamedColor2Type(self._io, self, self._root)
@@ -1525,7 +1525,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_localized_unicode_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
@@ -1539,7 +1539,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
@@ -1585,7 +1585,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.profile_sequence_identifier_type:
                         self.tag_data = self._root.TagTable.TagDefinition.ProfileSequenceIdentifierType(self._io, self, self._root)
@@ -1599,7 +1599,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
@@ -1629,7 +1629,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
@@ -1643,7 +1643,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.curve_type:
                         self.tag_data = self._root.TagTable.TagDefinition.CurveType(self._io, self, self._root)
@@ -1693,7 +1693,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.curve_type:
                         self.tag_data = self._root.TagTable.TagDefinition.CurveType(self._io, self, self._root)
@@ -1726,7 +1726,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type:
                         self.tag_data = self._root.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
@@ -1761,7 +1761,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.xyz_type:
                         self.tag_data = self._root.TagTable.TagDefinition.XyzType(self._io, self, self._root)
@@ -1792,7 +1792,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.tag_type = KaitaiStream.resolve_enum(self._root.TagTable.TagDefinition.TagTypeSignatures, self._io.read_u4be())
+                    self.tag_type = self._root.TagTable.TagDefinition.TagTypeSignatures(self._io.read_u4be())
                     _on = self.tag_type
                     if _on == self._root.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type:
                         self.tag_data = self._root.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
@@ -1806,202 +1806,202 @@ class Icc4(KaitaiStruct):
                 _pos = self._io.pos()
                 self._io.seek(self.offset_to_data_element)
                 _on = self.tag_signature
-                if _on == self._root.TagTable.TagDefinition.TagSignatures.colorant_order:
+                if _on == self._root.TagTable.TagDefinition.TagSignatures.profile_sequence_identifier:
                     self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ColorantOrderTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_a_2:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToA2Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.media_white_point:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.MediaWhitePointTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_d_3:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToD3Tag(_io__raw__m_tag_data_element, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ProfileSequenceIdentifierTag(io, self, self._root)
                 elif _on == self._root.TagTable.TagDefinition.TagSignatures.colorimetric_intent_image_state:
                     self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ColorimetricIntentImageStateTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.viewing_cond_desc:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ViewingCondDescTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.preview_1:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.Preview1Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.device_model_desc:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DeviceModelDescTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.chromaticity:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ChromaticityTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.preview_0:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.Preview0Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.d_to_b_1:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DToB1Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.saturation_rendering_intent_gamut:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.SaturationRenderingIntentGamutTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_a_0:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToA0Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.green_matrix_column:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.GreenMatrixColumnTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.copyright:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.CopyrightTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.blue_matrix_column:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BlueMatrixColumnTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.chromatic_adaptation:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ChromaticAdaptationTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.a_to_b_1:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.AToB1Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.output_response:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.OutputResponseTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.profile_sequence:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ProfileSequenceTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.char_target:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.CharTargetTag(_io__raw__m_tag_data_element, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ColorimetricIntentImageStateTag(io, self, self._root)
                 elif _on == self._root.TagTable.TagDefinition.TagSignatures.red_trc:
                     self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.RedTrcTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.gamut:
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.RedTrcTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.preview_0:
                     self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.GamutTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.device_mfg_desc:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DeviceMfgDescTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.measurement:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.MeasurementTag(_io__raw__m_tag_data_element, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.Preview0Tag(io, self, self._root)
                 elif _on == self._root.TagTable.TagDefinition.TagSignatures.green_trc:
                     self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.GreenTrcTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.d_to_b_3:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DToB3Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.colorant_table:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ColorantTableTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.d_to_b_2:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DToB2Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.profile_description:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ProfileDescriptionTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.profile_sequence_identifier:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ProfileSequenceIdentifierTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.gray_trc:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.GrayTrcTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.perceptual_rendering_intent_gamut:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.PerceptualRenderingIntentGamutTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.blue_trc:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BlueTrcTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.d_to_b_0:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DToB0Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.a_to_b_2:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.AToB2Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.calibration_date_time:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.CalibrationDateTimeTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.colorant_table_out:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ColorantTableOutTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.red_matrix_column:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.RedMatrixColumnTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.preview_2:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.Preview2Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.a_to_b_0:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.AToB0Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.luminance:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.LuminanceTag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.named_color_2:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.NamedColor2Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_d_2:
-                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToD2Tag(_io__raw__m_tag_data_element, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.GreenTrcTag(io, self, self._root)
                 elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_d_0:
                     self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToD0Tag(_io__raw__m_tag_data_element, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToD0Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.colorant_table_out:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ColorantTableOutTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_a_2:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToA2Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.calibration_date_time:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.CalibrationDateTimeTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.chromatic_adaptation:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ChromaticAdaptationTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.colorant_table:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ColorantTableTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.a_to_b_2:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.AToB2Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.d_to_b_1:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DToB1Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.chromaticity:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ChromaticityTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.blue_matrix_column:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BlueMatrixColumnTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.a_to_b_0:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.AToB0Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_d_2:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToD2Tag(io, self, self._root)
                 elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_a_1:
                     self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToA1Tag(_io__raw__m_tag_data_element, self, self._root)
-                elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_d_1:
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToA1Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.media_white_point:
                     self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToD1Tag(_io__raw__m_tag_data_element, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.MediaWhitePointTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.d_to_b_0:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DToB0Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.named_color_2:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.NamedColor2Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.d_to_b_2:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DToB2Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.red_matrix_column:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.RedMatrixColumnTag(io, self, self._root)
                 elif _on == self._root.TagTable.TagDefinition.TagSignatures.viewing_conditions:
                     self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ViewingConditionsTag(_io__raw__m_tag_data_element, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ViewingConditionsTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.a_to_b_1:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.AToB1Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.preview_1:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.Preview1Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.gray_trc:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.GrayTrcTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.device_mfg_desc:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DeviceMfgDescTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_d_1:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToD1Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.colorant_order:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ColorantOrderTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.copyright:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.CopyrightTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.gamut:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.GamutTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.char_target:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.CharTargetTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.output_response:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.OutputResponseTag(io, self, self._root)
                 elif _on == self._root.TagTable.TagDefinition.TagSignatures.technology:
                     self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
-                    _io__raw__m_tag_data_element = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
-                    self._m_tag_data_element = self._root.TagTable.TagDefinition.TechnologyTag(_io__raw__m_tag_data_element, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.TechnologyTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.viewing_cond_desc:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ViewingCondDescTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.profile_description:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ProfileDescriptionTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.luminance:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.LuminanceTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.d_to_b_3:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DToB3Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_d_3:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToD3Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.b_to_a_0:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BToA0Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.preview_2:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.Preview2Tag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.green_matrix_column:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.GreenMatrixColumnTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.profile_sequence:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.ProfileSequenceTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.saturation_rendering_intent_gamut:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.SaturationRenderingIntentGamutTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.perceptual_rendering_intent_gamut:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.PerceptualRenderingIntentGamutTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.blue_trc:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.BlueTrcTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.device_model_desc:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.DeviceModelDescTag(io, self, self._root)
+                elif _on == self._root.TagTable.TagDefinition.TagSignatures.measurement:
+                    self._raw__m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
+                    io = KaitaiStream(BytesIO(self._raw__m_tag_data_element))
+                    self._m_tag_data_element = self._root.TagTable.TagDefinition.MeasurementTag(io, self, self._root)
                 else:
                     self._m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
                 self._io.seek(_pos)
@@ -2033,10 +2033,10 @@ class Icc4(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.reflective_or_transparency = KaitaiStream.resolve_enum(self._root.DeviceAttributes.DeviceAttributesReflectiveOrTransparency, self._io.read_bits_int(1))
-            self.glossy_or_matte = KaitaiStream.resolve_enum(self._root.DeviceAttributes.DeviceAttributesGlossyOrMatte, self._io.read_bits_int(1))
-            self.positive_or_negative_media_polarity = KaitaiStream.resolve_enum(self._root.DeviceAttributes.DeviceAttributesPositiveOrNegativeMediaPolarity, self._io.read_bits_int(1))
-            self.colour_or_black_and_white_media = KaitaiStream.resolve_enum(self._root.DeviceAttributes.DeviceAttributesColourOrBlackAndWhiteMedia, self._io.read_bits_int(1))
+            self.reflective_or_transparency = self._root.DeviceAttributes.DeviceAttributesReflectiveOrTransparency(self._io.read_bits_int(1))
+            self.glossy_or_matte = self._root.DeviceAttributes.DeviceAttributesGlossyOrMatte(self._io.read_bits_int(1))
+            self.positive_or_negative_media_polarity = self._root.DeviceAttributes.DeviceAttributesPositiveOrNegativeMediaPolarity(self._io.read_bits_int(1))
+            self.colour_or_black_and_white_media = self._root.DeviceAttributes.DeviceAttributesColourOrBlackAndWhiteMedia(self._io.read_bits_int(1))
             self.reserved = self._io.read_bits_int(28)
             self.vendor_specific = self._io.read_bits_int(32)
 
@@ -2314,7 +2314,7 @@ class Icc4(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.device_manufacturer = KaitaiStream.resolve_enum(self._root.DeviceManufacturer.DeviceManufacturers, self._io.read_u4be())
+            self.device_manufacturer = self._root.DeviceManufacturer.DeviceManufacturers(self._io.read_u4be())
 
 
     class S15Fixed16Number(KaitaiStruct):

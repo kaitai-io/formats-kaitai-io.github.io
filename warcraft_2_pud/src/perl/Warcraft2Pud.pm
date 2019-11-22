@@ -601,7 +601,7 @@ sub _read {
 sub resource {
     my ($self) = @_;
     return $self->{resource} if ($self->{resource});
-    if ( (($self->u_type() == $Warcraft2Pud::UNIT_TYPE_GOLD_MINE) || ($self->u_type() == $Warcraft2Pud::UNIT_TYPE_HUMAN_OIL_WELL) || ($self->u_type() == $Warcraft2Pud::UNIT_TYPE_ORC_OIL_WELL) || ($self->u_type() == $Warcraft2Pud::UNIT_TYPE_OIL_PATCH)) ) {
+    if ( (($self->u_type() == $UNIT_TYPE_GOLD_MINE) || ($self->u_type() == $UNIT_TYPE_HUMAN_OIL_WELL) || ($self->u_type() == $UNIT_TYPE_ORC_OIL_WELL) || ($self->u_type() == $UNIT_TYPE_OIL_PATCH)) ) {
         $self->{resource} = ($self->options() * 2500);
     }
     return $self->{resource};

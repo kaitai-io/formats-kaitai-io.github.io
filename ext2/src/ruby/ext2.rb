@@ -251,8 +251,8 @@ class Ext2 < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek((ptr * _root.bg1.super_block.block_size))
       @_raw_body = @_io.read_bytes(_root.bg1.super_block.block_size)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = RawBlock.new(_io__raw_body, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = RawBlock.new(io, self, @_root)
       @_io.seek(_pos)
       @body
     end
@@ -284,8 +284,8 @@ class Ext2 < Kaitai::Struct::Struct
 
     def _read
       @_raw_super_block = @_io.read_bytes(1024)
-      _io__raw_super_block = Kaitai::Struct::Stream.new(@_raw_super_block)
-      @super_block = SuperBlockStruct.new(_io__raw_super_block, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_super_block)
+      @super_block = SuperBlockStruct.new(io, self, @_root)
       @block_groups = Array.new(super_block.block_group_count)
       (super_block.block_group_count).times { |i|
         @block_groups[i] = Bgd.new(@_io, self, @_root)

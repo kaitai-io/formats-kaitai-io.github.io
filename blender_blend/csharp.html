@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.blend file format of Blender: C# parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Multimedia Files</li>
+        <li class="active">.blend file format of Blender</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.blend file format of Blender:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Blender is an open source suite for 3D modelling, sculpting,
+animation, compositing, rendering, preparation of assets for its own
+game engine and exporting to others, etc. <code>.blend</code> is its own binary
+format that saves whole state of suite: current scene, animations,
+all software settings, extensions, etc.</p>
+<p>Internally, .blend format is a hybrid semi-self-descriptive
+format. On top level, it contains a simple header and a sequence of
+file blocks, which more or less follow typical <a href="https://en.wikipedia.org/wiki/Type-length-value">TLV
+pattern</a>. Pre-last
+block would be a structure with code <code>DNA1</code>, which is a essentially
+a machine-readable schema of all other structures used in this file.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Blender
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        blend
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/902">PRONOM fmt/902</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/903">PRONOM fmt/903</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q15671948">Wikidata Q15671948</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/BLEND">BLEND in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .blend file format of Blender
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".blend file format of Blender parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title=".blend file format of Blender parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title=".blend file format of Blender parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".blend file format of Blender parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".blend file format of Blender parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".blend file format of Blender parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".blend file format of Blender parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".blend file format of Blender parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".blend file format of Blender parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".blend file format of Blender parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".blend file format of Blender parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var data = BlenderBlend.FromFile("path/to/local/file.blend");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] someArray = new byte[] { ... };
+var data = new BlenderBlend(new KaitaiStream(someArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">data.Hdr // => get hdr</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse .blend file format of Blender
+            
+        </h2>
+
+        
+
+        <h3>BlenderBlend.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/BlenderBlend.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+
+    /// &lt;summary&gt;
+    /// Blender is an open source suite for 3D modelling, sculpting,
+    /// animation, compositing, rendering, preparation of assets for its own
+    /// game engine and exporting to others, etc. `.blend` is its own binary
+    /// format that saves whole state of suite: current scene, animations,
+    /// all software settings, extensions, etc.
+    /// 
+    /// Internally, .blend format is a hybrid semi-self-descriptive
+    /// format. On top level, it contains a simple header and a sequence of
+    /// file blocks, which more or less follow typical [TLV
+    /// pattern](https://en.wikipedia.org/wiki/Type-length-value). Pre-last
+    /// block would be a structure with code `DNA1`, which is a essentially
+    /// a machine-readable schema of all other structures used in this file.
+    /// &lt;/summary&gt;
+    public partial class BlenderBlend : KaitaiStruct
+    {
+        public static BlenderBlend FromFile(string fileName)
+        {
+            return new BlenderBlend(new KaitaiStream(fileName));
+        }
+
+
+        public enum PtrSize
+        {
+            Bits64 = 45,
+            Bits32 = 95,
+        }
+
+        public enum Endian
+        {
+            Be = 86,
+            Le = 118,
+        }
+        public BlenderBlend(KaitaiStream p__io, KaitaiStruct p__parent = null, BlenderBlend p__root = null) : base(p__io)
+        {
+            m_parent = p__parent;
+            m_root = p__root ?? this;
+            f_sdnaStructs = false;
+            _read();
+        }
+        private void _read()
+        {
+            _hdr = new Header(m_io, this, m_root);
+            _blocks = new List&lt;FileBlock&gt;();
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _blocks.Add(new FileBlock(m_io, this, m_root));
+                    i++;
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// DNA struct contains a `type` (type name), which is specified as
+        /// an index in types table, and sequence of fields.
+        /// &lt;/summary&gt;
+        public partial class DnaStruct : KaitaiStruct
+        {
+            public static DnaStruct FromFile(string fileName)
+            {
+                return new DnaStruct(new KaitaiStream(fileName));
+            }
+
+            public DnaStruct(KaitaiStream p__io, BlenderBlend.Dna1Body p__parent = null, BlenderBlend p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_type = false;
+                _read();
+            }
+            private void _read()
+            {
+                _idxType = m_io.ReadU2le();
+                _numFields = m_io.ReadU2le();
+                _fields = new List&lt;DnaField&gt;((int) (NumFields));
+                for (var i = 0; i &lt; NumFields; i++)
+                {
+                    _fields.Add(new DnaField(m_io, this, m_root));
+                }
+            }
+            private bool f_type;
+            private string _type;
+            public string Type
+            {
+                get
+                {
+                    if (f_type)
+                        return _type;
+                    _type = (string) (M_Parent.Types[IdxType]);
+                    f_type = true;
+                    return _type;
+                }
+            }
+            private ushort _idxType;
+            private ushort _numFields;
+            private List&lt;DnaField&gt; _fields;
+            private BlenderBlend m_root;
+            private BlenderBlend.Dna1Body m_parent;
+            public ushort IdxType { get { return _idxType; } }
+            public ushort NumFields { get { return _numFields; } }
+            public List&lt;DnaField&gt; Fields { get { return _fields; } }
+            public BlenderBlend M_Root { get { return m_root; } }
+            public BlenderBlend.Dna1Body M_Parent { get { return m_parent; } }
+        }
+        public partial class FileBlock : KaitaiStruct
+        {
+            public static FileBlock FromFile(string fileName)
+            {
+                return new FileBlock(new KaitaiStream(fileName));
+            }
+
+            public FileBlock(KaitaiStream p__io, BlenderBlend p__parent = null, BlenderBlend p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_sdnaStruct = false;
+                _read();
+            }
+            private void _read()
+            {
+                _code = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(4));
+                _lenBody = m_io.ReadU4le();
+                _memAddr = m_io.ReadBytes(M_Root.Hdr.Psize);
+                _sdnaIndex = m_io.ReadU4le();
+                _count = m_io.ReadU4le();
+                switch (Code) {
+                case &quot;DNA1&quot;: {
+                    __raw_body = m_io.ReadBytes(LenBody);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Dna1Body(io___raw_body, this, m_root);
+                    break;
+                }
+                default: {
+                    _body = m_io.ReadBytes(LenBody);
+                    break;
+                }
+                }
+            }
+            private bool f_sdnaStruct;
+            private DnaStruct _sdnaStruct;
+            public DnaStruct SdnaStruct
+            {
+                get
+                {
+                    if (f_sdnaStruct)
+                        return _sdnaStruct;
+                    if (SdnaIndex != 0) {
+                        _sdnaStruct = (DnaStruct) (M_Root.SdnaStructs[SdnaIndex]);
+                    }
+                    f_sdnaStruct = true;
+                    return _sdnaStruct;
+                }
+            }
+            private string _code;
+            private uint _lenBody;
+            private byte[] _memAddr;
+            private uint _sdnaIndex;
+            private uint _count;
+            private object _body;
+            private BlenderBlend m_root;
+            private BlenderBlend m_parent;
+            private byte[] __raw_body;
+
+            /// &lt;summary&gt;
+            /// Identifier of the file block
+            /// &lt;/summary&gt;
+            public string Code { get { return _code; } }
+
+            /// &lt;summary&gt;
+            /// Total length of the data after the header of file block
+            /// &lt;/summary&gt;
+            public uint LenBody { get { return _lenBody; } }
+
+            /// &lt;summary&gt;
+            /// Memory address the structure was located when written to disk
+            /// &lt;/summary&gt;
+            public byte[] MemAddr { get { return _memAddr; } }
+
+            /// &lt;summary&gt;
+            /// Index of the SDNA structure
+            /// &lt;/summary&gt;
+            public uint SdnaIndex { get { return _sdnaIndex; } }
+
+            /// &lt;summary&gt;
+            /// Number of structure located in this file-block
+            /// &lt;/summary&gt;
+            public uint Count { get { return _count; } }
+            public object Body { get { return _body; } }
+            public BlenderBlend M_Root { get { return m_root; } }
+            public BlenderBlend M_Parent { get { return m_parent; } }
+            public byte[] M_RawBody { get { return __raw_body; } }
+        }
+
+        /// &lt;summary&gt;
+        /// DNA1, also known as &amp;quot;Structure DNA&amp;quot;, is a special block in
+        /// .blend file, which contains machine-readable specifications of
+        /// all other structures used in this .blend file.
+        /// 
+        /// Effectively, this block contains:
+        /// 
+        /// * a sequence of &amp;quot;names&amp;quot; (strings which represent field names)
+        /// * a sequence of &amp;quot;types&amp;quot; (strings which represent type name)
+        /// * a sequence of &amp;quot;type lengths&amp;quot;
+        /// * a sequence of &amp;quot;structs&amp;quot; (which describe contents of every
+        ///   structure, referring to types and names by index)
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA&quot;&gt;Source&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class Dna1Body : KaitaiStruct
+        {
+            public static Dna1Body FromFile(string fileName)
+            {
+                return new Dna1Body(new KaitaiStream(fileName));
+            }
+
+            public Dna1Body(KaitaiStream p__io, BlenderBlend.FileBlock p__parent = null, BlenderBlend p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _id = m_io.EnsureFixedContents(new byte[] { 83, 68, 78, 65 });
+                _nameMagic = m_io.EnsureFixedContents(new byte[] { 78, 65, 77, 69 });
+                _numNames = m_io.ReadU4le();
+                _names = new List&lt;string&gt;((int) (NumNames));
+                for (var i = 0; i &lt; NumNames; i++)
+                {
+                    _names.Add(System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                }
+                _padding1 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
+                _typeMagic = m_io.EnsureFixedContents(new byte[] { 84, 89, 80, 69 });
+                _numTypes = m_io.ReadU4le();
+                _types = new List&lt;string&gt;((int) (NumTypes));
+                for (var i = 0; i &lt; NumTypes; i++)
+                {
+                    _types.Add(System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                }
+                _padding2 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
+                _tlenMagic = m_io.EnsureFixedContents(new byte[] { 84, 76, 69, 78 });
+                _lengths = new List&lt;ushort&gt;((int) (NumTypes));
+                for (var i = 0; i &lt; NumTypes; i++)
+                {
+                    _lengths.Add(m_io.ReadU2le());
+                }
+                _padding3 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
+                _strcMagic = m_io.EnsureFixedContents(new byte[] { 83, 84, 82, 67 });
+                _numStructs = m_io.ReadU4le();
+                _structs = new List&lt;DnaStruct&gt;((int) (NumStructs));
+                for (var i = 0; i &lt; NumStructs; i++)
+                {
+                    _structs.Add(new DnaStruct(m_io, this, m_root));
+                }
+            }
+            private byte[] _id;
+            private byte[] _nameMagic;
+            private uint _numNames;
+            private List&lt;string&gt; _names;
+            private byte[] _padding1;
+            private byte[] _typeMagic;
+            private uint _numTypes;
+            private List&lt;string&gt; _types;
+            private byte[] _padding2;
+            private byte[] _tlenMagic;
+            private List&lt;ushort&gt; _lengths;
+            private byte[] _padding3;
+            private byte[] _strcMagic;
+            private uint _numStructs;
+            private List&lt;DnaStruct&gt; _structs;
+            private BlenderBlend m_root;
+            private BlenderBlend.FileBlock m_parent;
+            public byte[] Id { get { return _id; } }
+            public byte[] NameMagic { get { return _nameMagic; } }
+            public uint NumNames { get { return _numNames; } }
+            public List&lt;string&gt; Names { get { return _names; } }
+            public byte[] Padding1 { get { return _padding1; } }
+            public byte[] TypeMagic { get { return _typeMagic; } }
+            public uint NumTypes { get { return _numTypes; } }
+            public List&lt;string&gt; Types { get { return _types; } }
+            public byte[] Padding2 { get { return _padding2; } }
+            public byte[] TlenMagic { get { return _tlenMagic; } }
+            public List&lt;ushort&gt; Lengths { get { return _lengths; } }
+            public byte[] Padding3 { get { return _padding3; } }
+            public byte[] StrcMagic { get { return _strcMagic; } }
+            public uint NumStructs { get { return _numStructs; } }
+            public List&lt;DnaStruct&gt; Structs { get { return _structs; } }
+            public BlenderBlend M_Root { get { return m_root; } }
+            public BlenderBlend.FileBlock M_Parent { get { return m_parent; } }
+        }
+        public partial class Header : KaitaiStruct
+        {
+            public static Header FromFile(string fileName)
+            {
+                return new Header(new KaitaiStream(fileName));
+            }
+
+            public Header(KaitaiStream p__io, BlenderBlend p__parent = null, BlenderBlend p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_psize = false;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.EnsureFixedContents(new byte[] { 66, 76, 69, 78, 68, 69, 82 });
+                _ptrSizeId = ((BlenderBlend.PtrSize) m_io.ReadU1());
+                _endian = ((BlenderBlend.Endian) m_io.ReadU1());
+                _version = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(3));
+            }
+            private bool f_psize;
+            private sbyte _psize;
+
+            /// &lt;summary&gt;
+            /// Number of bytes that a pointer occupies
+            /// &lt;/summary&gt;
+            public sbyte Psize
+            {
+                get
+                {
+                    if (f_psize)
+                        return _psize;
+                    _psize = (sbyte) ((PtrSizeId == BlenderBlend.PtrSize.Bits64 ? 8 : 4));
+                    f_psize = true;
+                    return _psize;
+                }
+            }
+            private byte[] _magic;
+            private PtrSize _ptrSizeId;
+            private Endian _endian;
+            private string _version;
+            private BlenderBlend m_root;
+            private BlenderBlend m_parent;
+            public byte[] Magic { get { return _magic; } }
+
+            /// &lt;summary&gt;
+            /// Size of a pointer; all pointers in the file are stored in this format
+            /// &lt;/summary&gt;
+            public PtrSize PtrSizeId { get { return _ptrSizeId; } }
+
+            /// &lt;summary&gt;
+            /// Type of byte ordering used
+            /// &lt;/summary&gt;
+            public Endian Endian { get { return _endian; } }
+
+            /// &lt;summary&gt;
+            /// Blender version used to save this file
+            /// &lt;/summary&gt;
+            public string Version { get { return _version; } }
+            public BlenderBlend M_Root { get { return m_root; } }
+            public BlenderBlend M_Parent { get { return m_parent; } }
+        }
+        public partial class DnaField : KaitaiStruct
+        {
+            public static DnaField FromFile(string fileName)
+            {
+                return new DnaField(new KaitaiStream(fileName));
+            }
+
+            public DnaField(KaitaiStream p__io, BlenderBlend.DnaStruct p__parent = null, BlenderBlend p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_type = false;
+                f_name = false;
+                _read();
+            }
+            private void _read()
+            {
+                _idxType = m_io.ReadU2le();
+                _idxName = m_io.ReadU2le();
+            }
+            private bool f_type;
+            private string _type;
+            public string Type
+            {
+                get
+                {
+                    if (f_type)
+                        return _type;
+                    _type = (string) (M_Parent.M_Parent.Types[IdxType]);
+                    f_type = true;
+                    return _type;
+                }
+            }
+            private bool f_name;
+            private string _name;
+            public string Name
+            {
+                get
+                {
+                    if (f_name)
+                        return _name;
+                    _name = (string) (M_Parent.M_Parent.Names[IdxName]);
+                    f_name = true;
+                    return _name;
+                }
+            }
+            private ushort _idxType;
+            private ushort _idxName;
+            private BlenderBlend m_root;
+            private BlenderBlend.DnaStruct m_parent;
+            public ushort IdxType { get { return _idxType; } }
+            public ushort IdxName { get { return _idxName; } }
+            public BlenderBlend M_Root { get { return m_root; } }
+            public BlenderBlend.DnaStruct M_Parent { get { return m_parent; } }
+        }
+        private bool f_sdnaStructs;
+        private List&lt;DnaStruct&gt; _sdnaStructs;
+        public List&lt;DnaStruct&gt; SdnaStructs
+        {
+            get
+            {
+                if (f_sdnaStructs)
+                    return _sdnaStructs;
+                _sdnaStructs = (List&lt;DnaStruct&gt;) (((Dna1Body) (Blocks[(Blocks.Count - 2)].Body)).Structs);
+                f_sdnaStructs = true;
+                return _sdnaStructs;
+            }
+        }
+        private Header _hdr;
+        private List&lt;FileBlock&gt; _blocks;
+        private BlenderBlend m_root;
+        private KaitaiStruct m_parent;
+        public Header Hdr { get { return _hdr; } }
+        public List&lt;FileBlock&gt; Blocks { get { return _blocks; } }
+        public BlenderBlend M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+    }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

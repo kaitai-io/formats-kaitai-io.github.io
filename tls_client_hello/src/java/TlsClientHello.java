@@ -194,7 +194,7 @@ public class TlsClientHello extends KaitaiStruct {
         }
         private void _read() {
             this.len = this._io.readU2be();
-            cipherSuites = new ArrayList<Integer>(((Number) ((len() / 2))).intValue());
+            cipherSuites = new ArrayList<Integer>((int) ((len() / 2)));
             for (int i = 0; i < (len() / 2); i++) {
                 this.cipherSuites.add(this._io.readU2be());
             }

@@ -158,6 +158,11 @@ magic header and a record.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="ruby_marshal parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="ruby_marshal parsing C# library">C#</a></li>
                 
                 
@@ -501,26 +506,26 @@ class RubyMarshal(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = KaitaiStream.resolve_enum(self._root.Codes, self._io.read_u1())
+            self.code = self._root.Codes(self._io.read_u1())
             _on = self.code
-            if _on == self._root.Codes.packed_int:
-                self.body = self._root.PackedInt(self._io, self, self._root)
-            elif _on == self._root.Codes.bignum:
+            if _on == self._root.Codes.bignum:
                 self.body = self._root.Bignum(self._io, self, self._root)
+            elif _on == self._root.Codes.ruby_hash:
+                self.body = self._root.RubyHash(self._io, self, self._root)
             elif _on == self._root.Codes.ruby_array:
                 self.body = self._root.RubyArray(self._io, self, self._root)
-            elif _on == self._root.Codes.ruby_symbol_link:
+            elif _on == self._root.Codes.ruby_symbol:
+                self.body = self._root.RubySymbol(self._io, self, self._root)
+            elif _on == self._root.Codes.instance_var:
+                self.body = self._root.InstanceVar(self._io, self, self._root)
+            elif _on == self._root.Codes.ruby_string:
+                self.body = self._root.RubyString(self._io, self, self._root)
+            elif _on == self._root.Codes.packed_int:
                 self.body = self._root.PackedInt(self._io, self, self._root)
             elif _on == self._root.Codes.ruby_struct:
                 self.body = self._root.RubyStruct(self._io, self, self._root)
-            elif _on == self._root.Codes.ruby_string:
-                self.body = self._root.RubyString(self._io, self, self._root)
-            elif _on == self._root.Codes.instance_var:
-                self.body = self._root.InstanceVar(self._io, self, self._root)
-            elif _on == self._root.Codes.ruby_hash:
-                self.body = self._root.RubyHash(self._io, self, self._root)
-            elif _on == self._root.Codes.ruby_symbol:
-                self.body = self._root.RubySymbol(self._io, self, self._root)
+            elif _on == self._root.Codes.ruby_symbol_link:
+                self.body = self._root.PackedInt(self._io, self, self._root)
 
 
     class RubyHash(KaitaiStruct):

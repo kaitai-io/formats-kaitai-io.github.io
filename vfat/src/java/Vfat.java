@@ -501,7 +501,7 @@ public class Vfat extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            records = new ArrayList<RootDirectoryRec>(((Number) (_root.bootSector().bpb().maxRootDirRec())).intValue());
+            records = new ArrayList<RootDirectoryRec>((int) (_root.bootSector().bpb().maxRootDirRec()));
             for (int i = 0; i < _root.bootSector().bpb().maxRootDirRec(); i++) {
                 this.records.add(new RootDirectoryRec(this._io, this, _root));
             }
@@ -592,7 +592,7 @@ public class Vfat extends KaitaiStruct {
             return this.fats;
         long _pos = this._io.pos();
         this._io.seek(bootSector().posFats());
-        fats = new ArrayList<byte[]>(((Number) (bootSector().bpb().numFats())).intValue());
+        fats = new ArrayList<byte[]>((int) (bootSector().bpb().numFats()));
         for (int i = 0; i < bootSector().bpb().numFats(); i++) {
             this.fats.add(this._io.readBytes(bootSector().sizeFat()));
         }

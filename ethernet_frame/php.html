@@ -170,6 +170,11 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing C# library">C#</a></li>
                 
                 
@@ -258,41 +263,111 @@ class EthernetFrame extends \Kaitai\Struct\Struct {
     private function _read() {
         $this-&gt;_m_dstMac = $this-&gt;_io-&gt;readBytes(6);
         $this-&gt;_m_srcMac = $this-&gt;_io-&gt;readBytes(6);
-        $this-&gt;_m_etherType = $this-&gt;_io-&gt;readU2be();
+        $this-&gt;_m_etherType1 = $this-&gt;_io-&gt;readU2be();
+        if ($this-&gt;etherType1() == \EthernetFrame\EtherTypeEnum::IEEE_802_1Q_TPID) {
+            $this-&gt;_m_tci = new \EthernetFrame\TagControlInfo($this-&gt;_io, $this, $this-&gt;_root);
+        }
+        if ($this-&gt;etherType1() == \EthernetFrame\EtherTypeEnum::IEEE_802_1Q_TPID) {
+            $this-&gt;_m_etherType2 = $this-&gt;_io-&gt;readU2be();
+        }
         switch ($this-&gt;etherType()) {
             case \EthernetFrame\EtherTypeEnum::IPV4:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytesFull();
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Ipv4Packet($_io__raw_body);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Ipv4Packet($io);
                 break;
             case \EthernetFrame\EtherTypeEnum::IPV6:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytesFull();
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Ipv6Packet($_io__raw_body);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Ipv6Packet($io);
                 break;
             default:
                 $this-&gt;_m_body = $this-&gt;_io-&gt;readBytesFull();
                 break;
         }
     }
+    protected $_m_etherType;
+
+    /**
+     * Ether type can be specied in several places in the frame. If
+     * first location bears special marker (0x8100), then it is not the
+     * real ether frame yet, an additional payload (`tci`) is expected
+     * and real ether type is upcoming next.
+     */
+    public function etherType() {
+        if ($this-&gt;_m_etherType !== null)
+            return $this-&gt;_m_etherType;
+        $this-&gt;_m_etherType = ($this-&gt;etherType1() == \EthernetFrame\EtherTypeEnum::IEEE_802_1Q_TPID ? $this-&gt;etherType2() : $this-&gt;etherType1());
+        return $this-&gt;_m_etherType;
+    }
     protected $_m_dstMac;
     protected $_m_srcMac;
-    protected $_m_etherType;
+    protected $_m_etherType1;
+    protected $_m_tci;
+    protected $_m_etherType2;
     protected $_m_body;
     protected $_m__raw_body;
 
     /**
-     * Destination MAC address.
+     * Destination MAC address
      */
     public function dstMac() { return $this-&gt;_m_dstMac; }
 
     /**
-     * Source MAC address.
+     * Source MAC address
      */
     public function srcMac() { return $this-&gt;_m_srcMac; }
-    public function etherType() { return $this-&gt;_m_etherType; }
+
+    /**
+     * Either ether type or TPID if it is a IEEE 802.1Q frame
+     */
+    public function etherType1() { return $this-&gt;_m_etherType1; }
+    public function tci() { return $this-&gt;_m_tci; }
+    public function etherType2() { return $this-&gt;_m_etherType2; }
     public function body() { return $this-&gt;_m_body; }
     public function _raw_body() { return $this-&gt;_m__raw_body; }
+}
+
+/**
+ * Tag Control Information (TCI) is an extension of IEEE 802.1Q to
+ * support VLANs on normal IEEE 802.3 Ethernet network.
+ */
+
+namespace \EthernetFrame;
+
+class TagControlInfo extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \EthernetFrame $_parent = null, \EthernetFrame $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_priority = $this-&gt;_io-&gt;readBitsInt(3);
+        $this-&gt;_m_dropEligible = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_vlanId = $this-&gt;_io-&gt;readBitsInt(12);
+    }
+    protected $_m_priority;
+    protected $_m_dropEligible;
+    protected $_m_vlanId;
+
+    /**
+     * Priority Code Point (PCP) is used to specify priority for
+     * different kinds of traffic.
+     */
+    public function priority() { return $this-&gt;_m_priority; }
+
+    /**
+     * Drop Eligible Indicator (DEI) specifies if frame is eligible
+     * to dropping while congestion is detected for certain classes
+     * of traffic.
+     */
+    public function dropEligible() { return $this-&gt;_m_dropEligible; }
+
+    /**
+     * VLAN Identifier (VID) specifies which VLAN this frame
+     * belongs to.
+     */
+    public function vlanId() { return $this-&gt;_m_vlanId; }
 }
 
 namespace \EthernetFrame;
@@ -305,6 +380,7 @@ class EtherTypeEnum {
     const CHAOSNET = 2052;
     const X_25_LEVEL_3 = 2053;
     const ARP = 2054;
+    const IEEE_802_1Q_TPID = 33024;
     const IPV6 = 34525;
 }
 </code></pre>

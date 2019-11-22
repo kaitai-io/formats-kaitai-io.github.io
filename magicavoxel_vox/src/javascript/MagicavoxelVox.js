@@ -99,11 +99,6 @@ var MagicavoxelVox = (function() {
           var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
           this.chunkContent = new Matt(_io__raw_chunkContent, this, this._root);
           break;
-        case MagicavoxelVox.ChunkType.RGBA:
-          this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
-          var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
-          this.chunkContent = new Rgba(_io__raw_chunkContent, this, this._root);
-          break;
         case MagicavoxelVox.ChunkType.XYZI:
           this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
           var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
@@ -113,6 +108,11 @@ var MagicavoxelVox = (function() {
           this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
           var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
           this.chunkContent = new Pack(_io__raw_chunkContent, this, this._root);
+          break;
+        case MagicavoxelVox.ChunkType.RGBA:
+          this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
+          var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
+          this.chunkContent = new Rgba(_io__raw_chunkContent, this, this._root);
           break;
         default:
           this.chunkContent = this._io.readBytes(this.numBytesOfChunkContent);

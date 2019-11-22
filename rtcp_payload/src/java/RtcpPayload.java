@@ -153,7 +153,7 @@ public class RtcpPayload extends KaitaiStruct {
             this.brExp = this._io.readBitsInt(6);
             this.brMantissa = this._io.readBitsInt(18);
             this._io.alignToByte();
-            ssrcList = new ArrayList<Long>(((Number) (numSsrc())).intValue());
+            ssrcList = new ArrayList<Long>((int) (numSsrc()));
             for (int i = 0; i < numSsrc(); i++) {
                 this.ssrcList.add(this._io.readU4be());
             }
@@ -205,7 +205,7 @@ public class RtcpPayload extends KaitaiStruct {
             this.rtpTimestamp = this._io.readU4be();
             this.senderPacketCount = this._io.readU4be();
             this.senderOctetCount = this._io.readU4be();
-            reportBlock = new ArrayList<ReportBlock>(((Number) (_parent().subtype())).intValue());
+            reportBlock = new ArrayList<ReportBlock>((int) (_parent().subtype()));
             for (int i = 0; i < _parent().subtype(); i++) {
                 this.reportBlock.add(new ReportBlock(this._io, this, _root));
             }
@@ -258,7 +258,7 @@ public class RtcpPayload extends KaitaiStruct {
         }
         private void _read() {
             this.ssrc = this._io.readU4be();
-            reportBlock = new ArrayList<ReportBlock>(((Number) (_parent().subtype())).intValue());
+            reportBlock = new ArrayList<ReportBlock>((int) (_parent().subtype()));
             for (int i = 0; i < _parent().subtype(); i++) {
                 this.reportBlock.add(new ReportBlock(this._io, this, _root));
             }
@@ -298,48 +298,41 @@ public class RtcpPayload extends KaitaiStruct {
             this._io.alignToByte();
             this.payloadType = RtcpPayload.PayloadType.byId(this._io.readU1());
             this.length = this._io.readU2be();
-            {
-                PayloadType on = payloadType();
-                if (on != null) {
-                    switch (payloadType()) {
-                    case SR: {
-                        this._raw_body = this._io.readBytes((4 * length()));
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new SrPacket(_io__raw_body, this, _root);
-                        break;
-                    }
-                    case PSFB: {
-                        this._raw_body = this._io.readBytes((4 * length()));
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new PsfbPacket(_io__raw_body, this, _root);
-                        break;
-                    }
-                    case RR: {
-                        this._raw_body = this._io.readBytes((4 * length()));
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new RrPacket(_io__raw_body, this, _root);
-                        break;
-                    }
-                    case RTPFB: {
-                        this._raw_body = this._io.readBytes((4 * length()));
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new RtpfbPacket(_io__raw_body, this, _root);
-                        break;
-                    }
-                    case SDES: {
-                        this._raw_body = this._io.readBytes((4 * length()));
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new SdesPacket(_io__raw_body, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.body = this._io.readBytes((4 * length()));
-                        break;
-                    }
-                    }
-                } else {
-                    this.body = this._io.readBytes((4 * length()));
-                }
+            switch (payloadType()) {
+            case SDES: {
+                this._raw_body = this._io.readBytes((4 * length()));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new SdesPacket(_io__raw_body, this, _root);
+                break;
+            }
+            case RR: {
+                this._raw_body = this._io.readBytes((4 * length()));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new RrPacket(_io__raw_body, this, _root);
+                break;
+            }
+            case RTPFB: {
+                this._raw_body = this._io.readBytes((4 * length()));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new RtpfbPacket(_io__raw_body, this, _root);
+                break;
+            }
+            case PSFB: {
+                this._raw_body = this._io.readBytes((4 * length()));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new PsfbPacket(_io__raw_body, this, _root);
+                break;
+            }
+            case SR: {
+                this._raw_body = this._io.readBytes((4 * length()));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new SrPacket(_io__raw_body, this, _root);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes((4 * length()));
+                break;
+            }
             }
         }
         private long version;
@@ -550,24 +543,17 @@ public class RtcpPayload extends KaitaiStruct {
         private void _read() {
             this.ssrc = this._io.readU4be();
             this.ssrcMediaSource = this._io.readU4be();
-            {
-                PsfbSubtype on = fmt();
-                if (on != null) {
-                    switch (fmt()) {
-                    case AFB: {
-                        this._raw_fciBlock = this._io.readBytesFull();
-                        KaitaiStream _io__raw_fciBlock = new ByteBufferKaitaiStream(_raw_fciBlock);
-                        this.fciBlock = new PsfbAfbPacket(_io__raw_fciBlock, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.fciBlock = this._io.readBytesFull();
-                        break;
-                    }
-                    }
-                } else {
-                    this.fciBlock = this._io.readBytesFull();
-                }
+            switch (fmt()) {
+            case AFB: {
+                this._raw_fciBlock = this._io.readBytesFull();
+                KaitaiStream _io__raw_fciBlock = new ByteBufferKaitaiStream(_raw_fciBlock);
+                this.fciBlock = new PsfbAfbPacket(_io__raw_fciBlock, this, _root);
+                break;
+            }
+            default: {
+                this.fciBlock = this._io.readBytesFull();
+                break;
+            }
             }
         }
         private PsfbSubtype fmt;
@@ -649,7 +635,7 @@ public class RtcpPayload extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            sourceChunk = new ArrayList<SourceChunk>(((Number) (sourceCount())).intValue());
+            sourceChunk = new ArrayList<SourceChunk>((int) (sourceCount()));
             for (int i = 0; i < sourceCount(); i++) {
                 this.sourceChunk.add(new SourceChunk(this._io, this, _root));
             }
@@ -691,24 +677,17 @@ public class RtcpPayload extends KaitaiStruct {
         private void _read() {
             this.ssrc = this._io.readU4be();
             this.ssrcMediaSource = this._io.readU4be();
-            {
-                RtpfbSubtype on = fmt();
-                if (on != null) {
-                    switch (fmt()) {
-                    case TRANSPORT_FEEDBACK: {
-                        this._raw_fciBlock = this._io.readBytesFull();
-                        KaitaiStream _io__raw_fciBlock = new ByteBufferKaitaiStream(_raw_fciBlock);
-                        this.fciBlock = new RtpfbTransportFeedbackPacket(_io__raw_fciBlock, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.fciBlock = this._io.readBytesFull();
-                        break;
-                    }
-                    }
-                } else {
-                    this.fciBlock = this._io.readBytesFull();
-                }
+            switch (fmt()) {
+            case TRANSPORT_FEEDBACK: {
+                this._raw_fciBlock = this._io.readBytesFull();
+                KaitaiStream _io__raw_fciBlock = new ByteBufferKaitaiStream(_raw_fciBlock);
+                this.fciBlock = new RtpfbTransportFeedbackPacket(_io__raw_fciBlock, this, _root);
+                break;
+            }
+            default: {
+                this.fciBlock = this._io.readBytesFull();
+                break;
+            }
             }
         }
         private RtpfbSubtype fmt;

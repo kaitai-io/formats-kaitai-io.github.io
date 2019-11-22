@@ -16,8 +16,8 @@ class Dune2Pak(KaitaiStruct):
 
     def _read(self):
         self._raw_dir = self._io.read_bytes(self.dir_size)
-        _io__raw_dir = KaitaiStream(BytesIO(self._raw_dir))
-        self.dir = self._root.Files(_io__raw_dir, self, self._root)
+        io = KaitaiStream(BytesIO(self._raw_dir))
+        self.dir = self._root.Files(io, self, self._root)
 
     class Files(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):

@@ -185,7 +185,7 @@ public class Sqlite3 extends KaitaiStruct {
             if ( ((pageType() == 2) || (pageType() == 5)) ) {
                 this.rightPtr = this._io.readU4be();
             }
-            cells = new ArrayList<RefCell>(((Number) (numCells())).intValue());
+            cells = new ArrayList<RefCell>((int) (numCells()));
             for (int i = 0; i < numCells(); i++) {
                 this.cells.add(new RefCell(this._io, this, _root));
             }
@@ -356,7 +356,7 @@ public class Sqlite3 extends KaitaiStruct {
             this._raw_columnSerials = this._io.readBytes((lenHeaderAndLen().value() - 1));
             KaitaiStream _io__raw_columnSerials = new ByteBufferKaitaiStream(_raw_columnSerials);
             this.columnSerials = new Serials(_io__raw_columnSerials, this, _root);
-            columnContents = new ArrayList<ColumnContent>(((Number) (columnSerials().entries().size())).intValue());
+            columnContents = new ArrayList<ColumnContent>((int) (columnSerials().entries().size()));
             for (int i = 0; i < columnSerials().entries().size(); i++) {
                 this.columnContents.add(new ColumnContent(this._io, this, _root, columnSerials().entries().get((int) i)));
             }
@@ -507,11 +507,12 @@ public class Sqlite3 extends KaitaiStruct {
             }
             this.asStr = new String(this._io.readBytes(serialType().lenContent()), Charset.forName("UTF-8"));
         }
-        private Sqlite3.Serial serialType;
-        public Sqlite3.Serial serialType() {
+        private Serial serialType;
+        public Serial serialType() {
             if (this.serialType != null)
                 return this.serialType;
-            this.serialType = ((Sqlite3.Serial) (ser()));
+            Sqlite3.Serial _tmp = (Sqlite3.Serial) (((Serial) (ser())));
+            this.serialType = _tmp;
             return this.serialType;
         }
         private Integer asInt;

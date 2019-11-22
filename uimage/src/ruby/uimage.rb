@@ -110,10 +110,10 @@ class Uimage < Kaitai::Struct::Struct
       @load_address = @_io.read_u4be
       @entry_address = @_io.read_u4be
       @data_crc = @_io.read_u4be
-      @os_type = Kaitai::Struct::Stream::resolve_enum(Uimage::UIMAGE_OS, @_io.read_u1)
-      @architecture = Kaitai::Struct::Stream::resolve_enum(Uimage::UIMAGE_ARCH, @_io.read_u1)
-      @image_type = Kaitai::Struct::Stream::resolve_enum(Uimage::UIMAGE_TYPE, @_io.read_u1)
-      @compression_type = Kaitai::Struct::Stream::resolve_enum(Uimage::UIMAGE_COMP, @_io.read_u1)
+      @os_type = Kaitai::Struct::Stream::resolve_enum(UIMAGE_OS, @_io.read_u1)
+      @architecture = Kaitai::Struct::Stream::resolve_enum(UIMAGE_ARCH, @_io.read_u1)
+      @image_type = Kaitai::Struct::Stream::resolve_enum(UIMAGE_TYPE, @_io.read_u1)
+      @compression_type = Kaitai::Struct::Stream::resolve_enum(UIMAGE_COMP, @_io.read_u1)
       @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding("UTF-8")
       self
     end

@@ -31,20 +31,20 @@ class Bmp < Kaitai::Struct::Struct
     case len_dib_header
     when 104
       @_raw_dib_header = @_io.read_bytes((len_dib_header - 4))
-      _io__raw_dib_header = Kaitai::Struct::Stream.new(@_raw_dib_header)
-      @dib_header = BitmapCoreHeader.new(_io__raw_dib_header, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_dib_header)
+      @dib_header = BitmapCoreHeader.new(io, self, @_root)
     when 12
       @_raw_dib_header = @_io.read_bytes((len_dib_header - 4))
-      _io__raw_dib_header = Kaitai::Struct::Stream.new(@_raw_dib_header)
-      @dib_header = BitmapCoreHeader.new(_io__raw_dib_header, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_dib_header)
+      @dib_header = BitmapCoreHeader.new(io, self, @_root)
     when 40
       @_raw_dib_header = @_io.read_bytes((len_dib_header - 4))
-      _io__raw_dib_header = Kaitai::Struct::Stream.new(@_raw_dib_header)
-      @dib_header = BitmapInfoHeader.new(_io__raw_dib_header, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_dib_header)
+      @dib_header = BitmapInfoHeader.new(io, self, @_root)
     when 124
       @_raw_dib_header = @_io.read_bytes((len_dib_header - 4))
-      _io__raw_dib_header = Kaitai::Struct::Stream.new(@_raw_dib_header)
-      @dib_header = BitmapCoreHeader.new(_io__raw_dib_header, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_dib_header)
+      @dib_header = BitmapCoreHeader.new(io, self, @_root)
     else
       @dib_header = @_io.read_bytes((len_dib_header - 4))
     end
@@ -123,7 +123,7 @@ class Bmp < Kaitai::Struct::Struct
       @image_height = @_io.read_u4le
       @num_planes = @_io.read_u2le
       @bits_per_pixel = @_io.read_u2le
-      @compression = Kaitai::Struct::Stream::resolve_enum(Bmp::COMPRESSIONS, @_io.read_u4le)
+      @compression = Kaitai::Struct::Stream::resolve_enum(COMPRESSIONS, @_io.read_u4le)
       @len_image = @_io.read_u4le
       @x_px_per_m = @_io.read_u4le
       @y_px_per_m = @_io.read_u4le

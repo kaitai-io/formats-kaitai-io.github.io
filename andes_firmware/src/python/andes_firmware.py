@@ -17,8 +17,8 @@ class AndesFirmware(KaitaiStruct):
 
     def _read(self):
         self._raw_image_header = self._io.read_bytes(32)
-        _io__raw_image_header = KaitaiStream(BytesIO(self._raw_image_header))
-        self.image_header = self._root.ImageHeader(_io__raw_image_header, self, self._root)
+        io = KaitaiStream(BytesIO(self._raw_image_header))
+        self.image_header = self._root.ImageHeader(io, self, self._root)
         self.ilm = self._io.read_bytes(self.image_header.ilm_len)
         self.dlm = self._io.read_bytes(self.image_header.dlm_len)
 

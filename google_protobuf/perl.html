@@ -327,16 +327,16 @@ sub _read {
 
     $self-&gt;{key} = VlqBase128Le-&gt;new($self-&gt;{_io});
     my $_on = $self-&gt;wire_type();
-    if ($_on == $GoogleProtobuf::Pair::WIRE_TYPES_VARINT) {
+    if ($_on == $WIRE_TYPES_VARINT) {
         $self-&gt;{value} = VlqBase128Le-&gt;new($self-&gt;{_io});
     }
-    elsif ($_on == $GoogleProtobuf::Pair::WIRE_TYPES_LEN_DELIMITED) {
+    elsif ($_on == $WIRE_TYPES_LEN_DELIMITED) {
         $self-&gt;{value} = GoogleProtobuf::DelimitedBytes-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $GoogleProtobuf::Pair::WIRE_TYPES_BIT_64) {
+    elsif ($_on == $WIRE_TYPES_BIT_64) {
         $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u8le();
     }
-    elsif ($_on == $GoogleProtobuf::Pair::WIRE_TYPES_BIT_32) {
+    elsif ($_on == $WIRE_TYPES_BIT_32) {
         $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
     }
 }

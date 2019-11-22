@@ -42,13 +42,13 @@ sub _read {
     my ($self) = @_;
 
     $self->{icmp_type} = $self->{_io}->read_u1();
-    if ($self->icmp_type() == $IcmpPacket::ICMP_TYPE_ENUM_DESTINATION_UNREACHABLE) {
+    if ($self->icmp_type() == $ICMP_TYPE_ENUM_DESTINATION_UNREACHABLE) {
         $self->{destination_unreachable} = IcmpPacket::DestinationUnreachableMsg->new($self->{_io}, $self, $self->{_root});
     }
-    if ($self->icmp_type() == $IcmpPacket::ICMP_TYPE_ENUM_TIME_EXCEEDED) {
+    if ($self->icmp_type() == $ICMP_TYPE_ENUM_TIME_EXCEEDED) {
         $self->{time_exceeded} = IcmpPacket::TimeExceededMsg->new($self->{_io}, $self, $self->{_root});
     }
-    if ( (($self->icmp_type() == $IcmpPacket::ICMP_TYPE_ENUM_ECHO) || ($self->icmp_type() == $IcmpPacket::ICMP_TYPE_ENUM_ECHO_REPLY)) ) {
+    if ( (($self->icmp_type() == $ICMP_TYPE_ENUM_ECHO) || ($self->icmp_type() == $ICMP_TYPE_ENUM_ECHO_REPLY)) ) {
         $self->{echo} = IcmpPacket::EchoMsg->new($self->{_io}, $self, $self->{_root});
     }
 }

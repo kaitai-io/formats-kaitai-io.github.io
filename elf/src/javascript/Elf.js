@@ -1497,25 +1497,25 @@ var Elf = (function() {
           io.seek(this.ofsBody);
           if (this._is_le) {
             switch (this.type) {
-            case Elf.ShType.STRTAB:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
-              break;
             case Elf.ShType.DYNAMIC:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
               this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
               break;
-            case Elf.ShType.DYNSYM:
+            case Elf.ShType.STRTAB:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
               break;
             case Elf.ShType.DYNSTR:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
               this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.DYNSYM:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
               break;
             default:
               this._m_body = io.readBytes(this.lenBody);
@@ -1523,25 +1523,25 @@ var Elf = (function() {
             }
           } else {
             switch (this.type) {
-            case Elf.ShType.STRTAB:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
-              break;
             case Elf.ShType.DYNAMIC:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
               this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
               break;
-            case Elf.ShType.DYNSYM:
+            case Elf.ShType.STRTAB:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
               break;
             case Elf.ShType.DYNSTR:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
               this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.DYNSYM:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
               break;
             default:
               this._m_body = io.readBytes(this.lenBody);

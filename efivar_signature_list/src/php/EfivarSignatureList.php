@@ -60,8 +60,8 @@ class SignatureList extends \Kaitai\Struct\Struct {
             $n = intval((($this->lenSignatureList() - $this->lenSignatureHeader()) - 28) / $this->lenSignature());
             for ($i = 0; $i < $n; $i++) {
                 $this->_m__raw_signatures[] = $this->_io->readBytes($this->lenSignature());
-                $_io__raw_signatures = new \Kaitai\Struct\Stream(end($this->_m__raw_signatures));
-                $this->_m_signatures[] = new \EfivarSignatureList\SignatureData($_io__raw_signatures, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream(end($this->_m__raw_signatures));
+                $this->_m_signatures[] = new \EfivarSignatureList\SignatureData($io, $this, $this->_root);
             }
         }
     }

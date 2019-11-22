@@ -40,8 +40,8 @@ class HccapRecord extends \Kaitai\Struct\Struct {
         $this->_m_nonceStation = $this->_io->readBytes(32);
         $this->_m_nonceAp = $this->_io->readBytes(32);
         $this->_m__raw_eapolBuffer = $this->_io->readBytes(256);
-        $_io__raw_eapolBuffer = new \Kaitai\Struct\Stream($this->_m__raw_eapolBuffer);
-        $this->_m_eapolBuffer = new \Hccap\EapolDummy($_io__raw_eapolBuffer, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_eapolBuffer);
+        $this->_m_eapolBuffer = new \Hccap\EapolDummy($io, $this, $this->_root);
         $this->_m_lenEapol = $this->_io->readU4le();
         $this->_m_keyver = $this->_io->readU4le();
         $this->_m_keymic = $this->_io->readBytes(16);

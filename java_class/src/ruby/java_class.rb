@@ -79,20 +79,20 @@ class JavaClass < Kaitai::Struct::Struct
       case name_as_str
       when "SourceFile"
         @_raw_info = @_io.read_bytes(attribute_length)
-        _io__raw_info = Kaitai::Struct::Stream.new(@_raw_info)
-        @info = AttrBodySourceFile.new(_io__raw_info, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_info)
+        @info = AttrBodySourceFile.new(io, self, @_root)
       when "LineNumberTable"
         @_raw_info = @_io.read_bytes(attribute_length)
-        _io__raw_info = Kaitai::Struct::Stream.new(@_raw_info)
-        @info = AttrBodyLineNumberTable.new(_io__raw_info, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_info)
+        @info = AttrBodyLineNumberTable.new(io, self, @_root)
       when "Exceptions"
         @_raw_info = @_io.read_bytes(attribute_length)
-        _io__raw_info = Kaitai::Struct::Stream.new(@_raw_info)
-        @info = AttrBodyExceptions.new(_io__raw_info, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_info)
+        @info = AttrBodyExceptions.new(io, self, @_root)
       when "Code"
         @_raw_info = @_io.read_bytes(attribute_length)
-        _io__raw_info = Kaitai::Struct::Stream.new(@_raw_info)
-        @info = AttrBodyCode.new(_io__raw_info, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_info)
+        @info = AttrBodyCode.new(io, self, @_root)
       else
         @info = @_io.read_bytes(attribute_length)
       end
@@ -584,34 +584,34 @@ class JavaClass < Kaitai::Struct::Struct
     def _read
       @tag = Kaitai::Struct::Stream::resolve_enum(TAG_ENUM, @_io.read_u1)
       case tag
-      when :tag_enum_interface_method_ref
-        @cp_info = InterfaceMethodRefCpInfo.new(@_io, self, @_root)
-      when :tag_enum_class_type
-        @cp_info = ClassCpInfo.new(@_io, self, @_root)
-      when :tag_enum_utf8
-        @cp_info = Utf8CpInfo.new(@_io, self, @_root)
-      when :tag_enum_method_type
-        @cp_info = MethodTypeCpInfo.new(@_io, self, @_root)
-      when :tag_enum_integer
-        @cp_info = IntegerCpInfo.new(@_io, self, @_root)
       when :tag_enum_string
         @cp_info = StringCpInfo.new(@_io, self, @_root)
-      when :tag_enum_float
-        @cp_info = FloatCpInfo.new(@_io, self, @_root)
-      when :tag_enum_long
-        @cp_info = LongCpInfo.new(@_io, self, @_root)
-      when :tag_enum_method_ref
-        @cp_info = MethodRefCpInfo.new(@_io, self, @_root)
       when :tag_enum_double
         @cp_info = DoubleCpInfo.new(@_io, self, @_root)
       when :tag_enum_invoke_dynamic
         @cp_info = InvokeDynamicCpInfo.new(@_io, self, @_root)
-      when :tag_enum_field_ref
-        @cp_info = FieldRefCpInfo.new(@_io, self, @_root)
       when :tag_enum_method_handle
         @cp_info = MethodHandleCpInfo.new(@_io, self, @_root)
+      when :tag_enum_class_type
+        @cp_info = ClassCpInfo.new(@_io, self, @_root)
+      when :tag_enum_method_ref
+        @cp_info = MethodRefCpInfo.new(@_io, self, @_root)
+      when :tag_enum_long
+        @cp_info = LongCpInfo.new(@_io, self, @_root)
       when :tag_enum_name_and_type
         @cp_info = NameAndTypeCpInfo.new(@_io, self, @_root)
+      when :tag_enum_float
+        @cp_info = FloatCpInfo.new(@_io, self, @_root)
+      when :tag_enum_interface_method_ref
+        @cp_info = InterfaceMethodRefCpInfo.new(@_io, self, @_root)
+      when :tag_enum_integer
+        @cp_info = IntegerCpInfo.new(@_io, self, @_root)
+      when :tag_enum_utf8
+        @cp_info = Utf8CpInfo.new(@_io, self, @_root)
+      when :tag_enum_field_ref
+        @cp_info = FieldRefCpInfo.new(@_io, self, @_root)
+      when :tag_enum_method_type
+        @cp_info = MethodTypeCpInfo.new(@_io, self, @_root)
       end
       self
     end

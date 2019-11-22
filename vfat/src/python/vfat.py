@@ -228,8 +228,8 @@ class Vfat(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.boot_sector.pos_root_dir)
         self._raw__m_root_dir = self._io.read_bytes(self.boot_sector.size_root_dir)
-        _io__raw__m_root_dir = KaitaiStream(BytesIO(self._raw__m_root_dir))
-        self._m_root_dir = self._root.RootDirectory(_io__raw__m_root_dir, self, self._root)
+        io = KaitaiStream(BytesIO(self._raw__m_root_dir))
+        self._m_root_dir = self._root.RootDirectory(io, self, self._root)
         self._io.seek(_pos)
         return self._m_root_dir if hasattr(self, '_m_root_dir') else None
 

@@ -491,38 +491,38 @@ class Dex &lt; Kaitai::Struct::Struct
       @value_type = Kaitai::Struct::Stream::resolve_enum(VALUE_TYPE_ENUM, @_io.read_bits_int(5))
       @_io.align_to_byte
       case value_type
-      when :value_type_enum_int
-        @value = @_io.read_s4le
+      when :value_type_enum_double
+        @value = @_io.read_f8le
       when :value_type_enum_annotation
         @value = EncodedAnnotation.new(@_io, self, @_root)
-      when :value_type_enum_long
-        @value = @_io.read_s8le
+      when :value_type_enum_type
+        @value = @_io.read_u4le
+      when :value_type_enum_char
+        @value = @_io.read_u2le
       when :value_type_enum_method_handle
         @value = @_io.read_u4le
-      when :value_type_enum_byte
-        @value = @_io.read_s1
       when :value_type_enum_array
         @value = EncodedArray.new(@_io, self, @_root)
+      when :value_type_enum_byte
+        @value = @_io.read_s1
+      when :value_type_enum_method
+        @value = @_io.read_u4le
       when :value_type_enum_method_type
         @value = @_io.read_u4le
       when :value_type_enum_short
         @value = @_io.read_s2le
-      when :value_type_enum_method
-        @value = @_io.read_u4le
-      when :value_type_enum_double
-        @value = @_io.read_f8le
-      when :value_type_enum_float
-        @value = @_io.read_f4le
-      when :value_type_enum_type
-        @value = @_io.read_u4le
-      when :value_type_enum_enum
-        @value = @_io.read_u4le
-      when :value_type_enum_field
-        @value = @_io.read_u4le
       when :value_type_enum_string
         @value = @_io.read_u4le
-      when :value_type_enum_char
-        @value = @_io.read_u2le
+      when :value_type_enum_int
+        @value = @_io.read_s4le
+      when :value_type_enum_field
+        @value = @_io.read_u4le
+      when :value_type_enum_long
+        @value = @_io.read_s8le
+      when :value_type_enum_float
+        @value = @_io.read_f4le
+      when :value_type_enum_enum
+        @value = @_io.read_u4le
       end
       self
     end
@@ -865,7 +865,7 @@ class Dex &lt; Kaitai::Struct::Struct
 
     def _read
       @class_idx = @_io.read_u4le
-      @access_flags = Kaitai::Struct::Stream::resolve_enum(Dex::CLASS_ACCESS_FLAGS, @_io.read_u4le)
+      @access_flags = Kaitai::Struct::Stream::resolve_enum(CLASS_ACCESS_FLAGS, @_io.read_u4le)
       @superclass_idx = @_io.read_u4le
       @interfaces_off = @_io.read_u4le
       @source_file_idx = @_io.read_u4le

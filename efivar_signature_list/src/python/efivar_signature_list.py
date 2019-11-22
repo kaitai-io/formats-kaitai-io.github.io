@@ -60,8 +60,8 @@ class EfivarSignatureList(KaitaiStruct):
                 self.signatures = [None] * (((self.len_signature_list - self.len_signature_header) - 28) // self.len_signature)
                 for i in range(((self.len_signature_list - self.len_signature_header) - 28) // self.len_signature):
                     self._raw_signatures[i] = self._io.read_bytes(self.len_signature)
-                    _io__raw_signatures = KaitaiStream(BytesIO(self._raw_signatures[i]))
-                    self.signatures[i] = self._root.SignatureData(_io__raw_signatures, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw_signatures[i]))
+                    self.signatures[i] = self._root.SignatureData(io, self, self._root)
 
 
 

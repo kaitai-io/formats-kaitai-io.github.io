@@ -118,7 +118,7 @@ public class Tsm extends KaitaiStruct {
                 this.key = new String(this._io.readBytes(keyLen()), Charset.forName("UTF-8"));
                 this.type = this._io.readU1();
                 this.entryCount = this._io.readU2be();
-                indexEntries = new ArrayList<IndexEntry>(((Number) (entryCount())).intValue());
+                indexEntries = new ArrayList<IndexEntry>((int) (entryCount()));
                 for (int i = 0; i < entryCount(); i++) {
                     this.indexEntries.add(new IndexEntry(this._io, this, _root));
                 }

@@ -88,8 +88,8 @@ class AppleSingleDouble < Kaitai::Struct::Struct
       case type
       when :types_finder_info
         @_raw_body = @_io.read_bytes(len_body)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = FinderInfo.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = FinderInfo.new(io, self, @_root)
       else
         @body = @_io.read_bytes(len_body)
       end

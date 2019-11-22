@@ -296,54 +296,47 @@ public class Swf extends KaitaiStruct {
         }
         private void _read() {
             this.recordHeader = new RecordHeader(this._io, this, _root);
-            {
-                TagType on = recordHeader().tagType();
-                if (on != null) {
-                    switch (recordHeader().tagType()) {
-                    case DEFINE_SOUND: {
-                        this._raw_tagBody = this._io.readBytes(recordHeader().len());
-                        KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
-                        this.tagBody = new DefineSoundBody(_io__raw_tagBody, this, _root);
-                        break;
-                    }
-                    case SET_BACKGROUND_COLOR: {
-                        this._raw_tagBody = this._io.readBytes(recordHeader().len());
-                        KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
-                        this.tagBody = new Rgb(_io__raw_tagBody, this, _root);
-                        break;
-                    }
-                    case SCRIPT_LIMITS: {
-                        this._raw_tagBody = this._io.readBytes(recordHeader().len());
-                        KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
-                        this.tagBody = new ScriptLimitsBody(_io__raw_tagBody, this, _root);
-                        break;
-                    }
-                    case DO_ABC: {
-                        this._raw_tagBody = this._io.readBytes(recordHeader().len());
-                        KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
-                        this.tagBody = new DoAbcBody(_io__raw_tagBody, this, _root);
-                        break;
-                    }
-                    case EXPORT_ASSETS: {
-                        this._raw_tagBody = this._io.readBytes(recordHeader().len());
-                        KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
-                        this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, _root);
-                        break;
-                    }
-                    case SYMBOL_CLASS: {
-                        this._raw_tagBody = this._io.readBytes(recordHeader().len());
-                        KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
-                        this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.tagBody = this._io.readBytes(recordHeader().len());
-                        break;
-                    }
-                    }
-                } else {
-                    this.tagBody = this._io.readBytes(recordHeader().len());
-                }
+            switch (recordHeader().tagType()) {
+            case SET_BACKGROUND_COLOR: {
+                this._raw_tagBody = this._io.readBytes(recordHeader().len());
+                KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
+                this.tagBody = new Rgb(_io__raw_tagBody, this, _root);
+                break;
+            }
+            case SCRIPT_LIMITS: {
+                this._raw_tagBody = this._io.readBytes(recordHeader().len());
+                KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
+                this.tagBody = new ScriptLimitsBody(_io__raw_tagBody, this, _root);
+                break;
+            }
+            case DEFINE_SOUND: {
+                this._raw_tagBody = this._io.readBytes(recordHeader().len());
+                KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
+                this.tagBody = new DefineSoundBody(_io__raw_tagBody, this, _root);
+                break;
+            }
+            case EXPORT_ASSETS: {
+                this._raw_tagBody = this._io.readBytes(recordHeader().len());
+                KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
+                this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, _root);
+                break;
+            }
+            case SYMBOL_CLASS: {
+                this._raw_tagBody = this._io.readBytes(recordHeader().len());
+                KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
+                this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, _root);
+                break;
+            }
+            case DO_ABC: {
+                this._raw_tagBody = this._io.readBytes(recordHeader().len());
+                KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
+                this.tagBody = new DoAbcBody(_io__raw_tagBody, this, _root);
+                break;
+            }
+            default: {
+                this.tagBody = this._io.readBytes(recordHeader().len());
+                break;
+            }
             }
         }
         private RecordHeader recordHeader;
@@ -378,7 +371,7 @@ public class Swf extends KaitaiStruct {
         }
         private void _read() {
             this.numSymbols = this._io.readU2le();
-            symbols = new ArrayList<Symbol>(((Number) (numSymbols())).intValue());
+            symbols = new ArrayList<Symbol>((int) (numSymbols()));
             for (int i = 0; i < numSymbols(); i++) {
                 this.symbols.add(new Symbol(this._io, this, _root));
             }
@@ -618,8 +611,8 @@ public class Swf extends KaitaiStruct {
     private Swf _root;
     private KaitaiStruct _parent;
     private byte[] _raw_plainBody;
-    private byte[] _raw_zlibBody;
     private byte[] _raw__raw_zlibBody;
+    private byte[] _raw_zlibBody;
     public Compressions compression() { return compression; }
     public byte[] signature() { return signature; }
     public int version() { return version; }
@@ -629,6 +622,6 @@ public class Swf extends KaitaiStruct {
     public Swf _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
     public byte[] _raw_plainBody() { return _raw_plainBody; }
-    public byte[] _raw_zlibBody() { return _raw_zlibBody; }
     public byte[] _raw__raw_zlibBody() { return _raw__raw_zlibBody; }
+    public byte[] _raw_zlibBody() { return _raw_zlibBody; }
 }

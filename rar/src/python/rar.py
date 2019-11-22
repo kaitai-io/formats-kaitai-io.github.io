@@ -92,7 +92,7 @@ class Rar(KaitaiStruct):
 
         def _read(self):
             self.crc16 = self._io.read_u2le()
-            self.block_type = KaitaiStream.resolve_enum(self._root.BlockTypes, self._io.read_u1())
+            self.block_type = self._root.BlockTypes(self._io.read_u1())
             self.flags = self._io.read_u2le()
             self.block_size = self._io.read_u2le()
             if self.has_add:
@@ -101,8 +101,8 @@ class Rar(KaitaiStruct):
             _on = self.block_type
             if _on == self._root.BlockTypes.file_header:
                 self._raw_body = self._io.read_bytes(self.body_size)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.BlockFileHeader(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.BlockFileHeader(io, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.body_size)
             if self.has_add:
@@ -144,11 +144,11 @@ class Rar(KaitaiStruct):
 
         def _read(self):
             self.low_unp_size = self._io.read_u4le()
-            self.host_os = KaitaiStream.resolve_enum(self._root.Oses, self._io.read_u1())
+            self.host_os = self._root.Oses(self._io.read_u1())
             self.file_crc32 = self._io.read_u4le()
             self.file_time = self._root.DosTime(self._io, self, self._root)
             self.rar_version = self._io.read_u1()
-            self.method = KaitaiStream.resolve_enum(self._root.Methods, self._io.read_u1())
+            self.method = self._root.Methods(self._io.read_u1())
             self.name_size = self._io.read_u2le()
             self.attr = self._io.read_u4le()
             if (self._parent.flags & 256) != 0:

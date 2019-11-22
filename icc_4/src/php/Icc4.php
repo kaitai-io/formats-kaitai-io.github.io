@@ -406,250 +406,250 @@ class TagDefinition extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->offsetToDataElement());
         switch ($this->tagSignature()) {
-            case \Icc4\TagTable\TagDefinition\TagSignatures::COLORANT_ORDER:
+            case \Icc4\TagTable\TagDefinition\TagSignatures::PROFILE_SEQUENCE_IDENTIFIER:
                 $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ColorantOrderTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_A_2:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToA2Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::MEDIA_WHITE_POINT:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\MediaWhitePointTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_D_3:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToD3Tag($_io__raw_tagDataElement, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ProfileSequenceIdentifierTag($io, $this, $this->_root);
                 break;
             case \Icc4\TagTable\TagDefinition\TagSignatures::COLORIMETRIC_INTENT_IMAGE_STATE:
                 $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ColorimetricIntentImageStateTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::VIEWING_COND_DESC:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ViewingCondDescTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::PREVIEW_1:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\Preview1Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::DEVICE_MODEL_DESC:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DeviceModelDescTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::CHROMATICITY:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ChromaticityTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::PREVIEW_0:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\Preview0Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::D_TO_B_1:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DToB1Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::SATURATION_RENDERING_INTENT_GAMUT:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\SaturationRenderingIntentGamutTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_A_0:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToA0Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::GREEN_MATRIX_COLUMN:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\GreenMatrixColumnTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::COPYRIGHT:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\CopyrightTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::BLUE_MATRIX_COLUMN:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BlueMatrixColumnTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::CHROMATIC_ADAPTATION:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ChromaticAdaptationTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::A_TO_B_1:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\AToB1Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::OUTPUT_RESPONSE:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\OutputResponseTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::PROFILE_SEQUENCE:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ProfileSequenceTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::CHAR_TARGET:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\CharTargetTag($_io__raw_tagDataElement, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ColorimetricIntentImageStateTag($io, $this, $this->_root);
                 break;
             case \Icc4\TagTable\TagDefinition\TagSignatures::RED_TRC:
                 $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\RedTrcTag($_io__raw_tagDataElement, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\RedTrcTag($io, $this, $this->_root);
                 break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::GAMUT:
+            case \Icc4\TagTable\TagDefinition\TagSignatures::PREVIEW_0:
                 $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\GamutTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::DEVICE_MFG_DESC:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DeviceMfgDescTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::MEASUREMENT:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\MeasurementTag($_io__raw_tagDataElement, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\Preview0Tag($io, $this, $this->_root);
                 break;
             case \Icc4\TagTable\TagDefinition\TagSignatures::GREEN_TRC:
                 $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\GreenTrcTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::D_TO_B_3:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DToB3Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::COLORANT_TABLE:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ColorantTableTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::D_TO_B_2:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DToB2Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::PROFILE_DESCRIPTION:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ProfileDescriptionTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::PROFILE_SEQUENCE_IDENTIFIER:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ProfileSequenceIdentifierTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::GRAY_TRC:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\GrayTrcTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::PERCEPTUAL_RENDERING_INTENT_GAMUT:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\PerceptualRenderingIntentGamutTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::BLUE_TRC:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BlueTrcTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::D_TO_B_0:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DToB0Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::A_TO_B_2:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\AToB2Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::CALIBRATION_DATE_TIME:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\CalibrationDateTimeTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::COLORANT_TABLE_OUT:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ColorantTableOutTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::RED_MATRIX_COLUMN:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\RedMatrixColumnTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::PREVIEW_2:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\Preview2Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::A_TO_B_0:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\AToB0Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::LUMINANCE:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\LuminanceTag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::NAMED_COLOR_2:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\NamedColor2Tag($_io__raw_tagDataElement, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_D_2:
-                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToD2Tag($_io__raw_tagDataElement, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\GreenTrcTag($io, $this, $this->_root);
                 break;
             case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_D_0:
                 $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToD0Tag($_io__raw_tagDataElement, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToD0Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::COLORANT_TABLE_OUT:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ColorantTableOutTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_A_2:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToA2Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::CALIBRATION_DATE_TIME:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\CalibrationDateTimeTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::CHROMATIC_ADAPTATION:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ChromaticAdaptationTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::COLORANT_TABLE:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ColorantTableTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::A_TO_B_2:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\AToB2Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::D_TO_B_1:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DToB1Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::CHROMATICITY:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ChromaticityTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::BLUE_MATRIX_COLUMN:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BlueMatrixColumnTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::A_TO_B_0:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\AToB0Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_D_2:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToD2Tag($io, $this, $this->_root);
                 break;
             case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_A_1:
                 $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToA1Tag($_io__raw_tagDataElement, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToA1Tag($io, $this, $this->_root);
                 break;
-            case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_D_1:
+            case \Icc4\TagTable\TagDefinition\TagSignatures::MEDIA_WHITE_POINT:
                 $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToD1Tag($_io__raw_tagDataElement, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\MediaWhitePointTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::D_TO_B_0:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DToB0Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::NAMED_COLOR_2:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\NamedColor2Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::D_TO_B_2:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DToB2Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::RED_MATRIX_COLUMN:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\RedMatrixColumnTag($io, $this, $this->_root);
                 break;
             case \Icc4\TagTable\TagDefinition\TagSignatures::VIEWING_CONDITIONS:
                 $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ViewingConditionsTag($_io__raw_tagDataElement, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ViewingConditionsTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::A_TO_B_1:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\AToB1Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::PREVIEW_1:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\Preview1Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::GRAY_TRC:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\GrayTrcTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::DEVICE_MFG_DESC:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DeviceMfgDescTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_D_1:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToD1Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::COLORANT_ORDER:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ColorantOrderTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::COPYRIGHT:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\CopyrightTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::GAMUT:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\GamutTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::CHAR_TARGET:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\CharTargetTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::OUTPUT_RESPONSE:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\OutputResponseTag($io, $this, $this->_root);
                 break;
             case \Icc4\TagTable\TagDefinition\TagSignatures::TECHNOLOGY:
                 $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
-                $_io__raw_tagDataElement = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
-                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\TechnologyTag($_io__raw_tagDataElement, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\TechnologyTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::VIEWING_COND_DESC:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ViewingCondDescTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::PROFILE_DESCRIPTION:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ProfileDescriptionTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::LUMINANCE:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\LuminanceTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::D_TO_B_3:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DToB3Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_D_3:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToD3Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::B_TO_A_0:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BToA0Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::PREVIEW_2:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\Preview2Tag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::GREEN_MATRIX_COLUMN:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\GreenMatrixColumnTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::PROFILE_SEQUENCE:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\ProfileSequenceTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::SATURATION_RENDERING_INTENT_GAMUT:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\SaturationRenderingIntentGamutTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::PERCEPTUAL_RENDERING_INTENT_GAMUT:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\PerceptualRenderingIntentGamutTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::BLUE_TRC:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\BlueTrcTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::DEVICE_MODEL_DESC:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\DeviceModelDescTag($io, $this, $this->_root);
+                break;
+            case \Icc4\TagTable\TagDefinition\TagSignatures::MEASUREMENT:
+                $this->_m__raw_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagDataElement);
+                $this->_m_tagDataElement = new \Icc4\TagTable\TagDefinition\MeasurementTag($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_tagDataElement = $this->_io->readBytes($this->sizeOfDataElement());
@@ -1557,11 +1557,11 @@ class ParametricCurveType extends \Kaitai\Struct\Struct {
         $this->_m_functionType = $this->_io->readU2be();
         $this->_m_reserved2 = $this->_io->ensureFixedContents("\x00\x00");
         switch ($this->functionType()) {
+            case \Icc4\TagTable\TagDefinition\ParametricCurveType\ParametricCurveTypeFunctions::Y_EQUALS_X_TO_POWER_OF_G:
+                $this->_m_parameters = new \Icc4\TagTable\TagDefinition\ParametricCurveType\ParamsYEqualsXToPowerOfG($this->_io, $this, $this->_root);
+                break;
             case \Icc4\TagTable\TagDefinition\ParametricCurveType\ParametricCurveTypeFunctions::CIE_122_1996:
                 $this->_m_parameters = new \Icc4\TagTable\TagDefinition\ParametricCurveType\ParamsCie1221996($this->_io, $this, $this->_root);
-                break;
-            case \Icc4\TagTable\TagDefinition\ParametricCurveType\ParametricCurveTypeFunctions::IEC_61966_3:
-                $this->_m_parameters = new \Icc4\TagTable\TagDefinition\ParametricCurveType\ParamsIec619663($this->_io, $this, $this->_root);
                 break;
             case \Icc4\TagTable\TagDefinition\ParametricCurveType\ParametricCurveTypeFunctions::IEC_61966_2_1:
                 $this->_m_parameters = new \Icc4\TagTable\TagDefinition\ParametricCurveType\ParamsIec6196621($this->_io, $this, $this->_root);
@@ -1569,8 +1569,8 @@ class ParametricCurveType extends \Kaitai\Struct\Struct {
             case \Icc4\TagTable\TagDefinition\ParametricCurveType\ParametricCurveTypeFunctions::Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C:
                 $this->_m_parameters = new \Icc4\TagTable\TagDefinition\ParametricCurveType\ParamsYEqualsObAxPlusBCbToPowerOfGPlusC($this->_io, $this, $this->_root);
                 break;
-            case \Icc4\TagTable\TagDefinition\ParametricCurveType\ParametricCurveTypeFunctions::Y_EQUALS_X_TO_POWER_OF_G:
-                $this->_m_parameters = new \Icc4\TagTable\TagDefinition\ParametricCurveType\ParamsYEqualsXToPowerOfG($this->_io, $this, $this->_root);
+            case \Icc4\TagTable\TagDefinition\ParametricCurveType\ParametricCurveTypeFunctions::IEC_61966_3:
+                $this->_m_parameters = new \Icc4\TagTable\TagDefinition\ParametricCurveType\ParamsIec619663($this->_io, $this, $this->_root);
                 break;
         }
     }

@@ -7,8 +7,8 @@ from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, 
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-import exif_be
-import exif_le
+from exif_be import ExifBe
+from exif_le import ExifLe
 class Exif(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -20,8 +20,8 @@ class Exif(KaitaiStruct):
         self.endianness = self._io.read_u2le()
         _on = self.endianness
         if _on == 18761:
-            self.body = exif_le.ExifLe(self._io)
+            self.body = ExifLe(self._io)
         elif _on == 19789:
-            self.body = exif_be.ExifBe(self._io)
+            self.body = ExifBe(self._io)
 
 

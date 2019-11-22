@@ -178,6 +178,11 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
                 
                 <li>
                 
+                <a href="cpp_stl.html" title=".pcap / .pcapdump file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".pcap / .pcapdump file format parsing C# library">C#</a></li>
                 
                 
@@ -271,13 +276,13 @@ var data = new Pcap(new KaitaiStream(arrayBuffer));</code></pre>
 
 (function (root, factory) {
   if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./PacketPpi&#39;, &#39;./EthernetFrame&#39;], factory);
+    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./EthernetFrame&#39;, &#39;./PacketPpi&#39;], factory);
   } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./PacketPpi&#39;), require(&#39;./EthernetFrame&#39;));
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./EthernetFrame&#39;), require(&#39;./PacketPpi&#39;));
   } else {
-    root.Pcap = factory(root.KaitaiStream, root.PacketPpi, root.EthernetFrame);
+    root.Pcap = factory(root.KaitaiStream, root.EthernetFrame, root.PacketPpi);
   }
-}(this, function (KaitaiStream, PacketPpi, EthernetFrame) {
+}(this, function (KaitaiStream, EthernetFrame, PacketPpi) {
 /**
  * PCAP (named after libpcap / winpcap) is a popular format for saving
  * network traffic grabbed by network sniffers. It is typically

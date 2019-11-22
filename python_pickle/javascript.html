@@ -856,200 +856,200 @@ var PythonPickle = (function() {
     Op.prototype._read = function() {
       this.code = this._io.readU1();
       switch (this.code) {
-      case PythonPickle.Opcode.EXT4:
-        this.arg = this._io.readU4le();
-        break;
-      case PythonPickle.Opcode.TUPLE1:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.SETITEM:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.STOP:
+      case PythonPickle.Opcode.LIST:
         this.arg = new NoArg(this._io, this, this._root);
         break;
       case PythonPickle.Opcode.EXT2:
         this.arg = this._io.readU2le();
         break;
-      case PythonPickle.Opcode.EMPTY_TUPLE:
+      case PythonPickle.Opcode.STOP:
         this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.NEWTRUE:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.LONG:
-        this.arg = new DecimalnlLong(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.NEWOBJ:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.PUT:
-        this.arg = new DecimalnlShort(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.STACK_GLOBAL:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.POP_MARK:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.APPEND:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.NEWFALSE:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINPERSID:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BUILD:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.EMPTY_DICT:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.TUPLE2:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.LONG4:
-        this.arg = new Long4(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.APPENDS:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINBYTES:
-        this.arg = new Bytes4(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.DUP:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.LIST:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.PROTO:
-        this.arg = this._io.readU1();
-        break;
-      case PythonPickle.Opcode.POP:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.FRAME:
-        this.arg = this._io.readU8le();
-        break;
-      case PythonPickle.Opcode.STRING:
-        this.arg = new Stringnl(this._io, this, this._root);
         break;
       case PythonPickle.Opcode.BINUNICODE:
         this.arg = new Unicodestring4(this._io, this, this._root);
         break;
-      case PythonPickle.Opcode.FLOAT:
-        this.arg = new Floatnl(this._io, this, this._root);
+      case PythonPickle.Opcode.PUT:
+        this.arg = new DecimalnlShort(this._io, this, this._root);
         break;
-      case PythonPickle.Opcode.REDUCE:
+      case PythonPickle.Opcode.NEWFALSE:
         this.arg = new NoArg(this._io, this, this._root);
         break;
-      case PythonPickle.Opcode.BINPUT:
-        this.arg = this._io.readU1();
+      case PythonPickle.Opcode.LONG1:
+        this.arg = new Long1(this._io, this, this._root);
         break;
-      case PythonPickle.Opcode.MEMOIZE:
+      case PythonPickle.Opcode.UNICODE:
+        this.arg = new Unicodestringnl(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.EMPTY_LIST:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.MARK:
         this.arg = new NoArg(this._io, this, this._root);
         break;
       case PythonPickle.Opcode.PERSID:
         this.arg = new StringnlNoescape(this._io, this, this._root);
         break;
-      case PythonPickle.Opcode.EXT1:
-        this.arg = this._io.readU1();
-        break;
-      case PythonPickle.Opcode.NONE:
+      case PythonPickle.Opcode.STACK_GLOBAL:
         this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.SHORT_BINUNICODE:
-        this.arg = new Unicodestring1(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.OBJ:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINFLOAT:
-        this.arg = this._io.readF8be();
-        break;
-      case PythonPickle.Opcode.NEWOBJ_EX:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.EMPTY_LIST:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.TUPLE:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINUNICODE8:
-        this.arg = new Unicodestring8(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINGET:
-        this.arg = this._io.readU1();
-        break;
-      case PythonPickle.Opcode.GLOBAL:
-        this.arg = new StringnlNoescapePair(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.DICT:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINSTRING:
-        this.arg = new String4(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.SETITEMS:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BININT2:
-        this.arg = this._io.readU2le();
-        break;
-      case PythonPickle.Opcode.BINBYTES8:
-        this.arg = new Bytes8(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BININT1:
-        this.arg = this._io.readU1();
-        break;
-      case PythonPickle.Opcode.INST:
-        this.arg = new StringnlNoescapePair(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.LONG_BINGET:
-        this.arg = this._io.readU4le();
-        break;
-      case PythonPickle.Opcode.LONG_BINPUT:
-        this.arg = this._io.readU4le();
-        break;
-      case PythonPickle.Opcode.INT:
-        this.arg = new DecimalnlShort(this._io, this, this._root);
         break;
       case PythonPickle.Opcode.BININT:
         this.arg = this._io.readS4le();
         break;
-      case PythonPickle.Opcode.UNICODE:
-        this.arg = new Unicodestringnl(this._io, this, this._root);
+      case PythonPickle.Opcode.BINPUT:
+        this.arg = this._io.readU1();
         break;
-      case PythonPickle.Opcode.LONG1:
-        this.arg = new Long1(this._io, this, this._root);
+      case PythonPickle.Opcode.BININT1:
+        this.arg = this._io.readU1();
+        break;
+      case PythonPickle.Opcode.BININT2:
+        this.arg = this._io.readU2le();
+        break;
+      case PythonPickle.Opcode.TUPLE:
+        this.arg = new NoArg(this._io, this, this._root);
         break;
       case PythonPickle.Opcode.SHORT_BINSTRING:
         this.arg = new String1(this._io, this, this._root);
         break;
-      case PythonPickle.Opcode.MARK:
+      case PythonPickle.Opcode.EMPTY_SET:
         this.arg = new NoArg(this._io, this, this._root);
         break;
-      case PythonPickle.Opcode.FROZENSET:
+      case PythonPickle.Opcode.STRING:
+        this.arg = new Stringnl(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.EMPTY_DICT:
         this.arg = new NoArg(this._io, this, this._root);
         break;
-      case PythonPickle.Opcode.TUPLE3:
+      case PythonPickle.Opcode.BINGET:
+        this.arg = this._io.readU1();
+        break;
+      case PythonPickle.Opcode.APPEND:
         this.arg = new NoArg(this._io, this, this._root);
         break;
-      case PythonPickle.Opcode.ADDITEMS:
+      case PythonPickle.Opcode.POP_MARK:
         this.arg = new NoArg(this._io, this, this._root);
         break;
       case PythonPickle.Opcode.GET:
         this.arg = new DecimalnlShort(this._io, this, this._root);
         break;
-      case PythonPickle.Opcode.EMPTY_SET:
+      case PythonPickle.Opcode.NEWOBJ:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.REDUCE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINBYTES:
+        this.arg = new Bytes4(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINBYTES8:
+        this.arg = new Bytes8(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.SETITEM:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.FRAME:
+        this.arg = this._io.readU8le();
+        break;
+      case PythonPickle.Opcode.FLOAT:
+        this.arg = new Floatnl(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINUNICODE8:
+        this.arg = new Unicodestring8(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.INT:
+        this.arg = new DecimalnlShort(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.LONG_BINPUT:
+        this.arg = this._io.readU4le();
+        break;
+      case PythonPickle.Opcode.EMPTY_TUPLE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.LONG:
+        this.arg = new DecimalnlLong(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.FROZENSET:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.GLOBAL:
+        this.arg = new StringnlNoescapePair(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.OBJ:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.ADDITEMS:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.TUPLE1:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.SETITEMS:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.NONE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BUILD:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.EXT4:
+        this.arg = this._io.readU4le();
+        break;
+      case PythonPickle.Opcode.NEWOBJ_EX:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINFLOAT:
+        this.arg = this._io.readF8be();
+        break;
+      case PythonPickle.Opcode.DUP:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.LONG4:
+        this.arg = new Long4(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.SHORT_BINUNICODE:
+        this.arg = new Unicodestring1(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.TUPLE3:
         this.arg = new NoArg(this._io, this, this._root);
         break;
       case PythonPickle.Opcode.SHORT_BINBYTES:
         this.arg = new Bytes1(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.EXT1:
+        this.arg = this._io.readU1();
+        break;
+      case PythonPickle.Opcode.DICT:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.APPENDS:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.INST:
+        this.arg = new StringnlNoescapePair(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINPERSID:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.MEMOIZE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.PROTO:
+        this.arg = this._io.readU1();
+        break;
+      case PythonPickle.Opcode.NEWTRUE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINSTRING:
+        this.arg = new String4(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.TUPLE2:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.POP:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.LONG_BINGET:
+        this.arg = this._io.readU4le();
         break;
       }
     }

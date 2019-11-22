@@ -176,6 +176,11 @@ printer, etc).</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Windows Metafile (WMF) vector image parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Windows Metafile (WMF) vector image parsing C# library">C#</a></li>
                 
                 
@@ -428,7 +433,7 @@ class Wmf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.bk_mode = KaitaiStream.resolve_enum(self._root.MixMode, self._io.read_u2le())
+            self.bk_mode = self._root.MixMode(self._io.read_u2le())
 
 
     class PointS(KaitaiStruct):
@@ -482,7 +487,7 @@ class Wmf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.metafile_type = KaitaiStream.resolve_enum(self._root.Header.MetafileType, self._io.read_u2le())
+            self.metafile_type = self._root.Header.MetafileType(self._io.read_u2le())
             self.header_size = self._io.read_u2le()
             self.version = self._io.read_u2le()
             self.size = self._io.read_u4le()
@@ -513,7 +518,7 @@ class Wmf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.draw_mode = KaitaiStream.resolve_enum(self._root.BinRasterOp, self._io.read_u2le())
+            self.draw_mode = self._root.BinRasterOp(self._io.read_u2le())
 
 
     class ParamsSetpolyfillmode(KaitaiStruct):
@@ -524,7 +529,7 @@ class Wmf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.poly_fill_mode = KaitaiStream.resolve_enum(self._root.PolyFillMode, self._io.read_u2le())
+            self.poly_fill_mode = self._root.PolyFillMode(self._io.read_u2le())
 
 
     class ParamsPolyline(KaitaiStruct):
@@ -570,40 +575,40 @@ class Wmf(KaitaiStruct):
 
         def _read(self):
             self.size = self._io.read_u4le()
-            self.function = KaitaiStream.resolve_enum(self._root.Func, self._io.read_u2le())
+            self.function = self._root.Func(self._io.read_u2le())
             _on = self.function
             if _on == self._root.Func.setbkmode:
                 self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                _io__raw_params = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsSetbkmode(_io__raw_params, self, self._root)
-            elif _on == self._root.Func.polygon:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                _io__raw_params = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsPolygon(_io__raw_params, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_params))
+                self.params = self._root.ParamsSetbkmode(io, self, self._root)
             elif _on == self._root.Func.setbkcolor:
                 self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                _io__raw_params = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ColorRef(_io__raw_params, self, self._root)
-            elif _on == self._root.Func.setpolyfillmode:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                _io__raw_params = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsSetpolyfillmode(_io__raw_params, self, self._root)
-            elif _on == self._root.Func.setwindoworg:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                _io__raw_params = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsSetwindoworg(_io__raw_params, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_params))
+                self.params = self._root.ColorRef(io, self, self._root)
             elif _on == self._root.Func.setrop2:
                 self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                _io__raw_params = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsSetrop2(_io__raw_params, self, self._root)
-            elif _on == self._root.Func.setwindowext:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                _io__raw_params = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsSetwindowext(_io__raw_params, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_params))
+                self.params = self._root.ParamsSetrop2(io, self, self._root)
             elif _on == self._root.Func.polyline:
                 self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                _io__raw_params = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsPolyline(_io__raw_params, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_params))
+                self.params = self._root.ParamsPolyline(io, self, self._root)
+            elif _on == self._root.Func.setwindoworg:
+                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
+                io = KaitaiStream(BytesIO(self._raw_params))
+                self.params = self._root.ParamsSetwindoworg(io, self, self._root)
+            elif _on == self._root.Func.polygon:
+                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
+                io = KaitaiStream(BytesIO(self._raw_params))
+                self.params = self._root.ParamsPolygon(io, self, self._root)
+            elif _on == self._root.Func.setwindowext:
+                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
+                io = KaitaiStream(BytesIO(self._raw_params))
+                self.params = self._root.ParamsSetwindowext(io, self, self._root)
+            elif _on == self._root.Func.setpolyfillmode:
+                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
+                io = KaitaiStream(BytesIO(self._raw_params))
+                self.params = self._root.ParamsSetpolyfillmode(io, self, self._root)
             else:
                 self.params = self._io.read_bytes(((self.size - 3) * 2))
 

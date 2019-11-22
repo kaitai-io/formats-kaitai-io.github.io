@@ -85,13 +85,13 @@ sub _read {
 
     $self->{len_block} = $self->{_io}->read_u2le();
     $self->{flag} = $self->{_io}->read_u1();
-    if ( (($self->len_block() == 19) && ($self->flag() == $ZxSpectrumTap::FLAG_ENUM_HEADER)) ) {
+    if ( (($self->len_block() == 19) && ($self->flag() == $FLAG_ENUM_HEADER)) ) {
         $self->{header} = ZxSpectrumTap::Header->new($self->{_io}, $self, $self->{_root});
     }
     if ($self->len_block() == 19) {
         $self->{data} = $self->{_io}->read_bytes(($self->header()->len_data() + 4));
     }
-    if ($self->flag() == $ZxSpectrumTap::FLAG_ENUM_DATA) {
+    if ($self->flag() == $FLAG_ENUM_DATA) {
         $self->{headerless_data} = $self->{_io}->read_bytes(($self->len_block() - 1));
     }
 }
@@ -243,16 +243,16 @@ sub _read {
     $self->{filename} = IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(10), 32);
     $self->{len_data} = $self->{_io}->read_u2le();
     my $_on = $self->header_type();
-    if ($_on == $ZxSpectrumTap::HEADER_TYPE_ENUM_PROGRAM) {
+    if ($_on == $HEADER_TYPE_ENUM_PROGRAM) {
         $self->{params} = ZxSpectrumTap::ProgramParams->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $ZxSpectrumTap::HEADER_TYPE_ENUM_NUM_ARRY) {
+    elsif ($_on == $HEADER_TYPE_ENUM_NUM_ARRY) {
         $self->{params} = ZxSpectrumTap::ArrayParams->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $ZxSpectrumTap::HEADER_TYPE_ENUM_CHAR_ARRY) {
+    elsif ($_on == $HEADER_TYPE_ENUM_CHAR_ARRY) {
         $self->{params} = ZxSpectrumTap::ArrayParams->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $ZxSpectrumTap::HEADER_TYPE_ENUM_BYTES) {
+    elsif ($_on == $HEADER_TYPE_ENUM_BYTES) {
         $self->{params} = ZxSpectrumTap::BytesParams->new($self->{_io}, $self, $self->{_root});
     }
     $self->{checksum} = $self->{_io}->read_u1();

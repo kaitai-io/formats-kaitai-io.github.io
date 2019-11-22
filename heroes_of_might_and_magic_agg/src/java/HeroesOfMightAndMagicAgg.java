@@ -32,7 +32,7 @@ public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
     }
     private void _read() {
         this.numFiles = this._io.readU2le();
-        entries = new ArrayList<Entry>(((Number) (numFiles())).intValue());
+        entries = new ArrayList<Entry>((int) (numFiles()));
         for (int i = 0; i < numFiles(); i++) {
             this.entries.add(new Entry(this._io, this, _root));
         }
@@ -120,8 +120,8 @@ public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
             return this.filenames;
         long _pos = this._io.pos();
         this._io.seek((entries().get(entries().size() - 1).offset() + entries().get(entries().size() - 1).size()));
-        this._raw_filenames = new ArrayList<byte[]>(((Number) (numFiles())).intValue());
-        filenames = new ArrayList<Filename>(((Number) (numFiles())).intValue());
+        this._raw_filenames = new ArrayList<byte[]>((int) (numFiles()));
+        filenames = new ArrayList<Filename>((int) (numFiles()));
         for (int i = 0; i < numFiles(); i++) {
             this._raw_filenames.add(this._io.readBytes(15));
             KaitaiStream _io__raw_filenames = new ByteBufferKaitaiStream(_raw_filenames.get(_raw_filenames.size() - 1));

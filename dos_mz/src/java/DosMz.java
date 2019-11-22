@@ -39,7 +39,7 @@ public class DosMz extends KaitaiStruct {
     private void _read() {
         this.hdr = new MzHeader(this._io, this, _root);
         this.mzHeader2 = this._io.readBytes((hdr().ofsRelocations() - 28));
-        relocations = new ArrayList<Relocation>(((Number) (hdr().numRelocations())).intValue());
+        relocations = new ArrayList<Relocation>((int) (hdr().numRelocations()));
         for (int i = 0; i < hdr().numRelocations(); i++) {
             this.relocations.add(new Relocation(this._io, this, _root));
         }

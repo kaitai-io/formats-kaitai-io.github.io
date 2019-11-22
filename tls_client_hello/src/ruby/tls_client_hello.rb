@@ -195,12 +195,12 @@ class TlsClientHello < Kaitai::Struct::Struct
       case type
       when 0
         @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Sni.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Sni.new(io, self, @_root)
       when 16
         @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Alpn.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Alpn.new(io, self, @_root)
       else
         @body = @_io.read_bytes(len)
       end

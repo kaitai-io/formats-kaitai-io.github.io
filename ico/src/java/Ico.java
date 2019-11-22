@@ -37,7 +37,7 @@ public class Ico extends KaitaiStruct {
     private void _read() {
         this.magic = this._io.ensureFixedContents(new byte[] { 0, 0, 1, 0 });
         this.numImages = this._io.readU2le();
-        images = new ArrayList<IconDirEntry>(((Number) (numImages())).intValue());
+        images = new ArrayList<IconDirEntry>((int) (numImages()));
         for (int i = 0; i < numImages(); i++) {
             this.images.add(new IconDirEntry(this._io, this, _root));
         }

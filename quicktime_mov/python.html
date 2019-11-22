@@ -146,6 +146,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="quicktime_mov parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="quicktime_mov parsing C# library">C#</a></li>
                 
                 
@@ -441,12 +446,12 @@ class QuicktimeMov(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.major_brand = KaitaiStream.resolve_enum(self._root.Brand, self._io.read_u4be())
+            self.major_brand = self._root.Brand(self._io.read_u4be())
             self.minor_version = self._io.read_bytes(4)
             self.compatible_brands = []
             i = 0
             while not self._io.is_eof():
-                self.compatible_brands.append(KaitaiStream.resolve_enum(self._root.Brand, self._io.read_u4be()))
+                self.compatible_brands.append(self._root.Brand(self._io.read_u4be()))
                 i += 1
 
 
@@ -486,55 +491,55 @@ class QuicktimeMov(KaitaiStruct):
 
         def _read(self):
             self.len32 = self._io.read_u4be()
-            self.atom_type = KaitaiStream.resolve_enum(self._root.AtomType, self._io.read_u4be())
+            self.atom_type = self._root.AtomType(self._io.read_u4be())
             if self.len32 == 1:
                 self.len64 = self._io.read_u8be()
 
             _on = self.atom_type
-            if _on == self._root.AtomType.moof:
+            if _on == self._root.AtomType.stbl:
                 self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(_io__raw_body, self, self._root)
-            elif _on == self._root.AtomType.tkhd:
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.AtomList(io, self, self._root)
+            elif _on == self._root.AtomType.moof:
                 self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.TkhdBody(_io__raw_body, self, self._root)
-            elif _on == self._root.AtomType.stbl:
-                self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(_io__raw_body, self, self._root)
-            elif _on == self._root.AtomType.traf:
-                self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(_io__raw_body, self, self._root)
-            elif _on == self._root.AtomType.minf:
-                self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(_io__raw_body, self, self._root)
-            elif _on == self._root.AtomType.trak:
-                self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(_io__raw_body, self, self._root)
-            elif _on == self._root.AtomType.moov:
-                self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(_io__raw_body, self, self._root)
-            elif _on == self._root.AtomType.mdia:
-                self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(_io__raw_body, self, self._root)
-            elif _on == self._root.AtomType.dinf:
-                self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.AtomList(io, self, self._root)
             elif _on == self._root.AtomType.mvhd:
                 self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.MvhdBody(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.MvhdBody(io, self, self._root)
+            elif _on == self._root.AtomType.minf:
+                self._raw_body = self._io.read_bytes(self.len)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.AtomList(io, self, self._root)
+            elif _on == self._root.AtomType.trak:
+                self._raw_body = self._io.read_bytes(self.len)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.AtomList(io, self, self._root)
+            elif _on == self._root.AtomType.traf:
+                self._raw_body = self._io.read_bytes(self.len)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.AtomList(io, self, self._root)
+            elif _on == self._root.AtomType.mdia:
+                self._raw_body = self._io.read_bytes(self.len)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.AtomList(io, self, self._root)
             elif _on == self._root.AtomType.ftyp:
                 self._raw_body = self._io.read_bytes(self.len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.FtypBody(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.FtypBody(io, self, self._root)
+            elif _on == self._root.AtomType.moov:
+                self._raw_body = self._io.read_bytes(self.len)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.AtomList(io, self, self._root)
+            elif _on == self._root.AtomType.tkhd:
+                self._raw_body = self._io.read_bytes(self.len)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.TkhdBody(io, self, self._root)
+            elif _on == self._root.AtomType.dinf:
+                self._raw_body = self._io.read_bytes(self.len)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.AtomList(io, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.len)
 

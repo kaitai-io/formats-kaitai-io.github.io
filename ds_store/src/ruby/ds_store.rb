@@ -236,8 +236,8 @@ class DsStore < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek(_parent.block_addresses[_parent.directory_entries[idx].block_id].offset)
       @_raw_master_block = @_io.read_bytes(_parent.block_addresses[_parent.directory_entries[idx].block_id].size)
-      _io__raw_master_block = Kaitai::Struct::Stream.new(@_raw_master_block)
-      @master_block = MasterBlock.new(_io__raw_master_block, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_master_block)
+      @master_block = MasterBlock.new(io, self, @_root)
       @_io.seek(_pos)
       @master_block
     end
@@ -398,8 +398,8 @@ class DsStore < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek((buddy_allocator_header.ofs_bookkeeping_info_block + 4))
     @_raw_buddy_allocator_body = @_io.read_bytes(buddy_allocator_header.len_bookkeeping_info_block)
-    _io__raw_buddy_allocator_body = Kaitai::Struct::Stream.new(@_raw_buddy_allocator_body)
-    @buddy_allocator_body = BuddyAllocatorBody.new(_io__raw_buddy_allocator_body, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_buddy_allocator_body)
+    @buddy_allocator_body = BuddyAllocatorBody.new(io, self, @_root)
     @_io.seek(_pos)
     @buddy_allocator_body
   end

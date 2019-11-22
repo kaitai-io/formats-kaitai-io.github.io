@@ -50,8 +50,8 @@ class Gif < Kaitai::Struct::Struct
     @logical_screen_descriptor = LogicalScreenDescriptorStruct.new(@_io, self, @_root)
     if logical_screen_descriptor.has_color_table
       @_raw_global_color_table = @_io.read_bytes((logical_screen_descriptor.color_table_size * 3))
-      _io__raw_global_color_table = Kaitai::Struct::Stream.new(@_raw_global_color_table)
-      @global_color_table = ColorTable.new(_io__raw_global_color_table, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_global_color_table)
+      @global_color_table = ColorTable.new(io, self, @_root)
     end
     @blocks = []
     i = 0
@@ -142,8 +142,8 @@ class Gif < Kaitai::Struct::Struct
       @flags = @_io.read_u1
       if has_color_table
         @_raw_local_color_table = @_io.read_bytes((color_table_size * 3))
-        _io__raw_local_color_table = Kaitai::Struct::Stream.new(@_raw_local_color_table)
-        @local_color_table = ColorTable.new(_io__raw_local_color_table, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_local_color_table)
+        @local_color_table = ColorTable.new(io, self, @_root)
       end
       @image_data = ImageData.new(@_io, self, @_root)
       self
@@ -184,7 +184,7 @@ class Gif < Kaitai::Struct::Struct
     end
 
     def _read
-      @block_type = Kaitai::Struct::Stream::resolve_enum(Gif::BLOCK_TYPE, @_io.read_u1)
+      @block_type = Kaitai::Struct::Stream::resolve_enum(BLOCK_TYPE, @_io.read_u1)
       case block_type
       when :block_type_extension
         @body = Extension.new(@_io, self, @_root)
@@ -325,7 +325,7 @@ class Gif < Kaitai::Struct::Struct
     end
 
     def _read
-      @label = Kaitai::Struct::Stream::resolve_enum(Gif::EXTENSION_LABEL, @_io.read_u1)
+      @label = Kaitai::Struct::Stream::resolve_enum(EXTENSION_LABEL, @_io.read_u1)
       case label
       when :extension_label_application
         @body = ExtApplication.new(@_io, self, @_root)

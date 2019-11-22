@@ -13,23 +13,23 @@ class Bmp extends \Kaitai\Struct\Struct {
         switch ($this->lenDibHeader()) {
             case 104:
                 $this->_m__raw_dibHeader = $this->_io->readBytes(($this->lenDibHeader() - 4));
-                $_io__raw_dibHeader = new \Kaitai\Struct\Stream($this->_m__raw_dibHeader);
-                $this->_m_dibHeader = new \Bmp\BitmapCoreHeader($_io__raw_dibHeader, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_dibHeader);
+                $this->_m_dibHeader = new \Bmp\BitmapCoreHeader($io, $this, $this->_root);
                 break;
             case 12:
                 $this->_m__raw_dibHeader = $this->_io->readBytes(($this->lenDibHeader() - 4));
-                $_io__raw_dibHeader = new \Kaitai\Struct\Stream($this->_m__raw_dibHeader);
-                $this->_m_dibHeader = new \Bmp\BitmapCoreHeader($_io__raw_dibHeader, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_dibHeader);
+                $this->_m_dibHeader = new \Bmp\BitmapCoreHeader($io, $this, $this->_root);
                 break;
             case 40:
                 $this->_m__raw_dibHeader = $this->_io->readBytes(($this->lenDibHeader() - 4));
-                $_io__raw_dibHeader = new \Kaitai\Struct\Stream($this->_m__raw_dibHeader);
-                $this->_m_dibHeader = new \Bmp\BitmapInfoHeader($_io__raw_dibHeader, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_dibHeader);
+                $this->_m_dibHeader = new \Bmp\BitmapInfoHeader($io, $this, $this->_root);
                 break;
             case 124:
                 $this->_m__raw_dibHeader = $this->_io->readBytes(($this->lenDibHeader() - 4));
-                $_io__raw_dibHeader = new \Kaitai\Struct\Stream($this->_m__raw_dibHeader);
-                $this->_m_dibHeader = new \Bmp\BitmapCoreHeader($_io__raw_dibHeader, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_dibHeader);
+                $this->_m_dibHeader = new \Bmp\BitmapCoreHeader($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_dibHeader = $this->_io->readBytes(($this->lenDibHeader() - 4));

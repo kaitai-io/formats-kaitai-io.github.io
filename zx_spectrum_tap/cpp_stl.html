@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ZX Spectrum tape file: C++/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">ZX Spectrum tape file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>ZX Spectrum tape file:
+            
+            C++/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>TAP files are used by emulators of ZX Spectrum computer (released in
+1982 by Sinclair Research). TAP file stores blocks of data as if
+they are written to magnetic tape, which was used as primary media
+for ZX Spectrum. Contents of this file can be viewed as a very
+simple linear filesystem, storing named files with some basic
+metainformation prepended as a header.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        tap
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/801">PRONOM fmt/801</a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/TAP_(ZX_Spectrum)">TAP (ZX Spectrum) in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of ZX Spectrum tape file
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="ZX Spectrum tape file parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl.html" title="ZX Spectrum tape file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="ZX Spectrum tape file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="ZX Spectrum tape file parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="ZX Spectrum tape file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="ZX Spectrum tape file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="ZX Spectrum tape file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="ZX Spectrum tape file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="ZX Spectrum tape file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="ZX Spectrum tape file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="ZX Spectrum tape file parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>). One can open local file for that, or use existing <code>std::string</code> or <code>char*</code> buffer.
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#example-local-file" role="tab" data-toggle="tab">From local file</a></li>
+            <li role="presentation"><a href="#example-std-string" role="tab" data-toggle="tab">From std::string</a></li>
+            <li role="presentation"><a href="#example-char-ptr" role="tab" data-toggle="tab">From char*</a></li>
+        </ul>
+        <div class="tab-content" style="margin-top: 6px">
+            <div role="tabpanel" class="tab-pane active" id="example-local-file">
+<pre><code class="cpp">#include &lt;fstream&gt;
+
+std::ifstream is("path/to/local/file.tap", std::ifstream::binary);</code></pre>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-std-string">
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+std::istringstream is(str);</code></pre>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-char-ptr">
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+const char buf[] = { ... };
+std::string str(buf, sizeof buf);
+std::istringstream is(str);</code></pre>
+            </div>
+        </div>
+
+    </li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<pre><code class="cpp">#include &lt;kaitai/kaitaistream.h&gt;
+
+kaitai::kstream ks(&amp;is);</code></pre></li>
+
+    <li>And finally, we can invoke the parsing:
+
+<pre><code class="cpp">zx_spectrum_tap_t data(&amp;ks);</code></pre></li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="cpp">data.block() // => get block</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++/STL source code to parse ZX Spectrum tape file
+            
+        </h2>
+
+        
+
+        <h3>zx_spectrum_tap.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/zx_spectrum_tap.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">#ifndef ZX_SPECTRUM_TAP_H_
+#define ZX_SPECTRUM_TAP_H_
+
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;kaitai/kaitaistruct.h&quot;
+
+#include &lt;stdint.h&gt;
+#include &lt;vector&gt;
+
+#if KAITAI_STRUCT_VERSION &lt; 7000L
+#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
+#endif
+
+/**
+ * TAP files are used by emulators of ZX Spectrum computer (released in
+ * 1982 by Sinclair Research). TAP file stores blocks of data as if
+ * they are written to magnetic tape, which was used as primary media
+ * for ZX Spectrum. Contents of this file can be viewed as a very
+ * simple linear filesystem, storing named files with some basic
+ * metainformation prepended as a header.
+ * \sa Source
+ */
+
+class zx_spectrum_tap_t : public kaitai::kstruct {
+
+public:
+    class block_t;
+    class program_params_t;
+    class bytes_params_t;
+    class header_t;
+    class array_params_t;
+
+    enum flag_enum_t {
+        FLAG_ENUM_HEADER = 0,
+        FLAG_ENUM_DATA = 255
+    };
+
+    enum header_type_enum_t {
+        HEADER_TYPE_ENUM_PROGRAM = 0,
+        HEADER_TYPE_ENUM_NUM_ARRAY = 1,
+        HEADER_TYPE_ENUM_CHAR_ARRAY = 2,
+        HEADER_TYPE_ENUM_BYTES = 3
+    };
+
+    zx_spectrum_tap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+
+private:
+    void _read();
+
+public:
+    ~zx_spectrum_tap_t();
+
+    class block_t : public kaitai::kstruct {
+
+    public:
+
+        block_t(kaitai::kstream* p__io, zx_spectrum_tap_t* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~block_t();
+
+    private:
+        uint16_t m_len_block;
+        flag_enum_t m_flag;
+        header_t* m_header;
+        bool n_header;
+
+    public:
+        bool _is_null_header() { header(); return n_header; };
+
+    private:
+        std::string m_data;
+        bool n_data;
+
+    public:
+        bool _is_null_data() { data(); return n_data; };
+
+    private:
+        std::string m_headerless_data;
+        bool n_headerless_data;
+
+    public:
+        bool _is_null_headerless_data() { headerless_data(); return n_headerless_data; };
+
+    private:
+        zx_spectrum_tap_t* m__root;
+        zx_spectrum_tap_t* m__parent;
+
+    public:
+        uint16_t len_block() const { return m_len_block; }
+        flag_enum_t flag() const { return m_flag; }
+        header_t* header() const { return m_header; }
+        std::string data() const { return m_data; }
+        std::string headerless_data() const { return m_headerless_data; }
+        zx_spectrum_tap_t* _root() const { return m__root; }
+        zx_spectrum_tap_t* _parent() const { return m__parent; }
+    };
+
+    class program_params_t : public kaitai::kstruct {
+
+    public:
+
+        program_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~program_params_t();
+
+    private:
+        uint16_t m_autostart_line;
+        uint16_t m_len_program;
+        zx_spectrum_tap_t* m__root;
+        zx_spectrum_tap_t::header_t* m__parent;
+
+    public:
+        uint16_t autostart_line() const { return m_autostart_line; }
+        uint16_t len_program() const { return m_len_program; }
+        zx_spectrum_tap_t* _root() const { return m__root; }
+        zx_spectrum_tap_t::header_t* _parent() const { return m__parent; }
+    };
+
+    class bytes_params_t : public kaitai::kstruct {
+
+    public:
+
+        bytes_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~bytes_params_t();
+
+    private:
+        uint16_t m_start_address;
+        std::string m_reserved;
+        zx_spectrum_tap_t* m__root;
+        zx_spectrum_tap_t::header_t* m__parent;
+
+    public:
+        uint16_t start_address() const { return m_start_address; }
+        std::string reserved() const { return m_reserved; }
+        zx_spectrum_tap_t* _root() const { return m__root; }
+        zx_spectrum_tap_t::header_t* _parent() const { return m__parent; }
+    };
+
+    class header_t : public kaitai::kstruct {
+
+    public:
+
+        header_t(kaitai::kstream* p__io, zx_spectrum_tap_t::block_t* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~header_t();
+
+    private:
+        header_type_enum_t m_header_type;
+        std::string m_filename;
+        uint16_t m_len_data;
+        kaitai::kstruct* m_params;
+        bool n_params;
+
+    public:
+        bool _is_null_params() { params(); return n_params; };
+
+    private:
+        uint8_t m_checksum;
+        zx_spectrum_tap_t* m__root;
+        zx_spectrum_tap_t::block_t* m__parent;
+
+    public:
+        header_type_enum_t header_type() const { return m_header_type; }
+        std::string filename() const { return m_filename; }
+        uint16_t len_data() const { return m_len_data; }
+        kaitai::kstruct* params() const { return m_params; }
+
+        /**
+         * Bitwise XOR of all bytes including the flag byte
+         */
+        uint8_t checksum() const { return m_checksum; }
+        zx_spectrum_tap_t* _root() const { return m__root; }
+        zx_spectrum_tap_t::block_t* _parent() const { return m__parent; }
+    };
+
+    class array_params_t : public kaitai::kstruct {
+
+    public:
+
+        array_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~array_params_t();
+
+    private:
+        uint8_t m_reserved;
+        uint8_t m_var_name;
+        std::string m_reserved1;
+        zx_spectrum_tap_t* m__root;
+        zx_spectrum_tap_t::header_t* m__parent;
+
+    public:
+        uint8_t reserved() const { return m_reserved; }
+
+        /**
+         * Variable name (1..26 meaning A$..Z$ +192)
+         */
+        uint8_t var_name() const { return m_var_name; }
+        std::string reserved1() const { return m_reserved1; }
+        zx_spectrum_tap_t* _root() const { return m__root; }
+        zx_spectrum_tap_t::header_t* _parent() const { return m__parent; }
+    };
+
+private:
+    std::vector&lt;block_t*&gt;* m_block;
+    zx_spectrum_tap_t* m__root;
+    kaitai::kstruct* m__parent;
+
+public:
+    std::vector&lt;block_t*&gt;* block() const { return m_block; }
+    zx_spectrum_tap_t* _root() const { return m__root; }
+    kaitai::kstruct* _parent() const { return m__parent; }
+};
+
+#endif  // ZX_SPECTRUM_TAP_H_
+</code></pre>
+            
+        </div>
+        
+
+        <h3>zx_spectrum_tap.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/zx_spectrum_tap.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;zx_spectrum_tap.h&quot;
+
+
+
+zx_spectrum_tap_t::zx_spectrum_tap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = this;
+    _read();
+}
+
+void zx_spectrum_tap_t::_read() {
+    m_block = new std::vector&lt;block_t*&gt;();
+    {
+        int i = 0;
+        while (!m__io-&gt;is_eof()) {
+            m_block-&gt;push_back(new block_t(m__io, this, m__root));
+            i++;
+        }
+    }
+}
+
+zx_spectrum_tap_t::~zx_spectrum_tap_t() {
+    for (std::vector&lt;block_t*&gt;::iterator it = m_block-&gt;begin(); it != m_block-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_block;
+}
+
+zx_spectrum_tap_t::block_t::block_t(kaitai::kstream* p__io, zx_spectrum_tap_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void zx_spectrum_tap_t::block_t::_read() {
+    m_len_block = m__io-&gt;read_u2le();
+    m_flag = static_cast&lt;zx_spectrum_tap_t::flag_enum_t&gt;(m__io-&gt;read_u1());
+    n_header = true;
+    if ( ((len_block() == 19) &amp;&amp; (flag() == FLAG_ENUM_HEADER)) ) {
+        n_header = false;
+        m_header = new header_t(m__io, this, m__root);
+    }
+    n_data = true;
+    if (len_block() == 19) {
+        n_data = false;
+        m_data = m__io-&gt;read_bytes((header()-&gt;len_data() + 4));
+    }
+    n_headerless_data = true;
+    if (flag() == FLAG_ENUM_DATA) {
+        n_headerless_data = false;
+        m_headerless_data = m__io-&gt;read_bytes((len_block() - 1));
+    }
+}
+
+zx_spectrum_tap_t::block_t::~block_t() {
+    if (!n_header) {
+        delete m_header;
+    }
+    if (!n_data) {
+    }
+    if (!n_headerless_data) {
+    }
+}
+
+zx_spectrum_tap_t::program_params_t::program_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void zx_spectrum_tap_t::program_params_t::_read() {
+    m_autostart_line = m__io-&gt;read_u2le();
+    m_len_program = m__io-&gt;read_u2le();
+}
+
+zx_spectrum_tap_t::program_params_t::~program_params_t() {
+}
+
+zx_spectrum_tap_t::bytes_params_t::bytes_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void zx_spectrum_tap_t::bytes_params_t::_read() {
+    m_start_address = m__io-&gt;read_u2le();
+    m_reserved = m__io-&gt;read_bytes(2);
+}
+
+zx_spectrum_tap_t::bytes_params_t::~bytes_params_t() {
+}
+
+zx_spectrum_tap_t::header_t::header_t(kaitai::kstream* p__io, zx_spectrum_tap_t::block_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void zx_spectrum_tap_t::header_t::_read() {
+    m_header_type = static_cast&lt;zx_spectrum_tap_t::header_type_enum_t&gt;(m__io-&gt;read_u1());
+    m_filename = kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(10), 32);
+    m_len_data = m__io-&gt;read_u2le();
+    n_params = true;
+    switch (header_type()) {
+    case HEADER_TYPE_ENUM_PROGRAM: {
+        n_params = false;
+        m_params = new program_params_t(m__io, this, m__root);
+        break;
+    }
+    case HEADER_TYPE_ENUM_NUM_ARRY: {
+        n_params = false;
+        m_params = new array_params_t(m__io, this, m__root);
+        break;
+    }
+    case HEADER_TYPE_ENUM_CHAR_ARRY: {
+        n_params = false;
+        m_params = new array_params_t(m__io, this, m__root);
+        break;
+    }
+    case HEADER_TYPE_ENUM_BYTES: {
+        n_params = false;
+        m_params = new bytes_params_t(m__io, this, m__root);
+        break;
+    }
+    }
+    m_checksum = m__io-&gt;read_u1();
+}
+
+zx_spectrum_tap_t::header_t::~header_t() {
+    if (!n_params) {
+        delete m_params;
+    }
+}
+
+zx_spectrum_tap_t::array_params_t::array_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void zx_spectrum_tap_t::array_params_t::_read() {
+    m_reserved = m__io-&gt;read_u1();
+    m_var_name = m__io-&gt;read_u1();
+    m_reserved1 = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00\x80&quot;, 2));
+}
+
+zx_spectrum_tap_t::array_params_t::~array_params_t() {
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

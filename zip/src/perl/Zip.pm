@@ -210,17 +210,17 @@ sub _read {
     $self->{code} = $self->{_io}->read_u2le();
     $self->{size} = $self->{_io}->read_u2le();
     my $_on = $self->code();
-    if ($_on == $Zip::EXTRA_CODES_NTFS) {
+    if ($_on == $EXTRA_CODES_NTFS) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Zip::ExtraField::Ntfs->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $Zip::EXTRA_CODES_EXTENDED_TIMESTAMP) {
+    elsif ($_on == $EXTRA_CODES_EXTENDED_TIMESTAMP) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Zip::ExtraField::ExtendedTimestamp->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $Zip::EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE) {
+    elsif ($_on == $EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Zip::ExtraField::InfozipUnixVarSize->new($io__raw_body, $self, $self->{_root});

@@ -17,8 +17,8 @@ class Bson extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_len = $this->_io->readS4le();
         $this->_m__raw_fields = $this->_io->readBytes(($this->len() - 5));
-        $_io__raw_fields = new \Kaitai\Struct\Stream($this->_m__raw_fields);
-        $this->_m_fields = new \Bson\ElementsList($_io__raw_fields, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_fields);
+        $this->_m_fields = new \Bson\ElementsList($io, $this, $this->_root);
         $this->_m_terminator = $this->_io->ensureFixedContents("\x00");
     }
     protected $_m_len;
@@ -75,8 +75,8 @@ class BinData extends \Kaitai\Struct\Struct {
         switch ($this->subtype()) {
             case \Bson\BinData\Subtype::BYTE_ARRAY_DEPRECATED:
                 $this->_m__raw_content = $this->_io->readBytes($this->len());
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \Bson\BinData\ByteArrayDeprecated($_io__raw_content, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \Bson\BinData\ByteArrayDeprecated($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_content = $this->_io->readBytes($this->len());
@@ -199,47 +199,32 @@ class Element extends \Kaitai\Struct\Struct {
         $this->_m_typeByte = $this->_io->readU1();
         $this->_m_name = new \Bson\Cstring($this->_io, $this, $this->_root);
         switch ($this->typeByte()) {
-            case \Bson\Element\BsonType::CODE_WITH_SCOPE:
-                $this->_m_content = new \Bson\CodeWithScope($this->_io, $this, $this->_root);
-                break;
-            case \Bson\Element\BsonType::REG_EX:
-                $this->_m_content = new \Bson\RegEx($this->_io, $this, $this->_root);
-                break;
             case \Bson\Element\BsonType::NUMBER_DOUBLE:
                 $this->_m_content = $this->_io->readF8le();
                 break;
-            case \Bson\Element\BsonType::SYMBOL:
-                $this->_m_content = new \Bson\String($this->_io, $this, $this->_root);
-                break;
-            case \Bson\Element\BsonType::TIMESTAMP:
-                $this->_m_content = new \Bson\Timestamp($this->_io, $this, $this->_root);
-                break;
-            case \Bson\Element\BsonType::NUMBER_INT:
-                $this->_m_content = $this->_io->readS4le();
-                break;
-            case \Bson\Element\BsonType::DOCUMENT:
-                $this->_m_content = new \Bson($this->_io);
+            case \Bson\Element\BsonType::CODE_WITH_SCOPE:
+                $this->_m_content = new \Bson\CodeWithScope($this->_io, $this, $this->_root);
                 break;
             case \Bson\Element\BsonType::OBJECT_ID:
                 $this->_m_content = new \Bson\ObjectId($this->_io, $this, $this->_root);
                 break;
-            case \Bson\Element\BsonType::JAVASCRIPT:
+            case \Bson\Element\BsonType::STRING:
                 $this->_m_content = new \Bson\String($this->_io, $this, $this->_root);
+                break;
+            case \Bson\Element\BsonType::REG_EX:
+                $this->_m_content = new \Bson\RegEx($this->_io, $this, $this->_root);
+                break;
+            case \Bson\Element\BsonType::NUMBER_DECIMAL:
+                $this->_m_content = new \Bson\F16($this->_io, $this, $this->_root);
                 break;
             case \Bson\Element\BsonType::UTC_DATETIME:
                 $this->_m_content = $this->_io->readS8le();
                 break;
-            case \Bson\Element\BsonType::BOOLEAN:
-                $this->_m_content = $this->_io->readU1();
-                break;
             case \Bson\Element\BsonType::NUMBER_LONG:
                 $this->_m_content = $this->_io->readS8le();
                 break;
-            case \Bson\Element\BsonType::BIN_DATA:
-                $this->_m_content = new \Bson\BinData($this->_io, $this, $this->_root);
-                break;
-            case \Bson\Element\BsonType::STRING:
-                $this->_m_content = new \Bson\String($this->_io, $this, $this->_root);
+            case \Bson\Element\BsonType::TIMESTAMP:
+                $this->_m_content = new \Bson\Timestamp($this->_io, $this, $this->_root);
                 break;
             case \Bson\Element\BsonType::DB_POINTER:
                 $this->_m_content = new \Bson\DbPointer($this->_io, $this, $this->_root);
@@ -247,8 +232,23 @@ class Element extends \Kaitai\Struct\Struct {
             case \Bson\Element\BsonType::ARRAY:
                 $this->_m_content = new \Bson($this->_io);
                 break;
-            case \Bson\Element\BsonType::NUMBER_DECIMAL:
-                $this->_m_content = new \Bson\F16($this->_io, $this, $this->_root);
+            case \Bson\Element\BsonType::JAVASCRIPT:
+                $this->_m_content = new \Bson\String($this->_io, $this, $this->_root);
+                break;
+            case \Bson\Element\BsonType::BOOLEAN:
+                $this->_m_content = $this->_io->readU1();
+                break;
+            case \Bson\Element\BsonType::DOCUMENT:
+                $this->_m_content = new \Bson($this->_io);
+                break;
+            case \Bson\Element\BsonType::SYMBOL:
+                $this->_m_content = new \Bson\String($this->_io, $this, $this->_root);
+                break;
+            case \Bson\Element\BsonType::NUMBER_INT:
+                $this->_m_content = $this->_io->readS4le();
+                break;
+            case \Bson\Element\BsonType::BIN_DATA:
+                $this->_m_content = new \Bson\BinData($this->_io, $this, $this->_root);
                 break;
         }
     }

@@ -362,17 +362,17 @@ sub _read {
     $self->{four_cc} = $self->{_io}->read_u4le();
     $self->{block_size} = $self->{_io}->read_u4le();
     my $_on = $self->four_cc();
-    if ($_on == $Avi::CHUNK_TYPE_LIST) {
+    if ($_on == $CHUNK_TYPE_LIST) {
         $self->{_raw_data} = $self->{_io}->read_bytes($self->block_size());
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
         $self->{data} = Avi::ListBody->new($io__raw_data, $self, $self->{_root});
     }
-    elsif ($_on == $Avi::CHUNK_TYPE_AVIH) {
+    elsif ($_on == $CHUNK_TYPE_AVIH) {
         $self->{_raw_data} = $self->{_io}->read_bytes($self->block_size());
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
         $self->{data} = Avi::AvihBody->new($io__raw_data, $self, $self->{_root});
     }
-    elsif ($_on == $Avi::CHUNK_TYPE_STRH) {
+    elsif ($_on == $CHUNK_TYPE_STRH) {
         $self->{_raw_data} = $self->{_io}->read_bytes($self->block_size());
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
         $self->{data} = Avi::StrhBody->new($io__raw_data, $self, $self->{_root});

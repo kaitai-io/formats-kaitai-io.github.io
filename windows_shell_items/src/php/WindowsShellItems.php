@@ -78,8 +78,8 @@ class ShellItem extends \Kaitai\Struct\Struct {
         $this->_m_lenData = $this->_io->readU2le();
         if ($this->lenData() >= 2) {
             $this->_m__raw_data = $this->_io->readBytes(($this->lenData() - 2));
-            $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-            $this->_m_data = new \WindowsShellItems\ShellItemData($_io__raw_data, $this, $this->_root);
+            $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
+            $this->_m_data = new \WindowsShellItems\ShellItemData($io, $this, $this->_root);
         }
     }
     protected $_m_lenData;

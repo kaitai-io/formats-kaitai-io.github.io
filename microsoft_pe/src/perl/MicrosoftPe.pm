@@ -164,10 +164,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    if ($self->_parent()->std()->format() == $MicrosoftPe::PE_FORMAT_PE32) {
+    if ($self->_parent()->std()->format() == $PE_FORMAT_PE32) {
         $self->{image_base_32} = $self->{_io}->read_u4le();
     }
-    if ($self->_parent()->std()->format() == $MicrosoftPe::PE_FORMAT_PE32_PLUS) {
+    if ($self->_parent()->std()->format() == $PE_FORMAT_PE32_PLUS) {
         $self->{image_base_64} = $self->{_io}->read_u8le();
     }
     $self->{section_alignment} = $self->{_io}->read_u4le();
@@ -184,28 +184,28 @@ sub _read {
     $self->{check_sum} = $self->{_io}->read_u4le();
     $self->{subsystem} = $self->{_io}->read_u2le();
     $self->{dll_characteristics} = $self->{_io}->read_u2le();
-    if ($self->_parent()->std()->format() == $MicrosoftPe::PE_FORMAT_PE32) {
+    if ($self->_parent()->std()->format() == $PE_FORMAT_PE32) {
         $self->{size_of_stack_reserve_32} = $self->{_io}->read_u4le();
     }
-    if ($self->_parent()->std()->format() == $MicrosoftPe::PE_FORMAT_PE32_PLUS) {
+    if ($self->_parent()->std()->format() == $PE_FORMAT_PE32_PLUS) {
         $self->{size_of_stack_reserve_64} = $self->{_io}->read_u8le();
     }
-    if ($self->_parent()->std()->format() == $MicrosoftPe::PE_FORMAT_PE32) {
+    if ($self->_parent()->std()->format() == $PE_FORMAT_PE32) {
         $self->{size_of_stack_commit_32} = $self->{_io}->read_u4le();
     }
-    if ($self->_parent()->std()->format() == $MicrosoftPe::PE_FORMAT_PE32_PLUS) {
+    if ($self->_parent()->std()->format() == $PE_FORMAT_PE32_PLUS) {
         $self->{size_of_stack_commit_64} = $self->{_io}->read_u8le();
     }
-    if ($self->_parent()->std()->format() == $MicrosoftPe::PE_FORMAT_PE32) {
+    if ($self->_parent()->std()->format() == $PE_FORMAT_PE32) {
         $self->{size_of_heap_reserve_32} = $self->{_io}->read_u4le();
     }
-    if ($self->_parent()->std()->format() == $MicrosoftPe::PE_FORMAT_PE32_PLUS) {
+    if ($self->_parent()->std()->format() == $PE_FORMAT_PE32_PLUS) {
         $self->{size_of_heap_reserve_64} = $self->{_io}->read_u8le();
     }
-    if ($self->_parent()->std()->format() == $MicrosoftPe::PE_FORMAT_PE32) {
+    if ($self->_parent()->std()->format() == $PE_FORMAT_PE32) {
         $self->{size_of_heap_commit_32} = $self->{_io}->read_u4le();
     }
-    if ($self->_parent()->std()->format() == $MicrosoftPe::PE_FORMAT_PE32_PLUS) {
+    if ($self->_parent()->std()->format() == $PE_FORMAT_PE32_PLUS) {
         $self->{size_of_heap_commit_64} = $self->{_io}->read_u8le();
     }
     $self->{loader_flags} = $self->{_io}->read_u4le();
@@ -967,7 +967,7 @@ sub _read {
     $self->{size_of_uninitialized_data} = $self->{_io}->read_u4le();
     $self->{address_of_entry_point} = $self->{_io}->read_u4le();
     $self->{base_of_code} = $self->{_io}->read_u4le();
-    if ($self->format() == $MicrosoftPe::PE_FORMAT_PE32) {
+    if ($self->format() == $PE_FORMAT_PE32) {
         $self->{base_of_data} = $self->{_io}->read_u4le();
     }
 }

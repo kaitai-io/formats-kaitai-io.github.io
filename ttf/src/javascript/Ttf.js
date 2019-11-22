@@ -1506,11 +1506,6 @@ var Ttf = (function() {
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new ByteEncodingTable(_io__raw_value, this, this._root);
           break;
-        case Ttf.Cmap.Subtable.SubtableFormat.SEGMENT_MAPPING_TO_DELTA_VALUES:
-          this._raw_value = this._io.readBytes((this.length - 6));
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new SegmentMappingToDeltaValues(_io__raw_value, this, this._root);
-          break;
         case Ttf.Cmap.Subtable.SubtableFormat.HIGH_BYTE_MAPPING_THROUGH_TABLE:
           this._raw_value = this._io.readBytes((this.length - 6));
           var _io__raw_value = new KaitaiStream(this._raw_value);
@@ -1520,6 +1515,11 @@ var Ttf = (function() {
           this._raw_value = this._io.readBytes((this.length - 6));
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new TrimmedTableMapping(_io__raw_value, this, this._root);
+          break;
+        case Ttf.Cmap.Subtable.SubtableFormat.SEGMENT_MAPPING_TO_DELTA_VALUES:
+          this._raw_value = this._io.readBytes((this.length - 6));
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new SegmentMappingToDeltaValues(_io__raw_value, this, this._root);
           break;
         default:
           this.value = this._io.readBytes((this.length - 6));

@@ -56,7 +56,7 @@ class ShapefileIndex(KaitaiStruct):
             self.unused_field_5 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
             self.file_length = self._io.read_s4be()
             self.version = self._io.ensure_fixed_contents(b"\xE8\x03\x00\x00")
-            self.shape_type = KaitaiStream.resolve_enum(self._root.ShapeType, self._io.read_s4le())
+            self.shape_type = self._root.ShapeType(self._io.read_s4le())
             self.bounding_box = self._root.BoundingBoxXYZM(self._io, self, self._root)
 
 

@@ -409,7 +409,7 @@ public class Vdi extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            index = new ArrayList<BlockIndex>(((Number) (_root.header().headerMain().blocksInImage())).intValue());
+            index = new ArrayList<BlockIndex>((int) (_root.header().headerMain().blocksInImage()));
             for (int i = 0; i < _root.header().headerMain().blocksInImage(); i++) {
                 this.index.add(new BlockIndex(this._io, this, _root));
             }
@@ -487,7 +487,7 @@ public class Vdi extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            blocks = new ArrayList<Block>(((Number) (_root.header().headerMain().blocksInImage())).intValue());
+            blocks = new ArrayList<Block>((int) (_root.header().headerMain().blocksInImage()));
             for (int i = 0; i < _root.header().headerMain().blocksInImage(); i++) {
                 this.blocks.add(new Block(this._io, this, _root));
             }

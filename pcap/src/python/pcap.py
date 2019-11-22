@@ -8,8 +8,8 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-import packet_ppi
-import ethernet_frame
+from ethernet_frame import EthernetFrame
+from packet_ppi import PacketPpi
 class Pcap(KaitaiStruct):
     """PCAP (named after libpcap / winpcap) is a popular format for saving
     network traffic grabbed by network sniffers. It is typically
@@ -158,7 +158,7 @@ class Pcap(KaitaiStruct):
             self.thiszone = self._io.read_s4le()
             self.sigfigs = self._io.read_u4le()
             self.snaplen = self._io.read_u4le()
-            self.network = KaitaiStream.resolve_enum(self._root.Linktype, self._io.read_u4le())
+            self.network = self._root.Linktype(self._io.read_u4le())
 
 
     class Packet(KaitaiStruct):
@@ -180,12 +180,12 @@ class Pcap(KaitaiStruct):
             _on = self._root.hdr.network
             if _on == self._root.Linktype.ppi:
                 self._raw_body = self._io.read_bytes(self.incl_len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = packet_ppi.PacketPpi(_io__raw_body)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = PacketPpi(io)
             elif _on == self._root.Linktype.ethernet:
                 self._raw_body = self._io.read_bytes(self.incl_len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = ethernet_frame.EthernetFrame(_io__raw_body)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = EthernetFrame(io)
             else:
                 self.body = self._io.read_bytes(self.incl_len)
 

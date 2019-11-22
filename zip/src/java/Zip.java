@@ -192,36 +192,29 @@ public class Zip extends KaitaiStruct {
         private void _read() {
             this.code = Zip.ExtraCodes.byId(this._io.readU2le());
             this.size = this._io.readU2le();
-            {
-                ExtraCodes on = code();
-                if (on != null) {
-                    switch (code()) {
-                    case NTFS: {
-                        this._raw_body = this._io.readBytes(size());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new Ntfs(_io__raw_body, this, _root);
-                        break;
-                    }
-                    case EXTENDED_TIMESTAMP: {
-                        this._raw_body = this._io.readBytes(size());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new ExtendedTimestamp(_io__raw_body, this, _root);
-                        break;
-                    }
-                    case INFOZIP_UNIX_VAR_SIZE: {
-                        this._raw_body = this._io.readBytes(size());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new InfozipUnixVarSize(_io__raw_body, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.body = this._io.readBytes(size());
-                        break;
-                    }
-                    }
-                } else {
-                    this.body = this._io.readBytes(size());
-                }
+            switch (code()) {
+            case NTFS: {
+                this._raw_body = this._io.readBytes(size());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new Ntfs(_io__raw_body, this, _root);
+                break;
+            }
+            case EXTENDED_TIMESTAMP: {
+                this._raw_body = this._io.readBytes(size());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new ExtendedTimestamp(_io__raw_body, this, _root);
+                break;
+            }
+            case INFOZIP_UNIX_VAR_SIZE: {
+                this._raw_body = this._io.readBytes(size());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new InfozipUnixVarSize(_io__raw_body, this, _root);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(size());
+                break;
+            }
             }
         }
 

@@ -43,8 +43,8 @@ class BitcoinTransaction < Kaitai::Struct::Struct
       @output_id = @_io.read_u4le
       @len_script = @_io.read_u1
       @_raw_script_sig = @_io.read_bytes(len_script)
-      _io__raw_script_sig = Kaitai::Struct::Stream.new(@_raw_script_sig)
-      @script_sig = ScriptSignature.new(_io__raw_script_sig, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_script_sig)
+      @script_sig = ScriptSignature.new(io, self, @_root)
       @end_of_vin = @_io.ensure_fixed_contents([255, 255, 255, 255].pack('C*'))
       self
     end

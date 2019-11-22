@@ -56,31 +56,31 @@ class MagicavoxelVox(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.chunk_id = KaitaiStream.resolve_enum(self._root.ChunkType, self._io.read_u4be())
+            self.chunk_id = self._root.ChunkType(self._io.read_u4be())
             self.num_bytes_of_chunk_content = self._io.read_u4le()
             self.num_bytes_of_children_chunks = self._io.read_u4le()
             if self.num_bytes_of_chunk_content != 0:
                 _on = self.chunk_id
                 if _on == self._root.ChunkType.size:
                     self._raw_chunk_content = self._io.read_bytes(self.num_bytes_of_chunk_content)
-                    _io__raw_chunk_content = KaitaiStream(BytesIO(self._raw_chunk_content))
-                    self.chunk_content = self._root.Size(_io__raw_chunk_content, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw_chunk_content))
+                    self.chunk_content = self._root.Size(io, self, self._root)
                 elif _on == self._root.ChunkType.matt:
                     self._raw_chunk_content = self._io.read_bytes(self.num_bytes_of_chunk_content)
-                    _io__raw_chunk_content = KaitaiStream(BytesIO(self._raw_chunk_content))
-                    self.chunk_content = self._root.Matt(_io__raw_chunk_content, self, self._root)
-                elif _on == self._root.ChunkType.rgba:
-                    self._raw_chunk_content = self._io.read_bytes(self.num_bytes_of_chunk_content)
-                    _io__raw_chunk_content = KaitaiStream(BytesIO(self._raw_chunk_content))
-                    self.chunk_content = self._root.Rgba(_io__raw_chunk_content, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw_chunk_content))
+                    self.chunk_content = self._root.Matt(io, self, self._root)
                 elif _on == self._root.ChunkType.xyzi:
                     self._raw_chunk_content = self._io.read_bytes(self.num_bytes_of_chunk_content)
-                    _io__raw_chunk_content = KaitaiStream(BytesIO(self._raw_chunk_content))
-                    self.chunk_content = self._root.Xyzi(_io__raw_chunk_content, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw_chunk_content))
+                    self.chunk_content = self._root.Xyzi(io, self, self._root)
                 elif _on == self._root.ChunkType.pack:
                     self._raw_chunk_content = self._io.read_bytes(self.num_bytes_of_chunk_content)
-                    _io__raw_chunk_content = KaitaiStream(BytesIO(self._raw_chunk_content))
-                    self.chunk_content = self._root.Pack(_io__raw_chunk_content, self, self._root)
+                    io = KaitaiStream(BytesIO(self._raw_chunk_content))
+                    self.chunk_content = self._root.Pack(io, self, self._root)
+                elif _on == self._root.ChunkType.rgba:
+                    self._raw_chunk_content = self._io.read_bytes(self.num_bytes_of_chunk_content)
+                    io = KaitaiStream(BytesIO(self._raw_chunk_content))
+                    self.chunk_content = self._root.Rgba(io, self, self._root)
                 else:
                     self.chunk_content = self._io.read_bytes(self.num_bytes_of_chunk_content)
 
@@ -141,7 +141,7 @@ class MagicavoxelVox(KaitaiStruct):
 
         def _read(self):
             self.id = self._io.read_u4le()
-            self.material_type = KaitaiStream.resolve_enum(self._root.MaterialType, self._io.read_u4le())
+            self.material_type = self._root.MaterialType(self._io.read_u4le())
             self.material_weight = self._io.read_f4le()
             self.property_bits = self._io.read_u4le()
             if self.has_plastic:

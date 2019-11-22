@@ -377,7 +377,7 @@ sub _read {
     $self->{data_type} = $self->{_io}->read_u4le();
     $self->{flags} = $self->{_io}->read_u2le();
     $self->{padding} = $self->{_io}->read_u2le();
-    if ($self->flags() == $Regf::HiveBinCell::SubKeyListVk::VK_FLAGS_VALUE_COMP_NAME) {
+    if ($self->flags() == $VK_FLAGS_VALUE_COMP_NAME) {
         $self->{value_name} = Encode::decode("ascii", $self->{_io}->read_bytes($self->value_name_size()));
     }
 }

@@ -178,30 +178,23 @@ public class PacketPpi extends KaitaiStruct {
         this._raw_fields = this._io.readBytes((header().pphLen() - 8));
         KaitaiStream _io__raw_fields = new ByteBufferKaitaiStream(_raw_fields);
         this.fields = new PacketPpiFields(_io__raw_fields, this, _root);
-        {
-            Linktype on = header().pphDlt();
-            if (on != null) {
-                switch (header().pphDlt()) {
-                case PPI: {
-                    this._raw_body = this._io.readBytesFull();
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new PacketPpi(_io__raw_body);
-                    break;
-                }
-                case ETHERNET: {
-                    this._raw_body = this._io.readBytesFull();
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new EthernetFrame(_io__raw_body);
-                    break;
-                }
-                default: {
-                    this.body = this._io.readBytesFull();
-                    break;
-                }
-                }
-            } else {
-                this.body = this._io.readBytesFull();
-            }
+        switch (header().pphDlt()) {
+        case PPI: {
+            this._raw_body = this._io.readBytesFull();
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+            this.body = new PacketPpi(_io__raw_body);
+            break;
+        }
+        case ETHERNET: {
+            this._raw_body = this._io.readBytesFull();
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+            this.body = new EthernetFrame(_io__raw_body);
+            break;
+        }
+        default: {
+            this.body = this._io.readBytesFull();
+            break;
+        }
         }
     }
     public static class PacketPpiFields extends KaitaiStruct {
@@ -489,36 +482,29 @@ public class PacketPpi extends KaitaiStruct {
         private void _read() {
             this.pfhType = PacketPpi.PfhType.byId(this._io.readU2le());
             this.pfhDatalen = this._io.readU2le();
-            {
-                PfhType on = pfhType();
-                if (on != null) {
-                    switch (pfhType()) {
-                    case RADIO_802_11_COMMON: {
-                        this._raw_body = this._io.readBytes(pfhDatalen());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new Radio80211CommonBody(_io__raw_body, this, _root);
-                        break;
-                    }
-                    case RADIO_802_11N_MAC_EXT: {
-                        this._raw_body = this._io.readBytes(pfhDatalen());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new Radio80211nMacExtBody(_io__raw_body, this, _root);
-                        break;
-                    }
-                    case RADIO_802_11N_MAC_PHY_EXT: {
-                        this._raw_body = this._io.readBytes(pfhDatalen());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new Radio80211nMacPhyExtBody(_io__raw_body, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.body = this._io.readBytes(pfhDatalen());
-                        break;
-                    }
-                    }
-                } else {
-                    this.body = this._io.readBytes(pfhDatalen());
-                }
+            switch (pfhType()) {
+            case RADIO_802_11_COMMON: {
+                this._raw_body = this._io.readBytes(pfhDatalen());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new Radio80211CommonBody(_io__raw_body, this, _root);
+                break;
+            }
+            case RADIO_802_11N_MAC_EXT: {
+                this._raw_body = this._io.readBytes(pfhDatalen());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new Radio80211nMacExtBody(_io__raw_body, this, _root);
+                break;
+            }
+            case RADIO_802_11N_MAC_PHY_EXT: {
+                this._raw_body = this._io.readBytes(pfhDatalen());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new Radio80211nMacPhyExtBody(_io__raw_body, this, _root);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(pfhDatalen());
+                break;
+            }
             }
         }
         private PfhType pfhType;
@@ -564,21 +550,21 @@ public class PacketPpi extends KaitaiStruct {
             this.mcs = this._io.readU1();
             this.numStreams = this._io.readU1();
             this.rssiCombined = this._io.readU1();
-            rssiAntCtl = new ArrayList<Integer>(((Number) (4)).intValue());
+            rssiAntCtl = new ArrayList<Integer>((int) (4));
             for (int i = 0; i < 4; i++) {
                 this.rssiAntCtl.add(this._io.readU1());
             }
-            rssiAntExt = new ArrayList<Integer>(((Number) (4)).intValue());
+            rssiAntExt = new ArrayList<Integer>((int) (4));
             for (int i = 0; i < 4; i++) {
                 this.rssiAntExt.add(this._io.readU1());
             }
             this.extChannelFreq = this._io.readU2le();
             this.extChannelFlags = new ChannelFlags(this._io, this, _root);
-            rfSignalNoise = new ArrayList<SignalNoise>(((Number) (4)).intValue());
+            rfSignalNoise = new ArrayList<SignalNoise>((int) (4));
             for (int i = 0; i < 4; i++) {
                 this.rfSignalNoise.add(new SignalNoise(this._io, this, _root));
             }
-            evm = new ArrayList<Long>(((Number) (4)).intValue());
+            evm = new ArrayList<Long>((int) (4));
             for (int i = 0; i < 4; i++) {
                 this.evm.add(this._io.readU4le());
             }

@@ -117,8 +117,8 @@ class SaintsRow2VppPc < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(ofs_filenames)
     @_raw_filenames = @_io.read_bytes(len_filenames)
-    _io__raw_filenames = Kaitai::Struct::Stream.new(@_raw_filenames)
-    @filenames = Strings.new(_io__raw_filenames, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_filenames)
+    @filenames = Strings.new(io, self, @_root)
     @_io.seek(_pos)
     @filenames
   end
@@ -132,8 +132,8 @@ class SaintsRow2VppPc < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(2048)
     @_raw_files = @_io.read_bytes(len_offsets)
-    _io__raw_files = Kaitai::Struct::Stream.new(@_raw_files)
-    @files = Offsets.new(_io__raw_files, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_files)
+    @files = Offsets.new(io, self, @_root)
     @_io.seek(_pos)
     @files
   end
@@ -147,8 +147,8 @@ class SaintsRow2VppPc < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(ofs_extensions)
     @_raw_extensions = @_io.read_bytes(len_extensions)
-    _io__raw_extensions = Kaitai::Struct::Stream.new(@_raw_extensions)
-    @extensions = Strings.new(_io__raw_extensions, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_extensions)
+    @extensions = Strings.new(io, self, @_root)
     @_io.seek(_pos)
     @extensions
   end

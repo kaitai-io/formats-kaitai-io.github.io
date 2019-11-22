@@ -334,32 +334,32 @@ var RubyMarshal = (function() {
     Record.prototype._read = function() {
       this.code = this._io.readU1();
       switch (this.code) {
-      case RubyMarshal.Codes.PACKED_INT:
-        this.body = new PackedInt(this._io, this, this._root);
-        break;
       case RubyMarshal.Codes.BIGNUM:
         this.body = new Bignum(this._io, this, this._root);
+        break;
+      case RubyMarshal.Codes.RUBY_HASH:
+        this.body = new RubyHash(this._io, this, this._root);
         break;
       case RubyMarshal.Codes.RUBY_ARRAY:
         this.body = new RubyArray(this._io, this, this._root);
         break;
-      case RubyMarshal.Codes.RUBY_SYMBOL_LINK:
+      case RubyMarshal.Codes.RUBY_SYMBOL:
+        this.body = new RubySymbol(this._io, this, this._root);
+        break;
+      case RubyMarshal.Codes.INSTANCE_VAR:
+        this.body = new InstanceVar(this._io, this, this._root);
+        break;
+      case RubyMarshal.Codes.RUBY_STRING:
+        this.body = new RubyString(this._io, this, this._root);
+        break;
+      case RubyMarshal.Codes.PACKED_INT:
         this.body = new PackedInt(this._io, this, this._root);
         break;
       case RubyMarshal.Codes.RUBY_STRUCT:
         this.body = new RubyStruct(this._io, this, this._root);
         break;
-      case RubyMarshal.Codes.RUBY_STRING:
-        this.body = new RubyString(this._io, this, this._root);
-        break;
-      case RubyMarshal.Codes.INSTANCE_VAR:
-        this.body = new InstanceVar(this._io, this, this._root);
-        break;
-      case RubyMarshal.Codes.RUBY_HASH:
-        this.body = new RubyHash(this._io, this, this._root);
-        break;
-      case RubyMarshal.Codes.RUBY_SYMBOL:
-        this.body = new RubySymbol(this._io, this, this._root);
+      case RubyMarshal.Codes.RUBY_SYMBOL_LINK:
+        this.body = new PackedInt(this._io, this, this._root);
         break;
       }
     }

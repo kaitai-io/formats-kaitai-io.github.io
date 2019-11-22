@@ -183,6 +183,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Microsoft PE (Portable Executable) file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Microsoft PE (Portable Executable) file format parsing C# library">C#</a></li>
                 
                 
@@ -574,8 +579,8 @@ class CoffSymbol extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this-&gt;_m__raw_nameAnnoying = $this-&gt;_io-&gt;readBytes(8);
-        $_io__raw_nameAnnoying = new \Kaitai\Struct\Stream($this-&gt;_m__raw_nameAnnoying);
-        $this-&gt;_m_nameAnnoying = new \MicrosoftPe\Annoyingstring($_io__raw_nameAnnoying, $this, $this-&gt;_root);
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_nameAnnoying);
+        $this-&gt;_m_nameAnnoying = new \MicrosoftPe\Annoyingstring($io, $this, $this-&gt;_root);
         $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
         $this-&gt;_m_sectionNumber = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_type = $this-&gt;_io-&gt;readU2le();
@@ -627,8 +632,8 @@ class PeHeader extends \Kaitai\Struct\Struct {
         $this-&gt;_m_peSignature = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x50\x45\x00\x00&quot;);
         $this-&gt;_m_coffHdr = new \MicrosoftPe\CoffHeader($this-&gt;_io, $this, $this-&gt;_root);
         $this-&gt;_m__raw_optionalHdr = $this-&gt;_io-&gt;readBytes($this-&gt;coffHdr()-&gt;sizeOfOptionalHeader());
-        $_io__raw_optionalHdr = new \Kaitai\Struct\Stream($this-&gt;_m__raw_optionalHdr);
-        $this-&gt;_m_optionalHdr = new \MicrosoftPe\OptionalHeader($_io__raw_optionalHdr, $this, $this-&gt;_root);
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_optionalHdr);
+        $this-&gt;_m_optionalHdr = new \MicrosoftPe\OptionalHeader($io, $this, $this-&gt;_root);
         $this-&gt;_m_sections = [];
         $n = $this-&gt;coffHdr()-&gt;numberOfSections();
         for ($i = 0; $i &lt; $n; $i++) {
@@ -643,8 +648,8 @@ class PeHeader extends \Kaitai\Struct\Struct {
             $_pos = $this-&gt;_io-&gt;pos();
             $this-&gt;_io-&gt;seek($this-&gt;optionalHdr()-&gt;dataDirs()-&gt;certificateTable()-&gt;virtualAddress());
             $this-&gt;_m__raw_certificateTable = $this-&gt;_io-&gt;readBytes($this-&gt;optionalHdr()-&gt;dataDirs()-&gt;certificateTable()-&gt;size());
-            $_io__raw_certificateTable = new \Kaitai\Struct\Stream($this-&gt;_m__raw_certificateTable);
-            $this-&gt;_m_certificateTable = new \MicrosoftPe\CertificateTable($_io__raw_certificateTable, $this, $this-&gt;_root);
+            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_certificateTable);
+            $this-&gt;_m_certificateTable = new \MicrosoftPe\CertificateTable($io, $this, $this-&gt;_root);
             $this-&gt;_io-&gt;seek($_pos);
         }
         return $this-&gt;_m_certificateTable;

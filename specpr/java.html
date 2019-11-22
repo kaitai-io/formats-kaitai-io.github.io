@@ -154,6 +154,11 @@ ftp://ftpext.cr.usgs.gov/pub/cr/co/denver/speclab/pub/spectral.library/splib06.l
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="SPECtrum Processing Routines Data Format 3/4/88 parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="SPECtrum Processing Routines Data Format 3/4/88 parsing C# library">C#</a></li>
                 
                 
@@ -346,7 +351,7 @@ public class Specpr extends KaitaiStruct {
             this.itchan = this._io.readS4be();
             this.irmas = this._io.readS4be();
             this.revs = this._io.readS4be();
-            iband = new ArrayList&lt;Integer&gt;(((Number) (2)).intValue());
+            iband = new ArrayList&lt;Integer&gt;((int) (2));
             for (int i = 0; i &lt; 2; i++) {
                 this.iband.add(this._io.readS4be());
             }
@@ -355,7 +360,7 @@ public class Specpr extends KaitaiStruct {
             this.irecno = this._io.readS4be();
             this.itpntr = this._io.readS4be();
             this.ihist = new String(KaitaiStream.bytesStripRight(this._io.readBytes(60), (byte) 32), Charset.forName(&quot;ascii&quot;));
-            mhist = new ArrayList&lt;String&gt;(((Number) (4)).intValue());
+            mhist = new ArrayList&lt;String&gt;((int) (4));
             for (int i = 0; i &lt; 4; i++) {
                 this.mhist.add(new String(this._io.readBytes(74), Charset.forName(&quot;ascii&quot;)));
             }
@@ -369,7 +374,7 @@ public class Specpr extends KaitaiStruct {
             this.scatim = this._io.readF4be();
             this.timint = this._io.readF4be();
             this.tempd = this._io.readF4be();
-            data = new ArrayList&lt;Float&gt;(((Number) (256)).intValue());
+            data = new ArrayList&lt;Float&gt;((int) (256));
             for (int i = 0; i &lt; 256; i++) {
                 this.data.add(this._io.readF4be());
             }
@@ -718,7 +723,7 @@ public class Specpr extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            cdata = new ArrayList&lt;Float&gt;(((Number) (383)).intValue());
+            cdata = new ArrayList&lt;Float&gt;((int) (383));
             for (int i = 0; i &lt; 383; i++) {
                 this.cdata.add(this._io.readF4be());
             }
@@ -902,42 +907,35 @@ public class Specpr extends KaitaiStruct {
         }
         private void _read() {
             this.icflag = new Icflag(this._io, this, _root);
-            {
-                RecordType on = icflag().type();
-                if (on != null) {
-                    switch (icflag().type()) {
-                    case DATA_INITIAL: {
-                        this._raw_content = this._io.readBytes((1536 - 4));
-                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                        this.content = new DataInitial(_io__raw_content, this, _root);
-                        break;
-                    }
-                    case DATA_CONTINUATION: {
-                        this._raw_content = this._io.readBytes((1536 - 4));
-                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                        this.content = new DataContinuation(_io__raw_content, this, _root);
-                        break;
-                    }
-                    case TEXT_CONTINUATION: {
-                        this._raw_content = this._io.readBytes((1536 - 4));
-                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                        this.content = new TextContinuation(_io__raw_content, this, _root);
-                        break;
-                    }
-                    case TEXT_INITIAL: {
-                        this._raw_content = this._io.readBytes((1536 - 4));
-                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                        this.content = new TextInitial(_io__raw_content, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.content = this._io.readBytes((1536 - 4));
-                        break;
-                    }
-                    }
-                } else {
-                    this.content = this._io.readBytes((1536 - 4));
-                }
+            switch (icflag().type()) {
+            case DATA_INITIAL: {
+                this._raw_content = this._io.readBytes((1536 - 4));
+                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                this.content = new DataInitial(_io__raw_content, this, _root);
+                break;
+            }
+            case DATA_CONTINUATION: {
+                this._raw_content = this._io.readBytes((1536 - 4));
+                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                this.content = new DataContinuation(_io__raw_content, this, _root);
+                break;
+            }
+            case TEXT_CONTINUATION: {
+                this._raw_content = this._io.readBytes((1536 - 4));
+                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                this.content = new TextContinuation(_io__raw_content, this, _root);
+                break;
+            }
+            case TEXT_INITIAL: {
+                this._raw_content = this._io.readBytes((1536 - 4));
+                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
+                this.content = new TextInitial(_io__raw_content, this, _root);
+                break;
+            }
+            default: {
+                this.content = this._io.readBytes((1536 - 4));
+                break;
+            }
             }
         }
         private Icflag icflag;

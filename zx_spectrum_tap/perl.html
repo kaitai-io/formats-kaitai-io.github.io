@@ -176,6 +176,11 @@ metainformation prepended as a header.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="ZX Spectrum tape file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="ZX Spectrum tape file parsing C# library">C#</a></li>
                 
                 
@@ -333,13 +338,13 @@ sub _read {
 
     $self-&gt;{len_block} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{flag} = $self-&gt;{_io}-&gt;read_u1();
-    if ( (($self-&gt;len_block() == 19) &amp;&amp; ($self-&gt;flag() == $ZxSpectrumTap::FLAG_ENUM_HEADER)) ) {
+    if ( (($self-&gt;len_block() == 19) &amp;&amp; ($self-&gt;flag() == $FLAG_ENUM_HEADER)) ) {
         $self-&gt;{header} = ZxSpectrumTap::Header-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
     if ($self-&gt;len_block() == 19) {
         $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;header()-&gt;len_data() + 4));
     }
-    if ($self-&gt;flag() == $ZxSpectrumTap::FLAG_ENUM_DATA) {
+    if ($self-&gt;flag() == $FLAG_ENUM_DATA) {
         $self-&gt;{headerless_data} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;len_block() - 1));
     }
 }
@@ -491,16 +496,16 @@ sub _read {
     $self-&gt;{filename} = IO::KaitaiStruct::Stream::bytes_strip_right($self-&gt;{_io}-&gt;read_bytes(10), 32);
     $self-&gt;{len_data} = $self-&gt;{_io}-&gt;read_u2le();
     my $_on = $self-&gt;header_type();
-    if ($_on == $ZxSpectrumTap::HEADER_TYPE_ENUM_PROGRAM) {
+    if ($_on == $HEADER_TYPE_ENUM_PROGRAM) {
         $self-&gt;{params} = ZxSpectrumTap::ProgramParams-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $ZxSpectrumTap::HEADER_TYPE_ENUM_NUM_ARRY) {
+    elsif ($_on == $HEADER_TYPE_ENUM_NUM_ARRY) {
         $self-&gt;{params} = ZxSpectrumTap::ArrayParams-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $ZxSpectrumTap::HEADER_TYPE_ENUM_CHAR_ARRY) {
+    elsif ($_on == $HEADER_TYPE_ENUM_CHAR_ARRY) {
         $self-&gt;{params} = ZxSpectrumTap::ArrayParams-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $ZxSpectrumTap::HEADER_TYPE_ENUM_BYTES) {
+    elsif ($_on == $HEADER_TYPE_ENUM_BYTES) {
         $self-&gt;{params} = ZxSpectrumTap::BytesParams-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
     $self-&gt;{checksum} = $self-&gt;{_io}-&gt;read_u1();

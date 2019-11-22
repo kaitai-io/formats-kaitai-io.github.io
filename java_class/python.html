@@ -170,6 +170,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title=".class file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".class file format parsing C# library">C#</a></li>
                 
                 
@@ -345,20 +350,20 @@ class JavaClass(KaitaiStruct):
             _on = self.name_as_str
             if _on == u&quot;SourceFile&quot;:
                 self._raw_info = self._io.read_bytes(self.attribute_length)
-                _io__raw_info = KaitaiStream(BytesIO(self._raw_info))
-                self.info = self._root.AttributeInfo.AttrBodySourceFile(_io__raw_info, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_info))
+                self.info = self._root.AttributeInfo.AttrBodySourceFile(io, self, self._root)
             elif _on == u&quot;LineNumberTable&quot;:
                 self._raw_info = self._io.read_bytes(self.attribute_length)
-                _io__raw_info = KaitaiStream(BytesIO(self._raw_info))
-                self.info = self._root.AttributeInfo.AttrBodyLineNumberTable(_io__raw_info, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_info))
+                self.info = self._root.AttributeInfo.AttrBodyLineNumberTable(io, self, self._root)
             elif _on == u&quot;Exceptions&quot;:
                 self._raw_info = self._io.read_bytes(self.attribute_length)
-                _io__raw_info = KaitaiStream(BytesIO(self._raw_info))
-                self.info = self._root.AttributeInfo.AttrBodyExceptions(_io__raw_info, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_info))
+                self.info = self._root.AttributeInfo.AttrBodyExceptions(io, self, self._root)
             elif _on == u&quot;Code&quot;:
                 self._raw_info = self._io.read_bytes(self.attribute_length)
-                _io__raw_info = KaitaiStream(BytesIO(self._raw_info))
-                self.info = self._root.AttributeInfo.AttrBodyCode(_io__raw_info, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_info))
+                self.info = self._root.AttributeInfo.AttrBodyCode(io, self, self._root)
             else:
                 self.info = self._io.read_bytes(self.attribute_length)
 
@@ -658,7 +663,7 @@ class JavaClass(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.reference_kind = KaitaiStream.resolve_enum(self._root.MethodHandleCpInfo.ReferenceKindEnum, self._io.read_u1())
+            self.reference_kind = self._root.MethodHandleCpInfo.ReferenceKindEnum(self._io.read_u1())
             self.reference_index = self._io.read_u2be()
 
 
@@ -847,36 +852,36 @@ class JavaClass(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.tag = KaitaiStream.resolve_enum(self._root.ConstantPoolEntry.TagEnum, self._io.read_u1())
+            self.tag = self._root.ConstantPoolEntry.TagEnum(self._io.read_u1())
             _on = self.tag
-            if _on == self._root.ConstantPoolEntry.TagEnum.interface_method_ref:
-                self.cp_info = self._root.InterfaceMethodRefCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.class_type:
-                self.cp_info = self._root.ClassCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.utf8:
-                self.cp_info = self._root.Utf8CpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.method_type:
-                self.cp_info = self._root.MethodTypeCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.integer:
-                self.cp_info = self._root.IntegerCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.string:
+            if _on == self._root.ConstantPoolEntry.TagEnum.string:
                 self.cp_info = self._root.StringCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.float:
-                self.cp_info = self._root.FloatCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.long:
-                self.cp_info = self._root.LongCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.method_ref:
-                self.cp_info = self._root.MethodRefCpInfo(self._io, self, self._root)
             elif _on == self._root.ConstantPoolEntry.TagEnum.double:
                 self.cp_info = self._root.DoubleCpInfo(self._io, self, self._root)
             elif _on == self._root.ConstantPoolEntry.TagEnum.invoke_dynamic:
                 self.cp_info = self._root.InvokeDynamicCpInfo(self._io, self, self._root)
-            elif _on == self._root.ConstantPoolEntry.TagEnum.field_ref:
-                self.cp_info = self._root.FieldRefCpInfo(self._io, self, self._root)
             elif _on == self._root.ConstantPoolEntry.TagEnum.method_handle:
                 self.cp_info = self._root.MethodHandleCpInfo(self._io, self, self._root)
+            elif _on == self._root.ConstantPoolEntry.TagEnum.class_type:
+                self.cp_info = self._root.ClassCpInfo(self._io, self, self._root)
+            elif _on == self._root.ConstantPoolEntry.TagEnum.method_ref:
+                self.cp_info = self._root.MethodRefCpInfo(self._io, self, self._root)
+            elif _on == self._root.ConstantPoolEntry.TagEnum.long:
+                self.cp_info = self._root.LongCpInfo(self._io, self, self._root)
             elif _on == self._root.ConstantPoolEntry.TagEnum.name_and_type:
                 self.cp_info = self._root.NameAndTypeCpInfo(self._io, self, self._root)
+            elif _on == self._root.ConstantPoolEntry.TagEnum.float:
+                self.cp_info = self._root.FloatCpInfo(self._io, self, self._root)
+            elif _on == self._root.ConstantPoolEntry.TagEnum.interface_method_ref:
+                self.cp_info = self._root.InterfaceMethodRefCpInfo(self._io, self, self._root)
+            elif _on == self._root.ConstantPoolEntry.TagEnum.integer:
+                self.cp_info = self._root.IntegerCpInfo(self._io, self, self._root)
+            elif _on == self._root.ConstantPoolEntry.TagEnum.utf8:
+                self.cp_info = self._root.Utf8CpInfo(self._io, self, self._root)
+            elif _on == self._root.ConstantPoolEntry.TagEnum.field_ref:
+                self.cp_info = self._root.FieldRefCpInfo(self._io, self, self._root)
+            elif _on == self._root.ConstantPoolEntry.TagEnum.method_type:
+                self.cp_info = self._root.MethodTypeCpInfo(self._io, self, self._root)
 
 
     class MethodInfo(KaitaiStruct):

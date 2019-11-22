@@ -70,7 +70,7 @@ public class AppleSingleDouble extends KaitaiStruct {
         this.version = this._io.readU4be();
         this.reserved = this._io.readBytes(16);
         this.numEntries = this._io.readU2be();
-        entries = new ArrayList<Entry>(((Number) (numEntries())).intValue());
+        entries = new ArrayList<Entry>((int) (numEntries()));
         for (int i = 0; i < numEntries(); i++) {
             this.entries.add(new Entry(this._io, this, _root));
         }
@@ -132,24 +132,17 @@ public class AppleSingleDouble extends KaitaiStruct {
                 return this.body;
             long _pos = this._io.pos();
             this._io.seek(ofsBody());
-            {
-                Types on = type();
-                if (on != null) {
-                    switch (type()) {
-                    case FINDER_INFO: {
-                        this._raw_body = this._io.readBytes(lenBody());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new FinderInfo(_io__raw_body, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.body = this._io.readBytes(lenBody());
-                        break;
-                    }
-                    }
-                } else {
-                    this.body = this._io.readBytes(lenBody());
-                }
+            switch (type()) {
+            case FINDER_INFO: {
+                this._raw_body = this._io.readBytes(lenBody());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new FinderInfo(_io__raw_body, this, _root);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(lenBody());
+                break;
+            }
             }
             this._io.seek(_pos);
             return this.body;

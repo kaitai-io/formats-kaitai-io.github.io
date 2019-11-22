@@ -36,12 +36,12 @@ public class BitcoinTransaction extends KaitaiStruct {
     private void _read() {
         this.version = this._io.readU4le();
         this.numVins = this._io.readU1();
-        vins = new ArrayList<Vin>(((Number) (numVins())).intValue());
+        vins = new ArrayList<Vin>((int) (numVins()));
         for (int i = 0; i < numVins(); i++) {
             this.vins.add(new Vin(this._io, this, _root));
         }
         this.numVouts = this._io.readU1();
-        vouts = new ArrayList<Vout>(((Number) (numVouts())).intValue());
+        vouts = new ArrayList<Vout>((int) (numVouts()));
         for (int i = 0; i < numVouts(); i++) {
             this.vouts.add(new Vout(this._io, this, _root));
         }

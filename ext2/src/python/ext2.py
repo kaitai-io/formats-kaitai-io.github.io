@@ -51,8 +51,8 @@ class Ext2(KaitaiStruct):
             self.mnt_count = self._io.read_u2le()
             self.max_mnt_count = self._io.read_u2le()
             self.magic = self._io.ensure_fixed_contents(b"\x53\xEF")
-            self.state = KaitaiStream.resolve_enum(self._root.SuperBlockStruct.StateEnum, self._io.read_u2le())
-            self.errors = KaitaiStream.resolve_enum(self._root.SuperBlockStruct.ErrorsEnum, self._io.read_u2le())
+            self.state = self._root.SuperBlockStruct.StateEnum(self._io.read_u2le())
+            self.errors = self._root.SuperBlockStruct.ErrorsEnum(self._io.read_u2le())
             self.minor_rev_level = self._io.read_u2le()
             self.lastcheck = self._io.read_u4le()
             self.checkinterval = self._io.read_u4le()
@@ -121,7 +121,7 @@ class Ext2(KaitaiStruct):
             self.inode_ptr = self._io.read_u4le()
             self.rec_len = self._io.read_u2le()
             self.name_len = self._io.read_u1()
-            self.file_type = KaitaiStream.resolve_enum(self._root.DirEntry.FileTypeEnum, self._io.read_u1())
+            self.file_type = self._root.DirEntry.FileTypeEnum(self._io.read_u1())
             self.name = (self._io.read_bytes(self.name_len)).decode(u"UTF-8")
             self.padding = self._io.read_bytes(((self.rec_len - self.name_len) - 8))
 
@@ -195,8 +195,8 @@ class Ext2(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek((self.ptr * self._root.bg1.super_block.block_size))
             self._raw__m_body = self._io.read_bytes(self._root.bg1.super_block.block_size)
-            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
-            self._m_body = self._root.RawBlock(_io__raw__m_body, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw__m_body))
+            self._m_body = self._root.RawBlock(io, self, self._root)
             self._io.seek(_pos)
             return self._m_body if hasattr(self, '_m_body') else None
 
@@ -226,8 +226,8 @@ class Ext2(KaitaiStruct):
 
         def _read(self):
             self._raw_super_block = self._io.read_bytes(1024)
-            _io__raw_super_block = KaitaiStream(BytesIO(self._raw_super_block))
-            self.super_block = self._root.SuperBlockStruct(_io__raw_super_block, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_super_block))
+            self.super_block = self._root.SuperBlockStruct(io, self, self._root)
             self.block_groups = [None] * (self.super_block.block_group_count)
             for i in range(self.super_block.block_group_count):
                 self.block_groups[i] = self._root.Bgd(self._io, self, self._root)

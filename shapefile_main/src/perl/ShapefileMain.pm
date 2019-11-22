@@ -1218,46 +1218,46 @@ sub _read {
     my ($self) = @_;
 
     $self->{shape_type} = $self->{_io}->read_s4le();
-    if ($self->shape_type() != $ShapefileMain::SHAPE_TYPE_NULL_SHAPE) {
+    if ($self->shape_type() != $SHAPE_TYPE_NULL_SHAPE) {
         my $_on = $self->shape_type();
-        if ($_on == $ShapefileMain::SHAPE_TYPE_POLY_LINE_Z) {
-            $self->{shape_parameters} = ShapefileMain::PolyLineZ->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_MULTI_PATCH) {
-            $self->{shape_parameters} = ShapefileMain::MultiPatch->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POLY_LINE_M) {
-            $self->{shape_parameters} = ShapefileMain::PolyLineM->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POLYGON) {
-            $self->{shape_parameters} = ShapefileMain::Polygon->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POLYGON_Z) {
-            $self->{shape_parameters} = ShapefileMain::PolygonZ->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POINT_Z) {
-            $self->{shape_parameters} = ShapefileMain::PointZ->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POLY_LINE) {
-            $self->{shape_parameters} = ShapefileMain::PolyLine->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POINT_M) {
+        if ($_on == $SHAPE_TYPE_POINT_M) {
             $self->{shape_parameters} = ShapefileMain::PointM->new($self->{_io}, $self, $self->{_root});
         }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POLYGON_M) {
-            $self->{shape_parameters} = ShapefileMain::PolygonM->new($self->{_io}, $self, $self->{_root});
+        elsif ($_on == $SHAPE_TYPE_POLYGON_Z) {
+            $self->{shape_parameters} = ShapefileMain::PolygonZ->new($self->{_io}, $self, $self->{_root});
         }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_MULTI_POINT) {
-            $self->{shape_parameters} = ShapefileMain::MultiPoint->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_POINT) {
-            $self->{shape_parameters} = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
-        }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_MULTI_POINT_M) {
+        elsif ($_on == $SHAPE_TYPE_MULTI_POINT_M) {
             $self->{shape_parameters} = ShapefileMain::MultiPointM->new($self->{_io}, $self, $self->{_root});
         }
-        elsif ($_on == $ShapefileMain::SHAPE_TYPE_MULTI_POINT_Z) {
+        elsif ($_on == $SHAPE_TYPE_POLY_LINE_Z) {
+            $self->{shape_parameters} = ShapefileMain::PolyLineZ->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $SHAPE_TYPE_MULTI_POINT_Z) {
             $self->{shape_parameters} = ShapefileMain::MultiPointZ->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $SHAPE_TYPE_MULTI_POINT) {
+            $self->{shape_parameters} = ShapefileMain::MultiPoint->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $SHAPE_TYPE_POLYGON_M) {
+            $self->{shape_parameters} = ShapefileMain::PolygonM->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $SHAPE_TYPE_POLYGON) {
+            $self->{shape_parameters} = ShapefileMain::Polygon->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $SHAPE_TYPE_POINT) {
+            $self->{shape_parameters} = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $SHAPE_TYPE_POLY_LINE_M) {
+            $self->{shape_parameters} = ShapefileMain::PolyLineM->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $SHAPE_TYPE_POLY_LINE) {
+            $self->{shape_parameters} = ShapefileMain::PolyLine->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $SHAPE_TYPE_POINT_Z) {
+            $self->{shape_parameters} = ShapefileMain::PointZ->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $SHAPE_TYPE_MULTI_PATCH) {
+            $self->{shape_parameters} = ShapefileMain::MultiPatch->new($self->{_io}, $self, $self->{_root});
         }
     }
 }

@@ -54,8 +54,8 @@ class Iso9660(KaitaiStruct):
             self.lba_path_table_be = self._io.read_u4be()
             self.lba_opt_path_table_be = self._io.read_u4be()
             self._raw_root_dir = self._io.read_bytes(34)
-            _io__raw_root_dir = KaitaiStream(BytesIO(self._raw_root_dir))
-            self.root_dir = self._root.DirEntry(_io__raw_root_dir, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_root_dir))
+            self.root_dir = self._root.DirEntry(io, self, self._root)
             self.vol_set_id = (self._io.read_bytes(128)).decode(u"UTF-8")
             self.publisher_id = (self._io.read_bytes(128)).decode(u"UTF-8")
             self.data_preparer_id = (self._io.read_bytes(128)).decode(u"UTF-8")
@@ -79,8 +79,8 @@ class Iso9660(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek((self.lba_path_table_le * self._root.sector_size))
             self._raw__m_path_table = self._io.read_bytes(self.path_table_size.le)
-            _io__raw__m_path_table = KaitaiStream(BytesIO(self._raw__m_path_table))
-            self._m_path_table = self._root.PathTableLe(_io__raw__m_path_table, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw__m_path_table))
+            self._m_path_table = self._root.PathTableLe(io, self, self._root)
             self._io.seek(_pos)
             return self._m_path_table if hasattr(self, '_m_path_table') else None
 
@@ -125,8 +125,8 @@ class Iso9660(KaitaiStruct):
             self.len = self._io.read_u1()
             if self.len > 0:
                 self._raw_body = self._io.read_bytes((self.len - 1))
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DirEntryBody(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DirEntryBody(io, self, self._root)
 
 
 
@@ -284,8 +284,8 @@ class Iso9660(KaitaiStruct):
                 _pos = io.pos()
                 io.seek((self.lba_extent.le * self._root.sector_size))
                 self._raw__m_extent_as_dir = io.read_bytes(self.size_extent.le)
-                _io__raw__m_extent_as_dir = KaitaiStream(BytesIO(self._raw__m_extent_as_dir))
-                self._m_extent_as_dir = self._root.DirEntries(_io__raw__m_extent_as_dir, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_extent_as_dir))
+                self._m_extent_as_dir = self._root.DirEntries(io, self, self._root)
                 io.seek(_pos)
 
             return self._m_extent_as_dir if hasattr(self, '_m_extent_as_dir') else None

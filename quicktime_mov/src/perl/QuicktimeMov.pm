@@ -485,60 +485,60 @@ sub _read {
         $self->{len64} = $self->{_io}->read_u8be();
     }
     my $_on = $self->atom_type();
-    if ($_on == $QuicktimeMov::ATOM_TYPE_MOOF) {
+    if ($_on == $ATOM_TYPE_STBL) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_TKHD) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::TkhdBody->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_STBL) {
+    elsif ($_on == $ATOM_TYPE_MOOF) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_TRAF) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MINF) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_TRAK) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MOOV) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MDIA) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_DINF) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MVHD) {
+    elsif ($_on == $ATOM_TYPE_MVHD) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = QuicktimeMov::MvhdBody->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_FTYP) {
+    elsif ($_on == $ATOM_TYPE_MINF) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $ATOM_TYPE_TRAK) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $ATOM_TYPE_TRAF) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $ATOM_TYPE_MDIA) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $ATOM_TYPE_FTYP) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = QuicktimeMov::FtypBody->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $ATOM_TYPE_MOOV) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $ATOM_TYPE_TKHD) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::TkhdBody->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $ATOM_TYPE_DINF) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes($self->len());

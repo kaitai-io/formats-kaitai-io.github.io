@@ -164,6 +164,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="DNS (Domain Name Service) packet parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="DNS (Domain Name Service) packet parsing C# library">C#</a></li>
                 
                 
@@ -343,11 +348,11 @@ public class DnsPacket extends KaitaiStruct {
         this.ancount = this._io.readU2be();
         this.nscount = this._io.readU2be();
         this.arcount = this._io.readU2be();
-        queries = new ArrayList&lt;Query&gt;(((Number) (qdcount())).intValue());
+        queries = new ArrayList&lt;Query&gt;((int) (qdcount()));
         for (int i = 0; i &lt; qdcount(); i++) {
             this.queries.add(new Query(this._io, this, _root));
         }
-        answers = new ArrayList&lt;Answer&gt;(((Number) (ancount())).intValue());
+        answers = new ArrayList&lt;Answer&gt;((int) (ancount()));
         for (int i = 0; i &lt; ancount(); i++) {
             this.answers.add(new Answer(this._io, this, _root));
         }
@@ -548,7 +553,7 @@ public class DnsPacket extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            ip = new ArrayList&lt;Integer&gt;(((Number) (4)).intValue());
+            ip = new ArrayList&lt;Integer&gt;((int) (4));
             for (int i = 0; i &lt; 4; i++) {
                 this.ip.add(this._io.readU1());
             }

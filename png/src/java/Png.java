@@ -684,32 +684,27 @@ public class Png extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            {
-                ColorType on = _root.ihdr().colorType();
-                if (on != null) {
-                    switch (_root.ihdr().colorType()) {
-                    case INDEXED: {
-                        this.bkgd = new BkgdIndexed(this._io, this, _root);
-                        break;
-                    }
-                    case TRUECOLOR_ALPHA: {
-                        this.bkgd = new BkgdTruecolor(this._io, this, _root);
-                        break;
-                    }
-                    case GREYSCALE_ALPHA: {
-                        this.bkgd = new BkgdGreyscale(this._io, this, _root);
-                        break;
-                    }
-                    case TRUECOLOR: {
-                        this.bkgd = new BkgdTruecolor(this._io, this, _root);
-                        break;
-                    }
-                    case GREYSCALE: {
-                        this.bkgd = new BkgdGreyscale(this._io, this, _root);
-                        break;
-                    }
-                    }
-                }
+            switch (_root.ihdr().colorType()) {
+            case GREYSCALE_ALPHA: {
+                this.bkgd = new BkgdGreyscale(this._io, this, _root);
+                break;
+            }
+            case INDEXED: {
+                this.bkgd = new BkgdIndexed(this._io, this, _root);
+                break;
+            }
+            case GREYSCALE: {
+                this.bkgd = new BkgdGreyscale(this._io, this, _root);
+                break;
+            }
+            case TRUECOLOR_ALPHA: {
+                this.bkgd = new BkgdTruecolor(this._io, this, _root);
+                break;
+            }
+            case TRUECOLOR: {
+                this.bkgd = new BkgdTruecolor(this._io, this, _root);
+                break;
+            }
             }
         }
         private KaitaiStruct bkgd;

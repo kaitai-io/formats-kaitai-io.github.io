@@ -9,8 +9,8 @@ class Dune2Pak extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_dir = $this->_io->readBytes($this->dirSize());
-        $_io__raw_dir = new \Kaitai\Struct\Stream($this->_m__raw_dir);
-        $this->_m_dir = new \Dune2Pak\Files($_io__raw_dir, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_dir);
+        $this->_m_dir = new \Dune2Pak\Files($io, $this, $this->_root);
     }
     protected $_m_dirSize;
     public function dirSize() {

@@ -234,8 +234,8 @@ class MetadataAreaDescriptor extends \Kaitai\Struct\Struct {
             $_pos = $this->_io->pos();
             $this->_io->seek($this->offset());
             $this->_m__raw_data = $this->_io->readBytes($this->size());
-            $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-            $this->_m_data = new \Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea($_io__raw_data, $this, $this->_root);
+            $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
+            $this->_m_data = new \Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea($io, $this, $this->_root);
             $this->_io->seek($_pos);
         }
         return $this->_m_data;

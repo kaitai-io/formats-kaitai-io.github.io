@@ -470,25 +470,20 @@ var QuicktimeMov = (function() {
         this.len64 = this._io.readU8be();
       }
       switch (this.atomType) {
-      case QuicktimeMov.AtomType.MOOF:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new AtomList(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.TKHD:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new TkhdBody(_io__raw_body, this, this._root);
-        break;
       case QuicktimeMov.AtomType.STBL:
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new AtomList(_io__raw_body, this, this._root);
         break;
-      case QuicktimeMov.AtomType.TRAF:
+      case QuicktimeMov.AtomType.MOOF:
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new AtomList(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.MVHD:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new MvhdBody(_io__raw_body, this, this._root);
         break;
       case QuicktimeMov.AtomType.MINF:
         this._raw_body = this._io.readBytes(this.len);
@@ -500,7 +495,7 @@ var QuicktimeMov = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new AtomList(_io__raw_body, this, this._root);
         break;
-      case QuicktimeMov.AtomType.MOOV:
+      case QuicktimeMov.AtomType.TRAF:
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new AtomList(_io__raw_body, this, this._root);
@@ -510,20 +505,25 @@ var QuicktimeMov = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new AtomList(_io__raw_body, this, this._root);
         break;
-      case QuicktimeMov.AtomType.DINF:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new AtomList(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.MVHD:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new MvhdBody(_io__raw_body, this, this._root);
-        break;
       case QuicktimeMov.AtomType.FTYP:
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new FtypBody(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.MOOV:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtomList(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.TKHD:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new TkhdBody(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.DINF:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtomList(_io__raw_body, this, this._root);
         break;
       default:
         this.body = this._io.readBytes(this.len);

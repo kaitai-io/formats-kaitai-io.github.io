@@ -37,8 +37,8 @@ class Regf < Kaitai::Struct::Struct
     i = 0
     while not @_io.eof?
       @_raw_hive_bins << @_io.read_bytes(4096)
-      _io__raw_hive_bins = Kaitai::Struct::Stream.new(@_raw_hive_bins.last)
-      @hive_bins << HiveBin.new(_io__raw_hive_bins, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_hive_bins.last)
+      @hive_bins << HiveBin.new(io, self, @_root)
       i += 1
     end
     self
@@ -129,32 +129,32 @@ class Regf < Kaitai::Struct::Struct
       case identifier
       when "li"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListLi.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListLi.new(io, self, @_root)
       when "vk"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListVk.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListVk.new(io, self, @_root)
       when "lf"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListLhLf.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListLhLf.new(io, self, @_root)
       when "ri"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListRi.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListRi.new(io, self, @_root)
       when "lh"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListLhLf.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListLhLf.new(io, self, @_root)
       when "nk"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = NamedKey.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = NamedKey.new(io, self, @_root)
       when "sk"
         @_raw_data = @_io.read_bytes(((cell_size - 2) - 4))
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SubKeyListSk.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = SubKeyListSk.new(io, self, @_root)
       else
         @data = @_io.read_bytes(((cell_size - 2) - 4))
       end

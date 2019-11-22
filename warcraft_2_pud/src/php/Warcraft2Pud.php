@@ -179,53 +179,53 @@ class Section extends \Kaitai\Struct\Struct {
         switch ($this->name()) {
             case "SLBR":
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Warcraft2Pud\SectionStartingResource($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Warcraft2Pud\SectionStartingResource($io, $this, $this->_root);
                 break;
             case "ERAX":
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Warcraft2Pud\SectionEra($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Warcraft2Pud\SectionEra($io, $this, $this->_root);
                 break;
             case "OWNR":
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Warcraft2Pud\SectionOwnr($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Warcraft2Pud\SectionOwnr($io, $this, $this->_root);
                 break;
             case "ERA ":
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Warcraft2Pud\SectionEra($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Warcraft2Pud\SectionEra($io, $this, $this->_root);
                 break;
             case "SGLD":
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Warcraft2Pud\SectionStartingResource($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Warcraft2Pud\SectionStartingResource($io, $this, $this->_root);
                 break;
             case "VER ":
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Warcraft2Pud\SectionVer($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Warcraft2Pud\SectionVer($io, $this, $this->_root);
                 break;
             case "SOIL":
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Warcraft2Pud\SectionStartingResource($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Warcraft2Pud\SectionStartingResource($io, $this, $this->_root);
                 break;
             case "UNIT":
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Warcraft2Pud\SectionUnit($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Warcraft2Pud\SectionUnit($io, $this, $this->_root);
                 break;
             case "DIM ":
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Warcraft2Pud\SectionDim($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Warcraft2Pud\SectionDim($io, $this, $this->_root);
                 break;
             case "TYPE":
                 $this->_m__raw_body = $this->_io->readBytes($this->size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Warcraft2Pud\SectionType($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \Warcraft2Pud\SectionType($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->size());

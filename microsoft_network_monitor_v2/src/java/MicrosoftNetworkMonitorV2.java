@@ -294,24 +294,17 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
             this.tsDelta = this._io.readU8le();
             this.origLen = this._io.readU4le();
             this.incLen = this._io.readU4le();
-            {
-                Linktype on = _root.macType();
-                if (on != null) {
-                    switch (_root.macType()) {
-                    case ETHERNET: {
-                        this._raw_body = this._io.readBytes(incLen());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new EthernetFrame(_io__raw_body);
-                        break;
-                    }
-                    default: {
-                        this.body = this._io.readBytes(incLen());
-                        break;
-                    }
-                    }
-                } else {
-                    this.body = this._io.readBytes(incLen());
-                }
+            switch (_root.macType()) {
+            case ETHERNET: {
+                this._raw_body = this._io.readBytes(incLen());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new EthernetFrame(_io__raw_body);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(incLen());
+                break;
+            }
             }
         }
         private long tsDelta;

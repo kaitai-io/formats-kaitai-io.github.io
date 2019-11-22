@@ -555,28 +555,10 @@ namespace Kaitai
                     _params = new ParamsSetbkmode(io___raw_params, this, m_root);
                     break;
                 }
-                case Wmf.Func.Polygon: {
-                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
-                    var io___raw_params = new KaitaiStream(__raw_params);
-                    _params = new ParamsPolygon(io___raw_params, this, m_root);
-                    break;
-                }
                 case Wmf.Func.Setbkcolor: {
                     __raw_params = m_io.ReadBytes(((Size - 3) * 2));
                     var io___raw_params = new KaitaiStream(__raw_params);
                     _params = new ColorRef(io___raw_params, this, m_root);
-                    break;
-                }
-                case Wmf.Func.Setpolyfillmode: {
-                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
-                    var io___raw_params = new KaitaiStream(__raw_params);
-                    _params = new ParamsSetpolyfillmode(io___raw_params, this, m_root);
-                    break;
-                }
-                case Wmf.Func.Setwindoworg: {
-                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
-                    var io___raw_params = new KaitaiStream(__raw_params);
-                    _params = new ParamsSetwindoworg(io___raw_params, this, m_root);
                     break;
                 }
                 case Wmf.Func.Setrop2: {
@@ -585,16 +567,34 @@ namespace Kaitai
                     _params = new ParamsSetrop2(io___raw_params, this, m_root);
                     break;
                 }
+                case Wmf.Func.Polyline: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsPolyline(io___raw_params, this, m_root);
+                    break;
+                }
+                case Wmf.Func.Setwindoworg: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsSetwindoworg(io___raw_params, this, m_root);
+                    break;
+                }
+                case Wmf.Func.Polygon: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsPolygon(io___raw_params, this, m_root);
+                    break;
+                }
                 case Wmf.Func.Setwindowext: {
                     __raw_params = m_io.ReadBytes(((Size - 3) * 2));
                     var io___raw_params = new KaitaiStream(__raw_params);
                     _params = new ParamsSetwindowext(io___raw_params, this, m_root);
                     break;
                 }
-                case Wmf.Func.Polyline: {
+                case Wmf.Func.Setpolyfillmode: {
                     __raw_params = m_io.ReadBytes(((Size - 3) * 2));
                     var io___raw_params = new KaitaiStream(__raw_params);
-                    _params = new ParamsPolyline(io___raw_params, this, m_root);
+                    _params = new ParamsSetpolyfillmode(io___raw_params, this, m_root);
                     break;
                 }
                 default: {

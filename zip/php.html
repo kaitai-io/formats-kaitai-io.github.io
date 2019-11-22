@@ -173,6 +173,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="ZIP archive file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="ZIP archive file parsing C# library">C#</a></li>
                 
                 
@@ -317,18 +322,18 @@ class ExtraField extends \Kaitai\Struct\Struct {
         switch ($this-&gt;code()) {
             case \Zip\ExtraCodes::NTFS:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Zip\ExtraField\Ntfs($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Zip\ExtraField\Ntfs($io, $this, $this-&gt;_root);
                 break;
             case \Zip\ExtraCodes::EXTENDED_TIMESTAMP:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Zip\ExtraField\ExtendedTimestamp($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Zip\ExtraField\ExtendedTimestamp($io, $this, $this-&gt;_root);
                 break;
             case \Zip\ExtraCodes::INFOZIP_UNIX_VAR_SIZE:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Zip\ExtraField\InfozipUnixVarSize($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Zip\ExtraField\InfozipUnixVarSize($io, $this, $this-&gt;_root);
                 break;
             default:
                 $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
@@ -382,8 +387,8 @@ class Attribute extends \Kaitai\Struct\Struct {
         switch ($this-&gt;tag()) {
             case 1:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Zip\ExtraField\Ntfs\Attribute1($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Zip\ExtraField\Ntfs\Attribute1($io, $this, $this-&gt;_root);
                 break;
             default:
                 $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
@@ -523,8 +528,8 @@ class CentralDirEntry extends \Kaitai\Struct\Struct {
         $this-&gt;_m_localHeaderOffset = $this-&gt;_io-&gt;readS4le();
         $this-&gt;_m_fileName = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;fileNameLen()), &quot;UTF-8&quot;);
         $this-&gt;_m__raw_extra = $this-&gt;_io-&gt;readBytes($this-&gt;extraLen());
-        $_io__raw_extra = new \Kaitai\Struct\Stream($this-&gt;_m__raw_extra);
-        $this-&gt;_m_extra = new \Zip\Extras($_io__raw_extra, $this, $this-&gt;_root);
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_extra);
+        $this-&gt;_m_extra = new \Zip\Extras($io, $this, $this-&gt;_root);
         $this-&gt;_m_comment = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;commentLen()), &quot;UTF-8&quot;);
     }
     protected $_m_localHeader;
@@ -654,8 +659,8 @@ class LocalFileHeader extends \Kaitai\Struct\Struct {
         $this-&gt;_m_extraLen = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_fileName = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;fileNameLen()), &quot;UTF-8&quot;);
         $this-&gt;_m__raw_extra = $this-&gt;_io-&gt;readBytes($this-&gt;extraLen());
-        $_io__raw_extra = new \Kaitai\Struct\Stream($this-&gt;_m__raw_extra);
-        $this-&gt;_m_extra = new \Zip\Extras($_io__raw_extra, $this, $this-&gt;_root);
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_extra);
+        $this-&gt;_m_extra = new \Zip\Extras($io, $this, $this-&gt;_root);
     }
     protected $_m_version;
     protected $_m_flags;

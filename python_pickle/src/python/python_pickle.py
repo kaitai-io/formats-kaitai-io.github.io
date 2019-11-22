@@ -386,138 +386,138 @@ class PythonPickle(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = KaitaiStream.resolve_enum(self._root.Opcode, self._io.read_u1())
+            self.code = self._root.Opcode(self._io.read_u1())
             _on = self.code
-            if _on == self._root.Opcode.ext4:
-                self.arg = self._io.read_u4le()
-            elif _on == self._root.Opcode.tuple1:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.setitem:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.stop:
+            if _on == self._root.Opcode.list:
                 self.arg = self._root.NoArg(self._io, self, self._root)
             elif _on == self._root.Opcode.ext2:
                 self.arg = self._io.read_u2le()
-            elif _on == self._root.Opcode.empty_tuple:
+            elif _on == self._root.Opcode.stop:
                 self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.newtrue:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.long:
-                self.arg = self._root.DecimalnlLong(self._io, self, self._root)
-            elif _on == self._root.Opcode.newobj:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.put:
-                self.arg = self._root.DecimalnlShort(self._io, self, self._root)
-            elif _on == self._root.Opcode.stack_global:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.pop_mark:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.append:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.newfalse:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binpersid:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.build:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.empty_dict:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.tuple2:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.long4:
-                self.arg = self._root.Long4(self._io, self, self._root)
-            elif _on == self._root.Opcode.appends:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binbytes:
-                self.arg = self._root.Bytes4(self._io, self, self._root)
-            elif _on == self._root.Opcode.dup:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.list:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.proto:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.pop:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.frame:
-                self.arg = self._io.read_u8le()
-            elif _on == self._root.Opcode.string:
-                self.arg = self._root.Stringnl(self._io, self, self._root)
             elif _on == self._root.Opcode.binunicode:
                 self.arg = self._root.Unicodestring4(self._io, self, self._root)
-            elif _on == self._root.Opcode.float:
-                self.arg = self._root.Floatnl(self._io, self, self._root)
-            elif _on == self._root.Opcode.reduce:
+            elif _on == self._root.Opcode.put:
+                self.arg = self._root.DecimalnlShort(self._io, self, self._root)
+            elif _on == self._root.Opcode.newfalse:
                 self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binput:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.memoize:
+            elif _on == self._root.Opcode.long1:
+                self.arg = self._root.Long1(self._io, self, self._root)
+            elif _on == self._root.Opcode.unicode:
+                self.arg = self._root.Unicodestringnl(self._io, self, self._root)
+            elif _on == self._root.Opcode.empty_list:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.mark:
                 self.arg = self._root.NoArg(self._io, self, self._root)
             elif _on == self._root.Opcode.persid:
                 self.arg = self._root.StringnlNoescape(self._io, self, self._root)
-            elif _on == self._root.Opcode.ext1:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.none:
+            elif _on == self._root.Opcode.stack_global:
                 self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.short_binunicode:
-                self.arg = self._root.Unicodestring1(self._io, self, self._root)
-            elif _on == self._root.Opcode.obj:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binfloat:
-                self.arg = self._io.read_f8be()
-            elif _on == self._root.Opcode.newobj_ex:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.empty_list:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.tuple:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binunicode8:
-                self.arg = self._root.Unicodestring8(self._io, self, self._root)
-            elif _on == self._root.Opcode.binget:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.global:
-                self.arg = self._root.StringnlNoescapePair(self._io, self, self._root)
-            elif _on == self._root.Opcode.dict:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binstring:
-                self.arg = self._root.String4(self._io, self, self._root)
-            elif _on == self._root.Opcode.setitems:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binint2:
-                self.arg = self._io.read_u2le()
-            elif _on == self._root.Opcode.binbytes8:
-                self.arg = self._root.Bytes8(self._io, self, self._root)
-            elif _on == self._root.Opcode.binint1:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.inst:
-                self.arg = self._root.StringnlNoescapePair(self._io, self, self._root)
-            elif _on == self._root.Opcode.long_binget:
-                self.arg = self._io.read_u4le()
-            elif _on == self._root.Opcode.long_binput:
-                self.arg = self._io.read_u4le()
-            elif _on == self._root.Opcode.int:
-                self.arg = self._root.DecimalnlShort(self._io, self, self._root)
             elif _on == self._root.Opcode.binint:
                 self.arg = self._io.read_s4le()
-            elif _on == self._root.Opcode.unicode:
-                self.arg = self._root.Unicodestringnl(self._io, self, self._root)
-            elif _on == self._root.Opcode.long1:
-                self.arg = self._root.Long1(self._io, self, self._root)
+            elif _on == self._root.Opcode.binput:
+                self.arg = self._io.read_u1()
+            elif _on == self._root.Opcode.binint1:
+                self.arg = self._io.read_u1()
+            elif _on == self._root.Opcode.binint2:
+                self.arg = self._io.read_u2le()
+            elif _on == self._root.Opcode.tuple:
+                self.arg = self._root.NoArg(self._io, self, self._root)
             elif _on == self._root.Opcode.short_binstring:
                 self.arg = self._root.String1(self._io, self, self._root)
-            elif _on == self._root.Opcode.mark:
+            elif _on == self._root.Opcode.empty_set:
                 self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.frozenset:
+            elif _on == self._root.Opcode.string:
+                self.arg = self._root.Stringnl(self._io, self, self._root)
+            elif _on == self._root.Opcode.empty_dict:
                 self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.tuple3:
+            elif _on == self._root.Opcode.binget:
+                self.arg = self._io.read_u1()
+            elif _on == self._root.Opcode.append:
                 self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.additems:
+            elif _on == self._root.Opcode.pop_mark:
                 self.arg = self._root.NoArg(self._io, self, self._root)
             elif _on == self._root.Opcode.get:
                 self.arg = self._root.DecimalnlShort(self._io, self, self._root)
-            elif _on == self._root.Opcode.empty_set:
+            elif _on == self._root.Opcode.newobj:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.reduce:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.binbytes:
+                self.arg = self._root.Bytes4(self._io, self, self._root)
+            elif _on == self._root.Opcode.binbytes8:
+                self.arg = self._root.Bytes8(self._io, self, self._root)
+            elif _on == self._root.Opcode.setitem:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.frame:
+                self.arg = self._io.read_u8le()
+            elif _on == self._root.Opcode.float:
+                self.arg = self._root.Floatnl(self._io, self, self._root)
+            elif _on == self._root.Opcode.binunicode8:
+                self.arg = self._root.Unicodestring8(self._io, self, self._root)
+            elif _on == self._root.Opcode.int:
+                self.arg = self._root.DecimalnlShort(self._io, self, self._root)
+            elif _on == self._root.Opcode.long_binput:
+                self.arg = self._io.read_u4le()
+            elif _on == self._root.Opcode.empty_tuple:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.long:
+                self.arg = self._root.DecimalnlLong(self._io, self, self._root)
+            elif _on == self._root.Opcode.frozenset:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.global:
+                self.arg = self._root.StringnlNoescapePair(self._io, self, self._root)
+            elif _on == self._root.Opcode.obj:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.additems:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.tuple1:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.setitems:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.none:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.build:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.ext4:
+                self.arg = self._io.read_u4le()
+            elif _on == self._root.Opcode.newobj_ex:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.binfloat:
+                self.arg = self._io.read_f8be()
+            elif _on == self._root.Opcode.dup:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.long4:
+                self.arg = self._root.Long4(self._io, self, self._root)
+            elif _on == self._root.Opcode.short_binunicode:
+                self.arg = self._root.Unicodestring1(self._io, self, self._root)
+            elif _on == self._root.Opcode.tuple3:
                 self.arg = self._root.NoArg(self._io, self, self._root)
             elif _on == self._root.Opcode.short_binbytes:
                 self.arg = self._root.Bytes1(self._io, self, self._root)
+            elif _on == self._root.Opcode.ext1:
+                self.arg = self._io.read_u1()
+            elif _on == self._root.Opcode.dict:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.appends:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.inst:
+                self.arg = self._root.StringnlNoescapePair(self._io, self, self._root)
+            elif _on == self._root.Opcode.binpersid:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.memoize:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.proto:
+                self.arg = self._io.read_u1()
+            elif _on == self._root.Opcode.newtrue:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.binstring:
+                self.arg = self._root.String4(self._io, self, self._root)
+            elif _on == self._root.Opcode.tuple2:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.pop:
+                self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.long_binget:
+                self.arg = self._io.read_u4le()
 
 
     class Floatnl(KaitaiStruct):

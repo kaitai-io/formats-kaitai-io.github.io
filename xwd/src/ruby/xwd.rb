@@ -49,14 +49,14 @@ class Xwd < Kaitai::Struct::Struct
   def _read
     @header_size = @_io.read_u4be
     @_raw_hdr = @_io.read_bytes((header_size - 4))
-    _io__raw_hdr = Kaitai::Struct::Stream.new(@_raw_hdr)
-    @hdr = Header.new(_io__raw_hdr, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_hdr)
+    @hdr = Header.new(io, self, @_root)
     @_raw_color_map = Array.new(hdr.color_map_entries)
     @color_map = Array.new(hdr.color_map_entries)
     (hdr.color_map_entries).times { |i|
       @_raw_color_map[i] = @_io.read_bytes(12)
-      _io__raw_color_map = Kaitai::Struct::Stream.new(@_raw_color_map[i])
-      @color_map[i] = ColorMapEntry.new(_io__raw_color_map, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_color_map[i])
+      @color_map[i] = ColorMapEntry.new(io, self, @_root)
     }
     self
   end
@@ -68,18 +68,18 @@ class Xwd < Kaitai::Struct::Struct
 
     def _read
       @file_version = @_io.read_u4be
-      @pixmap_format = Kaitai::Struct::Stream::resolve_enum(Xwd::PIXMAP_FORMAT, @_io.read_u4be)
+      @pixmap_format = Kaitai::Struct::Stream::resolve_enum(PIXMAP_FORMAT, @_io.read_u4be)
       @pixmap_depth = @_io.read_u4be
       @pixmap_width = @_io.read_u4be
       @pixmap_height = @_io.read_u4be
       @x_offset = @_io.read_u4be
-      @byte_order = Kaitai::Struct::Stream::resolve_enum(Xwd::BYTE_ORDER, @_io.read_u4be)
+      @byte_order = Kaitai::Struct::Stream::resolve_enum(BYTE_ORDER, @_io.read_u4be)
       @bitmap_unit = @_io.read_u4be
       @bitmap_bit_order = @_io.read_u4be
       @bitmap_pad = @_io.read_u4be
       @bits_per_pixel = @_io.read_u4be
       @bytes_per_line = @_io.read_u4be
-      @visual_class = Kaitai::Struct::Stream::resolve_enum(Xwd::VISUAL_CLASS, @_io.read_u4be)
+      @visual_class = Kaitai::Struct::Stream::resolve_enum(VISUAL_CLASS, @_io.read_u4be)
       @red_mask = @_io.read_u4be
       @green_mask = @_io.read_u4be
       @blue_mask = @_io.read_u4be

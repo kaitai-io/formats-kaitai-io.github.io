@@ -218,8 +218,8 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
       case _root.mac_type
       when :linktype_ethernet
         @_raw_body = @_io.read_bytes(inc_len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = EthernetFrame.new(_io__raw_body)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = EthernetFrame.new(io)
       else
         @body = @_io.read_bytes(inc_len)
       end
@@ -251,8 +251,8 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(frame_table_ofs)
     @_raw_frame_table = @_io.read_bytes(frame_table_len)
-    _io__raw_frame_table = Kaitai::Struct::Stream.new(@_raw_frame_table)
-    @frame_table = FrameIndex.new(_io__raw_frame_table, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_frame_table)
+    @frame_table = FrameIndex.new(io, self, @_root)
     @_io.seek(_pos)
     @frame_table
   end

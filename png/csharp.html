@@ -174,6 +174,11 @@ section#format-index .row {
                 <a href="index.html" title="PNG (Portable Network Graphics) file parsing Overview library">Overview</a></li>
                 
                 
+                <li>
+                
+                <a href="cpp_stl.html" title="PNG (Portable Network Graphics) file parsing C++/STL library">C++/STL</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="csharp.html" title="PNG (Portable Network Graphics) file parsing C# library">C#</a></li>
@@ -866,24 +871,24 @@ namespace Kaitai
             private void _read()
             {
                 switch (M_Root.Ihdr.ColorType) {
+                case Png.ColorType.GreyscaleAlpha: {
+                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
+                    break;
+                }
                 case Png.ColorType.Indexed: {
                     _bkgd = new BkgdIndexed(m_io, this, m_root);
+                    break;
+                }
+                case Png.ColorType.Greyscale: {
+                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
                     break;
                 }
                 case Png.ColorType.TruecolorAlpha: {
                     _bkgd = new BkgdTruecolor(m_io, this, m_root);
                     break;
                 }
-                case Png.ColorType.GreyscaleAlpha: {
-                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
-                    break;
-                }
                 case Png.ColorType.Truecolor: {
                     _bkgd = new BkgdTruecolor(m_io, this, m_root);
-                    break;
-                }
-                case Png.ColorType.Greyscale: {
-                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
                     break;
                 }
                 }

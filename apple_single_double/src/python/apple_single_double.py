@@ -43,7 +43,7 @@ class AppleSingleDouble(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = KaitaiStream.resolve_enum(self._root.FileType, self._io.read_u4be())
+        self.magic = self._root.FileType(self._io.read_u4be())
         self.version = self._io.read_u4be()
         self.reserved = self._io.read_bytes(16)
         self.num_entries = self._io.read_u2be()
@@ -76,7 +76,7 @@ class AppleSingleDouble(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type = KaitaiStream.resolve_enum(self._root.Entry.Types, self._io.read_u4be())
+            self.type = self._root.Entry.Types(self._io.read_u4be())
             self.ofs_body = self._io.read_u4be()
             self.len_body = self._io.read_u4be()
 
@@ -90,8 +90,8 @@ class AppleSingleDouble(KaitaiStruct):
             _on = self.type
             if _on == self._root.Entry.Types.finder_info:
                 self._raw__m_body = self._io.read_bytes(self.len_body)
-                _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
-                self._m_body = self._root.FinderInfo(_io__raw__m_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_body))
+                self._m_body = self._root.FinderInfo(io, self, self._root)
             else:
                 self._m_body = self._io.read_bytes(self.len_body)
             self._io.seek(_pos)

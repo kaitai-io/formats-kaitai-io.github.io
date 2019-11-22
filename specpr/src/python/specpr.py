@@ -137,7 +137,7 @@ class Specpr(KaitaiStruct):
             if hasattr(self, '_m_type'):
                 return self._m_type if hasattr(self, '_m_type') else None
 
-            self._m_type = KaitaiStream.resolve_enum(self._root.RecordType, ((int(self.text) * 1) + (int(self.continuation) * 2)))
+            self._m_type = self._root.RecordType(((int(self.text) * 1) + (int(self.continuation) * 2)))
             return self._m_type if hasattr(self, '_m_type') else None
 
 
@@ -228,20 +228,20 @@ class Specpr(KaitaiStruct):
             _on = self.icflag.type
             if _on == self._root.RecordType.data_initial:
                 self._raw_content = self._io.read_bytes((1536 - 4))
-                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.DataInitial(_io__raw_content, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.DataInitial(io, self, self._root)
             elif _on == self._root.RecordType.data_continuation:
                 self._raw_content = self._io.read_bytes((1536 - 4))
-                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.DataContinuation(_io__raw_content, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.DataContinuation(io, self, self._root)
             elif _on == self._root.RecordType.text_continuation:
                 self._raw_content = self._io.read_bytes((1536 - 4))
-                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.TextContinuation(_io__raw_content, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.TextContinuation(io, self, self._root)
             elif _on == self._root.RecordType.text_initial:
                 self._raw_content = self._io.read_bytes((1536 - 4))
-                _io__raw_content = KaitaiStream(BytesIO(self._raw_content))
-                self.content = self._root.TextInitial(_io__raw_content, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_content))
+                self.content = self._root.TextInitial(io, self, self._root)
             else:
                 self.content = self._io.read_bytes((1536 - 4))
 

@@ -162,10 +162,10 @@ class Ttf < Kaitai::Struct::Struct
       end
 
       def _read
-        @platform_id = Kaitai::Struct::Stream::resolve_enum(Ttf::Name::PLATFORMS, @_io.read_u2be)
+        @platform_id = Kaitai::Struct::Stream::resolve_enum(PLATFORMS, @_io.read_u2be)
         @encoding_id = @_io.read_u2be
         @language_id = @_io.read_u2be
-        @name_id = Kaitai::Struct::Stream::resolve_enum(Ttf::Name::NAMES, @_io.read_u2be)
+        @name_id = Kaitai::Struct::Stream::resolve_enum(NAMES, @_io.read_u2be)
         @len_str = @_io.read_u2be
         @ofs_str = @_io.read_u2be
         self
@@ -451,52 +451,52 @@ class Ttf < Kaitai::Struct::Struct
       case tag
       when "head"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Head.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Head.new(io, self, @_root)
       when "cvt "
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Cvt.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Cvt.new(io, self, @_root)
       when "prep"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Prep.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Prep.new(io, self, @_root)
       when "kern"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Kern.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Kern.new(io, self, @_root)
       when "hhea"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Hhea.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Hhea.new(io, self, @_root)
       when "post"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Post.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Post.new(io, self, @_root)
       when "OS/2"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Os2.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Os2.new(io, self, @_root)
       when "name"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Name.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Name.new(io, self, @_root)
       when "maxp"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Maxp.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Maxp.new(io, self, @_root)
       when "glyf"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Glyf.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Glyf.new(io, self, @_root)
       when "fpgm"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Fpgm.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Fpgm.new(io, self, @_root)
       when "cmap"
         @_raw_value = io.read_bytes(length)
-        _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-        @value = Cmap.new(_io__raw_value, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_value)
+        @value = Cmap.new(io, self, @_root)
       else
         @value = io.read_bytes(length)
       end
@@ -1403,20 +1403,20 @@ class Ttf < Kaitai::Struct::Struct
         case format
         when :subtable_format_byte_encoding_table
           @_raw_value = @_io.read_bytes((length - 6))
-          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = ByteEncodingTable.new(_io__raw_value, self, @_root)
-        when :subtable_format_segment_mapping_to_delta_values
-          @_raw_value = @_io.read_bytes((length - 6))
-          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = SegmentMappingToDeltaValues.new(_io__raw_value, self, @_root)
+          io = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = ByteEncodingTable.new(io, self, @_root)
         when :subtable_format_high_byte_mapping_through_table
           @_raw_value = @_io.read_bytes((length - 6))
-          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = HighByteMappingThroughTable.new(_io__raw_value, self, @_root)
+          io = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = HighByteMappingThroughTable.new(io, self, @_root)
         when :subtable_format_trimmed_table_mapping
           @_raw_value = @_io.read_bytes((length - 6))
-          _io__raw_value = Kaitai::Struct::Stream.new(@_raw_value)
-          @value = TrimmedTableMapping.new(_io__raw_value, self, @_root)
+          io = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = TrimmedTableMapping.new(io, self, @_root)
+        when :subtable_format_segment_mapping_to_delta_values
+          @_raw_value = @_io.read_bytes((length - 6))
+          io = Kaitai::Struct::Stream.new(@_raw_value)
+          @value = SegmentMappingToDeltaValues.new(io, self, @_root)
         else
           @value = @_io.read_bytes((length - 6))
         end

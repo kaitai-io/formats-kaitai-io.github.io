@@ -34,7 +34,7 @@ class AllegroDat(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.pack_magic = KaitaiStream.resolve_enum(self._root.PackEnum, self._io.read_u4be())
+        self.pack_magic = self._root.PackEnum(self._io.read_u4be())
         self.dat_magic = self._io.ensure_fixed_contents(b"\x41\x4C\x4C\x2E")
         self.num_objects = self._io.read_u4be()
         self.objects = [None] * (self.num_objects)
@@ -129,16 +129,16 @@ class AllegroDat(KaitaiStruct):
             _on = self.type
             if _on == u"BMP ":
                 self._raw_body = self._io.read_bytes(self.len_compressed)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DatBitmap(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DatBitmap(io, self, self._root)
             elif _on == u"RLE ":
                 self._raw_body = self._io.read_bytes(self.len_compressed)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DatRleSprite(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DatRleSprite(io, self, self._root)
             elif _on == u"FONT":
                 self._raw_body = self._io.read_bytes(self.len_compressed)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.DatFont(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.DatFont(io, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.len_compressed)
 

@@ -222,8 +222,8 @@ class Track extends \Kaitai\Struct\Struct {
         $this->_m_magic = $this->_io->ensureFixedContents("\x4D\x54\x72\x6B");
         $this->_m_lenEvents = $this->_io->readU4be();
         $this->_m__raw_events = $this->_io->readBytes($this->lenEvents());
-        $_io__raw_events = new \Kaitai\Struct\Stream($this->_m__raw_events);
-        $this->_m_events = new \StandardMidiFile\TrackEvents($_io__raw_events, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_events);
+        $this->_m_events = new \StandardMidiFile\TrackEvents($io, $this, $this->_root);
     }
     protected $_m_magic;
     protected $_m_lenEvents;

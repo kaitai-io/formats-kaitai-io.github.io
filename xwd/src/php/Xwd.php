@@ -22,15 +22,15 @@ class Xwd extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_headerSize = $this->_io->readU4be();
         $this->_m__raw_hdr = $this->_io->readBytes(($this->headerSize() - 4));
-        $_io__raw_hdr = new \Kaitai\Struct\Stream($this->_m__raw_hdr);
-        $this->_m_hdr = new \Xwd\Header($_io__raw_hdr, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_hdr);
+        $this->_m_hdr = new \Xwd\Header($io, $this, $this->_root);
         $this->_m__raw_colorMap = [];
         $this->_m_colorMap = [];
         $n = $this->hdr()->colorMapEntries();
         for ($i = 0; $i < $n; $i++) {
             $this->_m__raw_colorMap[] = $this->_io->readBytes(12);
-            $_io__raw_colorMap = new \Kaitai\Struct\Stream(end($this->_m__raw_colorMap));
-            $this->_m_colorMap[] = new \Xwd\ColorMapEntry($_io__raw_colorMap, $this, $this->_root);
+            $io = new \Kaitai\Struct\Stream(end($this->_m__raw_colorMap));
+            $this->_m_colorMap[] = new \Xwd\ColorMapEntry($io, $this, $this->_root);
         }
     }
     protected $_m_headerSize;

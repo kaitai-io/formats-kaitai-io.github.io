@@ -90,22 +90,12 @@ var Asn1Der = (function() {
     this.typeTag = this._io.readU1();
     this.len = new LenEncoded(this._io, this, this._root);
     switch (this.typeTag) {
-    case Asn1Der.TypeTag.PRINTABLE_STRING:
+    case Asn1Der.TypeTag.SEQUENCE_30:
       this._raw_body = this._io.readBytes(this.len.result);
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new BodyPrintableString(_io__raw_body, this, this._root);
+      this.body = new BodySequence(_io__raw_body, this, this._root);
       break;
     case Asn1Der.TypeTag.SEQUENCE_10:
-      this._raw_body = this._io.readBytes(this.len.result);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new BodySequence(_io__raw_body, this, this._root);
-      break;
-    case Asn1Der.TypeTag.SET:
-      this._raw_body = this._io.readBytes(this.len.result);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new BodySequence(_io__raw_body, this, this._root);
-      break;
-    case Asn1Der.TypeTag.SEQUENCE_30:
       this._raw_body = this._io.readBytes(this.len.result);
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new BodySequence(_io__raw_body, this, this._root);
@@ -115,10 +105,20 @@ var Asn1Der = (function() {
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new BodyUtf8string(_io__raw_body, this, this._root);
       break;
+    case Asn1Der.TypeTag.PRINTABLE_STRING:
+      this._raw_body = this._io.readBytes(this.len.result);
+      var _io__raw_body = new KaitaiStream(this._raw_body);
+      this.body = new BodyPrintableString(_io__raw_body, this, this._root);
+      break;
     case Asn1Der.TypeTag.OBJECT_ID:
       this._raw_body = this._io.readBytes(this.len.result);
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new BodyObjectId(_io__raw_body, this, this._root);
+      break;
+    case Asn1Der.TypeTag.SET:
+      this._raw_body = this._io.readBytes(this.len.result);
+      var _io__raw_body = new KaitaiStream(this._raw_body);
+      this.body = new BodySequence(_io__raw_body, this, this._root);
       break;
     default:
       this.body = this._io.readBytes(this.len.result);

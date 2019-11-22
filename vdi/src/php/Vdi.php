@@ -45,8 +45,8 @@ class Vdi extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->header()->blocksMapOffset());
         $this->_m__raw_blocksMap = $this->_io->readBytes($this->header()->blocksMapSize());
-        $_io__raw_blocksMap = new \Kaitai\Struct\Stream($this->_m__raw_blocksMap);
-        $this->_m_blocksMap = new \Vdi\BlocksMap($_io__raw_blocksMap, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_blocksMap);
+        $this->_m_blocksMap = new \Vdi\BlocksMap($io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_blocksMap;
     }
@@ -82,8 +82,8 @@ class Header extends \Kaitai\Struct\Struct {
             $this->_m_headerSizeOptional = $this->_io->readU4le();
         }
         $this->_m__raw_headerMain = $this->_io->readBytes($this->headerSize());
-        $_io__raw_headerMain = new \Kaitai\Struct\Stream($this->_m__raw_headerMain);
-        $this->_m_headerMain = new \Vdi\Header\HeaderMain($_io__raw_headerMain, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_headerMain);
+        $this->_m_headerMain = new \Vdi\Header\HeaderMain($io, $this, $this->_root);
     }
     protected $_m_headerSize;
     public function headerSize() {
@@ -391,8 +391,8 @@ class Block extends \Kaitai\Struct\Struct {
         $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m__raw_data[] = $this->_io->readBytes($this->_root()->header()->headerMain()->blockDataSize());
-            $_io__raw_data = new \Kaitai\Struct\Stream(end($this->_m__raw_data));
-            $this->_m_data[] = new \Vdi\Disk\Block\Sector($_io__raw_data, $this, $this->_root);
+            $io = new \Kaitai\Struct\Stream(end($this->_m__raw_data));
+            $this->_m_data[] = new \Vdi\Disk\Block\Sector($io, $this, $this->_root);
             $i++;
         }
     }

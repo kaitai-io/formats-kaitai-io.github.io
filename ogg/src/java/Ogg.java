@@ -84,11 +84,11 @@ public class Ogg extends KaitaiStruct {
             this.pageSeqNum = this._io.readU4le();
             this.crc32 = this._io.readU4le();
             this.numSegments = this._io.readU1();
-            lenSegments = new ArrayList<Integer>(((Number) (numSegments())).intValue());
+            lenSegments = new ArrayList<Integer>((int) (numSegments()));
             for (int i = 0; i < numSegments(); i++) {
                 this.lenSegments.add(this._io.readU1());
             }
-            segments = new ArrayList<byte[]>(((Number) (numSegments())).intValue());
+            segments = new ArrayList<byte[]>((int) (numSegments()));
             for (int i = 0; i < numSegments(); i++) {
                 this.segments.add(this._io.readBytes(lenSegments().get((int) i)));
             }

@@ -437,8 +437,8 @@ class DsStore(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek(self._parent.block_addresses[self._parent.directory_entries[self.idx].block_id].offset)
             self._raw__m_master_block = self._io.read_bytes(self._parent.block_addresses[self._parent.directory_entries[self.idx].block_id].size)
-            _io__raw__m_master_block = KaitaiStream(BytesIO(self._raw__m_master_block))
-            self._m_master_block = self._root.MasterBlockRef.MasterBlock(_io__raw__m_master_block, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw__m_master_block))
+            self._m_master_block = self._root.MasterBlockRef.MasterBlock(io, self, self._root)
             self._io.seek(_pos)
             return self._m_master_block if hasattr(self, &#39;_m_master_block&#39;) else None
 
@@ -576,8 +576,8 @@ class DsStore(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek((self.buddy_allocator_header.ofs_bookkeeping_info_block + 4))
         self._raw__m_buddy_allocator_body = self._io.read_bytes(self.buddy_allocator_header.len_bookkeeping_info_block)
-        _io__raw__m_buddy_allocator_body = KaitaiStream(BytesIO(self._raw__m_buddy_allocator_body))
-        self._m_buddy_allocator_body = self._root.BuddyAllocatorBody(_io__raw__m_buddy_allocator_body, self, self._root)
+        io = KaitaiStream(BytesIO(self._raw__m_buddy_allocator_body))
+        self._m_buddy_allocator_body = self._root.BuddyAllocatorBody(io, self, self._root)
         self._io.seek(_pos)
         return self._m_buddy_allocator_body if hasattr(self, &#39;_m_buddy_allocator_body&#39;) else None
 

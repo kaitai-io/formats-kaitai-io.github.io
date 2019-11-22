@@ -17,8 +17,8 @@ class Ines < Kaitai::Struct::Struct
 
   def _read
     @_raw_header = @_io.read_bytes(16)
-    _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-    @header = Header.new(_io__raw_header, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_header)
+    @header = Header.new(io, self, @_root)
     if header.f6.trainer
       @trainer = @_io.read_bytes(512)
     end
@@ -43,18 +43,18 @@ class Ines < Kaitai::Struct::Struct
       @len_prg_rom = @_io.read_u1
       @len_chr_rom = @_io.read_u1
       @_raw_f6 = @_io.read_bytes(1)
-      _io__raw_f6 = Kaitai::Struct::Stream.new(@_raw_f6)
-      @f6 = F6.new(_io__raw_f6, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_f6)
+      @f6 = F6.new(io, self, @_root)
       @_raw_f7 = @_io.read_bytes(1)
-      _io__raw_f7 = Kaitai::Struct::Stream.new(@_raw_f7)
-      @f7 = F7.new(_io__raw_f7, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_f7)
+      @f7 = F7.new(io, self, @_root)
       @len_prg_ram = @_io.read_u1
       @_raw_f9 = @_io.read_bytes(1)
-      _io__raw_f9 = Kaitai::Struct::Stream.new(@_raw_f9)
-      @f9 = F9.new(_io__raw_f9, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_f9)
+      @f9 = F9.new(io, self, @_root)
       @_raw_f10 = @_io.read_bytes(1)
-      _io__raw_f10 = Kaitai::Struct::Stream.new(@_raw_f10)
-      @f10 = F10.new(_io__raw_f10, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_f10)
+      @f10 = F10.new(io, self, @_root)
       @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0, 0].pack('C*'))
       self
     end

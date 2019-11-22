@@ -555,60 +555,40 @@ namespace Kaitai
                 _typeByte = ((BsonType) m_io.ReadU1());
                 _name = new Cstring(m_io, this, m_root);
                 switch (TypeByte) {
-                case BsonType.CodeWithScope: {
-                    _content = new CodeWithScope(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.RegEx: {
-                    _content = new RegEx(m_io, this, m_root);
-                    break;
-                }
                 case BsonType.NumberDouble: {
                     _content = m_io.ReadF8le();
                     break;
                 }
-                case BsonType.Symbol: {
-                    _content = new String(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.Timestamp: {
-                    _content = new Timestamp(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.NumberInt: {
-                    _content = m_io.ReadS4le();
-                    break;
-                }
-                case BsonType.Document: {
-                    _content = new Bson(m_io);
+                case BsonType.CodeWithScope: {
+                    _content = new CodeWithScope(m_io, this, m_root);
                     break;
                 }
                 case BsonType.ObjectId: {
                     _content = new ObjectId(m_io, this, m_root);
                     break;
                 }
-                case BsonType.Javascript: {
+                case BsonType.String: {
                     _content = new String(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.RegEx: {
+                    _content = new RegEx(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.NumberDecimal: {
+                    _content = new F16(m_io, this, m_root);
                     break;
                 }
                 case BsonType.UtcDatetime: {
                     _content = m_io.ReadS8le();
                     break;
                 }
-                case BsonType.Boolean: {
-                    _content = m_io.ReadU1();
-                    break;
-                }
                 case BsonType.NumberLong: {
                     _content = m_io.ReadS8le();
                     break;
                 }
-                case BsonType.BinData: {
-                    _content = new BinData(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.String: {
-                    _content = new String(m_io, this, m_root);
+                case BsonType.Timestamp: {
+                    _content = new Timestamp(m_io, this, m_root);
                     break;
                 }
                 case BsonType.DbPointer: {
@@ -619,8 +599,28 @@ namespace Kaitai
                     _content = new Bson(m_io);
                     break;
                 }
-                case BsonType.NumberDecimal: {
-                    _content = new F16(m_io, this, m_root);
+                case BsonType.Javascript: {
+                    _content = new String(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.Boolean: {
+                    _content = m_io.ReadU1();
+                    break;
+                }
+                case BsonType.Document: {
+                    _content = new Bson(m_io);
+                    break;
+                }
+                case BsonType.Symbol: {
+                    _content = new String(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.NumberInt: {
+                    _content = m_io.ReadS4le();
+                    break;
+                }
+                case BsonType.BinData: {
+                    _content = new BinData(m_io, this, m_root);
                     break;
                 }
                 }

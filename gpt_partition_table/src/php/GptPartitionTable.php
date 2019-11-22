@@ -106,8 +106,8 @@ class PartitionHeader extends \Kaitai\Struct\Struct {
         $n = $this->entriesCount();
         for ($i = 0; $i < $n; $i++) {
             $this->_m__raw_entries[] = $io->readBytes($this->entriesSize());
-            $_io__raw_entries = new \Kaitai\Struct\Stream(end($this->_m__raw_entries));
-            $this->_m_entries[] = new \GptPartitionTable\PartitionEntry($_io__raw_entries, $this, $this->_root);
+            $io = new \Kaitai\Struct\Stream(end($this->_m__raw_entries));
+            $this->_m_entries[] = new \GptPartitionTable\PartitionEntry($io, $this, $this->_root);
         }
         $io->seek($_pos);
         return $this->_m_entries;

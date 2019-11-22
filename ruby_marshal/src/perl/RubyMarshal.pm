@@ -482,32 +482,32 @@ sub _read {
 
     $self->{code} = $self->{_io}->read_u1();
     my $_on = $self->code();
-    if ($_on == $RubyMarshal::CODES_PACKED_INT) {
-        $self->{body} = RubyMarshal::PackedInt->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $RubyMarshal::CODES_BIGNUM) {
+    if ($_on == $CODES_BIGNUM) {
         $self->{body} = RubyMarshal::Bignum->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $RubyMarshal::CODES_RUBY_ARRAY) {
-        $self->{body} = RubyMarshal::RubyArray->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $RubyMarshal::CODES_RUBY_SYMBOL_LINK) {
-        $self->{body} = RubyMarshal::PackedInt->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $RubyMarshal::CODES_RUBY_STRUCT) {
-        $self->{body} = RubyMarshal::RubyStruct->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $RubyMarshal::CODES_RUBY_STRING) {
-        $self->{body} = RubyMarshal::RubyString->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $RubyMarshal::CODES_INSTANCE_VAR) {
-        $self->{body} = RubyMarshal::InstanceVar->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $RubyMarshal::CODES_RUBY_HASH) {
+    elsif ($_on == $CODES_RUBY_HASH) {
         $self->{body} = RubyMarshal::RubyHash->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $RubyMarshal::CODES_RUBY_SYMBOL) {
+    elsif ($_on == $CODES_RUBY_ARRAY) {
+        $self->{body} = RubyMarshal::RubyArray->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $CODES_RUBY_SYMBOL) {
         $self->{body} = RubyMarshal::RubySymbol->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $CODES_INSTANCE_VAR) {
+        $self->{body} = RubyMarshal::InstanceVar->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $CODES_RUBY_STRING) {
+        $self->{body} = RubyMarshal::RubyString->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $CODES_PACKED_INT) {
+        $self->{body} = RubyMarshal::PackedInt->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $CODES_RUBY_STRUCT) {
+        $self->{body} = RubyMarshal::RubyStruct->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $CODES_RUBY_SYMBOL_LINK) {
+        $self->{body} = RubyMarshal::PackedInt->new($self->{_io}, $self, $self->{_root});
     }
 }
 

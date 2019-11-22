@@ -176,6 +176,11 @@ printer, etc).</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Windows Metafile (WMF) vector image parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Windows Metafile (WMF) vector image parsing C# library">C#</a></li>
                 
                 
@@ -382,7 +387,7 @@ sub _read {
     do {
         $_ = Wmf::Record-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
         push @{$self-&gt;{records}}, $_;
-    } until ($_-&gt;function() == $Wmf::FUNC_EOF);
+    } until ($_-&gt;function() == $FUNC_EOF);
 }
 
 sub special_header {
@@ -994,45 +999,45 @@ sub _read {
     $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{function} = $self-&gt;{_io}-&gt;read_u2le();
     my $_on = $self-&gt;function();
-    if ($_on == $Wmf::FUNC_SETBKMODE) {
+    if ($_on == $FUNC_SETBKMODE) {
         $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
         my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
         $self-&gt;{params} = Wmf::ParamsSetbkmode-&gt;new($io__raw_params, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Wmf::FUNC_POLYGON) {
-        $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
-        $self-&gt;{params} = Wmf::ParamsPolygon-&gt;new($io__raw_params, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $Wmf::FUNC_SETBKCOLOR) {
+    elsif ($_on == $FUNC_SETBKCOLOR) {
         $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
         my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
         $self-&gt;{params} = Wmf::ColorRef-&gt;new($io__raw_params, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Wmf::FUNC_SETPOLYFILLMODE) {
-        $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
-        $self-&gt;{params} = Wmf::ParamsSetpolyfillmode-&gt;new($io__raw_params, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $Wmf::FUNC_SETWINDOWORG) {
-        $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
-        $self-&gt;{params} = Wmf::ParamsSetwindoworg-&gt;new($io__raw_params, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $Wmf::FUNC_SETROP2) {
+    elsif ($_on == $FUNC_SETROP2) {
         $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
         my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
         $self-&gt;{params} = Wmf::ParamsSetrop2-&gt;new($io__raw_params, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Wmf::FUNC_SETWINDOWEXT) {
+    elsif ($_on == $FUNC_POLYLINE) {
+        $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
+        my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
+        $self-&gt;{params} = Wmf::ParamsPolyline-&gt;new($io__raw_params, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $FUNC_SETWINDOWORG) {
+        $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
+        my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
+        $self-&gt;{params} = Wmf::ParamsSetwindoworg-&gt;new($io__raw_params, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $FUNC_POLYGON) {
+        $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
+        my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
+        $self-&gt;{params} = Wmf::ParamsPolygon-&gt;new($io__raw_params, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $FUNC_SETWINDOWEXT) {
         $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
         my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
         $self-&gt;{params} = Wmf::ParamsSetwindowext-&gt;new($io__raw_params, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Wmf::FUNC_POLYLINE) {
+    elsif ($_on == $FUNC_SETPOLYFILLMODE) {
         $self-&gt;{_raw_params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));
         my $io__raw_params = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_params});
-        $self-&gt;{params} = Wmf::ParamsPolyline-&gt;new($io__raw_params, $self, $self-&gt;{_root});
+        $self-&gt;{params} = Wmf::ParamsSetpolyfillmode-&gt;new($io__raw_params, $self, $self-&gt;{_root});
     }
     else {
         $self-&gt;{params} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;size() - 3) * 2));

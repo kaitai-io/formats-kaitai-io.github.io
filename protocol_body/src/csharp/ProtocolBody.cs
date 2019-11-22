@@ -183,20 +183,20 @@ namespace Kaitai
         private void _read()
         {
             switch (Protocol) {
+            case ProtocolEnum.Tcp: {
+                _body = new TcpSegment(m_io);
+                break;
+            }
             case ProtocolEnum.Ipv6Nonxt: {
                 _body = new NoNextHeader(m_io, this, m_root);
                 break;
             }
-            case ProtocolEnum.Ipv4: {
-                _body = new Ipv4Packet(m_io);
+            case ProtocolEnum.Icmp: {
+                _body = new IcmpPacket(m_io);
                 break;
             }
             case ProtocolEnum.Udp: {
                 _body = new UdpDatagram(m_io);
-                break;
-            }
-            case ProtocolEnum.Icmp: {
-                _body = new IcmpPacket(m_io);
                 break;
             }
             case ProtocolEnum.Hopopt: {
@@ -207,8 +207,8 @@ namespace Kaitai
                 _body = new Ipv6Packet(m_io);
                 break;
             }
-            case ProtocolEnum.Tcp: {
-                _body = new TcpSegment(m_io);
+            case ProtocolEnum.Ipv4: {
+                _body = new Ipv4Packet(m_io);
                 break;
             }
             }

@@ -71,7 +71,7 @@ class Fallout2Dat(KaitaiStruct):
 
         def _read(self):
             self.name = self._root.Pstr(self._io, self, self._root)
-            self.flags = KaitaiStream.resolve_enum(self._root.Compression, self._io.read_u1())
+            self.flags = self._root.Compression(self._io.read_u1())
             self.size_unpacked = self._io.read_u4le()
             self.size_packed = self._io.read_u4le()
             self.offset = self._io.read_u4le()

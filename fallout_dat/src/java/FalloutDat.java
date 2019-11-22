@@ -48,11 +48,11 @@ public class FalloutDat extends KaitaiStruct {
         this.unknown1 = this._io.readU4be();
         this.unknown2 = this._io.readU4be();
         this.timestamp = this._io.readU4be();
-        folderNames = new ArrayList<Pstr>(((Number) (folderCount())).intValue());
+        folderNames = new ArrayList<Pstr>((int) (folderCount()));
         for (int i = 0; i < folderCount(); i++) {
             this.folderNames.add(new Pstr(this._io, this, _root));
         }
-        folders = new ArrayList<Folder>(((Number) (folderCount())).intValue());
+        folders = new ArrayList<Folder>((int) (folderCount()));
         for (int i = 0; i < folderCount(); i++) {
             this.folders.add(new Folder(this._io, this, _root));
         }
@@ -113,7 +113,7 @@ public class FalloutDat extends KaitaiStruct {
             this.unknown = this._io.readU4be();
             this.flags = this._io.readU4be();
             this.timestamp = this._io.readU4be();
-            files = new ArrayList<File>(((Number) (fileCount())).intValue());
+            files = new ArrayList<File>((int) (fileCount()));
             for (int i = 0; i < fileCount(); i++) {
                 this.files.add(new File(this._io, this, _root));
             }

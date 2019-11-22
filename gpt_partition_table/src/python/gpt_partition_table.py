@@ -72,8 +72,8 @@ class GptPartitionTable(KaitaiStruct):
             self._m_entries = [None] * (self.entries_count)
             for i in range(self.entries_count):
                 self._raw__m_entries[i] = io.read_bytes(self.entries_size)
-                _io__raw__m_entries = KaitaiStream(BytesIO(self._raw__m_entries[i]))
-                self._m_entries[i] = self._root.PartitionEntry(_io__raw__m_entries, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_entries[i]))
+                self._m_entries[i] = self._root.PartitionEntry(io, self, self._root)
 
             io.seek(_pos)
             return self._m_entries if hasattr(self, '_m_entries') else None

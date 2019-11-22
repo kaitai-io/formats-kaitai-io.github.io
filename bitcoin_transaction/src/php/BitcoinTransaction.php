@@ -71,8 +71,8 @@ class Vin extends \Kaitai\Struct\Struct {
         $this->_m_outputId = $this->_io->readU4le();
         $this->_m_lenScript = $this->_io->readU1();
         $this->_m__raw_scriptSig = $this->_io->readBytes($this->lenScript());
-        $_io__raw_scriptSig = new \Kaitai\Struct\Stream($this->_m__raw_scriptSig);
-        $this->_m_scriptSig = new \BitcoinTransaction\Vin\ScriptSignature($_io__raw_scriptSig, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_scriptSig);
+        $this->_m_scriptSig = new \BitcoinTransaction\Vin\ScriptSignature($io, $this, $this->_root);
         $this->_m_endOfVin = $this->_io->ensureFixedContents("\xFF\xFF\xFF\xFF");
     }
     protected $_m_txid;

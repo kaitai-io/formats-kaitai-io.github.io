@@ -25,6 +25,7 @@ var EthernetFrame = (function() {
     CHAOSNET: 2052,
     X_25_LEVEL_3: 2053,
     ARP: 2054,
+    IEEE_802_1Q_TPID: 33024,
     IPV6: 34525,
 
     2048: "IPV4",
@@ -34,6 +35,7 @@ var EthernetFrame = (function() {
     2052: "CHAOSNET",
     2053: "X_25_LEVEL_3",
     2054: "ARP",
+    33024: "IEEE_802_1Q_TPID",
     34525: "IPV6",
   });
 
@@ -47,7 +49,13 @@ var EthernetFrame = (function() {
   EthernetFrame.prototype._read = function() {
     this.dstMac = this._io.readBytes(6);
     this.srcMac = this._io.readBytes(6);
-    this.etherType = this._io.readU2be();
+    this.etherType1 = this._io.readU2be();
+    if (this.etherType1 == EthernetFrame.EtherTypeEnum.IEEE_802_1Q_TPID) {
+      this.tci = new TagControlInfo(this._io, this, this._root);
+    }
+    if (this.etherType1 == EthernetFrame.EtherTypeEnum.IEEE_802_1Q_TPID) {
+      this.etherType2 = this._io.readU2be();
+    }
     switch (this.etherType) {
     case EthernetFrame.EtherTypeEnum.IPV4:
       this._raw_body = this._io.readBytesFull();
@@ -66,11 +74,68 @@ var EthernetFrame = (function() {
   }
 
   /**
-   * Destination MAC address.
+   * Tag Control Information (TCI) is an extension of IEEE 802.1Q to
+   * support VLANs on normal IEEE 802.3 Ethernet network.
+   */
+
+  var TagControlInfo = EthernetFrame.TagControlInfo = (function() {
+    function TagControlInfo(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    TagControlInfo.prototype._read = function() {
+      this.priority = this._io.readBitsInt(3);
+      this.dropEligible = this._io.readBitsInt(1) != 0;
+      this.vlanId = this._io.readBitsInt(12);
+    }
+
+    /**
+     * Priority Code Point (PCP) is used to specify priority for
+     * different kinds of traffic.
+     */
+
+    /**
+     * Drop Eligible Indicator (DEI) specifies if frame is eligible
+     * to dropping while congestion is detected for certain classes
+     * of traffic.
+     */
+
+    /**
+     * VLAN Identifier (VID) specifies which VLAN this frame
+     * belongs to.
+     */
+
+    return TagControlInfo;
+  })();
+
+  /**
+   * Ether type can be specied in several places in the frame. If
+   * first location bears special marker (0x8100), then it is not the
+   * real ether frame yet, an additional payload (`tci`) is expected
+   * and real ether type is upcoming next.
+   */
+  Object.defineProperty(EthernetFrame.prototype, 'etherType', {
+    get: function() {
+      if (this._m_etherType !== undefined)
+        return this._m_etherType;
+      this._m_etherType = (this.etherType1 == EthernetFrame.EtherTypeEnum.IEEE_802_1Q_TPID ? this.etherType2 : this.etherType1);
+      return this._m_etherType;
+    }
+  });
+
+  /**
+   * Destination MAC address
    */
 
   /**
-   * Source MAC address.
+   * Source MAC address
+   */
+
+  /**
+   * Either ether type or TPID if it is a IEEE 802.1Q frame
    */
 
   return EthernetFrame;

@@ -139,6 +139,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="vfat parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="vfat parsing C# library">C#</a></li>
                 
                 
@@ -734,7 +739,7 @@ public class Vfat extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            records = new ArrayList&lt;RootDirectoryRec&gt;(((Number) (_root.bootSector().bpb().maxRootDirRec())).intValue());
+            records = new ArrayList&lt;RootDirectoryRec&gt;((int) (_root.bootSector().bpb().maxRootDirRec()));
             for (int i = 0; i &lt; _root.bootSector().bpb().maxRootDirRec(); i++) {
                 this.records.add(new RootDirectoryRec(this._io, this, _root));
             }
@@ -825,7 +830,7 @@ public class Vfat extends KaitaiStruct {
             return this.fats;
         long _pos = this._io.pos();
         this._io.seek(bootSector().posFats());
-        fats = new ArrayList&lt;byte[]&gt;(((Number) (bootSector().bpb().numFats())).intValue());
+        fats = new ArrayList&lt;byte[]&gt;((int) (bootSector().bpb().numFats()));
         for (int i = 0; i &lt; bootSector().bpb().numFats(); i++) {
             this.fats.add(this._io.readBytes(bootSector().sizeFat()));
         }

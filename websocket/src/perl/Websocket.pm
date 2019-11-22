@@ -197,10 +197,10 @@ sub _read {
     my ($self) = @_;
 
     $self->{header} = Websocket::FrameHeader->new($self->{_io}, $self, $self->{_root});
-    if ($self->header()->opcode() != $Websocket::OPCODE_TEXT) {
+    if ($self->header()->opcode() != $OPCODE_TEXT) {
         $self->{payload_bytes} = $self->{_io}->read_bytes($self->header()->len_payload());
     }
-    if ($self->header()->opcode() == $Websocket::OPCODE_TEXT) {
+    if ($self->header()->opcode() == $OPCODE_TEXT) {
         $self->{payload_text} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->header()->len_payload()));
     }
 }
@@ -251,10 +251,10 @@ sub _read {
     my ($self) = @_;
 
     $self->{header} = Websocket::FrameHeader->new($self->{_io}, $self, $self->{_root});
-    if ($self->_root()->initial_frame()->header()->opcode() != $Websocket::OPCODE_TEXT) {
+    if ($self->_root()->initial_frame()->header()->opcode() != $OPCODE_TEXT) {
         $self->{payload_bytes} = $self->{_io}->read_bytes($self->header()->len_payload());
     }
-    if ($self->_root()->initial_frame()->header()->opcode() == $Websocket::OPCODE_TEXT) {
+    if ($self->_root()->initial_frame()->header()->opcode() == $OPCODE_TEXT) {
         $self->{payload_text} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->header()->len_payload()));
     }
 }

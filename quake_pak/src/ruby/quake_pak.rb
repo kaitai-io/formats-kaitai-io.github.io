@@ -68,8 +68,8 @@ class QuakePak < Kaitai::Struct::Struct
     _pos = @_io.pos
     @_io.seek(ofs_index)
     @_raw_index = @_io.read_bytes(len_index)
-    _io__raw_index = Kaitai::Struct::Stream.new(@_raw_index)
-    @index = IndexStruct.new(_io__raw_index, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_index)
+    @index = IndexStruct.new(io, self, @_root)
     @_io.seek(_pos)
     @index
   end

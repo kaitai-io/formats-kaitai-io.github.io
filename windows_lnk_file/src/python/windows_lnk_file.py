@@ -8,7 +8,7 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-import windows_shell_items
+from windows_shell_items import WindowsShellItems
 class WindowsLnkFile(KaitaiStruct):
     """Windows .lnk files (AKA "shell link" file) are most frequently used
     in Windows shell to create "shortcuts" to another files, usually for
@@ -76,8 +76,8 @@ class WindowsLnkFile(KaitaiStruct):
         def _read(self):
             self.len_id_list = self._io.read_u2le()
             self._raw_id_list = self._io.read_bytes(self.len_id_list)
-            _io__raw_id_list = KaitaiStream(BytesIO(self._raw_id_list))
-            self.id_list = windows_shell_items.WindowsShellItems(_io__raw_id_list)
+            io = KaitaiStream(BytesIO(self._raw_id_list))
+            self.id_list = WindowsShellItems(io)
 
 
     class StringData(KaitaiStruct):
@@ -106,8 +106,8 @@ class WindowsLnkFile(KaitaiStruct):
         def _read(self):
             self.len_all = self._io.read_u4le()
             self._raw_all = self._io.read_bytes((self.len_all - 4))
-            _io__raw_all = KaitaiStream(BytesIO(self._raw_all))
-            self.all = self._root.LinkInfo.All(_io__raw_all, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_all))
+            self.all = self._root.LinkInfo.All(io, self, self._root)
 
         class VolumeIdBody(KaitaiStruct):
             """
@@ -121,7 +121,7 @@ class WindowsLnkFile(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.drive_type = KaitaiStream.resolve_enum(self._root.DriveTypes, self._io.read_u4le())
+                self.drive_type = self._root.DriveTypes(self._io.read_u4le())
                 self.drive_serial_number = self._io.read_u4le()
                 self.ofs_volume_label = self._io.read_u4le()
                 if self.is_unicode:
@@ -164,8 +164,8 @@ class WindowsLnkFile(KaitaiStruct):
             def _read(self):
                 self.len_header = self._io.read_u4le()
                 self._raw_header = self._io.read_bytes((self.len_header - 8))
-                _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.LinkInfo.Header(_io__raw_header, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_header))
+                self.header = self._root.LinkInfo.Header(io, self, self._root)
 
             @property
             def volume_id(self):
@@ -208,8 +208,8 @@ class WindowsLnkFile(KaitaiStruct):
             def _read(self):
                 self.len_all = self._io.read_u4le()
                 self._raw_body = self._io.read_bytes((self.len_all - 4))
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.LinkInfo.VolumeIdBody(_io__raw_body, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.LinkInfo.VolumeIdBody(io, self, self._root)
 
 
         class LinkInfoFlags(KaitaiStruct):
@@ -297,15 +297,15 @@ class WindowsLnkFile(KaitaiStruct):
             self.len_header = self._io.ensure_fixed_contents(b"\x4C\x00\x00\x00")
             self.link_clsid = self._io.ensure_fixed_contents(b"\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00\x46")
             self._raw_flags = self._io.read_bytes(4)
-            _io__raw_flags = KaitaiStream(BytesIO(self._raw_flags))
-            self.flags = self._root.LinkFlags(_io__raw_flags, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_flags))
+            self.flags = self._root.LinkFlags(io, self, self._root)
             self.file_attrs = self._io.read_u4le()
             self.time_creation = self._io.read_u8le()
             self.time_access = self._io.read_u8le()
             self.time_write = self._io.read_u8le()
             self.target_file_size = self._io.read_u4le()
             self.icon_index = self._io.read_s4le()
-            self.show_command = KaitaiStream.resolve_enum(self._root.WindowState, self._io.read_u4le())
+            self.show_command = self._root.WindowState(self._io.read_u4le())
             self.hotkey = self._io.read_u2le()
             self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
 

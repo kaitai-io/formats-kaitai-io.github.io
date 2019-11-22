@@ -139,6 +139,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="GPT (GUID) partition table parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="GPT (GUID) partition table parsing C# library">C#</a></li>
                 
                 
@@ -307,8 +312,8 @@ class GptPartitionTable(KaitaiStruct):
             self._m_entries = [None] * (self.entries_count)
             for i in range(self.entries_count):
                 self._raw__m_entries[i] = io.read_bytes(self.entries_size)
-                _io__raw__m_entries = KaitaiStream(BytesIO(self._raw__m_entries[i]))
-                self._m_entries[i] = self._root.PartitionEntry(_io__raw__m_entries, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_entries[i]))
+                self._m_entries[i] = self._root.PartitionEntry(io, self, self._root)
 
             io.seek(_pos)
             return self._m_entries if hasattr(self, &#39;_m_entries&#39;) else None

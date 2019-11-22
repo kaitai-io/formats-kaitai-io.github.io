@@ -29,7 +29,7 @@ var UdpDatagram = (function() {
     this.dstPort = this._io.readU2be();
     this.length = this._io.readU2be();
     this.checksum = this._io.readU2be();
-    this.body = this._io.readBytesFull();
+    this.body = this._io.readBytes((this.length - 8));
   }
 
   return UdpDatagram;

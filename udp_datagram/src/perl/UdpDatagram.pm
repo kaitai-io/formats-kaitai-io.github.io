@@ -38,7 +38,7 @@ sub _read {
     $self->{dst_port} = $self->{_io}->read_u2be();
     $self->{length} = $self->{_io}->read_u2be();
     $self->{checksum} = $self->{_io}->read_u2be();
-    $self->{body} = $self->{_io}->read_bytes_full();
+    $self->{body} = $self->{_io}->read_bytes(($self->length() - 8));
 }
 
 sub src_port {

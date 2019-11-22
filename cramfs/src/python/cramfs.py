@@ -203,8 +203,8 @@ class Cramfs(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.offset)
             self._raw__m_as_dir = io.read_bytes(self.size)
-            _io__raw__m_as_dir = KaitaiStream(BytesIO(self._raw__m_as_dir))
-            self._m_as_dir = self._root.DirInode(_io__raw__m_as_dir, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw__m_as_dir))
+            self._m_as_dir = self._root.DirInode(io, self, self._root)
             io.seek(_pos)
             return self._m_as_dir if hasattr(self, '_m_as_dir') else None
 
@@ -213,7 +213,7 @@ class Cramfs(KaitaiStruct):
             if hasattr(self, '_m_type'):
                 return self._m_type if hasattr(self, '_m_type') else None
 
-            self._m_type = KaitaiStream.resolve_enum(self._root.Inode.FileType, ((self.mode >> 12) & 15))
+            self._m_type = self._root.Inode.FileType(((self.mode >> 12) & 15))
             return self._m_type if hasattr(self, '_m_type') else None
 
         @property

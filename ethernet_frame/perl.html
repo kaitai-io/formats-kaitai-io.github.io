@@ -170,6 +170,11 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing C# library">C#</a></li>
                 
                 
@@ -269,6 +274,7 @@ our $ETHER_TYPE_ENUM_ECMA_INTERNET = 2051;
 our $ETHER_TYPE_ENUM_CHAOSNET = 2052;
 our $ETHER_TYPE_ENUM_X_25_LEVEL_3 = 2053;
 our $ETHER_TYPE_ENUM_ARP = 2054;
+our $ETHER_TYPE_ENUM_IEEE_802_1Q_TPID = 33024;
 our $ETHER_TYPE_ENUM_IPV6 = 34525;
 
 sub new {
@@ -289,14 +295,20 @@ sub _read {
 
     $self-&gt;{dst_mac} = $self-&gt;{_io}-&gt;read_bytes(6);
     $self-&gt;{src_mac} = $self-&gt;{_io}-&gt;read_bytes(6);
-    $self-&gt;{ether_type} = $self-&gt;{_io}-&gt;read_u2be();
+    $self-&gt;{ether_type_1} = $self-&gt;{_io}-&gt;read_u2be();
+    if ($self-&gt;ether_type_1() == $ETHER_TYPE_ENUM_IEEE_802_1Q_TPID) {
+        $self-&gt;{tci} = EthernetFrame::TagControlInfo-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    if ($self-&gt;ether_type_1() == $ETHER_TYPE_ENUM_IEEE_802_1Q_TPID) {
+        $self-&gt;{ether_type_2} = $self-&gt;{_io}-&gt;read_u2be();
+    }
     my $_on = $self-&gt;ether_type();
-    if ($_on == $EthernetFrame::ETHER_TYPE_ENUM_IPV4) {
+    if ($_on == $ETHER_TYPE_ENUM_IPV4) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = Ipv4Packet-&gt;new($io__raw_body);
     }
-    elsif ($_on == $EthernetFrame::ETHER_TYPE_ENUM_IPV6) {
+    elsif ($_on == $ETHER_TYPE_ENUM_IPV6) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = Ipv6Packet-&gt;new($io__raw_body);
@@ -304,6 +316,13 @@ sub _read {
     else {
         $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes_full();
     }
+}
+
+sub ether_type {
+    my ($self) = @_;
+    return $self-&gt;{ether_type} if ($self-&gt;{ether_type});
+    $self-&gt;{ether_type} = ($self-&gt;ether_type_1() == $ETHER_TYPE_ENUM_IEEE_802_1Q_TPID ? $self-&gt;ether_type_2() : $self-&gt;ether_type_1());
+    return $self-&gt;{ether_type};
 }
 
 sub dst_mac {
@@ -316,9 +335,19 @@ sub src_mac {
     return $self-&gt;{src_mac};
 }
 
-sub ether_type {
+sub ether_type_1 {
     my ($self) = @_;
-    return $self-&gt;{ether_type};
+    return $self-&gt;{ether_type_1};
+}
+
+sub tci {
+    my ($self) = @_;
+    return $self-&gt;{tci};
+}
+
+sub ether_type_2 {
+    my ($self) = @_;
+    return $self-&gt;{ether_type_2};
 }
 
 sub body {
@@ -329,6 +358,56 @@ sub body {
 sub _raw_body {
     my ($self) = @_;
     return $self-&gt;{_raw_body};
+}
+
+########################################################################
+package EthernetFrame::TagControlInfo;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{priority} = $self-&gt;{_io}-&gt;read_bits_int(3);
+    $self-&gt;{drop_eligible} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{vlan_id} = $self-&gt;{_io}-&gt;read_bits_int(12);
+}
+
+sub priority {
+    my ($self) = @_;
+    return $self-&gt;{priority};
+}
+
+sub drop_eligible {
+    my ($self) = @_;
+    return $self-&gt;{drop_eligible};
+}
+
+sub vlan_id {
+    my ($self) = @_;
+    return $self-&gt;{vlan_id};
 }
 
 1;

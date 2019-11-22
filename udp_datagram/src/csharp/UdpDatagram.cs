@@ -30,7 +30,7 @@ namespace Kaitai
             _dstPort = m_io.ReadU2be();
             _length = m_io.ReadU2be();
             _checksum = m_io.ReadU2be();
-            _body = m_io.ReadBytesFull();
+            _body = m_io.ReadBytes((Length - 8));
         }
         private ushort _srcPort;
         private ushort _dstPort;

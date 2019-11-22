@@ -309,8 +309,8 @@ class Wav < Kaitai::Struct::Struct
     @file_size = @_io.read_u4le
     @wave_id = @_io.ensure_fixed_contents([87, 65, 86, 69].pack('C*'))
     @_raw_chunks = @_io.read_bytes((file_size - 5))
-    _io__raw_chunks = Kaitai::Struct::Stream.new(@_raw_chunks)
-    @chunks = ChunksType.new(_io__raw_chunks, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_chunks)
+    @chunks = ChunksType.new(io, self, @_root)
     self
   end
   class SampleType < Kaitai::Struct::Struct
@@ -332,7 +332,7 @@ class Wav < Kaitai::Struct::Struct
     end
 
     def _read
-      @w_format_tag = Kaitai::Struct::Stream::resolve_enum(Wav::W_FORMAT_TAG_TYPE, @_io.read_u2le)
+      @w_format_tag = Kaitai::Struct::Stream::resolve_enum(W_FORMAT_TAG_TYPE, @_io.read_u2le)
       @n_channels = @_io.read_u2le
       @n_samples_per_sec = @_io.read_u4le
       @n_avg_bytes_per_sec = @_io.read_u4le
@@ -557,20 +557,20 @@ class Wav < Kaitai::Struct::Struct
       case chunk_id
       when 1684108385
         @_raw_data = @_io.read_bytes(len)
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = DataChunkType.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = DataChunkType.new(io, self, @_root)
       when 1668637984
         @_raw_data = @_io.read_bytes(len)
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = CueChunkType.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = CueChunkType.new(io, self, @_root)
       when 1650817140
         @_raw_data = @_io.read_bytes(len)
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = BextChunkType.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = BextChunkType.new(io, self, @_root)
       when 1718449184
         @_raw_data = @_io.read_bytes(len)
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = FormatChunkType.new(_io__raw_data, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_data)
+        @data = FormatChunkType.new(io, self, @_root)
       else
         @data = @_io.read_bytes(len)
       end

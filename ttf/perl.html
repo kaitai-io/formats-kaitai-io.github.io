@@ -172,6 +172,11 @@ an outline font.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="TrueType Font File parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="TrueType Font File parsing C# library">C#</a></li>
                 
                 
@@ -3197,25 +3202,25 @@ sub _read {
     $self-&gt;{length} = $self-&gt;{_io}-&gt;read_u2be();
     $self-&gt;{version} = $self-&gt;{_io}-&gt;read_u2be();
     my $_on = $self-&gt;format();
-    if ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_BYTE_ENCODING_TABLE) {
+    if ($_on == $SUBTABLE_FORMAT_BYTE_ENCODING_TABLE) {
         $self-&gt;{_raw_value} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 6));
         my $io__raw_value = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_value});
         $self-&gt;{value} = Ttf::Cmap::Subtable::ByteEncodingTable-&gt;new($io__raw_value, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_SEGMENT_MAPPING_TO_DELTA_VALUES) {
-        $self-&gt;{_raw_value} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 6));
-        my $io__raw_value = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_value});
-        $self-&gt;{value} = Ttf::Cmap::Subtable::SegmentMappingToDeltaValues-&gt;new($io__raw_value, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_HIGH_BYTE_MAPPING_THROUGH_TABLE) {
+    elsif ($_on == $SUBTABLE_FORMAT_HIGH_BYTE_MAPPING_THROUGH_TABLE) {
         $self-&gt;{_raw_value} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 6));
         my $io__raw_value = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_value});
         $self-&gt;{value} = Ttf::Cmap::Subtable::HighByteMappingThroughTable-&gt;new($io__raw_value, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_TRIMMED_TABLE_MAPPING) {
+    elsif ($_on == $SUBTABLE_FORMAT_TRIMMED_TABLE_MAPPING) {
         $self-&gt;{_raw_value} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 6));
         my $io__raw_value = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_value});
         $self-&gt;{value} = Ttf::Cmap::Subtable::TrimmedTableMapping-&gt;new($io__raw_value, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $SUBTABLE_FORMAT_SEGMENT_MAPPING_TO_DELTA_VALUES) {
+        $self-&gt;{_raw_value} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 6));
+        my $io__raw_value = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_value});
+        $self-&gt;{value} = Ttf::Cmap::Subtable::SegmentMappingToDeltaValues-&gt;new($io__raw_value, $self, $self-&gt;{_root});
     }
     else {
         $self-&gt;{value} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 6));

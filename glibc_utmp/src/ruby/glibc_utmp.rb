@@ -32,8 +32,8 @@ class GlibcUtmp < Kaitai::Struct::Struct
     i = 0
     while not @_io.eof?
       @_raw_records << @_io.read_bytes(384)
-      _io__raw_records = Kaitai::Struct::Stream.new(@_raw_records.last)
-      @records << Record.new(_io__raw_records, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_records.last)
+      @records << Record.new(io, self, @_root)
       i += 1
     end
     self
@@ -45,7 +45,7 @@ class GlibcUtmp < Kaitai::Struct::Struct
     end
 
     def _read
-      @ut_type = Kaitai::Struct::Stream::resolve_enum(GlibcUtmp::ENTRY_TYPE, @_io.read_s4le)
+      @ut_type = Kaitai::Struct::Stream::resolve_enum(ENTRY_TYPE, @_io.read_s4le)
       @pid = @_io.read_u4le
       @line = (@_io.read_bytes(32)).force_encoding("UTF-8")
       @id = (@_io.read_bytes(4)).force_encoding("UTF-8")

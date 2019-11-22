@@ -437,21 +437,21 @@ sub _read {
 sub is_extensible {
     my ($self) = @_;
     return $self->{is_extensible} if ($self->{is_extensible});
-    $self->{is_extensible} = $self->w_format_tag() == $Wav::W_FORMAT_TAG_TYPE_EXTENSIBLE;
+    $self->{is_extensible} = $self->w_format_tag() == $W_FORMAT_TAG_TYPE_EXTENSIBLE;
     return $self->{is_extensible};
 }
 
 sub is_basic_pcm {
     my ($self) = @_;
     return $self->{is_basic_pcm} if ($self->{is_basic_pcm});
-    $self->{is_basic_pcm} = $self->w_format_tag() == $Wav::W_FORMAT_TAG_TYPE_PCM;
+    $self->{is_basic_pcm} = $self->w_format_tag() == $W_FORMAT_TAG_TYPE_PCM;
     return $self->{is_basic_pcm};
 }
 
 sub is_basic_float {
     my ($self) = @_;
     return $self->{is_basic_float} if ($self->{is_basic_float});
-    $self->{is_basic_float} = $self->w_format_tag() == $Wav::W_FORMAT_TAG_TYPE_IEEE_FLOAT;
+    $self->{is_basic_float} = $self->w_format_tag() == $W_FORMAT_TAG_TYPE_IEEE_FLOAT;
     return $self->{is_basic_float};
 }
 

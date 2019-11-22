@@ -200,8 +200,8 @@ class S3m < Kaitai::Struct::Struct
     def _read
       @size = @_io.read_u2le
       @_raw_body = @_io.read_bytes((size - 2))
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = PatternCells.new(_io__raw_body, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = PatternCells.new(io, self, @_root)
       self
     end
     attr_reader :size

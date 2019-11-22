@@ -177,6 +177,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title=".wad file format of id Tech 1 parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".wad file format of id Tech 1 parsing C# library">C#</a></li>
                 
                 
@@ -492,7 +497,7 @@ class DoomWad(KaitaiStruct):
             self.floor_flat = (self._io.read_bytes(8)).decode(u&quot;ASCII&quot;)
             self.ceil_flat = (self._io.read_bytes(8)).decode(u&quot;ASCII&quot;)
             self.light = self._io.read_s2le()
-            self.special_type = KaitaiStream.resolve_enum(self._root.Sector.SpecialSector, self._io.read_u2le())
+            self.special_type = self._root.Sector.SpecialSector(self._io.read_u2le())
             self.tag = self._io.read_u2le()
 
 
@@ -583,40 +588,40 @@ class DoomWad(KaitaiStruct):
             _on = self.name
             if _on == u&quot;SECTORS&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
-                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Sectors(_io__raw__m_contents, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Sectors(io, self, self._root)
             elif _on == u&quot;TEXTURE1&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
-                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Texture12(_io__raw__m_contents, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Texture12(io, self, self._root)
             elif _on == u&quot;VERTEXES&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
-                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Vertexes(_io__raw__m_contents, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Vertexes(io, self, self._root)
             elif _on == u&quot;BLOCKMAP&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
-                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Blockmap(_io__raw__m_contents, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Blockmap(io, self, self._root)
             elif _on == u&quot;PNAMES&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
-                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Pnames(_io__raw__m_contents, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Pnames(io, self, self._root)
             elif _on == u&quot;TEXTURE2&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
-                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Texture12(_io__raw__m_contents, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Texture12(io, self, self._root)
             elif _on == u&quot;THINGS&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
-                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Things(_io__raw__m_contents, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Things(io, self, self._root)
             elif _on == u&quot;LINEDEFS&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
-                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Linedefs(_io__raw__m_contents, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Linedefs(io, self, self._root)
             elif _on == u&quot;SIDEDEFS&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
-                _io__raw__m_contents = KaitaiStream(BytesIO(self._raw__m_contents))
-                self._m_contents = self._root.Sidedefs(_io__raw__m_contents, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Sidedefs(io, self, self._root)
             else:
                 self._m_contents = io.read_bytes(self.size)
             io.seek(_pos)

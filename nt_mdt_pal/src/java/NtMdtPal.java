@@ -33,12 +33,12 @@ public class NtMdtPal extends KaitaiStruct {
     private void _read() {
         this.signature = this._io.ensureFixedContents(new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 });
         this.count = this._io.readU4be();
-        meta = new ArrayList<Meta>(((Number) (count())).intValue());
+        meta = new ArrayList<Meta>((int) (count()));
         for (int i = 0; i < count(); i++) {
             this.meta.add(new Meta(this._io, this, _root));
         }
         this.something2 = this._io.readBytes(1);
-        tables = new ArrayList<ColTable>(((Number) (count())).intValue());
+        tables = new ArrayList<ColTable>((int) (count()));
         for (int i = 0; i < count(); i++) {
             this.tables.add(new ColTable(this._io, this, _root, i));
         }
@@ -176,7 +176,7 @@ public class NtMdtPal extends KaitaiStruct {
             this.unkn = this._io.readU1();
             this.title = new String(this._io.readBytes(_root.meta().get((int) index()).nameSize()), Charset.forName("UTF-16"));
             this.unkn1 = this._io.readU2be();
-            colors = new ArrayList<Color>(((Number) ((_root.meta().get((int) index()).colorsCount() - 1))).intValue());
+            colors = new ArrayList<Color>((int) ((_root.meta().get((int) index()).colorsCount() - 1)));
             for (int i = 0; i < (_root.meta().get((int) index()).colorsCount() - 1); i++) {
                 this.colors.add(new Color(this._io, this, _root));
             }

@@ -19,18 +19,18 @@ class PacketPpi extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_header = new \PacketPpi\PacketPpiHeader($this->_io, $this, $this->_root);
         $this->_m__raw_fields = $this->_io->readBytes(($this->header()->pphLen() - 8));
-        $_io__raw_fields = new \Kaitai\Struct\Stream($this->_m__raw_fields);
-        $this->_m_fields = new \PacketPpi\PacketPpiFields($_io__raw_fields, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_fields);
+        $this->_m_fields = new \PacketPpi\PacketPpiFields($io, $this, $this->_root);
         switch ($this->header()->pphDlt()) {
             case \PacketPpi\Linktype::PPI:
                 $this->_m__raw_body = $this->_io->readBytesFull();
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \PacketPpi($_io__raw_body);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \PacketPpi($io);
                 break;
             case \PacketPpi\Linktype::ETHERNET:
                 $this->_m__raw_body = $this->_io->readBytesFull();
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \EthernetFrame($_io__raw_body);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \EthernetFrame($io);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytesFull();
@@ -238,18 +238,18 @@ class PacketPpiField extends \Kaitai\Struct\Struct {
         switch ($this->pfhType()) {
             case \PacketPpi\PfhType::RADIO_802_11_COMMON:
                 $this->_m__raw_body = $this->_io->readBytes($this->pfhDatalen());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \PacketPpi\Radio80211CommonBody($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \PacketPpi\Radio80211CommonBody($io, $this, $this->_root);
                 break;
             case \PacketPpi\PfhType::RADIO_802_11N_MAC_EXT:
                 $this->_m__raw_body = $this->_io->readBytes($this->pfhDatalen());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \PacketPpi\Radio80211nMacExtBody($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \PacketPpi\Radio80211nMacExtBody($io, $this, $this->_root);
                 break;
             case \PacketPpi\PfhType::RADIO_802_11N_MAC_PHY_EXT:
                 $this->_m__raw_body = $this->_io->readBytes($this->pfhDatalen());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \PacketPpi\Radio80211nMacPhyExtBody($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \PacketPpi\Radio80211nMacPhyExtBody($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->pfhDatalen());

@@ -164,8 +164,8 @@ class Lvm2 < Kaitai::Struct::Struct
               _pos = @_io.pos
               @_io.seek(offset)
               @_raw_data = @_io.read_bytes(size)
-              _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-              @data = MetadataArea.new(_io__raw_data, self, @_root)
+              io = Kaitai::Struct::Stream.new(@_raw_data)
+              @data = MetadataArea.new(io, self, @_root)
               @_io.seek(_pos)
             end
             @data

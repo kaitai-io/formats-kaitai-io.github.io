@@ -28,8 +28,8 @@ class SaintsRow2VppPc extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->ofsFilenames());
         $this->_m__raw_filenames = $this->_io->readBytes($this->lenFilenames());
-        $_io__raw_filenames = new \Kaitai\Struct\Stream($this->_m__raw_filenames);
-        $this->_m_filenames = new \SaintsRow2VppPc\Strings($_io__raw_filenames, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_filenames);
+        $this->_m_filenames = new \SaintsRow2VppPc\Strings($io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_filenames;
     }
@@ -47,8 +47,8 @@ class SaintsRow2VppPc extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek(2048);
         $this->_m__raw_files = $this->_io->readBytes($this->lenOffsets());
-        $_io__raw_files = new \Kaitai\Struct\Stream($this->_m__raw_files);
-        $this->_m_files = new \SaintsRow2VppPc\Offsets($_io__raw_files, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_files);
+        $this->_m_files = new \SaintsRow2VppPc\Offsets($io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_files;
     }
@@ -66,8 +66,8 @@ class SaintsRow2VppPc extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->ofsExtensions());
         $this->_m__raw_extensions = $this->_io->readBytes($this->lenExtensions());
-        $_io__raw_extensions = new \Kaitai\Struct\Stream($this->_m__raw_extensions);
-        $this->_m_extensions = new \SaintsRow2VppPc\Strings($_io__raw_extensions, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_extensions);
+        $this->_m_extensions = new \SaintsRow2VppPc\Strings($io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_extensions;
     }

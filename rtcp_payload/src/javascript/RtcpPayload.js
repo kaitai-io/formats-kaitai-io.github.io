@@ -214,15 +214,10 @@ var RtcpPayload = (function() {
       this.payloadType = this._io.readU1();
       this.length = this._io.readU2be();
       switch (this.payloadType) {
-      case RtcpPayload.PayloadType.SR:
+      case RtcpPayload.PayloadType.SDES:
         this._raw_body = this._io.readBytes((4 * this.length));
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SrPacket(_io__raw_body, this, this._root);
-        break;
-      case RtcpPayload.PayloadType.PSFB:
-        this._raw_body = this._io.readBytes((4 * this.length));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new PsfbPacket(_io__raw_body, this, this._root);
+        this.body = new SdesPacket(_io__raw_body, this, this._root);
         break;
       case RtcpPayload.PayloadType.RR:
         this._raw_body = this._io.readBytes((4 * this.length));
@@ -234,10 +229,15 @@ var RtcpPayload = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new RtpfbPacket(_io__raw_body, this, this._root);
         break;
-      case RtcpPayload.PayloadType.SDES:
+      case RtcpPayload.PayloadType.PSFB:
         this._raw_body = this._io.readBytes((4 * this.length));
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SdesPacket(_io__raw_body, this, this._root);
+        this.body = new PsfbPacket(_io__raw_body, this, this._root);
+        break;
+      case RtcpPayload.PayloadType.SR:
+        this._raw_body = this._io.readBytes((4 * this.length));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SrPacket(_io__raw_body, this, this._root);
         break;
       default:
         this.body = this._io.readBytes((4 * this.length));

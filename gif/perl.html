@@ -185,6 +185,11 @@ metainformation or image data.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="GIF (Graphics Interchange Format) image file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="GIF (Graphics Interchange Format) image file parsing C# library">C#</a></li>
                 
                 
@@ -311,7 +316,7 @@ sub _read {
     do {
         $_ = Gif::Block-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
         push @{$self-&gt;{blocks}}, $_;
-    } until ( (($self-&gt;_io()-&gt;is_eof()) || ($_-&gt;block_type() == $Gif::BLOCK_TYPE_END_OF_FILE)) );
+    } until ( (($self-&gt;_io()-&gt;is_eof()) || ($_-&gt;block_type() == $BLOCK_TYPE_END_OF_FILE)) );
 }
 
 sub hdr {
@@ -652,10 +657,10 @@ sub _read {
 
     $self-&gt;{block_type} = $self-&gt;{_io}-&gt;read_u1();
     my $_on = $self-&gt;block_type();
-    if ($_on == $Gif::BLOCK_TYPE_EXTENSION) {
+    if ($_on == $BLOCK_TYPE_EXTENSION) {
         $self-&gt;{body} = Gif::Extension-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Gif::BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR) {
+    elsif ($_on == $BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR) {
         $self-&gt;{body} = Gif::LocalImageDescriptor-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
 }
@@ -997,13 +1002,13 @@ sub _read {
 
     $self-&gt;{label} = $self-&gt;{_io}-&gt;read_u1();
     my $_on = $self-&gt;label();
-    if ($_on == $Gif::EXTENSION_LABEL_APPLICATION) {
+    if ($_on == $EXTENSION_LABEL_APPLICATION) {
         $self-&gt;{body} = Gif::ExtApplication-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Gif::EXTENSION_LABEL_COMMENT) {
+    elsif ($_on == $EXTENSION_LABEL_COMMENT) {
         $self-&gt;{body} = Gif::Subblocks-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Gif::EXTENSION_LABEL_GRAPHIC_CONTROL) {
+    elsif ($_on == $EXTENSION_LABEL_GRAPHIC_CONTROL) {
         $self-&gt;{body} = Gif::ExtGraphicControl-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
     else {

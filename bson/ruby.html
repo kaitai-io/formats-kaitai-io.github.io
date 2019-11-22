@@ -291,8 +291,8 @@ class Bson &lt; Kaitai::Struct::Struct
   def _read
     @len = @_io.read_s4le
     @_raw_fields = @_io.read_bytes((len - 5))
-    _io__raw_fields = Kaitai::Struct::Stream.new(@_raw_fields)
-    @fields = ElementsList.new(_io__raw_fields, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_fields)
+    @fields = ElementsList.new(io, self, @_root)
     @terminator = @_io.ensure_fixed_contents([0].pack(&#39;C*&#39;))
     self
   end
@@ -339,8 +339,8 @@ class Bson &lt; Kaitai::Struct::Struct
       case subtype
       when :subtype_byte_array_deprecated
         @_raw_content = @_io.read_bytes(len)
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = ByteArrayDeprecated.new(_io__raw_content, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_content)
+        @content = ByteArrayDeprecated.new(io, self, @_root)
       else
         @content = @_io.read_bytes(len)
       end
@@ -452,40 +452,40 @@ class Bson &lt; Kaitai::Struct::Struct
       @type_byte = Kaitai::Struct::Stream::resolve_enum(BSON_TYPE, @_io.read_u1)
       @name = Cstring.new(@_io, self, @_root)
       case type_byte
-      when :bson_type_code_with_scope
-        @content = CodeWithScope.new(@_io, self, @_root)
-      when :bson_type_reg_ex
-        @content = RegEx.new(@_io, self, @_root)
       when :bson_type_number_double
         @content = @_io.read_f8le
-      when :bson_type_symbol
-        @content = String.new(@_io, self, @_root)
-      when :bson_type_timestamp
-        @content = Timestamp.new(@_io, self, @_root)
-      when :bson_type_number_int
-        @content = @_io.read_s4le
-      when :bson_type_document
-        @content = Bson.new(@_io)
+      when :bson_type_code_with_scope
+        @content = CodeWithScope.new(@_io, self, @_root)
       when :bson_type_object_id
         @content = ObjectId.new(@_io, self, @_root)
-      when :bson_type_javascript
-        @content = String.new(@_io, self, @_root)
-      when :bson_type_utc_datetime
-        @content = @_io.read_s8le
-      when :bson_type_boolean
-        @content = @_io.read_u1
-      when :bson_type_number_long
-        @content = @_io.read_s8le
-      when :bson_type_bin_data
-        @content = BinData.new(@_io, self, @_root)
       when :bson_type_string
         @content = String.new(@_io, self, @_root)
+      when :bson_type_reg_ex
+        @content = RegEx.new(@_io, self, @_root)
+      when :bson_type_number_decimal
+        @content = F16.new(@_io, self, @_root)
+      when :bson_type_utc_datetime
+        @content = @_io.read_s8le
+      when :bson_type_number_long
+        @content = @_io.read_s8le
+      when :bson_type_timestamp
+        @content = Timestamp.new(@_io, self, @_root)
       when :bson_type_db_pointer
         @content = DbPointer.new(@_io, self, @_root)
       when :bson_type_array
         @content = Bson.new(@_io)
-      when :bson_type_number_decimal
-        @content = F16.new(@_io, self, @_root)
+      when :bson_type_javascript
+        @content = String.new(@_io, self, @_root)
+      when :bson_type_boolean
+        @content = @_io.read_u1
+      when :bson_type_document
+        @content = Bson.new(@_io)
+      when :bson_type_symbol
+        @content = String.new(@_io, self, @_root)
+      when :bson_type_number_int
+        @content = @_io.read_s4le
+      when :bson_type_bin_data
+        @content = BinData.new(@_io, self, @_root)
       end
       self
     end

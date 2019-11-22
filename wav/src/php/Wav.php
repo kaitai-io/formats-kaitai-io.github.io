@@ -24,8 +24,8 @@ class Wav extends \Kaitai\Struct\Struct {
         $this->_m_fileSize = $this->_io->readU4le();
         $this->_m_waveId = $this->_io->ensureFixedContents("\x57\x41\x56\x45");
         $this->_m__raw_chunks = $this->_io->readBytes(($this->fileSize() - 5));
-        $_io__raw_chunks = new \Kaitai\Struct\Stream($this->_m__raw_chunks);
-        $this->_m_chunks = new \Wav\ChunksType($_io__raw_chunks, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_chunks);
+        $this->_m_chunks = new \Wav\ChunksType($io, $this, $this->_root);
     }
     protected $_m_formatChunk;
     public function formatChunk() {
@@ -369,23 +369,23 @@ class ChunkType extends \Kaitai\Struct\Struct {
         switch ($this->chunkId()) {
             case 1684108385:
                 $this->_m__raw_data = $this->_io->readBytes($this->len());
-                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Wav\DataChunkType($_io__raw_data, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Wav\DataChunkType($io, $this, $this->_root);
                 break;
             case 1668637984:
                 $this->_m__raw_data = $this->_io->readBytes($this->len());
-                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Wav\CueChunkType($_io__raw_data, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Wav\CueChunkType($io, $this, $this->_root);
                 break;
             case 1650817140:
                 $this->_m__raw_data = $this->_io->readBytes($this->len());
-                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Wav\BextChunkType($_io__raw_data, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Wav\BextChunkType($io, $this, $this->_root);
                 break;
             case 1718449184:
                 $this->_m__raw_data = $this->_io->readBytes($this->len());
-                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Wav\FormatChunkType($_io__raw_data, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Wav\FormatChunkType($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_data = $this->_io->readBytes($this->len());

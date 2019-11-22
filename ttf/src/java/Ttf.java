@@ -37,7 +37,7 @@ public class Ttf extends KaitaiStruct {
     }
     private void _read() {
         this.offsetTable = new OffsetTable(this._io, this, _root);
-        directoryTable = new ArrayList<DirTableEntry>(((Number) (offsetTable().numTables())).intValue());
+        directoryTable = new ArrayList<DirTableEntry>((int) (offsetTable().numTables()));
         for (int i = 0; i < offsetTable().numTables(); i++) {
             this.directoryTable.add(new DirTableEntry(this._io, this, _root));
         }
@@ -96,7 +96,7 @@ public class Ttf extends KaitaiStruct {
             }
             private void _read() {
                 this.numberOfGlyphs = this._io.readU2be();
-                glyphNameIndex = new ArrayList<Integer>(((Number) (numberOfGlyphs())).intValue());
+                glyphNameIndex = new ArrayList<Integer>((int) (numberOfGlyphs()));
                 for (int i = 0; i < numberOfGlyphs(); i++) {
                     this.glyphNameIndex.add(this._io.readU2be());
                 }
@@ -264,7 +264,7 @@ public class Ttf extends KaitaiStruct {
             this.formatSelector = this._io.readU2be();
             this.numNameRecords = this._io.readU2be();
             this.ofsStrings = this._io.readU2be();
-            nameRecords = new ArrayList<NameRecord>(((Number) (numNameRecords())).intValue());
+            nameRecords = new ArrayList<NameRecord>((int) (numNameRecords()));
             for (int i = 0; i < numNameRecords(); i++) {
                 this.nameRecords.add(new NameRecord(this._io, this, _root));
             }
@@ -632,7 +632,7 @@ public class Ttf extends KaitaiStruct {
         private void _read() {
             this.version = this._io.readU2be();
             this.subtableCount = this._io.readU2be();
-            subtables = new ArrayList<Subtable>(((Number) (subtableCount())).intValue());
+            subtables = new ArrayList<Subtable>((int) (subtableCount()));
             for (int i = 0; i < subtableCount(); i++) {
                 this.subtables.add(new Subtable(this._io, this, _root));
             }
@@ -694,7 +694,7 @@ public class Ttf extends KaitaiStruct {
                     this.searchRange = this._io.readU2be();
                     this.entrySelector = this._io.readU2be();
                     this.rangeShift = this._io.readU2be();
-                    kerningPairs = new ArrayList<KerningPair>(((Number) (pairCount())).intValue());
+                    kerningPairs = new ArrayList<KerningPair>((int) (pairCount()));
                     for (int i = 0; i < pairCount(); i++) {
                         this.kerningPairs.add(new KerningPair(this._io, this, _root));
                     }
@@ -1963,13 +1963,13 @@ public class Ttf extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                endPtsOfContours = new ArrayList<Integer>(((Number) (_parent().numberOfContours())).intValue());
+                endPtsOfContours = new ArrayList<Integer>((int) (_parent().numberOfContours()));
                 for (int i = 0; i < _parent().numberOfContours(); i++) {
                     this.endPtsOfContours.add(this._io.readU2be());
                 }
                 this.instructionLength = this._io.readU2be();
                 this.instructions = this._io.readBytes(instructionLength());
-                flags = new ArrayList<Flag>(((Number) (pointCount())).intValue());
+                flags = new ArrayList<Flag>((int) (pointCount()));
                 for (int i = 0; i < pointCount(); i++) {
                     this.flags.add(new Flag(this._io, this, _root));
                 }
@@ -2303,7 +2303,7 @@ public class Ttf extends KaitaiStruct {
         private void _read() {
             this.versionNumber = this._io.readU2be();
             this.numberOfEncodingTables = this._io.readU2be();
-            tables = new ArrayList<SubtableHeader>(((Number) (numberOfEncodingTables())).intValue());
+            tables = new ArrayList<SubtableHeader>((int) (numberOfEncodingTables()));
             for (int i = 0; i < numberOfEncodingTables(); i++) {
                 this.tables.add(new SubtableHeader(this._io, this, _root));
             }
@@ -2394,42 +2394,35 @@ public class Ttf extends KaitaiStruct {
                 this.format = SubtableFormat.byId(this._io.readU2be());
                 this.length = this._io.readU2be();
                 this.version = this._io.readU2be();
-                {
-                    SubtableFormat on = format();
-                    if (on != null) {
-                        switch (format()) {
-                        case BYTE_ENCODING_TABLE: {
-                            this._raw_value = this._io.readBytes((length() - 6));
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new ByteEncodingTable(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case SEGMENT_MAPPING_TO_DELTA_VALUES: {
-                            this._raw_value = this._io.readBytes((length() - 6));
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new SegmentMappingToDeltaValues(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case HIGH_BYTE_MAPPING_THROUGH_TABLE: {
-                            this._raw_value = this._io.readBytes((length() - 6));
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new HighByteMappingThroughTable(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case TRIMMED_TABLE_MAPPING: {
-                            this._raw_value = this._io.readBytes((length() - 6));
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new TrimmedTableMapping(_io__raw_value, this, _root);
-                            break;
-                        }
-                        default: {
-                            this.value = this._io.readBytes((length() - 6));
-                            break;
-                        }
-                        }
-                    } else {
-                        this.value = this._io.readBytes((length() - 6));
-                    }
+                switch (format()) {
+                case BYTE_ENCODING_TABLE: {
+                    this._raw_value = this._io.readBytes((length() - 6));
+                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                    this.value = new ByteEncodingTable(_io__raw_value, this, _root);
+                    break;
+                }
+                case HIGH_BYTE_MAPPING_THROUGH_TABLE: {
+                    this._raw_value = this._io.readBytes((length() - 6));
+                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                    this.value = new HighByteMappingThroughTable(_io__raw_value, this, _root);
+                    break;
+                }
+                case TRIMMED_TABLE_MAPPING: {
+                    this._raw_value = this._io.readBytes((length() - 6));
+                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                    this.value = new TrimmedTableMapping(_io__raw_value, this, _root);
+                    break;
+                }
+                case SEGMENT_MAPPING_TO_DELTA_VALUES: {
+                    this._raw_value = this._io.readBytes((length() - 6));
+                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
+                    this.value = new SegmentMappingToDeltaValues(_io__raw_value, this, _root);
+                    break;
+                }
+                default: {
+                    this.value = this._io.readBytes((length() - 6));
+                    break;
+                }
                 }
             }
             public static class ByteEncodingTable extends KaitaiStruct {
@@ -2481,7 +2474,7 @@ public class Ttf extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    subHeaderKeys = new ArrayList<Integer>(((Number) (256)).intValue());
+                    subHeaderKeys = new ArrayList<Integer>((int) (256));
                     for (int i = 0; i < 256; i++) {
                         this.subHeaderKeys.add(this._io.readU2be());
                     }
@@ -2517,20 +2510,20 @@ public class Ttf extends KaitaiStruct {
                     this.searchRange = this._io.readU2be();
                     this.entrySelector = this._io.readU2be();
                     this.rangeShift = this._io.readU2be();
-                    endCount = new ArrayList<Integer>(((Number) (segCount())).intValue());
+                    endCount = new ArrayList<Integer>((int) (segCount()));
                     for (int i = 0; i < segCount(); i++) {
                         this.endCount.add(this._io.readU2be());
                     }
                     this.reservedPad = this._io.readU2be();
-                    startCount = new ArrayList<Integer>(((Number) (segCount())).intValue());
+                    startCount = new ArrayList<Integer>((int) (segCount()));
                     for (int i = 0; i < segCount(); i++) {
                         this.startCount.add(this._io.readU2be());
                     }
-                    idDelta = new ArrayList<Integer>(((Number) (segCount())).intValue());
+                    idDelta = new ArrayList<Integer>((int) (segCount()));
                     for (int i = 0; i < segCount(); i++) {
                         this.idDelta.add(this._io.readU2be());
                     }
-                    idRangeOffset = new ArrayList<Integer>(((Number) (segCount())).intValue());
+                    idRangeOffset = new ArrayList<Integer>((int) (segCount()));
                     for (int i = 0; i < segCount(); i++) {
                         this.idRangeOffset.add(this._io.readU2be());
                     }
@@ -2598,7 +2591,7 @@ public class Ttf extends KaitaiStruct {
                 private void _read() {
                     this.firstCode = this._io.readU2be();
                     this.entryCount = this._io.readU2be();
-                    glyphIdArray = new ArrayList<Integer>(((Number) (entryCount())).intValue());
+                    glyphIdArray = new ArrayList<Integer>((int) (entryCount()));
                     for (int i = 0; i < entryCount(); i++) {
                         this.glyphIdArray.add(this._io.readU2be());
                     }

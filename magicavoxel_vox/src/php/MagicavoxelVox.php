@@ -40,28 +40,28 @@ class Chunk extends \Kaitai\Struct\Struct {
             switch ($this->chunkId()) {
                 case \MagicavoxelVox\ChunkType::SIZE:
                     $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
-                    $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
-                    $this->_m_chunkContent = new \MagicavoxelVox\Size($_io__raw_chunkContent, $this, $this->_root);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
+                    $this->_m_chunkContent = new \MagicavoxelVox\Size($io, $this, $this->_root);
                     break;
                 case \MagicavoxelVox\ChunkType::MATT:
                     $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
-                    $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
-                    $this->_m_chunkContent = new \MagicavoxelVox\Matt($_io__raw_chunkContent, $this, $this->_root);
-                    break;
-                case \MagicavoxelVox\ChunkType::RGBA:
-                    $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
-                    $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
-                    $this->_m_chunkContent = new \MagicavoxelVox\Rgba($_io__raw_chunkContent, $this, $this->_root);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
+                    $this->_m_chunkContent = new \MagicavoxelVox\Matt($io, $this, $this->_root);
                     break;
                 case \MagicavoxelVox\ChunkType::XYZI:
                     $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
-                    $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
-                    $this->_m_chunkContent = new \MagicavoxelVox\Xyzi($_io__raw_chunkContent, $this, $this->_root);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
+                    $this->_m_chunkContent = new \MagicavoxelVox\Xyzi($io, $this, $this->_root);
                     break;
                 case \MagicavoxelVox\ChunkType::PACK:
                     $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
-                    $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
-                    $this->_m_chunkContent = new \MagicavoxelVox\Pack($_io__raw_chunkContent, $this, $this->_root);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
+                    $this->_m_chunkContent = new \MagicavoxelVox\Pack($io, $this, $this->_root);
+                    break;
+                case \MagicavoxelVox\ChunkType::RGBA:
+                    $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
+                    $this->_m_chunkContent = new \MagicavoxelVox\Rgba($io, $this, $this->_root);
                     break;
                 default:
                     $this->_m_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());

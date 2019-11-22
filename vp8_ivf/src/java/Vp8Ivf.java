@@ -45,7 +45,7 @@ public class Vp8Ivf extends KaitaiStruct {
         this.timescale = this._io.readU4le();
         this.numFrames = this._io.readU4le();
         this.unused = this._io.readU4le();
-        imageData = new ArrayList<Blocks>(((Number) (numFrames())).intValue());
+        imageData = new ArrayList<Blocks>((int) (numFrames()));
         for (int i = 0; i < numFrames(); i++) {
             this.imageData.add(new Blocks(this._io, this, _root));
         }

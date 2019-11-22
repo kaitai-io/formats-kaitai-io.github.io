@@ -164,6 +164,11 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C# library">C#</a></li>
                 
                 
@@ -552,24 +557,17 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
             this.tsDelta = this._io.readU8le();
             this.origLen = this._io.readU4le();
             this.incLen = this._io.readU4le();
-            {
-                Linktype on = _root.macType();
-                if (on != null) {
-                    switch (_root.macType()) {
-                    case ETHERNET: {
-                        this._raw_body = this._io.readBytes(incLen());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new EthernetFrame(_io__raw_body);
-                        break;
-                    }
-                    default: {
-                        this.body = this._io.readBytes(incLen());
-                        break;
-                    }
-                    }
-                } else {
-                    this.body = this._io.readBytes(incLen());
-                }
+            switch (_root.macType()) {
+            case ETHERNET: {
+                this._raw_body = this._io.readBytes(incLen());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new EthernetFrame(_io__raw_body);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(incLen());
+                break;
+            }
             }
         }
         private long tsDelta;

@@ -310,7 +310,7 @@ public class NtMdt extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            data = new ArrayList<Integer>(((Number) (16)).intValue());
+            data = new ArrayList<Integer>((int) (16));
             for (int i = 0; i < 16; i++) {
                 this.data.add(this._io.readU1());
             }
@@ -342,7 +342,7 @@ public class NtMdt extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            frames = new ArrayList<Frame>(((Number) ((_root.lastFrame() + 1))).intValue());
+            frames = new ArrayList<Frame>((int) ((_root.lastFrame() + 1)));
             for (int i = 0; i < (_root.lastFrame() + 1); i++) {
                 this.frames.add(new Frame(this._io, this, _root));
             }
@@ -424,11 +424,11 @@ public class NtMdt extends KaitaiStruct {
                 if (fmNdots() > 0) {
                     this.coordHeader = new DotsHeader(this._io, this, _root);
                 }
-                coordinates = new ArrayList<DotsData>(((Number) (fmNdots())).intValue());
+                coordinates = new ArrayList<DotsData>((int) (fmNdots()));
                 for (int i = 0; i < fmNdots(); i++) {
                     this.coordinates.add(new DotsData(this._io, this, _root));
                 }
-                data = new ArrayList<DataLinez>(((Number) (fmNdots())).intValue());
+                data = new ArrayList<DataLinez>((int) (fmNdots()));
                 for (int i = 0; i < fmNdots(); i++) {
                     this.data.add(new DataLinez(this._io, this, _root, i));
                 }
@@ -560,11 +560,11 @@ public class NtMdt extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    forward = new ArrayList<Short>(((Number) (_parent().coordinates().get((int) index()).forwardSize())).intValue());
+                    forward = new ArrayList<Short>((int) (_parent().coordinates().get((int) index()).forwardSize()));
                     for (int i = 0; i < _parent().coordinates().get((int) index()).forwardSize(); i++) {
                         this.forward.add(this._io.readS2le());
                     }
-                    backward = new ArrayList<Short>(((Number) (_parent().coordinates().get((int) index()).backwardSize())).intValue());
+                    backward = new ArrayList<Short>((int) (_parent().coordinates().get((int) index()).backwardSize()));
                     for (int i = 0; i < _parent().coordinates().get((int) index()).backwardSize(); i++) {
                         this.backward.add(this._io.readS2le());
                     }
@@ -617,48 +617,41 @@ public class NtMdt extends KaitaiStruct {
                 this.version = new Version(this._io, this, _root);
                 this.dateTime = new DateTime(this._io, this, _root);
                 this.varSize = this._io.readU2le();
-                {
-                    FrameType on = type();
-                    if (on != null) {
-                        switch (type()) {
-                        case MDA: {
-                            this._raw_frameData = this._io.readBytesFull();
-                            KaitaiStream _io__raw_frameData = new ByteBufferKaitaiStream(_raw_frameData);
-                            this.frameData = new FdMetaData(_io__raw_frameData, this, _root);
-                            break;
-                        }
-                        case CURVES_NEW: {
-                            this._raw_frameData = this._io.readBytesFull();
-                            KaitaiStream _io__raw_frameData = new ByteBufferKaitaiStream(_raw_frameData);
-                            this.frameData = new FdCurvesNew(_io__raw_frameData, this, _root);
-                            break;
-                        }
-                        case CURVES: {
-                            this._raw_frameData = this._io.readBytesFull();
-                            KaitaiStream _io__raw_frameData = new ByteBufferKaitaiStream(_raw_frameData);
-                            this.frameData = new FdSpectroscopy(_io__raw_frameData, this, _root);
-                            break;
-                        }
-                        case SPECTROSCOPY: {
-                            this._raw_frameData = this._io.readBytesFull();
-                            KaitaiStream _io__raw_frameData = new ByteBufferKaitaiStream(_raw_frameData);
-                            this.frameData = new FdSpectroscopy(_io__raw_frameData, this, _root);
-                            break;
-                        }
-                        case SCANNED: {
-                            this._raw_frameData = this._io.readBytesFull();
-                            KaitaiStream _io__raw_frameData = new ByteBufferKaitaiStream(_raw_frameData);
-                            this.frameData = new FdScanned(_io__raw_frameData, this, _root);
-                            break;
-                        }
-                        default: {
-                            this.frameData = this._io.readBytesFull();
-                            break;
-                        }
-                        }
-                    } else {
-                        this.frameData = this._io.readBytesFull();
-                    }
+                switch (type()) {
+                case SCANNED: {
+                    this._raw_frameData = this._io.readBytesFull();
+                    KaitaiStream _io__raw_frameData = new ByteBufferKaitaiStream(_raw_frameData);
+                    this.frameData = new FdScanned(_io__raw_frameData, this, _root);
+                    break;
+                }
+                case CURVES_NEW: {
+                    this._raw_frameData = this._io.readBytesFull();
+                    KaitaiStream _io__raw_frameData = new ByteBufferKaitaiStream(_raw_frameData);
+                    this.frameData = new FdCurvesNew(_io__raw_frameData, this, _root);
+                    break;
+                }
+                case MDA: {
+                    this._raw_frameData = this._io.readBytesFull();
+                    KaitaiStream _io__raw_frameData = new ByteBufferKaitaiStream(_raw_frameData);
+                    this.frameData = new FdMetaData(_io__raw_frameData, this, _root);
+                    break;
+                }
+                case SPECTROSCOPY: {
+                    this._raw_frameData = this._io.readBytesFull();
+                    KaitaiStream _io__raw_frameData = new ByteBufferKaitaiStream(_raw_frameData);
+                    this.frameData = new FdSpectroscopy(_io__raw_frameData, this, _root);
+                    break;
+                }
+                case CURVES: {
+                    this._raw_frameData = this._io.readBytesFull();
+                    KaitaiStream _io__raw_frameData = new ByteBufferKaitaiStream(_raw_frameData);
+                    this.frameData = new FdSpectroscopy(_io__raw_frameData, this, _root);
+                    break;
+                }
+                default: {
+                    this.frameData = this._io.readBytesFull();
+                    break;
+                }
                 }
             }
             private FrameType type;
@@ -711,15 +704,15 @@ public class NtMdt extends KaitaiStruct {
             }
             private void _read() {
                 this.blockCount = this._io.readU4le();
-                blocksHeaders = new ArrayList<BlockDescr>(((Number) (blockCount())).intValue());
+                blocksHeaders = new ArrayList<BlockDescr>((int) (blockCount()));
                 for (int i = 0; i < blockCount(); i++) {
                     this.blocksHeaders.add(new BlockDescr(this._io, this, _root));
                 }
-                blocksNames = new ArrayList<String>(((Number) (blockCount())).intValue());
+                blocksNames = new ArrayList<String>((int) (blockCount()));
                 for (int i = 0; i < blockCount(); i++) {
                     this.blocksNames.add(new String(this._io.readBytes(blocksHeaders().get((int) i).nameLen()), Charset.forName("UTF-8")));
                 }
-                blocksData = new ArrayList<byte[]>(((Number) (blockCount())).intValue());
+                blocksData = new ArrayList<byte[]>((int) (blockCount()));
                 for (int i = 0; i < blockCount(); i++) {
                     this.blocksData.add(this._io.readBytes(blocksHeaders().get((int) i).len()));
                 }
@@ -791,7 +784,7 @@ public class NtMdt extends KaitaiStruct {
             private void _read() {
                 this.headSize = this._io.readU4le();
                 this.totLen = this._io.readU4le();
-                guids = new ArrayList<Uuid>(((Number) (2)).intValue());
+                guids = new ArrayList<Uuid>((int) (2));
                 for (int i = 0; i < 2; i++) {
                     this.guids.add(new Uuid(this._io, this, _root));
                 }
@@ -811,11 +804,11 @@ public class NtMdt extends KaitaiStruct {
                 this.cellSize = this._io.readU4le();
                 this.nDimensions = this._io.readU4le();
                 this.nMesurands = this._io.readU4le();
-                dimensions = new ArrayList<Calibration>(((Number) (nDimensions())).intValue());
+                dimensions = new ArrayList<Calibration>((int) (nDimensions()));
                 for (int i = 0; i < nDimensions(); i++) {
                     this.dimensions.add(new Calibration(this._io, this, _root));
                 }
-                mesurands = new ArrayList<Calibration>(((Number) (nMesurands())).intValue());
+                mesurands = new ArrayList<Calibration>((int) (nMesurands()));
                 for (int i = 0; i < nMesurands(); i++) {
                     this.mesurands.add(new Calibration(this._io, this, _root));
                 }
@@ -869,54 +862,49 @@ public class NtMdt extends KaitaiStruct {
                         _read();
                     }
                     private void _read() {
-                        items = new ArrayList<Double>(((Number) (_parent()._parent().nMesurands())).intValue());
+                        items = new ArrayList<Double>((int) (_parent()._parent().nMesurands()));
                         for (int i = 0; i < _parent()._parent().nMesurands(); i++) {
-                            {
-                                DataType on = _parent()._parent().mesurands().get((int) i).dataType();
-                                if (on != null) {
-                                    switch (_parent()._parent().mesurands().get((int) i).dataType()) {
-                                    case UINT64: {
-                                        this.items.add((double) (this._io.readU8le()));
-                                        break;
-                                    }
-                                    case UINT8: {
-                                        this.items.add((double) (this._io.readU1()));
-                                        break;
-                                    }
-                                    case FLOAT32: {
-                                        this.items.add((double) (this._io.readF4le()));
-                                        break;
-                                    }
-                                    case INT8: {
-                                        this.items.add((double) (this._io.readS1()));
-                                        break;
-                                    }
-                                    case UINT16: {
-                                        this.items.add((double) (this._io.readU2le()));
-                                        break;
-                                    }
-                                    case INT64: {
-                                        this.items.add((double) (this._io.readS8le()));
-                                        break;
-                                    }
-                                    case UINT32: {
-                                        this.items.add((double) (this._io.readU4le()));
-                                        break;
-                                    }
-                                    case FLOAT64: {
-                                        this.items.add((double) (this._io.readF8le()));
-                                        break;
-                                    }
-                                    case INT16: {
-                                        this.items.add((double) (this._io.readS2le()));
-                                        break;
-                                    }
-                                    case INT32: {
-                                        this.items.add((double) (this._io.readS4le()));
-                                        break;
-                                    }
-                                    }
-                                }
+                            switch (_parent()._parent().mesurands().get((int) i).dataType()) {
+                            case UINT8: {
+                                this.items.add((double) (this._io.readU1()));
+                                break;
+                            }
+                            case INT8: {
+                                this.items.add((double) (this._io.readS1()));
+                                break;
+                            }
+                            case INT16: {
+                                this.items.add((double) (this._io.readS2le()));
+                                break;
+                            }
+                            case UINT64: {
+                                this.items.add((double) (this._io.readU8le()));
+                                break;
+                            }
+                            case FLOAT64: {
+                                this.items.add((double) (this._io.readF8le()));
+                                break;
+                            }
+                            case INT32: {
+                                this.items.add((double) (this._io.readS4le()));
+                                break;
+                            }
+                            case FLOAT32: {
+                                this.items.add((double) (this._io.readF4le()));
+                                break;
+                            }
+                            case UINT16: {
+                                this.items.add((double) (this._io.readU2le()));
+                                break;
+                            }
+                            case INT64: {
+                                this.items.add((double) (this._io.readS8le()));
+                                break;
+                            }
+                            case UINT32: {
+                                this.items.add((double) (this._io.readU4le()));
+                                break;
+                            }
                             }
                         }
                     }
@@ -1110,7 +1098,7 @@ public class NtMdt extends KaitaiStruct {
                 this.fmXres = this._io.readU2le();
                 this.fmYres = this._io.readU2le();
                 this.dots = new Dots(this._io, this, _root);
-                data = new ArrayList<Short>(((Number) ((fmXres() * fmYres()))).intValue());
+                data = new ArrayList<Short>((int) ((fmXres() * fmYres())));
                 for (int i = 0; i < (fmXres() * fmYres()); i++) {
                     this.data.add(this._io.readS2le());
                 }
@@ -1494,7 +1482,7 @@ public class NtMdt extends KaitaiStruct {
                 this.fmXres = this._io.readU2le();
                 this.fmYres = this._io.readU2le();
                 this.dots = new Dots(this._io, this, _root);
-                image = new ArrayList<Short>(((Number) ((fmXres() * fmYres()))).intValue());
+                image = new ArrayList<Short>((int) ((fmXres() * fmYres())));
                 for (int i = 0; i < (fmXres() * fmYres()); i++) {
                     this.image.add(this._io.readS2le());
                 }

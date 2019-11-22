@@ -153,6 +153,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title=".agg file format of Heroes of Might and Magic parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title=".agg file format of Heroes of Might and Magic parsing C# library">C#</a></li>
                 
                 
@@ -279,7 +284,7 @@ public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
     }
     private void _read() {
         this.numFiles = this._io.readU2le();
-        entries = new ArrayList&lt;Entry&gt;(((Number) (numFiles())).intValue());
+        entries = new ArrayList&lt;Entry&gt;((int) (numFiles()));
         for (int i = 0; i &lt; numFiles(); i++) {
             this.entries.add(new Entry(this._io, this, _root));
         }
@@ -367,8 +372,8 @@ public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
             return this.filenames;
         long _pos = this._io.pos();
         this._io.seek((entries().get(entries().size() - 1).offset() + entries().get(entries().size() - 1).size()));
-        this._raw_filenames = new ArrayList&lt;byte[]&gt;(((Number) (numFiles())).intValue());
-        filenames = new ArrayList&lt;Filename&gt;(((Number) (numFiles())).intValue());
+        this._raw_filenames = new ArrayList&lt;byte[]&gt;((int) (numFiles()));
+        filenames = new ArrayList&lt;Filename&gt;((int) (numFiles()));
         for (int i = 0; i &lt; numFiles(); i++) {
             this._raw_filenames.add(this._io.readBytes(15));
             KaitaiStream _io__raw_filenames = new ByteBufferKaitaiStream(_raw_filenames.get(_raw_filenames.size() - 1));

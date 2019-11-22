@@ -154,6 +154,11 @@ and thus is probably a poor choice for true cross-platform usage.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="xwd (X Window Dump) bitmap image parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="xwd (X Window Dump) bitmap image parsing C# library">C#</a></li>
                 
                 
@@ -248,15 +253,15 @@ class Xwd extends \Kaitai\Struct\Struct {
     private function _read() {
         $this-&gt;_m_headerSize = $this-&gt;_io-&gt;readU4be();
         $this-&gt;_m__raw_hdr = $this-&gt;_io-&gt;readBytes(($this-&gt;headerSize() - 4));
-        $_io__raw_hdr = new \Kaitai\Struct\Stream($this-&gt;_m__raw_hdr);
-        $this-&gt;_m_hdr = new \Xwd\Header($_io__raw_hdr, $this, $this-&gt;_root);
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_hdr);
+        $this-&gt;_m_hdr = new \Xwd\Header($io, $this, $this-&gt;_root);
         $this-&gt;_m__raw_colorMap = [];
         $this-&gt;_m_colorMap = [];
         $n = $this-&gt;hdr()-&gt;colorMapEntries();
         for ($i = 0; $i &lt; $n; $i++) {
             $this-&gt;_m__raw_colorMap[] = $this-&gt;_io-&gt;readBytes(12);
-            $_io__raw_colorMap = new \Kaitai\Struct\Stream(end($this-&gt;_m__raw_colorMap));
-            $this-&gt;_m_colorMap[] = new \Xwd\ColorMapEntry($_io__raw_colorMap, $this, $this-&gt;_root);
+            $io = new \Kaitai\Struct\Stream(end($this-&gt;_m__raw_colorMap));
+            $this-&gt;_m_colorMap[] = new \Xwd\ColorMapEntry($io, $this, $this-&gt;_root);
         }
     }
     protected $_m_headerSize;

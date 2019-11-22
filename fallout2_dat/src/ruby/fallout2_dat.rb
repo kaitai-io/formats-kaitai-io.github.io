@@ -75,7 +75,7 @@ class Fallout2Dat < Kaitai::Struct::Struct
 
     def _read
       @name = Pstr.new(@_io, self, @_root)
-      @flags = Kaitai::Struct::Stream::resolve_enum(Fallout2Dat::COMPRESSION, @_io.read_u1)
+      @flags = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u1)
       @size_unpacked = @_io.read_u4le
       @size_packed = @_io.read_u4le
       @offset = @_io.read_u4le

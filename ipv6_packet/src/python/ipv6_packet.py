@@ -7,7 +7,7 @@ from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, 
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-import protocol_body
+from protocol_body import ProtocolBody
 class Ipv6Packet(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -25,7 +25,7 @@ class Ipv6Packet(KaitaiStruct):
         self.hop_limit = self._io.read_u1()
         self.src_ipv6_addr = self._io.read_bytes(16)
         self.dst_ipv6_addr = self._io.read_bytes(16)
-        self.next_header = protocol_body.ProtocolBody(self.next_header_type, self._io)
+        self.next_header = ProtocolBody(self.next_header_type, self._io)
         self.rest = self._io.read_bytes_full()
 
 

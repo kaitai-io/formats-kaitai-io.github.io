@@ -22,8 +22,8 @@ class DsStore extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek(($this->buddyAllocatorHeader()->ofsBookkeepingInfoBlock() + 4));
         $this->_m__raw_buddyAllocatorBody = $this->_io->readBytes($this->buddyAllocatorHeader()->lenBookkeepingInfoBlock());
-        $_io__raw_buddyAllocatorBody = new \Kaitai\Struct\Stream($this->_m__raw_buddyAllocatorBody);
-        $this->_m_buddyAllocatorBody = new \DsStore\BuddyAllocatorBody($_io__raw_buddyAllocatorBody, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_buddyAllocatorBody);
+        $this->_m_buddyAllocatorBody = new \DsStore\BuddyAllocatorBody($io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_buddyAllocatorBody;
     }
@@ -269,8 +269,8 @@ class MasterBlockRef extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->_parent()->blockAddresses()[$this->_parent()->directoryEntries()[$this->idx()]->blockId()]->offset());
         $this->_m__raw_masterBlock = $this->_io->readBytes($this->_parent()->blockAddresses()[$this->_parent()->directoryEntries()[$this->idx()]->blockId()]->size());
-        $_io__raw_masterBlock = new \Kaitai\Struct\Stream($this->_m__raw_masterBlock);
-        $this->_m_masterBlock = new \DsStore\MasterBlockRef\MasterBlock($_io__raw_masterBlock, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_masterBlock);
+        $this->_m_masterBlock = new \DsStore\MasterBlockRef\MasterBlock($io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_masterBlock;
     }

@@ -673,53 +673,53 @@ sub _read {
     $self-&gt;{value_type} = $self-&gt;{_io}-&gt;read_bits_int(5);
     $self-&gt;{_io}-&gt;align_to_byte();
     my $_on = $self-&gt;value_type();
-    if ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_INT) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_s4le();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_ANNOTATION) {
-        $self-&gt;{value} = Dex::EncodedAnnotation-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_LONG) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_s8le();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_METHOD_HANDLE) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_BYTE) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_s1();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_ARRAY) {
-        $self-&gt;{value} = Dex::EncodedArray-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_METHOD_TYPE) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_SHORT) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_s2le();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_METHOD) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_DOUBLE) {
+    if ($_on == $VALUE_TYPE_ENUM_DOUBLE) {
         $self-&gt;{value} = $self-&gt;{_io}-&gt;read_f8le();
     }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_FLOAT) {
+    elsif ($_on == $VALUE_TYPE_ENUM_ANNOTATION) {
+        $self-&gt;{value} = Dex::EncodedAnnotation-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_TYPE) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_CHAR) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u2le();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_METHOD_HANDLE) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_ARRAY) {
+        $self-&gt;{value} = Dex::EncodedArray-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_BYTE) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_s1();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_METHOD) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_METHOD_TYPE) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_SHORT) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_s2le();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_STRING) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_INT) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_s4le();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_FIELD) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_LONG) {
+        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_s8le();
+    }
+    elsif ($_on == $VALUE_TYPE_ENUM_FLOAT) {
         $self-&gt;{value} = $self-&gt;{_io}-&gt;read_f4le();
     }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_TYPE) {
+    elsif ($_on == $VALUE_TYPE_ENUM_ENUM) {
         $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_ENUM) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_FIELD) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_STRING) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4le();
-    }
-    elsif ($_on == $Dex::EncodedValue::VALUE_TYPE_ENUM_CHAR) {
-        $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u2le();
     }
 }
 

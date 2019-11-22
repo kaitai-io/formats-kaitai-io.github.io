@@ -9,17 +9,38 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="dst_mac_pos">0</TD><TD PORT="dst_mac_size">6</TD><TD></TD><TD PORT="dst_mac_type">dst_mac</TD></TR>
 			<TR><TD PORT="src_mac_pos">6</TD><TD PORT="src_mac_size">6</TD><TD></TD><TD PORT="src_mac_type">src_mac</TD></TR>
-			<TR><TD PORT="ether_type_pos">12</TD><TD PORT="ether_type_size">2</TD><TD>u2be→EtherTypeEnum</TD><TD PORT="ether_type_type">ether_type</TD></TR>
-			<TR><TD PORT="body_pos">14</TD><TD PORT="body_size">...</TD><TD>switch (ether_type)</TD><TD PORT="body_type">body</TD></TR>
+			<TR><TD PORT="ether_type_1_pos">12</TD><TD PORT="ether_type_1_size">2</TD><TD>u2be→EtherTypeEnum</TD><TD PORT="ether_type_1_type">ether_type_1</TD></TR>
+			<TR><TD PORT="tci_pos">14</TD><TD PORT="tci_size">2</TD><TD>TagControlInfo</TD><TD PORT="tci_type">tci</TD></TR>
+			<TR><TD PORT="ether_type_2_pos">16</TD><TD PORT="ether_type_2_size">2</TD><TD>u2be→EtherTypeEnum</TD><TD PORT="ether_type_2_type">ether_type_2</TD></TR>
+			<TR><TD PORT="body_pos">18</TD><TD PORT="body_size">...</TD><TD>switch (ether_type)</TD><TD PORT="body_type">body</TD></TR>
+		</TABLE>>];
+		ethernet_frame__inst__ether_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>ether_type</TD><TD>(ether_type_1 == :ether_type_enum_ieee_802_1q_tpid ? ether_type_2 : ether_type_1)</TD></TR>
 		</TABLE>>];
 ethernet_frame__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 	<TR><TD>:ether_type_enum_ipv4</TD><TD PORT="case0">Ipv4Packet</TD></TR>
 	<TR><TD>:ether_type_enum_ipv6</TD><TD PORT="case1">Ipv6Packet</TD></TR>
 </TABLE>>];
+		subgraph cluster__tag_control_info {
+			label="EthernetFrame::TagControlInfo";
+			graph[style=dotted];
+
+			tag_control_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="priority_pos">0</TD><TD PORT="priority_size">3b</TD><TD>b3</TD><TD PORT="priority_type">priority</TD></TR>
+				<TR><TD PORT="drop_eligible_pos">0:3</TD><TD PORT="drop_eligible_size">1b</TD><TD>BitsType1</TD><TD PORT="drop_eligible_type">drop_eligible</TD></TR>
+				<TR><TD PORT="vlan_id_pos">0:4</TD><TD PORT="vlan_id_size">12b</TD><TD>b12</TD><TD PORT="vlan_id_type">vlan_id</TD></TR>
+			</TABLE>>];
+		}
 	}
+	ethernet_frame__seq:tci_type -> tag_control_info__seq [style=bold];
 	ethernet_frame__seq:body_type -> ethernet_frame__seq_body_switch [style=bold];
 	ethernet_frame__seq_body_switch:case0 -> ipv4_packet__seq [style=bold];
 	ethernet_frame__seq_body_switch:case1 -> ipv6_packet__seq [style=bold];
-	ethernet_frame__seq:ether_type_type -> ethernet_frame__seq:body_type [color="#404040"];
+	ethernet_frame__inst__ether_type:ether_type_type -> ethernet_frame__seq:body_type [color="#404040"];
+	ethernet_frame__seq:ether_type_1_type -> ethernet_frame__inst__ether_type [color="#404040"];
+	ethernet_frame__seq:ether_type_2_type -> ethernet_frame__inst__ether_type [color="#404040"];
+	ethernet_frame__seq:ether_type_1_type -> ethernet_frame__inst__ether_type [color="#404040"];
 }

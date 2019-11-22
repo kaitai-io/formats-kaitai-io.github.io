@@ -31,8 +31,8 @@ class HeapsPak < Kaitai::Struct::Struct
       @len_header = @_io.read_u4le
       @len_data = @_io.read_u4le
       @_raw_root_entry = @_io.read_bytes((len_header - 16))
-      _io__raw_root_entry = Kaitai::Struct::Stream.new(@_raw_root_entry)
-      @root_entry = Entry.new(_io__raw_root_entry, self, @_root)
+      io = Kaitai::Struct::Stream.new(@_raw_root_entry)
+      @root_entry = Entry.new(io, self, @_root)
       @magic2 = @_io.ensure_fixed_contents([68, 65, 84, 65].pack('C*'))
       self
     end

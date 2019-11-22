@@ -2953,25 +2953,25 @@ sub _read {
     $self->{length} = $self->{_io}->read_u2be();
     $self->{version} = $self->{_io}->read_u2be();
     my $_on = $self->format();
-    if ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_BYTE_ENCODING_TABLE) {
+    if ($_on == $SUBTABLE_FORMAT_BYTE_ENCODING_TABLE) {
         $self->{_raw_value} = $self->{_io}->read_bytes(($self->length() - 6));
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = Ttf::Cmap::Subtable::ByteEncodingTable->new($io__raw_value, $self, $self->{_root});
     }
-    elsif ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_SEGMENT_MAPPING_TO_DELTA_VALUES) {
-        $self->{_raw_value} = $self->{_io}->read_bytes(($self->length() - 6));
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = Ttf::Cmap::Subtable::SegmentMappingToDeltaValues->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_HIGH_BYTE_MAPPING_THROUGH_TABLE) {
+    elsif ($_on == $SUBTABLE_FORMAT_HIGH_BYTE_MAPPING_THROUGH_TABLE) {
         $self->{_raw_value} = $self->{_io}->read_bytes(($self->length() - 6));
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = Ttf::Cmap::Subtable::HighByteMappingThroughTable->new($io__raw_value, $self, $self->{_root});
     }
-    elsif ($_on == $Ttf::Cmap::Subtable::SUBTABLE_FORMAT_TRIMMED_TABLE_MAPPING) {
+    elsif ($_on == $SUBTABLE_FORMAT_TRIMMED_TABLE_MAPPING) {
         $self->{_raw_value} = $self->{_io}->read_bytes(($self->length() - 6));
         my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
         $self->{value} = Ttf::Cmap::Subtable::TrimmedTableMapping->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBTABLE_FORMAT_SEGMENT_MAPPING_TO_DELTA_VALUES) {
+        $self->{_raw_value} = $self->{_io}->read_bytes(($self->length() - 6));
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = Ttf::Cmap::Subtable::SegmentMappingToDeltaValues->new($io__raw_value, $self, $self->{_root});
     }
     else {
         $self->{value} = $self->{_io}->read_bytes(($self->length() - 6));

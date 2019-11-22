@@ -48,8 +48,8 @@ class MicrosoftNetworkMonitorV2 extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->frameTableOfs());
         $this->_m__raw_frameTable = $this->_io->readBytes($this->frameTableLen());
-        $_io__raw_frameTable = new \Kaitai\Struct\Stream($this->_m__raw_frameTable);
-        $this->_m_frameTable = new \MicrosoftNetworkMonitorV2\FrameIndex($_io__raw_frameTable, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_frameTable);
+        $this->_m_frameTable = new \MicrosoftNetworkMonitorV2\FrameIndex($io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_frameTable;
     }
@@ -187,8 +187,8 @@ class Frame extends \Kaitai\Struct\Struct {
         switch ($this->_root()->macType()) {
             case \MicrosoftNetworkMonitorV2\Linktype::ETHERNET:
                 $this->_m__raw_body = $this->_io->readBytes($this->incLen());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \EthernetFrame($_io__raw_body);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \EthernetFrame($io);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->incLen());

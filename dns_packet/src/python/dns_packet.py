@@ -114,8 +114,8 @@ class DnsPacket(KaitaiStruct):
 
         def _read(self):
             self.name = self._root.DomainName(self._io, self, self._root)
-            self.type = KaitaiStream.resolve_enum(self._root.TypeType, self._io.read_u2be())
-            self.query_class = KaitaiStream.resolve_enum(self._root.ClassType, self._io.read_u2be())
+            self.type = self._root.TypeType(self._io.read_u2be())
+            self.query_class = self._root.ClassType(self._io.read_u2be())
 
 
     class DomainName(KaitaiStruct):
@@ -159,8 +159,8 @@ class DnsPacket(KaitaiStruct):
 
         def _read(self):
             self.name = self._root.DomainName(self._io, self, self._root)
-            self.type = KaitaiStream.resolve_enum(self._root.TypeType, self._io.read_u2be())
-            self.answer_class = KaitaiStream.resolve_enum(self._root.ClassType, self._io.read_u2be())
+            self.type = self._root.TypeType(self._io.read_u2be())
+            self.answer_class = self._root.ClassType(self._io.read_u2be())
             self.ttl = self._io.read_s4be()
             self.rdlength = self._io.read_u2be()
             if self.type == self._root.TypeType.ptr:

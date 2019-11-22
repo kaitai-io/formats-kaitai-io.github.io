@@ -158,6 +158,11 @@ magic header and a record.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="ruby_marshal parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="ruby_marshal parsing C# library">C#</a></li>
                 
                 
@@ -536,32 +541,32 @@ class Record extends \Kaitai\Struct\Struct {
     private function _read() {
         $this-&gt;_m_code = $this-&gt;_io-&gt;readU1();
         switch ($this-&gt;code()) {
-            case \RubyMarshal\Codes::PACKED_INT:
-                $this-&gt;_m_body = new \RubyMarshal\PackedInt($this-&gt;_io, $this, $this-&gt;_root);
-                break;
             case \RubyMarshal\Codes::BIGNUM:
                 $this-&gt;_m_body = new \RubyMarshal\Bignum($this-&gt;_io, $this, $this-&gt;_root);
+                break;
+            case \RubyMarshal\Codes::RUBY_HASH:
+                $this-&gt;_m_body = new \RubyMarshal\RubyHash($this-&gt;_io, $this, $this-&gt;_root);
                 break;
             case \RubyMarshal\Codes::RUBY_ARRAY:
                 $this-&gt;_m_body = new \RubyMarshal\RubyArray($this-&gt;_io, $this, $this-&gt;_root);
                 break;
-            case \RubyMarshal\Codes::RUBY_SYMBOL_LINK:
+            case \RubyMarshal\Codes::RUBY_SYMBOL:
+                $this-&gt;_m_body = new \RubyMarshal\RubySymbol($this-&gt;_io, $this, $this-&gt;_root);
+                break;
+            case \RubyMarshal\Codes::INSTANCE_VAR:
+                $this-&gt;_m_body = new \RubyMarshal\InstanceVar($this-&gt;_io, $this, $this-&gt;_root);
+                break;
+            case \RubyMarshal\Codes::RUBY_STRING:
+                $this-&gt;_m_body = new \RubyMarshal\RubyString($this-&gt;_io, $this, $this-&gt;_root);
+                break;
+            case \RubyMarshal\Codes::PACKED_INT:
                 $this-&gt;_m_body = new \RubyMarshal\PackedInt($this-&gt;_io, $this, $this-&gt;_root);
                 break;
             case \RubyMarshal\Codes::RUBY_STRUCT:
                 $this-&gt;_m_body = new \RubyMarshal\RubyStruct($this-&gt;_io, $this, $this-&gt;_root);
                 break;
-            case \RubyMarshal\Codes::RUBY_STRING:
-                $this-&gt;_m_body = new \RubyMarshal\RubyString($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \RubyMarshal\Codes::INSTANCE_VAR:
-                $this-&gt;_m_body = new \RubyMarshal\InstanceVar($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \RubyMarshal\Codes::RUBY_HASH:
-                $this-&gt;_m_body = new \RubyMarshal\RubyHash($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \RubyMarshal\Codes::RUBY_SYMBOL:
-                $this-&gt;_m_body = new \RubyMarshal\RubySymbol($this-&gt;_io, $this, $this-&gt;_root);
+            case \RubyMarshal\Codes::RUBY_SYMBOL_LINK:
+                $this-&gt;_m_body = new \RubyMarshal\PackedInt($this-&gt;_io, $this, $this-&gt;_root);
                 break;
         }
     }

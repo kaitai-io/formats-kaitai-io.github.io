@@ -160,6 +160,11 @@ as:</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules) parsing C# library">C#</a></li>
                 
                 
@@ -269,35 +274,35 @@ class Asn1Der extends \Kaitai\Struct\Struct {
         $this-&gt;_m_typeTag = $this-&gt;_io-&gt;readU1();
         $this-&gt;_m_len = new \Asn1Der\LenEncoded($this-&gt;_io, $this, $this-&gt;_root);
         switch ($this-&gt;typeTag()) {
-            case \Asn1Der\TypeTag::PRINTABLE_STRING:
+            case \Asn1Der\TypeTag::SEQUENCE_30:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;result());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Asn1Der\BodyPrintableString($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Asn1Der\BodySequence($io, $this, $this-&gt;_root);
                 break;
             case \Asn1Der\TypeTag::SEQUENCE_10:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;result());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Asn1Der\BodySequence($_io__raw_body, $this, $this-&gt;_root);
-                break;
-            case \Asn1Der\TypeTag::SET:
-                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;result());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Asn1Der\BodySequence($_io__raw_body, $this, $this-&gt;_root);
-                break;
-            case \Asn1Der\TypeTag::SEQUENCE_30:
-                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;result());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Asn1Der\BodySequence($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Asn1Der\BodySequence($io, $this, $this-&gt;_root);
                 break;
             case \Asn1Der\TypeTag::UTF8STRING:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;result());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Asn1Der\BodyUtf8string($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Asn1Der\BodyUtf8string($io, $this, $this-&gt;_root);
+                break;
+            case \Asn1Der\TypeTag::PRINTABLE_STRING:
+                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;result());
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Asn1Der\BodyPrintableString($io, $this, $this-&gt;_root);
                 break;
             case \Asn1Der\TypeTag::OBJECT_ID:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;result());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Asn1Der\BodyObjectId($_io__raw_body, $this, $this-&gt;_root);
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Asn1Der\BodyObjectId($io, $this, $this-&gt;_root);
+                break;
+            case \Asn1Der\TypeTag::SET:
+                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;result());
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+                $this-&gt;_m_body = new \Asn1Der\BodySequence($io, $this, $this-&gt;_root);
                 break;
             default:
                 $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;result());

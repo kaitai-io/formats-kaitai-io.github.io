@@ -173,6 +173,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="ZIP archive file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="ZIP archive file parsing C# library">C#</a></li>
                 
                 
@@ -455,17 +460,17 @@ sub _read {
     $self-&gt;{code} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u2le();
     my $_on = $self-&gt;code();
-    if ($_on == $Zip::EXTRA_CODES_NTFS) {
+    if ($_on == $EXTRA_CODES_NTFS) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = Zip::ExtraField::Ntfs-&gt;new($io__raw_body, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Zip::EXTRA_CODES_EXTENDED_TIMESTAMP) {
+    elsif ($_on == $EXTRA_CODES_EXTENDED_TIMESTAMP) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = Zip::ExtraField::ExtendedTimestamp-&gt;new($io__raw_body, $self, $self-&gt;{_root});
     }
-    elsif ($_on == $Zip::EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE) {
+    elsif ($_on == $EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE) {
         $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
         my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
         $self-&gt;{body} = Zip::ExtraField::InfozipUnixVarSize-&gt;new($io__raw_body, $self, $self-&gt;{_root});

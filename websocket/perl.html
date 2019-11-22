@@ -166,6 +166,11 @@ frames with the <code>fin</code> bit set.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="WebSocket parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="WebSocket parsing C# library">C#</a></li>
                 
                 
@@ -435,10 +440,10 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{header} = Websocket::FrameHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    if ($self-&gt;header()-&gt;opcode() != $Websocket::OPCODE_TEXT) {
+    if ($self-&gt;header()-&gt;opcode() != $OPCODE_TEXT) {
         $self-&gt;{payload_bytes} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;header()-&gt;len_payload());
     }
-    if ($self-&gt;header()-&gt;opcode() == $Websocket::OPCODE_TEXT) {
+    if ($self-&gt;header()-&gt;opcode() == $OPCODE_TEXT) {
         $self-&gt;{payload_text} = Encode::decode(&quot;UTF-8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;header()-&gt;len_payload()));
     }
 }
@@ -489,10 +494,10 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{header} = Websocket::FrameHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    if ($self-&gt;_root()-&gt;initial_frame()-&gt;header()-&gt;opcode() != $Websocket::OPCODE_TEXT) {
+    if ($self-&gt;_root()-&gt;initial_frame()-&gt;header()-&gt;opcode() != $OPCODE_TEXT) {
         $self-&gt;{payload_bytes} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;header()-&gt;len_payload());
     }
-    if ($self-&gt;_root()-&gt;initial_frame()-&gt;header()-&gt;opcode() == $Websocket::OPCODE_TEXT) {
+    if ($self-&gt;_root()-&gt;initial_frame()-&gt;header()-&gt;opcode() == $OPCODE_TEXT) {
         $self-&gt;{payload_text} = Encode::decode(&quot;UTF-8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;header()-&gt;len_payload()));
     }
 }

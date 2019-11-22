@@ -170,6 +170,11 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing C# library">C#</a></li>
                 
                 
@@ -251,19 +256,40 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;dst_mac_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;dst_mac_size&quot;&gt;6&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;dst_mac_type&quot;&gt;dst_mac&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;src_mac_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;src_mac_size&quot;&gt;6&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;src_mac_type&quot;&gt;src_mac&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;ether_type_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;ether_type_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be→EtherTypeEnum&lt;/TD&gt;&lt;TD PORT=&quot;ether_type_type&quot;&gt;ether_type&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;14&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (ether_type)&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;ether_type_1_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;ether_type_1_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be→EtherTypeEnum&lt;/TD&gt;&lt;TD PORT=&quot;ether_type_1_type&quot;&gt;ether_type_1&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;tci_pos&quot;&gt;14&lt;/TD&gt;&lt;TD PORT=&quot;tci_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;TagControlInfo&lt;/TD&gt;&lt;TD PORT=&quot;tci_type&quot;&gt;tci&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;ether_type_2_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;ether_type_2_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be→EtherTypeEnum&lt;/TD&gt;&lt;TD PORT=&quot;ether_type_2_type&quot;&gt;ether_type_2&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;18&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (ether_type)&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		ethernet_frame__inst__ether_type [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD&gt;ether_type&lt;/TD&gt;&lt;TD&gt;(ether_type_1 == :ether_type_enum_ieee_802_1q_tpid ? ether_type_2 : ether_type_1)&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
 ethernet_frame__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
 	&lt;TR&gt;&lt;TD&gt;:ether_type_enum_ipv4&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;Ipv4Packet&lt;/TD&gt;&lt;/TR&gt;
 	&lt;TR&gt;&lt;TD&gt;:ether_type_enum_ipv6&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;Ipv6Packet&lt;/TD&gt;&lt;/TR&gt;
 &lt;/TABLE&gt;&gt;];
+		subgraph cluster__tag_control_info {
+			label=&quot;EthernetFrame::TagControlInfo&quot;;
+			graph[style=dotted];
+
+			tag_control_info__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;priority_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;priority_size&quot;&gt;3b&lt;/TD&gt;&lt;TD&gt;b3&lt;/TD&gt;&lt;TD PORT=&quot;priority_type&quot;&gt;priority&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;drop_eligible_pos&quot;&gt;0:3&lt;/TD&gt;&lt;TD PORT=&quot;drop_eligible_size&quot;&gt;1b&lt;/TD&gt;&lt;TD&gt;BitsType1&lt;/TD&gt;&lt;TD PORT=&quot;drop_eligible_type&quot;&gt;drop_eligible&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vlan_id_pos&quot;&gt;0:4&lt;/TD&gt;&lt;TD PORT=&quot;vlan_id_size&quot;&gt;12b&lt;/TD&gt;&lt;TD&gt;b12&lt;/TD&gt;&lt;TD PORT=&quot;vlan_id_type&quot;&gt;vlan_id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
 	}
+	ethernet_frame__seq:tci_type -&gt; tag_control_info__seq [style=bold];
 	ethernet_frame__seq:body_type -&gt; ethernet_frame__seq_body_switch [style=bold];
 	ethernet_frame__seq_body_switch:case0 -&gt; ipv4_packet__seq [style=bold];
 	ethernet_frame__seq_body_switch:case1 -&gt; ipv6_packet__seq [style=bold];
-	ethernet_frame__seq:ether_type_type -&gt; ethernet_frame__seq:body_type [color=&quot;#404040&quot;];
+	ethernet_frame__inst__ether_type:ether_type_type -&gt; ethernet_frame__seq:body_type [color=&quot;#404040&quot;];
+	ethernet_frame__seq:ether_type_1_type -&gt; ethernet_frame__inst__ether_type [color=&quot;#404040&quot;];
+	ethernet_frame__seq:ether_type_2_type -&gt; ethernet_frame__inst__ether_type [color=&quot;#404040&quot;];
+	ethernet_frame__seq:ether_type_1_type -&gt; ethernet_frame__inst__ether_type [color=&quot;#404040&quot;];
 }
 </code></pre>
             

@@ -81,22 +81,22 @@ class Jpeg < Kaitai::Struct::Struct
       end
       if  ((marker != :marker_enum_soi) && (marker != :marker_enum_eoi)) 
         case marker
-        when :marker_enum_app1
-          @_raw_data = @_io.read_bytes((length - 2))
-          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentApp1.new(_io__raw_data, self, @_root)
-        when :marker_enum_app0
-          @_raw_data = @_io.read_bytes((length - 2))
-          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentApp0.new(_io__raw_data, self, @_root)
-        when :marker_enum_sof0
-          @_raw_data = @_io.read_bytes((length - 2))
-          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentSof0.new(_io__raw_data, self, @_root)
         when :marker_enum_sos
           @_raw_data = @_io.read_bytes((length - 2))
-          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentSos.new(_io__raw_data, self, @_root)
+          io = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = SegmentSos.new(io, self, @_root)
+        when :marker_enum_app1
+          @_raw_data = @_io.read_bytes((length - 2))
+          io = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = SegmentApp1.new(io, self, @_root)
+        when :marker_enum_sof0
+          @_raw_data = @_io.read_bytes((length - 2))
+          io = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = SegmentSof0.new(io, self, @_root)
+        when :marker_enum_app0
+          @_raw_data = @_io.read_bytes((length - 2))
+          io = Kaitai::Struct::Stream.new(@_raw_data)
+          @data = SegmentApp0.new(io, self, @_root)
         else
           @data = @_io.read_bytes((length - 2))
         end
@@ -137,7 +137,7 @@ class Jpeg < Kaitai::Struct::Struct
       end
 
       def _read
-        @id = Kaitai::Struct::Stream::resolve_enum(Jpeg::COMPONENT_ID, @_io.read_u1)
+        @id = Kaitai::Struct::Stream::resolve_enum(COMPONENT_ID, @_io.read_u1)
         @huffman_table = @_io.read_u1
         self
       end
@@ -209,7 +209,7 @@ class Jpeg < Kaitai::Struct::Struct
       end
 
       def _read
-        @id = Kaitai::Struct::Stream::resolve_enum(Jpeg::COMPONENT_ID, @_io.read_u1)
+        @id = Kaitai::Struct::Stream::resolve_enum(COMPONENT_ID, @_io.read_u1)
         @sampling_factors = @_io.read_u1
         @quantization_table_id = @_io.read_u1
         self
@@ -246,8 +246,8 @@ class Jpeg < Kaitai::Struct::Struct
     def _read
       @extra_zero = @_io.ensure_fixed_contents([0].pack('C*'))
       @_raw_data = @_io.read_bytes_full
-      _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-      @data = Exif.new(_io__raw_data)
+      io = Kaitai::Struct::Stream.new(@_raw_data)
+      @data = Exif.new(io)
       self
     end
     attr_reader :extra_zero

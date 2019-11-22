@@ -490,40 +490,40 @@ var Wmf = (function() {
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ParamsSetbkmode(_io__raw_params, this, this._root);
         break;
-      case Wmf.Func.POLYGON:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsPolygon(_io__raw_params, this, this._root);
-        break;
       case Wmf.Func.SETBKCOLOR:
         this._raw_params = this._io.readBytes(((this.size - 3) * 2));
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ColorRef(_io__raw_params, this, this._root);
-        break;
-      case Wmf.Func.SETPOLYFILLMODE:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetpolyfillmode(_io__raw_params, this, this._root);
-        break;
-      case Wmf.Func.SETWINDOWORG:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetwindoworg(_io__raw_params, this, this._root);
         break;
       case Wmf.Func.SETROP2:
         this._raw_params = this._io.readBytes(((this.size - 3) * 2));
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ParamsSetrop2(_io__raw_params, this, this._root);
         break;
+      case Wmf.Func.POLYLINE:
+        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
+        var _io__raw_params = new KaitaiStream(this._raw_params);
+        this.params = new ParamsPolyline(_io__raw_params, this, this._root);
+        break;
+      case Wmf.Func.SETWINDOWORG:
+        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
+        var _io__raw_params = new KaitaiStream(this._raw_params);
+        this.params = new ParamsSetwindoworg(_io__raw_params, this, this._root);
+        break;
+      case Wmf.Func.POLYGON:
+        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
+        var _io__raw_params = new KaitaiStream(this._raw_params);
+        this.params = new ParamsPolygon(_io__raw_params, this, this._root);
+        break;
       case Wmf.Func.SETWINDOWEXT:
         this._raw_params = this._io.readBytes(((this.size - 3) * 2));
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ParamsSetwindowext(_io__raw_params, this, this._root);
         break;
-      case Wmf.Func.POLYLINE:
+      case Wmf.Func.SETPOLYFILLMODE:
         this._raw_params = this._io.readBytes(((this.size - 3) * 2));
         var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsPolyline(_io__raw_params, this, this._root);
+        this.params = new ParamsSetpolyfillmode(_io__raw_params, this, this._root);
         break;
       default:
         this.params = this._io.readBytes(((this.size - 3) * 2));

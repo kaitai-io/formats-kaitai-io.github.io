@@ -831,115 +831,115 @@ sub _read {
     $self->{len} = OpenpgpMessage::LenSubpacket->new($self->{_io}, $self, $self->{_root});
     $self->{subpacket_type} = $self->{_io}->read_u1();
     my $_on = $self->subpacket_type();
-    if ($_on == $OpenpgpMessage::SUBPACKET_TYPES_PREFERRED_KEY_SERVER) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::PreferredKeyServer->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_ISSUER) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::Issuer->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_REVOCABLE) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::Revocable->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_SIGNATURE_TARGET) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::SignatureTarget->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_REGULAR_EXPRESSION) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::RegularExpression->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_EXPORTABLE_CERTIFICATION) {
+    if ($_on == $SUBPACKET_TYPES_EXPORTABLE_CERTIFICATION) {
         $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = OpenpgpMessage::ExportableCertification->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_REASON_FOR_REVOCATION) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::ReasonForRevocation->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_KEY_SERVER_PREFERENCES) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::KeyServerPreferences->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_SIGNATURE_CREATION_TIME) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::SignatureCreationTime->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_PREFERRED_HASH_ALGORITHMS) {
+    elsif ($_on == $SUBPACKET_TYPES_PREFERRED_HASH_ALGORITHMS) {
         $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = OpenpgpMessage::PreferredHashAlgorithms->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_TRUST_SIGNATURE) {
+    elsif ($_on == $SUBPACKET_TYPES_EMBEDDED_SIGNATURE) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::EmbeddedSignature->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_TRUST_SIGNATURE) {
         $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = OpenpgpMessage::TrustSignature->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_KEY_EXPIRATION_TIME) {
+    elsif ($_on == $SUBPACKET_TYPES_REASON_FOR_REVOCATION) {
         $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::KeyExpirationTime->new($io__raw_content, $self, $self->{_root});
+        $self->{content} = OpenpgpMessage::ReasonForRevocation->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_KEY_FLAGS) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::KeyFlags->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_SIGNATURE_EXPIRATION_TIME) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::SignatureExpirationTime->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_FEATURES) {
+    elsif ($_on == $SUBPACKET_TYPES_FEATURES) {
         $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = OpenpgpMessage::Features->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_SIGNERS_USER_ID) {
+    elsif ($_on == $SUBPACKET_TYPES_SIGNATURE_EXPIRATION_TIME) {
         $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::SignersUserId->new($io__raw_content, $self, $self->{_root});
+        $self->{content} = OpenpgpMessage::SignatureExpirationTime->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_NOTATION_DATA) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::NotationData->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_REVOCATION_KEY) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::RevocationKey->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_PREFERRED_COMPRESSION_ALGORITHMS) {
+    elsif ($_on == $SUBPACKET_TYPES_PREFERRED_COMPRESSION_ALGORITHMS) {
         $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = OpenpgpMessage::PreferredCompressionAlgorithms->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_POLICY_URI) {
+    elsif ($_on == $SUBPACKET_TYPES_REVOCABLE) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::Revocable->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_REGULAR_EXPRESSION) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::RegularExpression->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_NOTATION_DATA) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::NotationData->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_KEY_EXPIRATION_TIME) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::KeyExpirationTime->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_SIGNATURE_CREATION_TIME) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::SignatureCreationTime->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_REVOCATION_KEY) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::RevocationKey->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_KEY_FLAGS) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::KeyFlags->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_ISSUER) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::Issuer->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_SIGNATURE_TARGET) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::SignatureTarget->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_KEY_SERVER_PREFERENCES) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::KeyServerPreferences->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_SIGNERS_USER_ID) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::SignersUserId->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_POLICY_URI) {
         $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = OpenpgpMessage::PolicyUri->new($io__raw_content, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_PRIMARY_USER_ID) {
+    elsif ($_on == $SUBPACKET_TYPES_PREFERRED_KEY_SERVER) {
+        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
+        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
+        $self->{content} = OpenpgpMessage::PreferredKeyServer->new($io__raw_content, $self, $self->{_root});
+    }
+    elsif ($_on == $SUBPACKET_TYPES_PRIMARY_USER_ID) {
         $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
         my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
         $self->{content} = OpenpgpMessage::PrimaryUserId->new($io__raw_content, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::SUBPACKET_TYPES_EMBEDDED_SIGNATURE) {
-        $self->{_raw_content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
-        my $io__raw_content = IO::KaitaiStruct::Stream->new($self->{_raw_content});
-        $self->{content} = OpenpgpMessage::EmbeddedSignature->new($io__raw_content, $self, $self->{_root});
     }
     else {
         $self->{content} = $self->{_io}->read_bytes(($self->len()->len() - 1));
@@ -1007,35 +1007,35 @@ sub _read {
         $self->{len} = $self->{_io}->read_u4be();
     }
     my $_on = $self->_parent()->packet_type_old();
-    if ($_on == $OpenpgpMessage::PACKET_TAGS_PUBLIC_KEY_PACKET) {
+    if ($_on == $PACKET_TAGS_PUBLIC_KEY_PACKET) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = OpenpgpMessage::PublicKeyPacket->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::PACKET_TAGS_PUBLIC_SUBKEY_PACKET) {
+    elsif ($_on == $PACKET_TAGS_SECRET_SUBKEY_PACKET) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = OpenpgpMessage::PublicKeyPacket->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::PACKET_TAGS_USER_ID_PACKET) {
+    elsif ($_on == $PACKET_TAGS_USER_ID_PACKET) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = OpenpgpMessage::UserIdPacket->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::PACKET_TAGS_SIGNATURE_PACKET) {
+    elsif ($_on == $PACKET_TAGS_SECRET_KEY_PACKET) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = OpenpgpMessage::SecretKeyPacket->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $PACKET_TAGS_SIGNATURE_PACKET) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = OpenpgpMessage::SignaturePacket->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $OpenpgpMessage::PACKET_TAGS_SECRET_SUBKEY_PACKET) {
+    elsif ($_on == $PACKET_TAGS_PUBLIC_SUBKEY_PACKET) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = OpenpgpMessage::PublicKeyPacket->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $OpenpgpMessage::PACKET_TAGS_SECRET_KEY_PACKET) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = OpenpgpMessage::SecretKeyPacket->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes($self->len());

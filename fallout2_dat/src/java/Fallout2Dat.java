@@ -130,7 +130,7 @@ public class Fallout2Dat extends KaitaiStruct {
         }
         private void _read() {
             this.fileCount = this._io.readU4le();
-            files = new ArrayList<File>(((Number) (fileCount())).intValue());
+            files = new ArrayList<File>((int) (fileCount()));
             for (int i = 0; i < fileCount(); i++) {
                 this.files.add(new File(this._io, this, _root));
             }

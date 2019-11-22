@@ -190,6 +190,11 @@ features got limited support in v1.3).</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Warcraft II map files parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Warcraft II map files parsing C# library">C#</a></li>
                 
                 
@@ -469,7 +474,7 @@ class Warcraft2Pud &lt; Kaitai::Struct::Struct
     end
 
     def _read
-      @terrain = Kaitai::Struct::Stream::resolve_enum(Warcraft2Pud::TERRAIN_TYPE, @_io.read_u2le)
+      @terrain = Kaitai::Struct::Stream::resolve_enum(TERRAIN_TYPE, @_io.read_u2le)
       self
     end
     attr_reader :terrain
@@ -560,44 +565,44 @@ class Warcraft2Pud &lt; Kaitai::Struct::Struct
       case name
       when &quot;SLBR&quot;
         @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionStartingResource.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionStartingResource.new(io, self, @_root)
       when &quot;ERAX&quot;
         @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionEra.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionEra.new(io, self, @_root)
       when &quot;OWNR&quot;
         @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionOwnr.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionOwnr.new(io, self, @_root)
       when &quot;ERA &quot;
         @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionEra.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionEra.new(io, self, @_root)
       when &quot;SGLD&quot;
         @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionStartingResource.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionStartingResource.new(io, self, @_root)
       when &quot;VER &quot;
         @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionVer.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionVer.new(io, self, @_root)
       when &quot;SOIL&quot;
         @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionStartingResource.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionStartingResource.new(io, self, @_root)
       when &quot;UNIT&quot;
         @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionUnit.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionUnit.new(io, self, @_root)
       when &quot;DIM &quot;
         @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionDim.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionDim.new(io, self, @_root)
       when &quot;TYPE&quot;
         @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionType.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SectionType.new(io, self, @_root)
       else
         @body = @_io.read_bytes(size)
       end
@@ -621,7 +626,7 @@ class Warcraft2Pud &lt; Kaitai::Struct::Struct
       @controller_by_player = []
       i = 0
       while not @_io.eof?
-        @controller_by_player &lt;&lt; Kaitai::Struct::Stream::resolve_enum(Warcraft2Pud::CONTROLLER, @_io.read_u1)
+        @controller_by_player &lt;&lt; Kaitai::Struct::Stream::resolve_enum(CONTROLLER, @_io.read_u1)
         i += 1
       end
       self
@@ -637,7 +642,7 @@ class Warcraft2Pud &lt; Kaitai::Struct::Struct
     def _read
       @x = @_io.read_u2le
       @y = @_io.read_u2le
-      @u_type = Kaitai::Struct::Stream::resolve_enum(Warcraft2Pud::UNIT_TYPE, @_io.read_u1)
+      @u_type = Kaitai::Struct::Stream::resolve_enum(UNIT_TYPE, @_io.read_u1)
       @owner = @_io.read_u1
       @options = @_io.read_u2le
       self

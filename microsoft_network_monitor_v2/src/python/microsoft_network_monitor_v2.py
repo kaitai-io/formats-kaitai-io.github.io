@@ -8,8 +8,8 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-import ethernet_frame
-import windows_systemtime
+from ethernet_frame import EthernetFrame
+from windows_systemtime import WindowsSystemtime
 class MicrosoftNetworkMonitorV2(KaitaiStruct):
     """Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
     network packet sniffing and analysis tool. It can save captured
@@ -139,8 +139,8 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         self.signature = self._io.ensure_fixed_contents(b"\x47\x4D\x42\x55")
         self.version_minor = self._io.read_u1()
         self.version_major = self._io.read_u1()
-        self.mac_type = KaitaiStream.resolve_enum(self._root.Linktype, self._io.read_u2le())
-        self.time_capture_start = windows_systemtime.WindowsSystemtime(self._io)
+        self.mac_type = self._root.Linktype(self._io.read_u2le())
+        self.time_capture_start = WindowsSystemtime(self._io)
         self.frame_table_ofs = self._io.read_u4le()
         self.frame_table_len = self._io.read_u4le()
         self.user_data_ofs = self._io.read_u4le()
@@ -218,8 +218,8 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
             _on = self._root.mac_type
             if _on == self._root.Linktype.ethernet:
                 self._raw_body = self._io.read_bytes(self.inc_len)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = ethernet_frame.EthernetFrame(_io__raw_body)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = EthernetFrame(io)
             else:
                 self.body = self._io.read_bytes(self.inc_len)
 
@@ -233,8 +233,8 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         _pos = self._io.pos()
         self._io.seek(self.frame_table_ofs)
         self._raw__m_frame_table = self._io.read_bytes(self.frame_table_len)
-        _io__raw__m_frame_table = KaitaiStream(BytesIO(self._raw__m_frame_table))
-        self._m_frame_table = self._root.FrameIndex(_io__raw__m_frame_table, self, self._root)
+        io = KaitaiStream(BytesIO(self._raw__m_frame_table))
+        self._m_frame_table = self._root.FrameIndex(io, self, self._root)
         self._io.seek(_pos)
         return self._m_frame_table if hasattr(self, '_m_frame_table') else None
 

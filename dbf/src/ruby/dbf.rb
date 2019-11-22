@@ -15,8 +15,8 @@ class Dbf < Kaitai::Struct::Struct
   def _read
     @header1 = Header1.new(@_io, self, @_root)
     @_raw_header2 = @_io.read_bytes((header1.len_header - 12))
-    _io__raw_header2 = Kaitai::Struct::Stream.new(@_raw_header2)
-    @header2 = Header2.new(_io__raw_header2, self, @_root)
+    io = Kaitai::Struct::Stream.new(@_raw_header2)
+    @header2 = Header2.new(io, self, @_root)
     @records = Array.new(header1.num_records)
     (header1.num_records).times { |i|
       @records[i] = @_io.read_bytes(header1.len_record)

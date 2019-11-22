@@ -73,11 +73,11 @@ digraph {
 			</TABLE>>];
 rtcp_packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:payload_type_sr</TD><TD PORT="case0">SrPacket</TD></TR>
-	<TR><TD>:payload_type_psfb</TD><TD PORT="case1">PsfbPacket</TD></TR>
-	<TR><TD>:payload_type_rr</TD><TD PORT="case2">RrPacket</TD></TR>
-	<TR><TD>:payload_type_rtpfb</TD><TD PORT="case3">RtpfbPacket</TD></TR>
-	<TR><TD>:payload_type_sdes</TD><TD PORT="case4">SdesPacket</TD></TR>
+	<TR><TD>:payload_type_sdes</TD><TD PORT="case0">SdesPacket</TD></TR>
+	<TR><TD>:payload_type_rr</TD><TD PORT="case1">RrPacket</TD></TR>
+	<TR><TD>:payload_type_rtpfb</TD><TD PORT="case2">RtpfbPacket</TD></TR>
+	<TR><TD>:payload_type_psfb</TD><TD PORT="case3">PsfbPacket</TD></TR>
+	<TR><TD>:payload_type_sr</TD><TD PORT="case4">SrPacket</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__sdes_tlv {
@@ -153,7 +153,7 @@ rtcp_packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 			</TABLE>>];
 			psfb_packet__inst__fmt [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>fmt</TD><TD>Kaitai::Struct::Stream::resolve_enum(RtcpPayload::PSFB_SUBTYPE, _parent.subtype)</TD></TR>
+				<TR><TD>fmt</TD><TD>Kaitai::Struct::Stream::resolve_enum(PSFB_SUBTYPE, _parent.subtype)</TD></TR>
 			</TABLE>>];
 psfb_packet__seq_fci_block_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
@@ -197,7 +197,7 @@ psfb_packet__seq_fci_block_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLS
 			</TABLE>>];
 			rtpfb_packet__inst__fmt [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>fmt</TD><TD>Kaitai::Struct::Stream::resolve_enum(RtcpPayload::RTPFB_SUBTYPE, _parent.subtype)</TD></TR>
+				<TR><TD>fmt</TD><TD>Kaitai::Struct::Stream::resolve_enum(RTPFB_SUBTYPE, _parent.subtype)</TD></TR>
 			</TABLE>>];
 rtpfb_packet__seq_fci_block_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
@@ -247,11 +247,11 @@ psfb_afb_packet__seq_contents_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CE
 	rr_packet__seq:report_block_type -> report_block__seq [style=bold];
 	rtcp_packet__seq:subtype_type -> rr_packet__seq:report_block__repeat [color="#404040"];
 	rtcp_packet__seq:body_type -> rtcp_packet__seq_body_switch [style=bold];
-	rtcp_packet__seq_body_switch:case0 -> sr_packet__seq [style=bold];
-	rtcp_packet__seq_body_switch:case1 -> psfb_packet__seq [style=bold];
-	rtcp_packet__seq_body_switch:case2 -> rr_packet__seq [style=bold];
-	rtcp_packet__seq_body_switch:case3 -> rtpfb_packet__seq [style=bold];
-	rtcp_packet__seq_body_switch:case4 -> sdes_packet__seq [style=bold];
+	rtcp_packet__seq_body_switch:case0 -> sdes_packet__seq [style=bold];
+	rtcp_packet__seq_body_switch:case1 -> rr_packet__seq [style=bold];
+	rtcp_packet__seq_body_switch:case2 -> rtpfb_packet__seq [style=bold];
+	rtcp_packet__seq_body_switch:case3 -> psfb_packet__seq [style=bold];
+	rtcp_packet__seq_body_switch:case4 -> sr_packet__seq [style=bold];
 	rtcp_packet__seq:payload_type_type -> rtcp_packet__seq:body_type [color="#404040"];
 	sdes_tlv__seq:length_type -> sdes_tlv__seq:value_size [color="#404040"];
 	report_block__seq:lost_val_type -> report_block__inst__fraction_lost [color="#404040"];

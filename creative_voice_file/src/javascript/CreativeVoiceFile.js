@@ -201,6 +201,21 @@ var CreativeVoiceFile = (function() {
       }
       if (this.blockType != CreativeVoiceFile.BlockTypes.TERMINATOR) {
         switch (this.blockType) {
+        case CreativeVoiceFile.BlockTypes.SILENCE:
+          this._raw_body = this._io.readBytes(this.bodySize);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new BlockSilence(_io__raw_body, this, this._root);
+          break;
+        case CreativeVoiceFile.BlockTypes.SOUND_DATA:
+          this._raw_body = this._io.readBytes(this.bodySize);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new BlockSoundData(_io__raw_body, this, this._root);
+          break;
+        case CreativeVoiceFile.BlockTypes.MARKER:
+          this._raw_body = this._io.readBytes(this.bodySize);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new BlockMarker(_io__raw_body, this, this._root);
+          break;
         case CreativeVoiceFile.BlockTypes.SOUND_DATA_NEW:
           this._raw_body = this._io.readBytes(this.bodySize);
           var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -211,25 +226,10 @@ var CreativeVoiceFile = (function() {
           var _io__raw_body = new KaitaiStream(this._raw_body);
           this.body = new BlockRepeatStart(_io__raw_body, this, this._root);
           break;
-        case CreativeVoiceFile.BlockTypes.MARKER:
-          this._raw_body = this._io.readBytes(this.bodySize);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new BlockMarker(_io__raw_body, this, this._root);
-          break;
-        case CreativeVoiceFile.BlockTypes.SOUND_DATA:
-          this._raw_body = this._io.readBytes(this.bodySize);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new BlockSoundData(_io__raw_body, this, this._root);
-          break;
         case CreativeVoiceFile.BlockTypes.EXTRA_INFO:
           this._raw_body = this._io.readBytes(this.bodySize);
           var _io__raw_body = new KaitaiStream(this._raw_body);
           this.body = new BlockExtraInfo(_io__raw_body, this, this._root);
-          break;
-        case CreativeVoiceFile.BlockTypes.SILENCE:
-          this._raw_body = this._io.readBytes(this.bodySize);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new BlockSilence(_io__raw_body, this, this._root);
           break;
         default:
           this.body = this._io.readBytes(this.bodySize);

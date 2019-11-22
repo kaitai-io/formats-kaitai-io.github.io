@@ -35,8 +35,8 @@ class ApmPartitionTable extends \Kaitai\Struct\Struct {
         $_pos = $io->pos();
         $io->seek($this->_root()->sectorSize());
         $this->_m__raw_partitionLookup = $io->readBytes($this->sectorSize());
-        $_io__raw_partitionLookup = new \Kaitai\Struct\Stream($this->_m__raw_partitionLookup);
-        $this->_m_partitionLookup = new \ApmPartitionTable\PartitionEntry($_io__raw_partitionLookup, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_partitionLookup);
+        $this->_m_partitionLookup = new \ApmPartitionTable\PartitionEntry($io, $this, $this->_root);
         $io->seek($_pos);
         return $this->_m_partitionLookup;
     }
@@ -52,8 +52,8 @@ class ApmPartitionTable extends \Kaitai\Struct\Struct {
         $n = $this->_root()->partitionLookup()->numberOfPartitions();
         for ($i = 0; $i < $n; $i++) {
             $this->_m__raw_partitionEntries[] = $io->readBytes($this->sectorSize());
-            $_io__raw_partitionEntries = new \Kaitai\Struct\Stream(end($this->_m__raw_partitionEntries));
-            $this->_m_partitionEntries[] = new \ApmPartitionTable\PartitionEntry($_io__raw_partitionEntries, $this, $this->_root);
+            $io = new \Kaitai\Struct\Stream(end($this->_m__raw_partitionEntries));
+            $this->_m_partitionEntries[] = new \ApmPartitionTable\PartitionEntry($io, $this, $this->_root);
         }
         $io->seek($_pos);
         return $this->_m_partitionEntries;

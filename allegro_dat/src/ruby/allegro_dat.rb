@@ -137,16 +137,16 @@ class AllegroDat < Kaitai::Struct::Struct
       case type
       when "BMP "
         @_raw_body = @_io.read_bytes(len_compressed)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DatBitmap.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DatBitmap.new(io, self, @_root)
       when "RLE "
         @_raw_body = @_io.read_bytes(len_compressed)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DatRleSprite.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DatRleSprite.new(io, self, @_root)
       when "FONT"
         @_raw_body = @_io.read_bytes(len_compressed)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DatFont.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DatFont.new(io, self, @_root)
       else
         @body = @_io.read_bytes(len_compressed)
       end

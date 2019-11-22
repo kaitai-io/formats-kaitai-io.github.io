@@ -59,8 +59,8 @@ class FileRecord extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m__raw_header = $this->_io->readBytes(($this->_parent()->headerLen() - 1));
-        $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-        $this->_m_header = new \Lzh\Header($_io__raw_header, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_header);
+        $this->_m_header = new \Lzh\Header($io, $this, $this->_root);
         if ($this->header()->header1()->lhaLevel() == 0) {
             $this->_m_fileUncomprCrc16 = $this->_io->readU2le();
         }

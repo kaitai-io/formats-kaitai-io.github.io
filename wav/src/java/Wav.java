@@ -700,7 +700,7 @@ public class Wav extends KaitaiStruct {
         private void _read() {
             this.dwCuePoints = this._io.readU4le();
             if (dwCuePoints() != 0) {
-                cuePoints = new ArrayList<CuePointType>(((Number) (dwCuePoints())).intValue());
+                cuePoints = new ArrayList<CuePointType>((int) (dwCuePoints()));
                 for (int i = 0; i < dwCuePoints(); i++) {
                     this.cuePoints.add(new CuePointType(this._io, this, _root));
                 }

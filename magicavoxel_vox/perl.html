@@ -153,6 +153,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="MagicaVoxel File parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="MagicaVoxel File parsing C# library">C#</a></li>
                 
                 
@@ -335,30 +340,30 @@ sub _read {
     $self-&gt;{num_bytes_of_children_chunks} = $self-&gt;{_io}-&gt;read_u4le();
     if ($self-&gt;num_bytes_of_chunk_content() != 0) {
         my $_on = $self-&gt;chunk_id();
-        if ($_on == $MagicavoxelVox::CHUNK_TYPE_SIZE) {
+        if ($_on == $CHUNK_TYPE_SIZE) {
             $self-&gt;{_raw_chunk_content} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;num_bytes_of_chunk_content());
             my $io__raw_chunk_content = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_chunk_content});
             $self-&gt;{chunk_content} = MagicavoxelVox::Size-&gt;new($io__raw_chunk_content, $self, $self-&gt;{_root});
         }
-        elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_MATT) {
+        elsif ($_on == $CHUNK_TYPE_MATT) {
             $self-&gt;{_raw_chunk_content} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;num_bytes_of_chunk_content());
             my $io__raw_chunk_content = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_chunk_content});
             $self-&gt;{chunk_content} = MagicavoxelVox::Matt-&gt;new($io__raw_chunk_content, $self, $self-&gt;{_root});
         }
-        elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_RGBA) {
-            $self-&gt;{_raw_chunk_content} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;num_bytes_of_chunk_content());
-            my $io__raw_chunk_content = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_chunk_content});
-            $self-&gt;{chunk_content} = MagicavoxelVox::Rgba-&gt;new($io__raw_chunk_content, $self, $self-&gt;{_root});
-        }
-        elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_XYZI) {
+        elsif ($_on == $CHUNK_TYPE_XYZI) {
             $self-&gt;{_raw_chunk_content} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;num_bytes_of_chunk_content());
             my $io__raw_chunk_content = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_chunk_content});
             $self-&gt;{chunk_content} = MagicavoxelVox::Xyzi-&gt;new($io__raw_chunk_content, $self, $self-&gt;{_root});
         }
-        elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_PACK) {
+        elsif ($_on == $CHUNK_TYPE_PACK) {
             $self-&gt;{_raw_chunk_content} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;num_bytes_of_chunk_content());
             my $io__raw_chunk_content = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_chunk_content});
             $self-&gt;{chunk_content} = MagicavoxelVox::Pack-&gt;new($io__raw_chunk_content, $self, $self-&gt;{_root});
+        }
+        elsif ($_on == $CHUNK_TYPE_RGBA) {
+            $self-&gt;{_raw_chunk_content} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;num_bytes_of_chunk_content());
+            my $io__raw_chunk_content = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_chunk_content});
+            $self-&gt;{chunk_content} = MagicavoxelVox::Rgba-&gt;new($io__raw_chunk_content, $self, $self-&gt;{_root});
         }
         else {
             $self-&gt;{chunk_content} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;num_bytes_of_chunk_content());

@@ -684,8 +684,8 @@ class EndianElf extends \Kaitai\Struct\Struct {
             $n = $this->qtyProgramHeader();
             for ($i = 0; $i < $n; $i++) {
                 $this->_m__raw_programHeaders[] = $this->_io->readBytes($this->programHeaderEntrySize());
-                $_io__raw_programHeaders = new \Kaitai\Struct\Stream(end($this->_m__raw_programHeaders));
-                $this->_m_programHeaders[] = new \Elf\EndianElf\ProgramHeader($_io__raw_programHeaders, $this, $this->_root, $this->_m__is_le);
+                $io = new \Kaitai\Struct\Stream(end($this->_m__raw_programHeaders));
+                $this->_m_programHeaders[] = new \Elf\EndianElf\ProgramHeader($io, $this, $this->_root, $this->_m__is_le);
             }
         } else {
             $this->_m__raw_programHeaders = [];
@@ -693,8 +693,8 @@ class EndianElf extends \Kaitai\Struct\Struct {
             $n = $this->qtyProgramHeader();
             for ($i = 0; $i < $n; $i++) {
                 $this->_m__raw_programHeaders[] = $this->_io->readBytes($this->programHeaderEntrySize());
-                $_io__raw_programHeaders = new \Kaitai\Struct\Stream(end($this->_m__raw_programHeaders));
-                $this->_m_programHeaders[] = new \Elf\EndianElf\ProgramHeader($_io__raw_programHeaders, $this, $this->_root, $this->_m__is_le);
+                $io = new \Kaitai\Struct\Stream(end($this->_m__raw_programHeaders));
+                $this->_m_programHeaders[] = new \Elf\EndianElf\ProgramHeader($io, $this, $this->_root, $this->_m__is_le);
             }
         }
         $this->_io->seek($_pos);
@@ -712,8 +712,8 @@ class EndianElf extends \Kaitai\Struct\Struct {
             $n = $this->qtySectionHeader();
             for ($i = 0; $i < $n; $i++) {
                 $this->_m__raw_sectionHeaders[] = $this->_io->readBytes($this->sectionHeaderEntrySize());
-                $_io__raw_sectionHeaders = new \Kaitai\Struct\Stream(end($this->_m__raw_sectionHeaders));
-                $this->_m_sectionHeaders[] = new \Elf\EndianElf\SectionHeader($_io__raw_sectionHeaders, $this, $this->_root, $this->_m__is_le);
+                $io = new \Kaitai\Struct\Stream(end($this->_m__raw_sectionHeaders));
+                $this->_m_sectionHeaders[] = new \Elf\EndianElf\SectionHeader($io, $this, $this->_root, $this->_m__is_le);
             }
         } else {
             $this->_m__raw_sectionHeaders = [];
@@ -721,8 +721,8 @@ class EndianElf extends \Kaitai\Struct\Struct {
             $n = $this->qtySectionHeader();
             for ($i = 0; $i < $n; $i++) {
                 $this->_m__raw_sectionHeaders[] = $this->_io->readBytes($this->sectionHeaderEntrySize());
-                $_io__raw_sectionHeaders = new \Kaitai\Struct\Stream(end($this->_m__raw_sectionHeaders));
-                $this->_m_sectionHeaders[] = new \Elf\EndianElf\SectionHeader($_io__raw_sectionHeaders, $this, $this->_root, $this->_m__is_le);
+                $io = new \Kaitai\Struct\Stream(end($this->_m__raw_sectionHeaders));
+                $this->_m_sectionHeaders[] = new \Elf\EndianElf\SectionHeader($io, $this, $this->_root, $this->_m__is_le);
             }
         }
         $this->_io->seek($_pos);
@@ -736,12 +736,12 @@ class EndianElf extends \Kaitai\Struct\Struct {
         $this->_io->seek($this->sectionHeaders()[$this->sectionNamesIdx()]->ofsBody());
         if ($this->_m__is_le) {
             $this->_m__raw_strings = $this->_io->readBytes($this->sectionHeaders()[$this->sectionNamesIdx()]->lenBody());
-            $_io__raw_strings = new \Kaitai\Struct\Stream($this->_m__raw_strings);
-            $this->_m_strings = new \Elf\EndianElf\StringsStruct($_io__raw_strings, $this, $this->_root, $this->_m__is_le);
+            $io = new \Kaitai\Struct\Stream($this->_m__raw_strings);
+            $this->_m_strings = new \Elf\EndianElf\StringsStruct($io, $this, $this->_root, $this->_m__is_le);
         } else {
             $this->_m__raw_strings = $this->_io->readBytes($this->sectionHeaders()[$this->sectionNamesIdx()]->lenBody());
-            $_io__raw_strings = new \Kaitai\Struct\Stream($this->_m__raw_strings);
-            $this->_m_strings = new \Elf\EndianElf\StringsStruct($_io__raw_strings, $this, $this->_root, $this->_m__is_le);
+            $io = new \Kaitai\Struct\Stream($this->_m__raw_strings);
+            $this->_m_strings = new \Elf\EndianElf\StringsStruct($io, $this, $this->_root, $this->_m__is_le);
         }
         $this->_io->seek($_pos);
         return $this->_m_strings;
@@ -980,12 +980,12 @@ class ProgramHeader extends \Kaitai\Struct\Struct {
             $io->seek($this->offset());
             if ($this->_m__is_le) {
                 $this->_m__raw_dynamic = $io->readBytes($this->filesz());
-                $_io__raw_dynamic = new \Kaitai\Struct\Stream($this->_m__raw_dynamic);
-                $this->_m_dynamic = new \Elf\EndianElf\DynamicSection($_io__raw_dynamic, $this, $this->_root, $this->_m__is_le);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_dynamic);
+                $this->_m_dynamic = new \Elf\EndianElf\DynamicSection($io, $this, $this->_root, $this->_m__is_le);
             } else {
                 $this->_m__raw_dynamic = $io->readBytes($this->filesz());
-                $_io__raw_dynamic = new \Kaitai\Struct\Stream($this->_m__raw_dynamic);
-                $this->_m_dynamic = new \Elf\EndianElf\DynamicSection($_io__raw_dynamic, $this, $this->_root, $this->_m__is_le);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_dynamic);
+                $this->_m_dynamic = new \Elf\EndianElf\DynamicSection($io, $this, $this->_root, $this->_m__is_le);
             }
             $io->seek($_pos);
         }
@@ -1249,25 +1249,25 @@ class SectionHeader extends \Kaitai\Struct\Struct {
         $io->seek($this->ofsBody());
         if ($this->_m__is_le) {
             switch ($this->type()) {
-                case \Elf\ShType::STRTAB:
-                    $this->_m__raw_body = $io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Elf\EndianElf\StringsStruct($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                    break;
                 case \Elf\ShType::DYNAMIC:
                     $this->_m__raw_body = $io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Elf\EndianElf\DynamicSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Elf\EndianElf\DynamicSection($io, $this, $this->_root, $this->_m__is_le);
                     break;
-                case \Elf\ShType::DYNSYM:
+                case \Elf\ShType::STRTAB:
                     $this->_m__raw_body = $io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Elf\EndianElf\DynsymSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Elf\EndianElf\StringsStruct($io, $this, $this->_root, $this->_m__is_le);
                     break;
                 case \Elf\ShType::DYNSTR:
                     $this->_m__raw_body = $io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Elf\EndianElf\StringsStruct($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Elf\EndianElf\StringsStruct($io, $this, $this->_root, $this->_m__is_le);
+                    break;
+                case \Elf\ShType::DYNSYM:
+                    $this->_m__raw_body = $io->readBytes($this->lenBody());
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Elf\EndianElf\DynsymSection($io, $this, $this->_root, $this->_m__is_le);
                     break;
                 default:
                     $this->_m_body = $io->readBytes($this->lenBody());
@@ -1275,25 +1275,25 @@ class SectionHeader extends \Kaitai\Struct\Struct {
             }
         } else {
             switch ($this->type()) {
-                case \Elf\ShType::STRTAB:
-                    $this->_m__raw_body = $io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Elf\EndianElf\StringsStruct($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                    break;
                 case \Elf\ShType::DYNAMIC:
                     $this->_m__raw_body = $io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Elf\EndianElf\DynamicSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Elf\EndianElf\DynamicSection($io, $this, $this->_root, $this->_m__is_le);
                     break;
-                case \Elf\ShType::DYNSYM:
+                case \Elf\ShType::STRTAB:
                     $this->_m__raw_body = $io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Elf\EndianElf\DynsymSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Elf\EndianElf\StringsStruct($io, $this, $this->_root, $this->_m__is_le);
                     break;
                 case \Elf\ShType::DYNSTR:
                     $this->_m__raw_body = $io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Elf\EndianElf\StringsStruct($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Elf\EndianElf\StringsStruct($io, $this, $this->_root, $this->_m__is_le);
+                    break;
+                case \Elf\ShType::DYNSYM:
+                    $this->_m__raw_body = $io->readBytes($this->lenBody());
+                    $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Elf\EndianElf\DynsymSection($io, $this, $this->_root, $this->_m__is_le);
                     break;
                 default:
                     $this->_m_body = $io->readBytes($this->lenBody());

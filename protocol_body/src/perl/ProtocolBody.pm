@@ -4,8 +4,8 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
 use TcpSegment;
-use Ipv4Packet;
 use IcmpPacket;
+use Ipv4Packet;
 use UdpDatagram;
 use Ipv6Packet;
 
@@ -185,26 +185,26 @@ sub _read {
     my ($self) = @_;
 
     my $_on = $self->protocol();
-    if ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV6_NONXT) {
+    if ($_on == $PROTOCOL_ENUM_TCP) {
+        $self->{body} = TcpSegment->new($self->{_io});
+    }
+    elsif ($_on == $PROTOCOL_ENUM_IPV6_NONXT) {
         $self->{body} = ProtocolBody::NoNextHeader->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV4) {
-        $self->{body} = Ipv4Packet->new($self->{_io});
-    }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_UDP) {
-        $self->{body} = UdpDatagram->new($self->{_io});
-    }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_ICMP) {
+    elsif ($_on == $PROTOCOL_ENUM_ICMP) {
         $self->{body} = IcmpPacket->new($self->{_io});
     }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_HOPOPT) {
+    elsif ($_on == $PROTOCOL_ENUM_UDP) {
+        $self->{body} = UdpDatagram->new($self->{_io});
+    }
+    elsif ($_on == $PROTOCOL_ENUM_HOPOPT) {
         $self->{body} = ProtocolBody::OptionHopByHop->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV6) {
+    elsif ($_on == $PROTOCOL_ENUM_IPV6) {
         $self->{body} = Ipv6Packet->new($self->{_io});
     }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_TCP) {
-        $self->{body} = TcpSegment->new($self->{_io});
+    elsif ($_on == $PROTOCOL_ENUM_IPV4) {
+        $self->{body} = Ipv4Packet->new($self->{_io});
     }
 }
 

@@ -123,8 +123,8 @@ class DnsPacket < Kaitai::Struct::Struct
 
     def _read
       @name = DomainName.new(@_io, self, @_root)
-      @type = Kaitai::Struct::Stream::resolve_enum(DnsPacket::TYPE_TYPE, @_io.read_u2be)
-      @query_class = Kaitai::Struct::Stream::resolve_enum(DnsPacket::CLASS_TYPE, @_io.read_u2be)
+      @type = Kaitai::Struct::Stream::resolve_enum(TYPE_TYPE, @_io.read_u2be)
+      @query_class = Kaitai::Struct::Stream::resolve_enum(CLASS_TYPE, @_io.read_u2be)
       self
     end
     attr_reader :name
@@ -175,8 +175,8 @@ class DnsPacket < Kaitai::Struct::Struct
 
     def _read
       @name = DomainName.new(@_io, self, @_root)
-      @type = Kaitai::Struct::Stream::resolve_enum(DnsPacket::TYPE_TYPE, @_io.read_u2be)
-      @answer_class = Kaitai::Struct::Stream::resolve_enum(DnsPacket::CLASS_TYPE, @_io.read_u2be)
+      @type = Kaitai::Struct::Stream::resolve_enum(TYPE_TYPE, @_io.read_u2be)
+      @answer_class = Kaitai::Struct::Stream::resolve_enum(CLASS_TYPE, @_io.read_u2be)
       @ttl = @_io.read_s4be
       @rdlength = @_io.read_u2be
       if type == :type_type_ptr

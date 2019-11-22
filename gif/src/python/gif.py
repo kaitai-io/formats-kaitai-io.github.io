@@ -48,8 +48,8 @@ class Gif(KaitaiStruct):
         self.logical_screen_descriptor = self._root.LogicalScreenDescriptorStruct(self._io, self, self._root)
         if self.logical_screen_descriptor.has_color_table:
             self._raw_global_color_table = self._io.read_bytes((self.logical_screen_descriptor.color_table_size * 3))
-            _io__raw_global_color_table = KaitaiStream(BytesIO(self._raw_global_color_table))
-            self.global_color_table = self._root.ColorTable(_io__raw_global_color_table, self, self._root)
+            io = KaitaiStream(BytesIO(self._raw_global_color_table))
+            self.global_color_table = self._root.ColorTable(io, self, self._root)
 
         self.blocks = []
         i = 0
@@ -139,8 +139,8 @@ class Gif(KaitaiStruct):
             self.flags = self._io.read_u1()
             if self.has_color_table:
                 self._raw_local_color_table = self._io.read_bytes((self.color_table_size * 3))
-                _io__raw_local_color_table = KaitaiStream(BytesIO(self._raw_local_color_table))
-                self.local_color_table = self._root.ColorTable(_io__raw_local_color_table, self, self._root)
+                io = KaitaiStream(BytesIO(self._raw_local_color_table))
+                self.local_color_table = self._root.ColorTable(io, self, self._root)
 
             self.image_data = self._root.ImageData(self._io, self, self._root)
 
@@ -185,7 +185,7 @@ class Gif(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.block_type = KaitaiStream.resolve_enum(self._root.BlockType, self._io.read_u1())
+            self.block_type = self._root.BlockType(self._io.read_u1())
             _on = self.block_type
             if _on == self._root.BlockType.extension:
                 self.body = self._root.Extension(self._io, self, self._root)
@@ -321,7 +321,7 @@ class Gif(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.label = KaitaiStream.resolve_enum(self._root.ExtensionLabel, self._io.read_u1())
+            self.label = self._root.ExtensionLabel(self._io.read_u1())
             _on = self.label
             if _on == self._root.ExtensionLabel.application:
                 self.body = self._root.ExtApplication(self._io, self, self._root)

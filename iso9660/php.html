@@ -178,6 +178,11 @@ speed).</p>
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="ISO9660 CD filesystem parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="ISO9660 CD filesystem parsing C# library">C#</a></li>
                 
                 
@@ -314,8 +319,8 @@ class VolDescPrimary extends \Kaitai\Struct\Struct {
         $this-&gt;_m_lbaPathTableBe = $this-&gt;_io-&gt;readU4be();
         $this-&gt;_m_lbaOptPathTableBe = $this-&gt;_io-&gt;readU4be();
         $this-&gt;_m__raw_rootDir = $this-&gt;_io-&gt;readBytes(34);
-        $_io__raw_rootDir = new \Kaitai\Struct\Stream($this-&gt;_m__raw_rootDir);
-        $this-&gt;_m_rootDir = new \Iso9660\DirEntry($_io__raw_rootDir, $this, $this-&gt;_root);
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_rootDir);
+        $this-&gt;_m_rootDir = new \Iso9660\DirEntry($io, $this, $this-&gt;_root);
         $this-&gt;_m_volSetId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(128), &quot;UTF-8&quot;);
         $this-&gt;_m_publisherId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(128), &quot;UTF-8&quot;);
         $this-&gt;_m_dataPreparerId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(128), &quot;UTF-8&quot;);
@@ -338,8 +343,8 @@ class VolDescPrimary extends \Kaitai\Struct\Struct {
         $_pos = $this-&gt;_io-&gt;pos();
         $this-&gt;_io-&gt;seek(($this-&gt;lbaPathTableLe() * $this-&gt;_root()-&gt;sectorSize()));
         $this-&gt;_m__raw_pathTable = $this-&gt;_io-&gt;readBytes($this-&gt;pathTableSize()-&gt;le());
-        $_io__raw_pathTable = new \Kaitai\Struct\Stream($this-&gt;_m__raw_pathTable);
-        $this-&gt;_m_pathTable = new \Iso9660\PathTableLe($_io__raw_pathTable, $this, $this-&gt;_root);
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_pathTable);
+        $this-&gt;_m_pathTable = new \Iso9660\PathTableLe($io, $this, $this-&gt;_root);
         $this-&gt;_io-&gt;seek($_pos);
         return $this-&gt;_m_pathTable;
     }
@@ -470,8 +475,8 @@ class DirEntry extends \Kaitai\Struct\Struct {
         $this-&gt;_m_len = $this-&gt;_io-&gt;readU1();
         if ($this-&gt;len() &gt; 0) {
             $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes(($this-&gt;len() - 1));
-            $_io__raw_body = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-            $this-&gt;_m_body = new \Iso9660\DirEntryBody($_io__raw_body, $this, $this-&gt;_root);
+            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
+            $this-&gt;_m_body = new \Iso9660\DirEntryBody($io, $this, $this-&gt;_root);
         }
     }
     protected $_m_len;
@@ -691,8 +696,8 @@ class DirEntryBody extends \Kaitai\Struct\Struct {
             $_pos = $io-&gt;pos();
             $io-&gt;seek(($this-&gt;lbaExtent()-&gt;le() * $this-&gt;_root()-&gt;sectorSize()));
             $this-&gt;_m__raw_extentAsDir = $io-&gt;readBytes($this-&gt;sizeExtent()-&gt;le());
-            $_io__raw_extentAsDir = new \Kaitai\Struct\Stream($this-&gt;_m__raw_extentAsDir);
-            $this-&gt;_m_extentAsDir = new \Iso9660\DirEntries($_io__raw_extentAsDir, $this, $this-&gt;_root);
+            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_extentAsDir);
+            $this-&gt;_m_extentAsDir = new \Iso9660\DirEntries($io, $this, $this-&gt;_root);
             $io-&gt;seek($_pos);
         }
         return $this-&gt;_m_extentAsDir;

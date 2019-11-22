@@ -78,8 +78,8 @@ class Entry extends \Kaitai\Struct\Struct {
         switch ($this->type()) {
             case \AppleSingleDouble\Entry\Types::FINDER_INFO:
                 $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \AppleSingleDouble\FinderInfo($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \AppleSingleDouble\FinderInfo($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->lenBody());

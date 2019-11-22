@@ -155,6 +155,11 @@ software due to simplicity and availability of Creative's recording
                 
                 <li>
                 
+                <a href="cpp_stl.html" title="Creative Voice File parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
                 <a href="csharp.html" title="Creative Voice File parsing C# library">C#</a></li>
                 
                 
@@ -380,7 +385,7 @@ class CreativeVoiceFile &lt; Kaitai::Struct::Struct
       @sample_rate = @_io.read_u4le
       @bits_per_sample = @_io.read_u1
       @num_channels = @_io.read_u1
-      @codec = Kaitai::Struct::Stream::resolve_enum(CreativeVoiceFile::CODECS, @_io.read_u2le)
+      @codec = Kaitai::Struct::Stream::resolve_enum(CODECS, @_io.read_u2le)
       @reserved = @_io.read_bytes(4)
       @wave = @_io.read_bytes_full
       self
@@ -399,7 +404,7 @@ class CreativeVoiceFile &lt; Kaitai::Struct::Struct
     end
 
     def _read
-      @block_type = Kaitai::Struct::Stream::resolve_enum(CreativeVoiceFile::BLOCK_TYPES, @_io.read_u1)
+      @block_type = Kaitai::Struct::Stream::resolve_enum(BLOCK_TYPES, @_io.read_u1)
       if block_type != :block_types_terminator
         @body_size1 = @_io.read_u2le
       end
@@ -408,30 +413,30 @@ class CreativeVoiceFile &lt; Kaitai::Struct::Struct
       end
       if block_type != :block_types_terminator
         case block_type
-        when :block_types_sound_data_new
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockSoundDataNew.new(_io__raw_body, self, @_root)
-        when :block_types_repeat_start
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockRepeatStart.new(_io__raw_body, self, @_root)
-        when :block_types_marker
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockMarker.new(_io__raw_body, self, @_root)
-        when :block_types_sound_data
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockSoundData.new(_io__raw_body, self, @_root)
-        when :block_types_extra_info
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockExtraInfo.new(_io__raw_body, self, @_root)
         when :block_types_silence
           @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockSilence.new(_io__raw_body, self, @_root)
+          io = Kaitai::Struct::Stream.new(@_raw_body)
+          @body = BlockSilence.new(io, self, @_root)
+        when :block_types_sound_data
+          @_raw_body = @_io.read_bytes(body_size)
+          io = Kaitai::Struct::Stream.new(@_raw_body)
+          @body = BlockSoundData.new(io, self, @_root)
+        when :block_types_marker
+          @_raw_body = @_io.read_bytes(body_size)
+          io = Kaitai::Struct::Stream.new(@_raw_body)
+          @body = BlockMarker.new(io, self, @_root)
+        when :block_types_sound_data_new
+          @_raw_body = @_io.read_bytes(body_size)
+          io = Kaitai::Struct::Stream.new(@_raw_body)
+          @body = BlockSoundDataNew.new(io, self, @_root)
+        when :block_types_repeat_start
+          @_raw_body = @_io.read_bytes(body_size)
+          io = Kaitai::Struct::Stream.new(@_raw_body)
+          @body = BlockRepeatStart.new(io, self, @_root)
+        when :block_types_extra_info
+          @_raw_body = @_io.read_bytes(body_size)
+          io = Kaitai::Struct::Stream.new(@_raw_body)
+          @body = BlockExtraInfo.new(io, self, @_root)
         else
           @body = @_io.read_bytes(body_size)
         end
@@ -491,7 +496,7 @@ class CreativeVoiceFile &lt; Kaitai::Struct::Struct
 
     def _read
       @freq_div = @_io.read_u1
-      @codec = Kaitai::Struct::Stream::resolve_enum(CreativeVoiceFile::CODECS, @_io.read_u1)
+      @codec = Kaitai::Struct::Stream::resolve_enum(CODECS, @_io.read_u1)
       @wave = @_io.read_bytes_full
       self
     end
@@ -518,7 +523,7 @@ class CreativeVoiceFile &lt; Kaitai::Struct::Struct
 
     def _read
       @freq_div = @_io.read_u2le
-      @codec = Kaitai::Struct::Stream::resolve_enum(CreativeVoiceFile::CODECS, @_io.read_u1)
+      @codec = Kaitai::Struct::Stream::resolve_enum(CODECS, @_io.read_u1)
       @num_channels_1 = @_io.read_u1
       self
     end

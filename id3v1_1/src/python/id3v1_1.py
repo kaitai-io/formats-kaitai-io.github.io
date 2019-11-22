@@ -180,7 +180,7 @@ class Id3v11(KaitaiStruct):
             self.album = self._io.read_bytes(30)
             self.year = (self._io.read_bytes(4)).decode(u"ASCII")
             self.comment = self._io.read_bytes(30)
-            self.genre = KaitaiStream.resolve_enum(self._root.Id3V11Tag.GenreEnum, self._io.read_u1())
+            self.genre = self._root.Id3V11Tag.GenreEnum(self._io.read_u1())
 
 
     @property

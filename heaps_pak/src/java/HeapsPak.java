@@ -211,7 +211,7 @@ public class HeapsPak extends KaitaiStruct {
             }
             private void _read() {
                 this.numEntries = this._io.readU4le();
-                entries = new ArrayList<Entry>(((Number) (numEntries())).intValue());
+                entries = new ArrayList<Entry>((int) (numEntries()));
                 for (int i = 0; i < numEntries(); i++) {
                     this.entries.add(new Entry(this._io, this, _root));
                 }

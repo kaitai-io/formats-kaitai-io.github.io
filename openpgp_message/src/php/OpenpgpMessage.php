@@ -293,115 +293,115 @@ class Subpacket extends \Kaitai\Struct\Struct {
         $this->_m_len = new \OpenpgpMessage\LenSubpacket($this->_io, $this, $this->_root);
         $this->_m_subpacketType = $this->_io->readU1();
         switch ($this->subpacketType()) {
-            case \OpenpgpMessage\SubpacketTypes::PREFERRED_KEY_SERVER:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\PreferredKeyServer($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::ISSUER:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\Issuer($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::REVOCABLE:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\Revocable($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::SIGNATURE_TARGET:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\SignatureTarget($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::REGULAR_EXPRESSION:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\RegularExpression($_io__raw_content, $this, $this->_root);
-                break;
             case \OpenpgpMessage\SubpacketTypes::EXPORTABLE_CERTIFICATION:
                 $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\ExportableCertification($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::REASON_FOR_REVOCATION:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\ReasonForRevocation($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::KEY_SERVER_PREFERENCES:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\KeyServerPreferences($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::SIGNATURE_CREATION_TIME:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\SignatureCreationTime($_io__raw_content, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\ExportableCertification($io, $this, $this->_root);
                 break;
             case \OpenpgpMessage\SubpacketTypes::PREFERRED_HASH_ALGORITHMS:
                 $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\PreferredHashAlgorithms($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::TRUST_SIGNATURE:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\TrustSignature($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::KEY_EXPIRATION_TIME:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\KeyExpirationTime($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::KEY_FLAGS:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\KeyFlags($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::SIGNATURE_EXPIRATION_TIME:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\SignatureExpirationTime($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::FEATURES:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\Features($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::SIGNERS_USER_ID:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\SignersUserId($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::NOTATION_DATA:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\NotationData($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::REVOCATION_KEY:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\RevocationKey($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::PREFERRED_COMPRESSION_ALGORITHMS:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\PreferredCompressionAlgorithms($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::POLICY_URI:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\PolicyUri($_io__raw_content, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\SubpacketTypes::PRIMARY_USER_ID:
-                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\PrimaryUserId($_io__raw_content, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\PreferredHashAlgorithms($io, $this, $this->_root);
                 break;
             case \OpenpgpMessage\SubpacketTypes::EMBEDDED_SIGNATURE:
                 $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
-                $_io__raw_content = new \Kaitai\Struct\Stream($this->_m__raw_content);
-                $this->_m_content = new \OpenpgpMessage\EmbeddedSignature($_io__raw_content, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\EmbeddedSignature($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::TRUST_SIGNATURE:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\TrustSignature($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::REASON_FOR_REVOCATION:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\ReasonForRevocation($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::FEATURES:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\Features($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::SIGNATURE_EXPIRATION_TIME:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\SignatureExpirationTime($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::PREFERRED_COMPRESSION_ALGORITHMS:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\PreferredCompressionAlgorithms($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::REVOCABLE:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\Revocable($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::REGULAR_EXPRESSION:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\RegularExpression($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::NOTATION_DATA:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\NotationData($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::KEY_EXPIRATION_TIME:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\KeyExpirationTime($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::SIGNATURE_CREATION_TIME:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\SignatureCreationTime($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::REVOCATION_KEY:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\RevocationKey($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::KEY_FLAGS:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\KeyFlags($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::ISSUER:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\Issuer($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::SIGNATURE_TARGET:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\SignatureTarget($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::KEY_SERVER_PREFERENCES:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\KeyServerPreferences($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::SIGNERS_USER_ID:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\SignersUserId($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::POLICY_URI:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\PolicyUri($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::PREFERRED_KEY_SERVER:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\PreferredKeyServer($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\SubpacketTypes::PRIMARY_USER_ID:
+                $this->_m__raw_content = $this->_io->readBytes(($this->len()->len() - 1));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_content);
+                $this->_m_content = new \OpenpgpMessage\PrimaryUserId($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_content = $this->_io->readBytes(($this->len()->len() - 1));
@@ -441,33 +441,33 @@ class OldPacket extends \Kaitai\Struct\Struct {
         switch ($this->_parent()->packetTypeOld()) {
             case \OpenpgpMessage\PacketTags::PUBLIC_KEY_PACKET:
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \OpenpgpMessage\PublicKeyPacket($_io__raw_body, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\PacketTags::PUBLIC_SUBKEY_PACKET:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \OpenpgpMessage\PublicKeyPacket($_io__raw_body, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\PacketTags::USER_ID_PACKET:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \OpenpgpMessage\UserIdPacket($_io__raw_body, $this, $this->_root);
-                break;
-            case \OpenpgpMessage\PacketTags::SIGNATURE_PACKET:
-                $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \OpenpgpMessage\SignaturePacket($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \OpenpgpMessage\PublicKeyPacket($io, $this, $this->_root);
                 break;
             case \OpenpgpMessage\PacketTags::SECRET_SUBKEY_PACKET:
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \OpenpgpMessage\PublicKeyPacket($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \OpenpgpMessage\PublicKeyPacket($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\PacketTags::USER_ID_PACKET:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \OpenpgpMessage\UserIdPacket($io, $this, $this->_root);
                 break;
             case \OpenpgpMessage\PacketTags::SECRET_KEY_PACKET:
                 $this->_m__raw_body = $this->_io->readBytes($this->len());
-                $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \OpenpgpMessage\SecretKeyPacket($_io__raw_body, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \OpenpgpMessage\SecretKeyPacket($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\PacketTags::SIGNATURE_PACKET:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \OpenpgpMessage\SignaturePacket($io, $this, $this->_root);
+                break;
+            case \OpenpgpMessage\PacketTags::PUBLIC_SUBKEY_PACKET:
+                $this->_m__raw_body = $this->_io->readBytes($this->len());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \OpenpgpMessage\PublicKeyPacket($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_body = $this->_io->readBytes($this->len());
@@ -557,12 +557,12 @@ class SignaturePacket extends \Kaitai\Struct\Struct {
         $this->_m_hashAlgorithm = $this->_io->readU1();
         $this->_m_lenHashedSubpacket = $this->_io->readU2be();
         $this->_m__raw_hashedSubpackets = $this->_io->readBytes($this->lenHashedSubpacket());
-        $_io__raw_hashedSubpackets = new \Kaitai\Struct\Stream($this->_m__raw_hashedSubpackets);
-        $this->_m_hashedSubpackets = new \OpenpgpMessage\Subpackets($_io__raw_hashedSubpackets, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_hashedSubpackets);
+        $this->_m_hashedSubpackets = new \OpenpgpMessage\Subpackets($io, $this, $this->_root);
         $this->_m_lenUnhashedSubpacket = $this->_io->readU2be();
         $this->_m__raw_unhashedSubpackets = $this->_io->readBytes($this->lenUnhashedSubpacket());
-        $_io__raw_unhashedSubpackets = new \Kaitai\Struct\Stream($this->_m__raw_unhashedSubpackets);
-        $this->_m_unhashedSubpackets = new \OpenpgpMessage\Subpackets($_io__raw_unhashedSubpackets, $this, $this->_root);
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_unhashedSubpackets);
+        $this->_m_unhashedSubpackets = new \OpenpgpMessage\Subpackets($io, $this, $this->_root);
         $this->_m_leftSignedHash = $this->_io->readU2be();
         $this->_m_rsaN = $this->_io->readU2be();
         $this->_m_signature = $this->_io->readBytesFull();

@@ -95,7 +95,7 @@ class Rar < Kaitai::Struct::Struct
 
     def _read
       @crc16 = @_io.read_u2le
-      @block_type = Kaitai::Struct::Stream::resolve_enum(Rar::BLOCK_TYPES, @_io.read_u1)
+      @block_type = Kaitai::Struct::Stream::resolve_enum(BLOCK_TYPES, @_io.read_u1)
       @flags = @_io.read_u2le
       @block_size = @_io.read_u2le
       if has_add
@@ -104,8 +104,8 @@ class Rar < Kaitai::Struct::Struct
       case block_type
       when :block_types_file_header
         @_raw_body = @_io.read_bytes(body_size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = BlockFileHeader.new(_io__raw_body, self, @_root)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = BlockFileHeader.new(io, self, @_root)
       else
         @body = @_io.read_bytes(body_size)
       end
@@ -161,11 +161,11 @@ class Rar < Kaitai::Struct::Struct
 
     def _read
       @low_unp_size = @_io.read_u4le
-      @host_os = Kaitai::Struct::Stream::resolve_enum(Rar::OSES, @_io.read_u1)
+      @host_os = Kaitai::Struct::Stream::resolve_enum(OSES, @_io.read_u1)
       @file_crc32 = @_io.read_u4le
       @file_time = DosTime.new(@_io, self, @_root)
       @rar_version = @_io.read_u1
-      @method = Kaitai::Struct::Stream::resolve_enum(Rar::METHODS, @_io.read_u1)
+      @method = Kaitai::Struct::Stream::resolve_enum(METHODS, @_io.read_u1)
       @name_size = @_io.read_u2le
       @attr = @_io.read_u4le
       if (_parent.flags & 256) != 0

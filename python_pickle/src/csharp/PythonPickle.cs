@@ -688,19 +688,7 @@ namespace Kaitai
             {
                 _code = ((PythonPickle.Opcode) m_io.ReadU1());
                 switch (Code) {
-                case PythonPickle.Opcode.Ext4: {
-                    _arg = m_io.ReadU4le();
-                    break;
-                }
-                case PythonPickle.Opcode.Tuple1: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Setitem: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Stop: {
+                case PythonPickle.Opcode.List: {
                     _arg = new NoArg(m_io, this, m_root);
                     break;
                 }
@@ -708,111 +696,35 @@ namespace Kaitai
                     _arg = m_io.ReadU2le();
                     break;
                 }
-                case PythonPickle.Opcode.EmptyTuple: {
+                case PythonPickle.Opcode.Stop: {
                     _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Newtrue: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Long: {
-                    _arg = new DecimalnlLong(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Newobj: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Put: {
-                    _arg = new DecimalnlShort(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.StackGlobal: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.PopMark: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Append: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Newfalse: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binpersid: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Build: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.EmptyDict: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Tuple2: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Long4: {
-                    _arg = new Long4(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Appends: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binbytes: {
-                    _arg = new Bytes4(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Dup: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.List: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Proto: {
-                    _arg = m_io.ReadU1();
-                    break;
-                }
-                case PythonPickle.Opcode.Pop: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Frame: {
-                    _arg = m_io.ReadU8le();
-                    break;
-                }
-                case PythonPickle.Opcode.String: {
-                    _arg = new Stringnl(m_io, this, m_root);
                     break;
                 }
                 case PythonPickle.Opcode.Binunicode: {
                     _arg = new Unicodestring4(m_io, this, m_root);
                     break;
                 }
-                case PythonPickle.Opcode.Float: {
-                    _arg = new Floatnl(m_io, this, m_root);
+                case PythonPickle.Opcode.Put: {
+                    _arg = new DecimalnlShort(m_io, this, m_root);
                     break;
                 }
-                case PythonPickle.Opcode.Reduce: {
+                case PythonPickle.Opcode.Newfalse: {
                     _arg = new NoArg(m_io, this, m_root);
                     break;
                 }
-                case PythonPickle.Opcode.Binput: {
-                    _arg = m_io.ReadU1();
+                case PythonPickle.Opcode.Long1: {
+                    _arg = new Long1(m_io, this, m_root);
                     break;
                 }
-                case PythonPickle.Opcode.Memoize: {
+                case PythonPickle.Opcode.Unicode: {
+                    _arg = new Unicodestringnl(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.EmptyList: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Mark: {
                     _arg = new NoArg(m_io, this, m_root);
                     break;
                 }
@@ -820,119 +732,55 @@ namespace Kaitai
                     _arg = new StringnlNoescape(m_io, this, m_root);
                     break;
                 }
-                case PythonPickle.Opcode.Ext1: {
-                    _arg = m_io.ReadU1();
-                    break;
-                }
-                case PythonPickle.Opcode.None: {
+                case PythonPickle.Opcode.StackGlobal: {
                     _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.ShortBinunicode: {
-                    _arg = new Unicodestring1(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Obj: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binfloat: {
-                    _arg = m_io.ReadF8be();
-                    break;
-                }
-                case PythonPickle.Opcode.NewobjEx: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.EmptyList: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Tuple: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binunicode8: {
-                    _arg = new Unicodestring8(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binget: {
-                    _arg = m_io.ReadU1();
-                    break;
-                }
-                case PythonPickle.Opcode.Global: {
-                    _arg = new StringnlNoescapePair(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Dict: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binstring: {
-                    _arg = new String4(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Setitems: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binint2: {
-                    _arg = m_io.ReadU2le();
-                    break;
-                }
-                case PythonPickle.Opcode.Binbytes8: {
-                    _arg = new Bytes8(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binint1: {
-                    _arg = m_io.ReadU1();
-                    break;
-                }
-                case PythonPickle.Opcode.Inst: {
-                    _arg = new StringnlNoescapePair(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.LongBinget: {
-                    _arg = m_io.ReadU4le();
-                    break;
-                }
-                case PythonPickle.Opcode.LongBinput: {
-                    _arg = m_io.ReadU4le();
-                    break;
-                }
-                case PythonPickle.Opcode.Int: {
-                    _arg = new DecimalnlShort(m_io, this, m_root);
                     break;
                 }
                 case PythonPickle.Opcode.Binint: {
                     _arg = m_io.ReadS4le();
                     break;
                 }
-                case PythonPickle.Opcode.Unicode: {
-                    _arg = new Unicodestringnl(m_io, this, m_root);
+                case PythonPickle.Opcode.Binput: {
+                    _arg = m_io.ReadU1();
                     break;
                 }
-                case PythonPickle.Opcode.Long1: {
-                    _arg = new Long1(m_io, this, m_root);
+                case PythonPickle.Opcode.Binint1: {
+                    _arg = m_io.ReadU1();
+                    break;
+                }
+                case PythonPickle.Opcode.Binint2: {
+                    _arg = m_io.ReadU2le();
+                    break;
+                }
+                case PythonPickle.Opcode.Tuple: {
+                    _arg = new NoArg(m_io, this, m_root);
                     break;
                 }
                 case PythonPickle.Opcode.ShortBinstring: {
                     _arg = new String1(m_io, this, m_root);
                     break;
                 }
-                case PythonPickle.Opcode.Mark: {
+                case PythonPickle.Opcode.EmptySet: {
                     _arg = new NoArg(m_io, this, m_root);
                     break;
                 }
-                case PythonPickle.Opcode.Frozenset: {
+                case PythonPickle.Opcode.String: {
+                    _arg = new Stringnl(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.EmptyDict: {
                     _arg = new NoArg(m_io, this, m_root);
                     break;
                 }
-                case PythonPickle.Opcode.Tuple3: {
+                case PythonPickle.Opcode.Binget: {
+                    _arg = m_io.ReadU1();
+                    break;
+                }
+                case PythonPickle.Opcode.Append: {
                     _arg = new NoArg(m_io, this, m_root);
                     break;
                 }
-                case PythonPickle.Opcode.Additems: {
+                case PythonPickle.Opcode.PopMark: {
                     _arg = new NoArg(m_io, this, m_root);
                     break;
                 }
@@ -940,12 +788,164 @@ namespace Kaitai
                     _arg = new DecimalnlShort(m_io, this, m_root);
                     break;
                 }
-                case PythonPickle.Opcode.EmptySet: {
+                case PythonPickle.Opcode.Newobj: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Reduce: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binbytes: {
+                    _arg = new Bytes4(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binbytes8: {
+                    _arg = new Bytes8(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Setitem: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Frame: {
+                    _arg = m_io.ReadU8le();
+                    break;
+                }
+                case PythonPickle.Opcode.Float: {
+                    _arg = new Floatnl(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binunicode8: {
+                    _arg = new Unicodestring8(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Int: {
+                    _arg = new DecimalnlShort(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.LongBinput: {
+                    _arg = m_io.ReadU4le();
+                    break;
+                }
+                case PythonPickle.Opcode.EmptyTuple: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Long: {
+                    _arg = new DecimalnlLong(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Frozenset: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Global: {
+                    _arg = new StringnlNoescapePair(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Obj: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Additems: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Tuple1: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Setitems: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.None: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Build: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Ext4: {
+                    _arg = m_io.ReadU4le();
+                    break;
+                }
+                case PythonPickle.Opcode.NewobjEx: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binfloat: {
+                    _arg = m_io.ReadF8be();
+                    break;
+                }
+                case PythonPickle.Opcode.Dup: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Long4: {
+                    _arg = new Long4(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.ShortBinunicode: {
+                    _arg = new Unicodestring1(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Tuple3: {
                     _arg = new NoArg(m_io, this, m_root);
                     break;
                 }
                 case PythonPickle.Opcode.ShortBinbytes: {
                     _arg = new Bytes1(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Ext1: {
+                    _arg = m_io.ReadU1();
+                    break;
+                }
+                case PythonPickle.Opcode.Dict: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Appends: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Inst: {
+                    _arg = new StringnlNoescapePair(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binpersid: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Memoize: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Proto: {
+                    _arg = m_io.ReadU1();
+                    break;
+                }
+                case PythonPickle.Opcode.Newtrue: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binstring: {
+                    _arg = new String4(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Tuple2: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Pop: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.LongBinget: {
+                    _arg = m_io.ReadU4le();
                     break;
                 }
                 }

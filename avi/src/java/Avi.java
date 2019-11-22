@@ -290,36 +290,29 @@ public class Avi extends KaitaiStruct {
         private void _read() {
             this.fourCc = Avi.ChunkType.byId(this._io.readU4le());
             this.blockSize = this._io.readU4le();
-            {
-                ChunkType on = fourCc();
-                if (on != null) {
-                    switch (fourCc()) {
-                    case LIST: {
-                        this._raw_data = this._io.readBytes(blockSize());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new ListBody(_io__raw_data, this, _root);
-                        break;
-                    }
-                    case AVIH: {
-                        this._raw_data = this._io.readBytes(blockSize());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new AvihBody(_io__raw_data, this, _root);
-                        break;
-                    }
-                    case STRH: {
-                        this._raw_data = this._io.readBytes(blockSize());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new StrhBody(_io__raw_data, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.data = this._io.readBytes(blockSize());
-                        break;
-                    }
-                    }
-                } else {
-                    this.data = this._io.readBytes(blockSize());
-                }
+            switch (fourCc()) {
+            case LIST: {
+                this._raw_data = this._io.readBytes(blockSize());
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                this.data = new ListBody(_io__raw_data, this, _root);
+                break;
+            }
+            case AVIH: {
+                this._raw_data = this._io.readBytes(blockSize());
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                this.data = new AvihBody(_io__raw_data, this, _root);
+                break;
+            }
+            case STRH: {
+                this._raw_data = this._io.readBytes(blockSize());
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
+                this.data = new StrhBody(_io__raw_data, this, _root);
+                break;
+            }
+            default: {
+                this.data = this._io.readBytes(blockSize());
+                break;
+            }
             }
         }
         private ChunkType fourCc;

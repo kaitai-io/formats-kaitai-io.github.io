@@ -93,7 +93,7 @@ public class Msgpack extends KaitaiStruct {
             this.numArrayElements32 = this._io.readU4be();
         }
         if (isArray()) {
-            arrayElements = new ArrayList<Msgpack>(((Number) (numArrayElements())).intValue());
+            arrayElements = new ArrayList<Msgpack>((int) (numArrayElements()));
             for (int i = 0; i < numArrayElements(); i++) {
                 this.arrayElements.add(new Msgpack(this._io));
             }
@@ -105,7 +105,7 @@ public class Msgpack extends KaitaiStruct {
             this.numMapElements32 = this._io.readU4be();
         }
         if (isMap()) {
-            mapElements = new ArrayList<MapTuple>(((Number) (numMapElements())).intValue());
+            mapElements = new ArrayList<MapTuple>((int) (numMapElements()));
             for (int i = 0; i < numMapElements(); i++) {
                 this.mapElements.add(new MapTuple(this._io, this, _root));
             }

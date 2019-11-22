@@ -13,8 +13,8 @@ class GlibcUtmp extends \Kaitai\Struct\Struct {
         $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m__raw_records[] = $this->_io->readBytes(384);
-            $_io__raw_records = new \Kaitai\Struct\Stream(end($this->_m__raw_records));
-            $this->_m_records[] = new \GlibcUtmp\Record($_io__raw_records, $this, $this->_root);
+            $io = new \Kaitai\Struct\Stream(end($this->_m__raw_records));
+            $this->_m_records[] = new \GlibcUtmp\Record($io, $this, $this->_root);
             $i++;
         }
     }

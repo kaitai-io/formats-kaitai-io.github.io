@@ -213,28 +213,23 @@ public class ZxSpectrumTap extends KaitaiStruct {
             this.headerType = ZxSpectrumTap.HeaderTypeEnum.byId(this._io.readU1());
             this.filename = KaitaiStream.bytesStripRight(this._io.readBytes(10), (byte) 32);
             this.lenData = this._io.readU2le();
-            {
-                HeaderTypeEnum on = headerType();
-                if (on != null) {
-                    switch (headerType()) {
-                    case PROGRAM: {
-                        this.params = new ProgramParams(this._io, this, _root);
-                        break;
-                    }
-                    case NUM_ARRY: {
-                        this.params = new ArrayParams(this._io, this, _root);
-                        break;
-                    }
-                    case CHAR_ARRY: {
-                        this.params = new ArrayParams(this._io, this, _root);
-                        break;
-                    }
-                    case BYTES: {
-                        this.params = new BytesParams(this._io, this, _root);
-                        break;
-                    }
-                    }
-                }
+            switch (headerType()) {
+            case PROGRAM: {
+                this.params = new ProgramParams(this._io, this, _root);
+                break;
+            }
+            case NUM_ARRY: {
+                this.params = new ArrayParams(this._io, this, _root);
+                break;
+            }
+            case CHAR_ARRY: {
+                this.params = new ArrayParams(this._io, this, _root);
+                break;
+            }
+            case BYTES: {
+                this.params = new BytesParams(this._io, this, _root);
+                break;
+            }
             }
             this.checksum = this._io.readU1();
         }

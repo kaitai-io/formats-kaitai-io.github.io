@@ -332,43 +332,43 @@ class Record extends \Kaitai\Struct\Struct {
         switch ($this->function()) {
             case \Wmf\Func::SETBKMODE:
                 $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                $this->_m_params = new \Wmf\ParamsSetbkmode($_io__raw_params, $this, $this->_root);
-                break;
-            case \Wmf\Func::POLYGON:
-                $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                $this->_m_params = new \Wmf\ParamsPolygon($_io__raw_params, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                $this->_m_params = new \Wmf\ParamsSetbkmode($io, $this, $this->_root);
                 break;
             case \Wmf\Func::SETBKCOLOR:
                 $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                $this->_m_params = new \Wmf\ColorRef($_io__raw_params, $this, $this->_root);
-                break;
-            case \Wmf\Func::SETPOLYFILLMODE:
-                $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                $this->_m_params = new \Wmf\ParamsSetpolyfillmode($_io__raw_params, $this, $this->_root);
-                break;
-            case \Wmf\Func::SETWINDOWORG:
-                $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                $this->_m_params = new \Wmf\ParamsSetwindoworg($_io__raw_params, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                $this->_m_params = new \Wmf\ColorRef($io, $this, $this->_root);
                 break;
             case \Wmf\Func::SETROP2:
                 $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                $this->_m_params = new \Wmf\ParamsSetrop2($_io__raw_params, $this, $this->_root);
-                break;
-            case \Wmf\Func::SETWINDOWEXT:
-                $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                $this->_m_params = new \Wmf\ParamsSetwindowext($_io__raw_params, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                $this->_m_params = new \Wmf\ParamsSetrop2($io, $this, $this->_root);
                 break;
             case \Wmf\Func::POLYLINE:
                 $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                $this->_m_params = new \Wmf\ParamsPolyline($_io__raw_params, $this, $this->_root);
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                $this->_m_params = new \Wmf\ParamsPolyline($io, $this, $this->_root);
+                break;
+            case \Wmf\Func::SETWINDOWORG:
+                $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                $this->_m_params = new \Wmf\ParamsSetwindoworg($io, $this, $this->_root);
+                break;
+            case \Wmf\Func::POLYGON:
+                $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                $this->_m_params = new \Wmf\ParamsPolygon($io, $this, $this->_root);
+                break;
+            case \Wmf\Func::SETWINDOWEXT:
+                $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                $this->_m_params = new \Wmf\ParamsSetwindowext($io, $this, $this->_root);
+                break;
+            case \Wmf\Func::SETPOLYFILLMODE:
+                $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                $this->_m_params = new \Wmf\ParamsSetpolyfillmode($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_params = $this->_io->readBytes((($this->size() - 3) * 2));

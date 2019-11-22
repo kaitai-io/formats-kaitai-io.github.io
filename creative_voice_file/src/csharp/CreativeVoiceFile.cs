@@ -245,6 +245,24 @@ namespace Kaitai
                 }
                 if (BlockType != CreativeVoiceFile.BlockTypes.Terminator) {
                     switch (BlockType) {
+                    case CreativeVoiceFile.BlockTypes.Silence: {
+                        __raw_body = m_io.ReadBytes(BodySize);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new BlockSilence(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case CreativeVoiceFile.BlockTypes.SoundData: {
+                        __raw_body = m_io.ReadBytes(BodySize);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new BlockSoundData(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case CreativeVoiceFile.BlockTypes.Marker: {
+                        __raw_body = m_io.ReadBytes(BodySize);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new BlockMarker(io___raw_body, this, m_root);
+                        break;
+                    }
                     case CreativeVoiceFile.BlockTypes.SoundDataNew: {
                         __raw_body = m_io.ReadBytes(BodySize);
                         var io___raw_body = new KaitaiStream(__raw_body);
@@ -257,28 +275,10 @@ namespace Kaitai
                         _body = new BlockRepeatStart(io___raw_body, this, m_root);
                         break;
                     }
-                    case CreativeVoiceFile.BlockTypes.Marker: {
-                        __raw_body = m_io.ReadBytes(BodySize);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new BlockMarker(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case CreativeVoiceFile.BlockTypes.SoundData: {
-                        __raw_body = m_io.ReadBytes(BodySize);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new BlockSoundData(io___raw_body, this, m_root);
-                        break;
-                    }
                     case CreativeVoiceFile.BlockTypes.ExtraInfo: {
                         __raw_body = m_io.ReadBytes(BodySize);
                         var io___raw_body = new KaitaiStream(__raw_body);
                         _body = new BlockExtraInfo(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case CreativeVoiceFile.BlockTypes.Silence: {
-                        __raw_body = m_io.ReadBytes(BodySize);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new BlockSilence(io___raw_body, this, m_root);
                         break;
                     }
                     default: {

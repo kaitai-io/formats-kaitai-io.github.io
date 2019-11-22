@@ -152,12 +152,12 @@ sub _read {
     my $io__raw_fields = IO::KaitaiStruct::Stream->new($self->{_raw_fields});
     $self->{fields} = PacketPpi::PacketPpiFields->new($io__raw_fields, $self, $self->{_root});
     my $_on = $self->header()->pph_dlt();
-    if ($_on == $PacketPpi::LINKTYPE_PPI) {
+    if ($_on == $LINKTYPE_PPI) {
         $self->{_raw_body} = $self->{_io}->read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = PacketPpi->new($io__raw_body);
     }
-    elsif ($_on == $PacketPpi::LINKTYPE_ETHERNET) {
+    elsif ($_on == $LINKTYPE_ETHERNET) {
         $self->{_raw_body} = $self->{_io}->read_bytes_full();
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = EthernetFrame->new($io__raw_body);
@@ -551,17 +551,17 @@ sub _read {
     $self->{pfh_type} = $self->{_io}->read_u2le();
     $self->{pfh_datalen} = $self->{_io}->read_u2le();
     my $_on = $self->pfh_type();
-    if ($_on == $PacketPpi::PFH_TYPE_RADIO_802_11_COMMON) {
+    if ($_on == $PFH_TYPE_RADIO_802_11_COMMON) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->pfh_datalen());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = PacketPpi::Radio80211CommonBody->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $PacketPpi::PFH_TYPE_RADIO_802_11N_MAC_EXT) {
+    elsif ($_on == $PFH_TYPE_RADIO_802_11N_MAC_EXT) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->pfh_datalen());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = PacketPpi::Radio80211nMacExtBody->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $PacketPpi::PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT) {
+    elsif ($_on == $PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->pfh_datalen());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = PacketPpi::Radio80211nMacPhyExtBody->new($io__raw_body, $self, $self->{_root});

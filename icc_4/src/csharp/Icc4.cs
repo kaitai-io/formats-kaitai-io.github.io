@@ -1821,12 +1821,12 @@ namespace Kaitai
                         _functionType = ((ParametricCurveTypeFunctions) m_io.ReadU2be());
                         _reserved2 = m_io.EnsureFixedContents(new byte[] { 0, 0 });
                         switch (FunctionType) {
-                        case ParametricCurveTypeFunctions.Cie1221996: {
-                            _parameters = new ParamsCie1221996(m_io, this, m_root);
+                        case ParametricCurveTypeFunctions.YEqualsXToPowerOfG: {
+                            _parameters = new ParamsYEqualsXToPowerOfG(m_io, this, m_root);
                             break;
                         }
-                        case ParametricCurveTypeFunctions.Iec619663: {
-                            _parameters = new ParamsIec619663(m_io, this, m_root);
+                        case ParametricCurveTypeFunctions.Cie1221996: {
+                            _parameters = new ParamsCie1221996(m_io, this, m_root);
                             break;
                         }
                         case ParametricCurveTypeFunctions.Iec6196621: {
@@ -1837,8 +1837,8 @@ namespace Kaitai
                             _parameters = new ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(m_io, this, m_root);
                             break;
                         }
-                        case ParametricCurveTypeFunctions.YEqualsXToPowerOfG: {
-                            _parameters = new ParamsYEqualsXToPowerOfG(m_io, this, m_root);
+                        case ParametricCurveTypeFunctions.Iec619663: {
+                            _parameters = new ParamsIec619663(m_io, this, m_root);
                             break;
                         }
                         }
@@ -3786,28 +3786,10 @@ namespace Kaitai
                         long _pos = m_io.Pos;
                         m_io.Seek(OffsetToDataElement);
                         switch (TagSignature) {
-                        case TagSignatures.ColorantOrder: {
+                        case TagSignatures.ProfileSequenceIdentifier: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new ColorantOrderTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.BToA2: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new BToA2Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.MediaWhitePoint: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new MediaWhitePointTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.BToD3: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new BToD3Tag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new ProfileSequenceIdentifierTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
                         case TagSignatures.ColorimetricIntentImageState: {
@@ -3816,28 +3798,10 @@ namespace Kaitai
                             _tagDataElement = new ColorimetricIntentImageStateTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.ViewingCondDesc: {
+                        case TagSignatures.RedTrc: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new ViewingCondDescTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.Preview1: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new Preview1Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.DeviceModelDesc: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new DeviceModelDescTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.Chromaticity: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new ChromaticityTag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new RedTrcTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
                         case TagSignatures.Preview0: {
@@ -3846,40 +3810,34 @@ namespace Kaitai
                             _tagDataElement = new Preview0Tag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.DToB1: {
+                        case TagSignatures.GreenTrc: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new DToB1Tag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new GreenTrcTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.SaturationRenderingIntentGamut: {
+                        case TagSignatures.BToD0: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new SaturationRenderingIntentGamutTag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new BToD0Tag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.BToA0: {
+                        case TagSignatures.ColorantTableOut: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new BToA0Tag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new ColorantTableOutTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.GreenMatrixColumn: {
+                        case TagSignatures.BToA2: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new GreenMatrixColumnTag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new BToA2Tag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.Copyright: {
+                        case TagSignatures.CalibrationDateTime: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new CopyrightTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.BlueMatrixColumn: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new BlueMatrixColumnTag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new CalibrationDateTimeTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
                         case TagSignatures.ChromaticAdaptation: {
@@ -3888,70 +3846,70 @@ namespace Kaitai
                             _tagDataElement = new ChromaticAdaptationTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.AToB1: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new AToB1Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.OutputResponse: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new OutputResponseTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.ProfileSequence: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new ProfileSequenceTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.CharTarget: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new CharTargetTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.RedTrc: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new RedTrcTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.Gamut: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new GamutTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.DeviceMfgDesc: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new DeviceMfgDescTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.Measurement: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new MeasurementTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.GreenTrc: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new GreenTrcTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.DToB3: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new DToB3Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
                         case TagSignatures.ColorantTable: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
                             _tagDataElement = new ColorantTableTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.AToB2: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new AToB2Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.DToB1: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new DToB1Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.Chromaticity: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new ChromaticityTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.BlueMatrixColumn: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new BlueMatrixColumnTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.AToB0: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new AToB0Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.BToD2: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new BToD2Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.BToA1: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new BToA1Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.MediaWhitePoint: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new MediaWhitePointTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.DToB0: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new DToB0Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.NamedColor2: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new NamedColor2Tag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
                         case TagSignatures.DToB2: {
@@ -3960,22 +3918,142 @@ namespace Kaitai
                             _tagDataElement = new DToB2Tag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.ProfileDescription: {
+                        case TagSignatures.RedMatrixColumn: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new ProfileDescriptionTag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new RedMatrixColumnTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.ProfileSequenceIdentifier: {
+                        case TagSignatures.ViewingConditions: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new ProfileSequenceIdentifierTag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new ViewingConditionsTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.AToB1: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new AToB1Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.Preview1: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new Preview1Tag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
                         case TagSignatures.GrayTrc: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
                             _tagDataElement = new GrayTrcTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.DeviceMfgDesc: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new DeviceMfgDescTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.BToD1: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new BToD1Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.ColorantOrder: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new ColorantOrderTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.Copyright: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new CopyrightTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.Gamut: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new GamutTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.CharTarget: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new CharTargetTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.OutputResponse: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new OutputResponseTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.Technology: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new TechnologyTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.ViewingCondDesc: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new ViewingCondDescTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.ProfileDescription: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new ProfileDescriptionTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.Luminance: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new LuminanceTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.DToB3: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new DToB3Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.BToD3: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new BToD3Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.BToA0: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new BToA0Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.Preview2: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new Preview2Tag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.GreenMatrixColumn: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new GreenMatrixColumnTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.ProfileSequence: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new ProfileSequenceTag(io___raw_tagDataElement, this, m_root);
+                            break;
+                        }
+                        case TagSignatures.SaturationRenderingIntentGamut: {
+                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
+                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
+                            _tagDataElement = new SaturationRenderingIntentGamutTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
                         case TagSignatures.PerceptualRenderingIntentGamut: {
@@ -3990,94 +4068,16 @@ namespace Kaitai
                             _tagDataElement = new BlueTrcTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.DToB0: {
+                        case TagSignatures.DeviceModelDesc: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new DToB0Tag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new DeviceModelDescTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
-                        case TagSignatures.AToB2: {
+                        case TagSignatures.Measurement: {
                             __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
                             var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new AToB2Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.CalibrationDateTime: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new CalibrationDateTimeTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.ColorantTableOut: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new ColorantTableOutTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.RedMatrixColumn: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new RedMatrixColumnTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.Preview2: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new Preview2Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.AToB0: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new AToB0Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.Luminance: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new LuminanceTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.NamedColor2: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new NamedColor2Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.BToD2: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new BToD2Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.BToD0: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new BToD0Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.BToA1: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new BToA1Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.BToD1: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new BToD1Tag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.ViewingConditions: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new ViewingConditionsTag(io___raw_tagDataElement, this, m_root);
-                            break;
-                        }
-                        case TagSignatures.Technology: {
-                            __raw_tagDataElement = m_io.ReadBytes(SizeOfDataElement);
-                            var io___raw_tagDataElement = new KaitaiStream(__raw_tagDataElement);
-                            _tagDataElement = new TechnologyTag(io___raw_tagDataElement, this, m_root);
+                            _tagDataElement = new MeasurementTag(io___raw_tagDataElement, this, m_root);
                             break;
                         }
                         default: {
