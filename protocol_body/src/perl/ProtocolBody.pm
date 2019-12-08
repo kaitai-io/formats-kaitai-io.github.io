@@ -3,11 +3,11 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
+use Ipv6Packet;
 use TcpSegment;
-use IcmpPacket;
 use Ipv4Packet;
 use UdpDatagram;
-use Ipv6Packet;
+use IcmpPacket;
 
 ########################################################################
 package ProtocolBody;

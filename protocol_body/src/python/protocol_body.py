@@ -8,11 +8,11 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
+from ipv6_packet import Ipv6Packet
 from tcp_segment import TcpSegment
-from icmp_packet import IcmpPacket
 from ipv4_packet import Ipv4Packet
 from udp_datagram import UdpDatagram
-from ipv6_packet import Ipv6Packet
+from icmp_packet import IcmpPacket
 class ProtocolBody(KaitaiStruct):
     """Protocol body represents particular payload on transport level (OSI
     layer 4).

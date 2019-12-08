@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>TE (Terse Executable) file.: C# parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Executables and Byte-code</li>
+        <li class="active">TE (Terse Executable) file.</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>TE (Terse Executable) file.:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>This type of executables could be found inside the UEFI firmware. The UEFI
+firmware is stored in SPI flash memory, which is a chip soldered on a
+system’s motherboard. UEFI firmware is very modular: it usually contains
+dozens, if not hundreds, of executables. To store all these separates files,
+the firmware is laid out in volumes using the Firmware File System (FFS), a
+file system specifically designed to store firmware images. The volumes
+contain files that are identified by GUIDs and each of these files contain
+one or more sections holding the data. One of these sections contains the
+actual executable image. Most of the executable images follow the PE format.
+However, some of them follow the TE format.</p>
+<p>The Terse Executable (TE) image format was created as a mechanism to reduce
+the overhead of the PE/COFF headers in PE32/PE32+ images, resulting in a
+corresponding reduction of image sizes for executables running in the PI
+(Platform Initialization) Architecture environment. Reducing image size
+provides an opportunity for use of a smaller system flash part.</p>
+<p>So the TE format is basically a stripped version of PE.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        UEFI
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["efi", "te"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of TE (Terse Executable) file.
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="TE (Terse Executable) file. parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="TE (Terse Executable) file. parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title="TE (Terse Executable) file. parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="TE (Terse Executable) file. parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="TE (Terse Executable) file. parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="TE (Terse Executable) file. parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="TE (Terse Executable) file. parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="TE (Terse Executable) file. parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="TE (Terse Executable) file. parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="TE (Terse Executable) file. parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var data = UefiTe.FromFile("path/to/local/file.["efi", "te"]");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] someArray = new byte[] { ... };
+var data = new UefiTe(new KaitaiStream(someArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">data.TeHdr // => get te hdr</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse TE (Terse Executable) file.
+            
+        </h2>
+
+        
+
+        <h3>UefiTe.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/UefiTe.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+
+    /// &lt;summary&gt;
+    /// This type of executables could be found inside the UEFI firmware. The UEFI 
+    /// firmware is stored in SPI flash memory, which is a chip soldered on a 
+    /// system’s motherboard. UEFI firmware is very modular: it usually contains 
+    /// dozens, if not hundreds, of executables. To store all these separates files, 
+    /// the firmware is laid out in volumes using the Firmware File System (FFS), a 
+    /// file system specifically designed to store firmware images. The volumes 
+    /// contain files that are identified by GUIDs and each of these files contain 
+    /// one or more sections holding the data. One of these sections contains the 
+    /// actual executable image. Most of the executable images follow the PE format. 
+    /// However, some of them follow the TE format.
+    /// 
+    /// The Terse Executable (TE) image format was created as a mechanism to reduce
+    /// the overhead of the PE/COFF headers in PE32/PE32+ images, resulting in a 
+    /// corresponding reduction of image sizes for executables running in the PI 
+    /// (Platform Initialization) Architecture environment. Reducing image size 
+    /// provides an opportunity for use of a smaller system flash part.
+    /// 
+    /// So the TE format is basically a stripped version of PE.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;
+    /// Reference: &lt;a href=&quot;https://uefi.org/sites/default/files/resources/PI_Spec_1_6.pdf&quot;&gt;Source&lt;/a&gt;
+    /// &lt;/remarks&gt;
+    public partial class UefiTe : KaitaiStruct
+    {
+        public static UefiTe FromFile(string fileName)
+        {
+            return new UefiTe(new KaitaiStream(fileName));
+        }
+
+        public UefiTe(KaitaiStream p__io, KaitaiStruct p__parent = null, UefiTe p__root = null) : base(p__io)
+        {
+            m_parent = p__parent;
+            m_root = p__root ?? this;
+            _read();
+        }
+        private void _read()
+        {
+            __raw_teHdr = m_io.ReadBytes(40);
+            var io___raw_teHdr = new KaitaiStream(__raw_teHdr);
+            _teHdr = new TeHeader(io___raw_teHdr, this, m_root);
+            _sections = new List&lt;Section&gt;((int) (TeHdr.NumSections));
+            for (var i = 0; i &lt; TeHdr.NumSections; i++)
+            {
+                _sections.Add(new Section(m_io, this, m_root));
+            }
+        }
+        public partial class TeHeader : KaitaiStruct
+        {
+            public static TeHeader FromFile(string fileName)
+            {
+                return new TeHeader(new KaitaiStream(fileName));
+            }
+
+
+            public enum MachineType
+            {
+                Unknown = 0,
+                I386 = 332,
+                R4000 = 358,
+                Wcemipsv2 = 361,
+                Alpha = 388,
+                Sh3 = 418,
+                Sh3dsp = 419,
+                Sh4 = 422,
+                Sh5 = 424,
+                Arm = 448,
+                Thumb = 450,
+                Armnt = 452,
+                Am33 = 467,
+                Powerpc = 496,
+                Powerpcfp = 497,
+                Ia64 = 512,
+                Mips16 = 614,
+                Mipsfpu = 870,
+                Mipsfpu16 = 1126,
+                Ebc = 3772,
+                Riscv32 = 20530,
+                Riscv64 = 20580,
+                Riscv128 = 20776,
+                Amd64 = 34404,
+                M32r = 36929,
+                Arm64 = 43620,
+            }
+
+            public enum SubsystemEnum
+            {
+                Unknown = 0,
+                Native = 1,
+                WindowsGui = 2,
+                WindowsCui = 3,
+                PosixCui = 7,
+                WindowsCeGui = 9,
+                EfiApplication = 10,
+                EfiBootServiceDriver = 11,
+                EfiRuntimeDriver = 12,
+                EfiRom = 13,
+                Xbox = 14,
+                WindowsBootApplication = 16,
+            }
+            public TeHeader(KaitaiStream p__io, UefiTe p__parent = null, UefiTe p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.EnsureFixedContents(new byte[] { 86, 90 });
+                _machine = ((MachineType) m_io.ReadU2le());
+                _numSections = m_io.ReadU1();
+                _subsystem = ((SubsystemEnum) m_io.ReadU1());
+                _strippedSize = m_io.ReadU2le();
+                _entryPointAddr = m_io.ReadU4le();
+                _baseOfCode = m_io.ReadU4le();
+                _imageBase = m_io.ReadU8le();
+                _dataDirs = new HeaderDataDirs(m_io, this, m_root);
+            }
+            private byte[] _magic;
+            private MachineType _machine;
+            private byte _numSections;
+            private SubsystemEnum _subsystem;
+            private ushort _strippedSize;
+            private uint _entryPointAddr;
+            private uint _baseOfCode;
+            private ulong _imageBase;
+            private HeaderDataDirs _dataDirs;
+            private UefiTe m_root;
+            private UefiTe m_parent;
+            public byte[] Magic { get { return _magic; } }
+            public MachineType Machine { get { return _machine; } }
+            public byte NumSections { get { return _numSections; } }
+            public SubsystemEnum Subsystem { get { return _subsystem; } }
+            public ushort StrippedSize { get { return _strippedSize; } }
+            public uint EntryPointAddr { get { return _entryPointAddr; } }
+            public uint BaseOfCode { get { return _baseOfCode; } }
+            public ulong ImageBase { get { return _imageBase; } }
+            public HeaderDataDirs DataDirs { get { return _dataDirs; } }
+            public UefiTe M_Root { get { return m_root; } }
+            public UefiTe M_Parent { get { return m_parent; } }
+        }
+        public partial class HeaderDataDirs : KaitaiStruct
+        {
+            public static HeaderDataDirs FromFile(string fileName)
+            {
+                return new HeaderDataDirs(new KaitaiStream(fileName));
+            }
+
+            public HeaderDataDirs(KaitaiStream p__io, UefiTe.TeHeader p__parent = null, UefiTe p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _baseRelocationTable = new DataDir(m_io, this, m_root);
+                _debug = new DataDir(m_io, this, m_root);
+            }
+            private DataDir _baseRelocationTable;
+            private DataDir _debug;
+            private UefiTe m_root;
+            private UefiTe.TeHeader m_parent;
+            public DataDir BaseRelocationTable { get { return _baseRelocationTable; } }
+            public DataDir Debug { get { return _debug; } }
+            public UefiTe M_Root { get { return m_root; } }
+            public UefiTe.TeHeader M_Parent { get { return m_parent; } }
+        }
+        public partial class DataDir : KaitaiStruct
+        {
+            public static DataDir FromFile(string fileName)
+            {
+                return new DataDir(new KaitaiStream(fileName));
+            }
+
+            public DataDir(KaitaiStream p__io, UefiTe.HeaderDataDirs p__parent = null, UefiTe p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _virtualAddress = m_io.ReadU4le();
+                _size = m_io.ReadU4le();
+            }
+            private uint _virtualAddress;
+            private uint _size;
+            private UefiTe m_root;
+            private UefiTe.HeaderDataDirs m_parent;
+            public uint VirtualAddress { get { return _virtualAddress; } }
+            public uint Size { get { return _size; } }
+            public UefiTe M_Root { get { return m_root; } }
+            public UefiTe.HeaderDataDirs M_Parent { get { return m_parent; } }
+        }
+        public partial class Section : KaitaiStruct
+        {
+            public static Section FromFile(string fileName)
+            {
+                return new Section(new KaitaiStream(fileName));
+            }
+
+            public Section(KaitaiStream p__io, UefiTe p__parent = null, UefiTe p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_body = false;
+                _read();
+            }
+            private void _read()
+            {
+                _name = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0));
+                _virtualSize = m_io.ReadU4le();
+                _virtualAddress = m_io.ReadU4le();
+                _sizeOfRawData = m_io.ReadU4le();
+                _pointerToRawData = m_io.ReadU4le();
+                _pointerToRelocations = m_io.ReadU4le();
+                _pointerToLinenumbers = m_io.ReadU4le();
+                _numRelocations = m_io.ReadU2le();
+                _numLinenumbers = m_io.ReadU2le();
+                _characteristics = m_io.ReadU4le();
+            }
+            private bool f_body;
+            private byte[] _body;
+            public byte[] Body
+            {
+                get
+                {
+                    if (f_body)
+                        return _body;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(((PointerToRawData - M_Root.TeHdr.StrippedSize) + M_Root.TeHdr.M_Io.Size));
+                    _body = m_io.ReadBytes(SizeOfRawData);
+                    m_io.Seek(_pos);
+                    f_body = true;
+                    return _body;
+                }
+            }
+            private string _name;
+            private uint _virtualSize;
+            private uint _virtualAddress;
+            private uint _sizeOfRawData;
+            private uint _pointerToRawData;
+            private uint _pointerToRelocations;
+            private uint _pointerToLinenumbers;
+            private ushort _numRelocations;
+            private ushort _numLinenumbers;
+            private uint _characteristics;
+            private UefiTe m_root;
+            private UefiTe m_parent;
+            public string Name { get { return _name; } }
+            public uint VirtualSize { get { return _virtualSize; } }
+            public uint VirtualAddress { get { return _virtualAddress; } }
+            public uint SizeOfRawData { get { return _sizeOfRawData; } }
+            public uint PointerToRawData { get { return _pointerToRawData; } }
+            public uint PointerToRelocations { get { return _pointerToRelocations; } }
+            public uint PointerToLinenumbers { get { return _pointerToLinenumbers; } }
+            public ushort NumRelocations { get { return _numRelocations; } }
+            public ushort NumLinenumbers { get { return _numLinenumbers; } }
+            public uint Characteristics { get { return _characteristics; } }
+            public UefiTe M_Root { get { return m_root; } }
+            public UefiTe M_Parent { get { return m_parent; } }
+        }
+        private TeHeader _teHdr;
+        private List&lt;Section&gt; _sections;
+        private UefiTe m_root;
+        private KaitaiStruct m_parent;
+        private byte[] __raw_teHdr;
+        public TeHeader TeHdr { get { return _teHdr; } }
+        public List&lt;Section&gt; Sections { get { return _sections; } }
+        public UefiTe M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+        public byte[] M_RawTeHdr { get { return __raw_teHdr; } }
+    }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
