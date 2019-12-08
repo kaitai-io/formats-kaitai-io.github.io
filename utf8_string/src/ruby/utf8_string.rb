@@ -8,8 +8,9 @@ end
 
 
 ##
-# UTF-8 is a popular character encoding schemes that allows to represent
-# code points defined in Unicode standard. Its features are:
+# UTF-8 is a popular character encoding scheme that allows to
+# represent strings as sequence of code points defined in Unicode
+# standard. Its features are:
 # 
 # * variable width (i.e. one code point might be represented by 1 to 4
 #   bytes)

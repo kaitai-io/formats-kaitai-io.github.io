@@ -8,8 +8,9 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class Utf8String(KaitaiStruct):
-    """UTF-8 is a popular character encoding schemes that allows to represent
-    code points defined in Unicode standard. Its features are:
+    """UTF-8 is a popular character encoding scheme that allows to
+    represent strings as sequence of code points defined in Unicode
+    standard. Its features are:
     
     * variable width (i.e. one code point might be represented by 1 to 4
       bytes)
