@@ -586,11 +586,11 @@ class Dex(KaitaiStruct):
     def string_ids(self):
         """string identifiers list.
         
-        These are identifiers for all the strings used by this file, either for 
+        These are identifiers for all the strings used by this file, either for
         internal naming (e.g., type descriptors) or as constant objects referred to by code.
         
         This list must be sorted by string contents, using UTF-16 code point values
-        (not in a locale-sensitive manner), and it must not contain any duplicate entries.    
+        (not in a locale-sensitive manner), and it must not contain any duplicate entries.
         """
         if hasattr(self, '_m_string_ids'):
             return self._m_string_ids if hasattr(self, '_m_string_ids') else None
@@ -611,7 +611,7 @@ class Dex(KaitaiStruct):
         These are identifiers for all methods referred to by this file,
         whether defined in the file or not.
         
-        This list must be sorted, where the defining type (by type_id index 
+        This list must be sorted, where the defining type (by type_id index
         is the major order, method name (by string_id index) is the intermediate
         order, and method prototype (by proto_id index) is the minor order.
         
@@ -698,9 +698,9 @@ class Dex(KaitaiStruct):
 
     @property
     def type_ids(self):
-        """type identifiers list. 
+        """type identifiers list.
         
-        These are identifiers for all types (classes, arrays, or primitive types) 
+        These are identifiers for all types (classes, arrays, or primitive types)
         referred to by this file, whether defined in the file or not.
         
         This list must be sorted by string_id index, and it must not contain any duplicate entries.
@@ -743,10 +743,10 @@ class Dex(KaitaiStruct):
     def field_ids(self):
         """field identifiers list.
         
-        These are identifiers for all fields referred to by this file, whether defined in the file or not. 
+        These are identifiers for all fields referred to by this file, whether defined in the file or not.
         
-        This list must be sorted, where the defining type (by type_id index) 
-        is the major order, field name (by string_id index) is the intermediate 
+        This list must be sorted, where the defining type (by type_id index)
+        is the major order, field name (by string_id index) is the intermediate
         order, and type (by type_id index) is the minor order.
         
         The list must not contain any duplicate entries.
