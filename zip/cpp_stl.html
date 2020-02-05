@@ -98,7 +98,15 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+and originally implemented in PKZIP utility by PKWARE.</p>
+<p>Thanks to solid support of it in most desktop environments and
+operating systems, and algorithms / specs availability in public
+domain, it quickly became tool of choice for implementing file
+containers.</p>
+<p>For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+are actually ZIP archives.</p>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -318,6 +326,16 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 #endif
 
 /**
+ * ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+ * and originally implemented in PKZIP utility by PKWARE.
+ * 
+ * Thanks to solid support of it in most desktop environments and
+ * operating systems, and algorithms / specs availability in public
+ * domain, it quickly became tool of choice for implementing file
+ * containers.
+ * 
+ * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+ * are actually ZIP archives.
  * \sa Source
  */
 
@@ -421,15 +439,15 @@ public:
 
     private:
         uint32_t m_crc32;
-        uint32_t m_compressed_size;
-        uint32_t m_uncompressed_size;
+        uint32_t m_len_body_compressed;
+        uint32_t m_len_body_uncompressed;
         zip_t* m__root;
         zip_t::pk_section_t* m__parent;
 
     public:
         uint32_t crc32() const { return m_crc32; }
-        uint32_t compressed_size() const { return m_compressed_size; }
-        uint32_t uncompressed_size() const { return m_uncompressed_size; }
+        uint32_t len_body_compressed() const { return m_len_body_compressed; }
+        uint32_t len_body_uncompressed() const { return m_len_body_uncompressed; }
         zip_t* _root() const { return m__root; }
         zip_t::pk_section_t* _parent() const { return m__parent; }
     };
@@ -481,7 +499,7 @@ public:
 
             private:
                 uint16_t m_tag;
-                uint16_t m_size;
+                uint16_t m_len_body;
                 attribute_1_t* m_body;
                 bool n_body;
 
@@ -496,7 +514,7 @@ public:
 
             public:
                 uint16_t tag() const { return m_tag; }
-                uint16_t size() const { return m_size; }
+                uint16_t len_body() const { return m_len_body; }
                 attribute_1_t* body() const { return m_body; }
                 zip_t* _root() const { return m__root; }
                 zip_t::extra_field_t::ntfs_t* _parent() const { return m__parent; }
@@ -607,9 +625,9 @@ public:
 
         private:
             uint8_t m_version;
-            uint8_t m_uid_size;
+            uint8_t m_len_uid;
             std::string m_uid;
-            uint8_t m_gid_size;
+            uint8_t m_len_gid;
             std::string m_gid;
             zip_t* m__root;
             zip_t::extra_field_t* m__parent;
@@ -624,7 +642,7 @@ public:
             /**
              * Size of UID field
              */
-            uint8_t uid_size() const { return m_uid_size; }
+            uint8_t len_uid() const { return m_len_uid; }
 
             /**
              * UID (User ID) for a file
@@ -634,7 +652,7 @@ public:
             /**
              * Size of GID field
              */
-            uint8_t gid_size() const { return m_gid_size; }
+            uint8_t len_gid() const { return m_len_gid; }
 
             /**
              * GID (Group ID) for a file
@@ -646,7 +664,7 @@ public:
 
     private:
         extra_codes_t m_code;
-        uint16_t m_size;
+        uint16_t m_len_body;
         kaitai::kstruct* m_body;
         bool n_body;
 
@@ -661,7 +679,7 @@ public:
 
     public:
         extra_codes_t code() const { return m_code; }
-        uint16_t size() const { return m_size; }
+        uint16_t len_body() const { return m_len_body; }
         kaitai::kstruct* body() const { return m_body; }
         zip_t* _root() const { return m__root; }
         zip_t::extras_t* _parent() const { return m__parent; }
@@ -700,15 +718,15 @@ public:
         uint16_t m_last_mod_file_time;
         uint16_t m_last_mod_file_date;
         uint32_t m_crc32;
-        uint32_t m_compressed_size;
-        uint32_t m_uncompressed_size;
-        uint16_t m_file_name_len;
-        uint16_t m_extra_len;
-        uint16_t m_comment_len;
+        uint32_t m_len_body_compressed;
+        uint32_t m_len_body_uncompressed;
+        uint16_t m_len_file_name;
+        uint16_t m_len_extra;
+        uint16_t m_len_comment;
         uint16_t m_disk_number_start;
         uint16_t m_int_file_attr;
         uint32_t m_ext_file_attr;
-        int32_t m_local_header_offset;
+        int32_t m_ofs_local_header;
         std::string m_file_name;
         extras_t* m_extra;
         std::string m_comment;
@@ -725,15 +743,15 @@ public:
         uint16_t last_mod_file_time() const { return m_last_mod_file_time; }
         uint16_t last_mod_file_date() const { return m_last_mod_file_date; }
         uint32_t crc32() const { return m_crc32; }
-        uint32_t compressed_size() const { return m_compressed_size; }
-        uint32_t uncompressed_size() const { return m_uncompressed_size; }
-        uint16_t file_name_len() const { return m_file_name_len; }
-        uint16_t extra_len() const { return m_extra_len; }
-        uint16_t comment_len() const { return m_comment_len; }
+        uint32_t len_body_compressed() const { return m_len_body_compressed; }
+        uint32_t len_body_uncompressed() const { return m_len_body_uncompressed; }
+        uint16_t len_file_name() const { return m_len_file_name; }
+        uint16_t len_extra() const { return m_len_extra; }
+        uint16_t len_comment() const { return m_len_comment; }
         uint16_t disk_number_start() const { return m_disk_number_start; }
         uint16_t int_file_attr() const { return m_int_file_attr; }
         uint32_t ext_file_attr() const { return m_ext_file_attr; }
-        int32_t local_header_offset() const { return m_local_header_offset; }
+        int32_t ofs_local_header() const { return m_ofs_local_header; }
         std::string file_name() const { return m_file_name; }
         extras_t* extra() const { return m_extra; }
         std::string comment() const { return m_comment; }
@@ -818,10 +836,10 @@ public:
         uint16_t m_file_mod_time;
         uint16_t m_file_mod_date;
         uint32_t m_crc32;
-        uint32_t m_compressed_size;
-        uint32_t m_uncompressed_size;
-        uint16_t m_file_name_len;
-        uint16_t m_extra_len;
+        uint32_t m_len_body_compressed;
+        uint32_t m_len_body_uncompressed;
+        uint16_t m_len_file_name;
+        uint16_t m_len_extra;
         std::string m_file_name;
         extras_t* m_extra;
         zip_t* m__root;
@@ -836,10 +854,10 @@ public:
         uint16_t file_mod_time() const { return m_file_mod_time; }
         uint16_t file_mod_date() const { return m_file_mod_date; }
         uint32_t crc32() const { return m_crc32; }
-        uint32_t compressed_size() const { return m_compressed_size; }
-        uint32_t uncompressed_size() const { return m_uncompressed_size; }
-        uint16_t file_name_len() const { return m_file_name_len; }
-        uint16_t extra_len() const { return m_extra_len; }
+        uint32_t len_body_compressed() const { return m_len_body_compressed; }
+        uint32_t len_body_uncompressed() const { return m_len_body_uncompressed; }
+        uint16_t len_file_name() const { return m_len_file_name; }
+        uint16_t len_extra() const { return m_len_extra; }
         std::string file_name() const { return m_file_name; }
         extras_t* extra() const { return m_extra; }
         zip_t* _root() const { return m__root; }
@@ -863,11 +881,11 @@ public:
     private:
         uint16_t m_disk_of_end_of_central_dir;
         uint16_t m_disk_of_central_dir;
-        uint16_t m_qty_central_dir_entries_on_disk;
-        uint16_t m_qty_central_dir_entries_total;
-        uint32_t m_central_dir_size;
-        uint32_t m_central_dir_offset;
-        uint16_t m_comment_len;
+        uint16_t m_num_central_dir_entries_on_disk;
+        uint16_t m_num_central_dir_entries_total;
+        uint32_t m_len_central_dir;
+        uint32_t m_ofs_central_dir;
+        uint16_t m_len_comment;
         std::string m_comment;
         zip_t* m__root;
         zip_t::pk_section_t* m__parent;
@@ -875,11 +893,11 @@ public:
     public:
         uint16_t disk_of_end_of_central_dir() const { return m_disk_of_end_of_central_dir; }
         uint16_t disk_of_central_dir() const { return m_disk_of_central_dir; }
-        uint16_t qty_central_dir_entries_on_disk() const { return m_qty_central_dir_entries_on_disk; }
-        uint16_t qty_central_dir_entries_total() const { return m_qty_central_dir_entries_total; }
-        uint32_t central_dir_size() const { return m_central_dir_size; }
-        uint32_t central_dir_offset() const { return m_central_dir_offset; }
-        uint16_t comment_len() const { return m_comment_len; }
+        uint16_t num_central_dir_entries_on_disk() const { return m_num_central_dir_entries_on_disk; }
+        uint16_t num_central_dir_entries_total() const { return m_num_central_dir_entries_total; }
+        uint32_t len_central_dir() const { return m_len_central_dir; }
+        uint32_t ofs_central_dir() const { return m_ofs_central_dir; }
+        uint16_t len_comment() const { return m_len_comment; }
         std::string comment() const { return m_comment; }
         zip_t* _root() const { return m__root; }
         zip_t::pk_section_t* _parent() const { return m__parent; }
@@ -951,7 +969,7 @@ zip_t::local_file_t::local_file_t(kaitai::kstream* p__io, zip_t::pk_section_t* p
 
 void zip_t::local_file_t::_read() {
     m_header = new local_file_header_t(m__io, this, m__root);
-    m_body = m__io-&gt;read_bytes(header()-&gt;compressed_size());
+    m_body = m__io-&gt;read_bytes(header()-&gt;len_body_compressed());
 }
 
 zip_t::local_file_t::~local_file_t() {
@@ -966,8 +984,8 @@ zip_t::data_descriptor_t::data_descriptor_t(kaitai::kstream* p__io, zip_t::pk_se
 
 void zip_t::data_descriptor_t::_read() {
     m_crc32 = m__io-&gt;read_u4le();
-    m_compressed_size = m__io-&gt;read_u4le();
-    m_uncompressed_size = m__io-&gt;read_u4le();
+    m_len_body_compressed = m__io-&gt;read_u4le();
+    m_len_body_uncompressed = m__io-&gt;read_u4le();
 }
 
 zip_t::data_descriptor_t::~data_descriptor_t() {
@@ -981,32 +999,32 @@ zip_t::extra_field_t::extra_field_t(kaitai::kstream* p__io, zip_t::extras_t* p__
 
 void zip_t::extra_field_t::_read() {
     m_code = static_cast&lt;zip_t::extra_codes_t&gt;(m__io-&gt;read_u2le());
-    m_size = m__io-&gt;read_u2le();
+    m_len_body = m__io-&gt;read_u2le();
     n_body = true;
     switch (code()) {
     case EXTRA_CODES_NTFS: {
         n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(size());
+        m__raw_body = m__io-&gt;read_bytes(len_body());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new ntfs_t(m__io__raw_body, this, m__root);
         break;
     }
     case EXTRA_CODES_EXTENDED_TIMESTAMP: {
         n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(size());
+        m__raw_body = m__io-&gt;read_bytes(len_body());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new extended_timestamp_t(m__io__raw_body, this, m__root);
         break;
     }
     case EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE: {
         n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(size());
+        m__raw_body = m__io-&gt;read_bytes(len_body());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new infozip_unix_var_size_t(m__io__raw_body, this, m__root);
         break;
     }
     default: {
-        m__raw_body = m__io-&gt;read_bytes(size());
+        m__raw_body = m__io-&gt;read_bytes(len_body());
         break;
     }
     }
@@ -1052,18 +1070,18 @@ zip_t::extra_field_t::ntfs_t::attribute_t::attribute_t(kaitai::kstream* p__io, z
 
 void zip_t::extra_field_t::ntfs_t::attribute_t::_read() {
     m_tag = m__io-&gt;read_u2le();
-    m_size = m__io-&gt;read_u2le();
+    m_len_body = m__io-&gt;read_u2le();
     n_body = true;
     switch (tag()) {
     case 1: {
         n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(size());
+        m__raw_body = m__io-&gt;read_bytes(len_body());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new attribute_1_t(m__io__raw_body, this, m__root);
         break;
     }
     default: {
-        m__raw_body = m__io-&gt;read_bytes(size());
+        m__raw_body = m__io-&gt;read_bytes(len_body());
         break;
     }
     }
@@ -1127,10 +1145,10 @@ zip_t::extra_field_t::infozip_unix_var_size_t::infozip_unix_var_size_t(kaitai::k
 
 void zip_t::extra_field_t::infozip_unix_var_size_t::_read() {
     m_version = m__io-&gt;read_u1();
-    m_uid_size = m__io-&gt;read_u1();
-    m_uid = m__io-&gt;read_bytes(uid_size());
-    m_gid_size = m__io-&gt;read_u1();
-    m_gid = m__io-&gt;read_bytes(gid_size());
+    m_len_uid = m__io-&gt;read_u1();
+    m_uid = m__io-&gt;read_bytes(len_uid());
+    m_len_gid = m__io-&gt;read_u1();
+    m_gid = m__io-&gt;read_bytes(len_gid());
 }
 
 zip_t::extra_field_t::infozip_unix_var_size_t::~infozip_unix_var_size_t() {
@@ -1151,20 +1169,20 @@ void zip_t::central_dir_entry_t::_read() {
     m_last_mod_file_time = m__io-&gt;read_u2le();
     m_last_mod_file_date = m__io-&gt;read_u2le();
     m_crc32 = m__io-&gt;read_u4le();
-    m_compressed_size = m__io-&gt;read_u4le();
-    m_uncompressed_size = m__io-&gt;read_u4le();
-    m_file_name_len = m__io-&gt;read_u2le();
-    m_extra_len = m__io-&gt;read_u2le();
-    m_comment_len = m__io-&gt;read_u2le();
+    m_len_body_compressed = m__io-&gt;read_u4le();
+    m_len_body_uncompressed = m__io-&gt;read_u4le();
+    m_len_file_name = m__io-&gt;read_u2le();
+    m_len_extra = m__io-&gt;read_u2le();
+    m_len_comment = m__io-&gt;read_u2le();
     m_disk_number_start = m__io-&gt;read_u2le();
     m_int_file_attr = m__io-&gt;read_u2le();
     m_ext_file_attr = m__io-&gt;read_u4le();
-    m_local_header_offset = m__io-&gt;read_s4le();
-    m_file_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(file_name_len()), std::string(&quot;UTF-8&quot;));
-    m__raw_extra = m__io-&gt;read_bytes(extra_len());
+    m_ofs_local_header = m__io-&gt;read_s4le();
+    m_file_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(len_file_name()), std::string(&quot;UTF-8&quot;));
+    m__raw_extra = m__io-&gt;read_bytes(len_extra());
     m__io__raw_extra = new kaitai::kstream(m__raw_extra);
     m_extra = new extras_t(m__io__raw_extra, this, m__root);
-    m_comment = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(comment_len()), std::string(&quot;UTF-8&quot;));
+    m_comment = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(len_comment()), std::string(&quot;UTF-8&quot;));
 }
 
 zip_t::central_dir_entry_t::~central_dir_entry_t() {
@@ -1179,7 +1197,7 @@ zip_t::pk_section_t* zip_t::central_dir_entry_t::local_header() {
     if (f_local_header)
         return m_local_header;
     std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek(local_header_offset());
+    m__io-&gt;seek(ofs_local_header());
     m_local_header = new pk_section_t(m__io, this, m__root);
     m__io-&gt;seek(_pos);
     f_local_header = true;
@@ -1263,12 +1281,12 @@ void zip_t::local_file_header_t::_read() {
     m_file_mod_time = m__io-&gt;read_u2le();
     m_file_mod_date = m__io-&gt;read_u2le();
     m_crc32 = m__io-&gt;read_u4le();
-    m_compressed_size = m__io-&gt;read_u4le();
-    m_uncompressed_size = m__io-&gt;read_u4le();
-    m_file_name_len = m__io-&gt;read_u2le();
-    m_extra_len = m__io-&gt;read_u2le();
-    m_file_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(file_name_len()), std::string(&quot;UTF-8&quot;));
-    m__raw_extra = m__io-&gt;read_bytes(extra_len());
+    m_len_body_compressed = m__io-&gt;read_u4le();
+    m_len_body_uncompressed = m__io-&gt;read_u4le();
+    m_len_file_name = m__io-&gt;read_u2le();
+    m_len_extra = m__io-&gt;read_u2le();
+    m_file_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(len_file_name()), std::string(&quot;UTF-8&quot;));
+    m__raw_extra = m__io-&gt;read_bytes(len_extra());
     m__io__raw_extra = new kaitai::kstream(m__raw_extra);
     m_extra = new extras_t(m__io__raw_extra, this, m__root);
 }
@@ -1287,12 +1305,12 @@ zip_t::end_of_central_dir_t::end_of_central_dir_t(kaitai::kstream* p__io, zip_t:
 void zip_t::end_of_central_dir_t::_read() {
     m_disk_of_end_of_central_dir = m__io-&gt;read_u2le();
     m_disk_of_central_dir = m__io-&gt;read_u2le();
-    m_qty_central_dir_entries_on_disk = m__io-&gt;read_u2le();
-    m_qty_central_dir_entries_total = m__io-&gt;read_u2le();
-    m_central_dir_size = m__io-&gt;read_u4le();
-    m_central_dir_offset = m__io-&gt;read_u4le();
-    m_comment_len = m__io-&gt;read_u2le();
-    m_comment = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(comment_len()), std::string(&quot;UTF-8&quot;));
+    m_num_central_dir_entries_on_disk = m__io-&gt;read_u2le();
+    m_num_central_dir_entries_total = m__io-&gt;read_u2le();
+    m_len_central_dir = m__io-&gt;read_u4le();
+    m_ofs_central_dir = m__io-&gt;read_u4le();
+    m_len_comment = m__io-&gt;read_u2le();
+    m_comment = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(len_comment()), std::string(&quot;UTF-8&quot;));
 }
 
 zip_t::end_of_central_dir_t::~end_of_central_dir_t() {

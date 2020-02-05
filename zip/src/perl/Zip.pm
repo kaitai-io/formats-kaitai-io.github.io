@@ -114,7 +114,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{header} = Zip::LocalFileHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{body} = $self->{_io}->read_bytes($self->header()->compressed_size());
+    $self->{body} = $self->{_io}->read_bytes($self->header()->len_body_compressed());
 }
 
 sub header {
@@ -158,8 +158,8 @@ sub _read {
     my ($self) = @_;
 
     $self->{crc32} = $self->{_io}->read_u4le();
-    $self->{compressed_size} = $self->{_io}->read_u4le();
-    $self->{uncompressed_size} = $self->{_io}->read_u4le();
+    $self->{len_body_compressed} = $self->{_io}->read_u4le();
+    $self->{len_body_uncompressed} = $self->{_io}->read_u4le();
 }
 
 sub crc32 {
@@ -167,14 +167,14 @@ sub crc32 {
     return $self->{crc32};
 }
 
-sub compressed_size {
+sub len_body_compressed {
     my ($self) = @_;
-    return $self->{compressed_size};
+    return $self->{len_body_compressed};
 }
 
-sub uncompressed_size {
+sub len_body_uncompressed {
     my ($self) = @_;
-    return $self->{uncompressed_size};
+    return $self->{len_body_uncompressed};
 }
 
 ########################################################################
@@ -208,25 +208,25 @@ sub _read {
     my ($self) = @_;
 
     $self->{code} = $self->{_io}->read_u2le();
-    $self->{size} = $self->{_io}->read_u2le();
+    $self->{len_body} = $self->{_io}->read_u2le();
     my $_on = $self->code();
     if ($_on == $EXTRA_CODES_NTFS) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Zip::ExtraField::Ntfs->new($io__raw_body, $self, $self->{_root});
     }
     elsif ($_on == $EXTRA_CODES_EXTENDED_TIMESTAMP) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Zip::ExtraField::ExtendedTimestamp->new($io__raw_body, $self, $self->{_root});
     }
     elsif ($_on == $EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Zip::ExtraField::InfozipUnixVarSize->new($io__raw_body, $self, $self->{_root});
     }
     else {
-        $self->{body} = $self->{_io}->read_bytes($self->size());
+        $self->{body} = $self->{_io}->read_bytes($self->len_body());
     }
 }
 
@@ -235,9 +235,9 @@ sub code {
     return $self->{code};
 }
 
-sub size {
+sub len_body {
     my ($self) = @_;
-    return $self->{size};
+    return $self->{len_body};
 }
 
 sub body {
@@ -328,15 +328,15 @@ sub _read {
     my ($self) = @_;
 
     $self->{tag} = $self->{_io}->read_u2le();
-    $self->{size} = $self->{_io}->read_u2le();
+    $self->{len_body} = $self->{_io}->read_u2le();
     my $_on = $self->tag();
     if ($_on == 1) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Zip::ExtraField::Ntfs::Attribute1->new($io__raw_body, $self, $self->{_root});
     }
     else {
-        $self->{body} = $self->{_io}->read_bytes($self->size());
+        $self->{body} = $self->{_io}->read_bytes($self->len_body());
     }
 }
 
@@ -345,9 +345,9 @@ sub tag {
     return $self->{tag};
 }
 
-sub size {
+sub len_body {
     my ($self) = @_;
-    return $self->{size};
+    return $self->{len_body};
 }
 
 sub body {
@@ -501,10 +501,10 @@ sub _read {
     my ($self) = @_;
 
     $self->{version} = $self->{_io}->read_u1();
-    $self->{uid_size} = $self->{_io}->read_u1();
-    $self->{uid} = $self->{_io}->read_bytes($self->uid_size());
-    $self->{gid_size} = $self->{_io}->read_u1();
-    $self->{gid} = $self->{_io}->read_bytes($self->gid_size());
+    $self->{len_uid} = $self->{_io}->read_u1();
+    $self->{uid} = $self->{_io}->read_bytes($self->len_uid());
+    $self->{len_gid} = $self->{_io}->read_u1();
+    $self->{gid} = $self->{_io}->read_bytes($self->len_gid());
 }
 
 sub version {
@@ -512,9 +512,9 @@ sub version {
     return $self->{version};
 }
 
-sub uid_size {
+sub len_uid {
     my ($self) = @_;
-    return $self->{uid_size};
+    return $self->{len_uid};
 }
 
 sub uid {
@@ -522,9 +522,9 @@ sub uid {
     return $self->{uid};
 }
 
-sub gid_size {
+sub len_gid {
     my ($self) = @_;
-    return $self->{gid_size};
+    return $self->{len_gid};
 }
 
 sub gid {
@@ -569,27 +569,27 @@ sub _read {
     $self->{last_mod_file_time} = $self->{_io}->read_u2le();
     $self->{last_mod_file_date} = $self->{_io}->read_u2le();
     $self->{crc32} = $self->{_io}->read_u4le();
-    $self->{compressed_size} = $self->{_io}->read_u4le();
-    $self->{uncompressed_size} = $self->{_io}->read_u4le();
-    $self->{file_name_len} = $self->{_io}->read_u2le();
-    $self->{extra_len} = $self->{_io}->read_u2le();
-    $self->{comment_len} = $self->{_io}->read_u2le();
+    $self->{len_body_compressed} = $self->{_io}->read_u4le();
+    $self->{len_body_uncompressed} = $self->{_io}->read_u4le();
+    $self->{len_file_name} = $self->{_io}->read_u2le();
+    $self->{len_extra} = $self->{_io}->read_u2le();
+    $self->{len_comment} = $self->{_io}->read_u2le();
     $self->{disk_number_start} = $self->{_io}->read_u2le();
     $self->{int_file_attr} = $self->{_io}->read_u2le();
     $self->{ext_file_attr} = $self->{_io}->read_u4le();
-    $self->{local_header_offset} = $self->{_io}->read_s4le();
-    $self->{file_name} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->file_name_len()));
-    $self->{_raw_extra} = $self->{_io}->read_bytes($self->extra_len());
+    $self->{ofs_local_header} = $self->{_io}->read_s4le();
+    $self->{file_name} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_file_name()));
+    $self->{_raw_extra} = $self->{_io}->read_bytes($self->len_extra());
     my $io__raw_extra = IO::KaitaiStruct::Stream->new($self->{_raw_extra});
     $self->{extra} = Zip::Extras->new($io__raw_extra, $self, $self->{_root});
-    $self->{comment} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->comment_len()));
+    $self->{comment} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_comment()));
 }
 
 sub local_header {
     my ($self) = @_;
     return $self->{local_header} if ($self->{local_header});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek($self->local_header_offset());
+    $self->{_io}->seek($self->ofs_local_header());
     $self->{local_header} = Zip::PkSection->new($self->{_io}, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{local_header};
@@ -630,29 +630,29 @@ sub crc32 {
     return $self->{crc32};
 }
 
-sub compressed_size {
+sub len_body_compressed {
     my ($self) = @_;
-    return $self->{compressed_size};
+    return $self->{len_body_compressed};
 }
 
-sub uncompressed_size {
+sub len_body_uncompressed {
     my ($self) = @_;
-    return $self->{uncompressed_size};
+    return $self->{len_body_uncompressed};
 }
 
-sub file_name_len {
+sub len_file_name {
     my ($self) = @_;
-    return $self->{file_name_len};
+    return $self->{len_file_name};
 }
 
-sub extra_len {
+sub len_extra {
     my ($self) = @_;
-    return $self->{extra_len};
+    return $self->{len_extra};
 }
 
-sub comment_len {
+sub len_comment {
     my ($self) = @_;
-    return $self->{comment_len};
+    return $self->{len_comment};
 }
 
 sub disk_number_start {
@@ -670,9 +670,9 @@ sub ext_file_attr {
     return $self->{ext_file_attr};
 }
 
-sub local_header_offset {
+sub ofs_local_header {
     my ($self) = @_;
-    return $self->{local_header_offset};
+    return $self->{ofs_local_header};
 }
 
 sub file_name {
@@ -834,12 +834,12 @@ sub _read {
     $self->{file_mod_time} = $self->{_io}->read_u2le();
     $self->{file_mod_date} = $self->{_io}->read_u2le();
     $self->{crc32} = $self->{_io}->read_u4le();
-    $self->{compressed_size} = $self->{_io}->read_u4le();
-    $self->{uncompressed_size} = $self->{_io}->read_u4le();
-    $self->{file_name_len} = $self->{_io}->read_u2le();
-    $self->{extra_len} = $self->{_io}->read_u2le();
-    $self->{file_name} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->file_name_len()));
-    $self->{_raw_extra} = $self->{_io}->read_bytes($self->extra_len());
+    $self->{len_body_compressed} = $self->{_io}->read_u4le();
+    $self->{len_body_uncompressed} = $self->{_io}->read_u4le();
+    $self->{len_file_name} = $self->{_io}->read_u2le();
+    $self->{len_extra} = $self->{_io}->read_u2le();
+    $self->{file_name} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_file_name()));
+    $self->{_raw_extra} = $self->{_io}->read_bytes($self->len_extra());
     my $io__raw_extra = IO::KaitaiStruct::Stream->new($self->{_raw_extra});
     $self->{extra} = Zip::Extras->new($io__raw_extra, $self, $self->{_root});
 }
@@ -874,24 +874,24 @@ sub crc32 {
     return $self->{crc32};
 }
 
-sub compressed_size {
+sub len_body_compressed {
     my ($self) = @_;
-    return $self->{compressed_size};
+    return $self->{len_body_compressed};
 }
 
-sub uncompressed_size {
+sub len_body_uncompressed {
     my ($self) = @_;
-    return $self->{uncompressed_size};
+    return $self->{len_body_uncompressed};
 }
 
-sub file_name_len {
+sub len_file_name {
     my ($self) = @_;
-    return $self->{file_name_len};
+    return $self->{len_file_name};
 }
 
-sub extra_len {
+sub len_extra {
     my ($self) = @_;
-    return $self->{extra_len};
+    return $self->{len_extra};
 }
 
 sub file_name {
@@ -941,12 +941,12 @@ sub _read {
 
     $self->{disk_of_end_of_central_dir} = $self->{_io}->read_u2le();
     $self->{disk_of_central_dir} = $self->{_io}->read_u2le();
-    $self->{qty_central_dir_entries_on_disk} = $self->{_io}->read_u2le();
-    $self->{qty_central_dir_entries_total} = $self->{_io}->read_u2le();
-    $self->{central_dir_size} = $self->{_io}->read_u4le();
-    $self->{central_dir_offset} = $self->{_io}->read_u4le();
-    $self->{comment_len} = $self->{_io}->read_u2le();
-    $self->{comment} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->comment_len()));
+    $self->{num_central_dir_entries_on_disk} = $self->{_io}->read_u2le();
+    $self->{num_central_dir_entries_total} = $self->{_io}->read_u2le();
+    $self->{len_central_dir} = $self->{_io}->read_u4le();
+    $self->{ofs_central_dir} = $self->{_io}->read_u4le();
+    $self->{len_comment} = $self->{_io}->read_u2le();
+    $self->{comment} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_comment()));
 }
 
 sub disk_of_end_of_central_dir {
@@ -959,29 +959,29 @@ sub disk_of_central_dir {
     return $self->{disk_of_central_dir};
 }
 
-sub qty_central_dir_entries_on_disk {
+sub num_central_dir_entries_on_disk {
     my ($self) = @_;
-    return $self->{qty_central_dir_entries_on_disk};
+    return $self->{num_central_dir_entries_on_disk};
 }
 
-sub qty_central_dir_entries_total {
+sub num_central_dir_entries_total {
     my ($self) = @_;
-    return $self->{qty_central_dir_entries_total};
+    return $self->{num_central_dir_entries_total};
 }
 
-sub central_dir_size {
+sub len_central_dir {
     my ($self) = @_;
-    return $self->{central_dir_size};
+    return $self->{len_central_dir};
 }
 
-sub central_dir_offset {
+sub ofs_central_dir {
     my ($self) = @_;
-    return $self->{central_dir_offset};
+    return $self->{ofs_central_dir};
 }
 
-sub comment_len {
+sub len_comment {
     my ($self) = @_;
-    return $self->{comment_len};
+    return $self->{len_comment};
 }
 
 sub comment {

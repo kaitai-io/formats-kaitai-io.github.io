@@ -98,7 +98,15 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+and originally implemented in PKZIP utility by PKWARE.</p>
+<p>Thanks to solid support of it in most desktop environments and
+operating systems, and algorithms / specs availability in public
+domain, it quickly became tool of choice for implementing file
+containers.</p>
+<p>For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+are actually ZIP archives.</p>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -267,7 +275,7 @@ section#format-index .row {
 			local_file__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;header_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;header_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;LocalFileHeader&lt;/TD&gt;&lt;TD PORT=&quot;header_type&quot;&gt;header&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;header.compressed_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;header.len_body_compressed&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__data_descriptor {
@@ -277,8 +285,8 @@ section#format-index .row {
 			data_descriptor__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;crc32_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;crc32_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;crc32_type&quot;&gt;crc32&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;compressed_size_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;compressed_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;compressed_size_type&quot;&gt;compressed_size&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;uncompressed_size_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;uncompressed_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;uncompressed_size_type&quot;&gt;uncompressed_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_body_compressed_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;len_body_compressed_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_body_compressed_type&quot;&gt;len_body_compressed&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_body_uncompressed_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;len_body_uncompressed_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_body_uncompressed_type&quot;&gt;len_body_uncompressed&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__extra_field {
@@ -288,7 +296,7 @@ section#format-index .row {
 			extra_field__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;code_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;code_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le→ExtraCodes&lt;/TD&gt;&lt;TD PORT=&quot;code_type&quot;&gt;code&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;size_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;size_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;size_type&quot;&gt;size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_body_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;len_body_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;len_body_type&quot;&gt;len_body&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (code)&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 extra_field__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
@@ -314,7 +322,7 @@ extra_field__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDE
 					attribute__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 						&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 						&lt;TR&gt;&lt;TD PORT=&quot;tag_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;tag_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;tag_type&quot;&gt;tag&lt;/TD&gt;&lt;/TR&gt;
-						&lt;TR&gt;&lt;TD PORT=&quot;size_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;size_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;size_type&quot;&gt;size&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD PORT=&quot;len_body_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;len_body_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;len_body_type&quot;&gt;len_body&lt;/TD&gt;&lt;/TR&gt;
 						&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (tag)&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 					&lt;/TABLE&gt;&gt;];
 attribute__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
@@ -353,10 +361,10 @@ attribute__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=
 				infozip_unix_var_size__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;version_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;version_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;version_type&quot;&gt;version&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;uid_size_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;uid_size_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;uid_size_type&quot;&gt;uid_size&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;uid_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;uid_size&quot;&gt;uid_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;uid_type&quot;&gt;uid&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;gid_size_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;gid_size_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;gid_size_type&quot;&gt;gid_size&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;gid_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;gid_size&quot;&gt;gid_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;gid_type&quot;&gt;gid&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;len_uid_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;len_uid_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;len_uid_type&quot;&gt;len_uid&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;uid_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;uid_size&quot;&gt;len_uid&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;uid_type&quot;&gt;uid&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;len_gid_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;len_gid_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;len_gid_type&quot;&gt;len_gid&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;gid_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;gid_size&quot;&gt;len_gid&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;gid_type&quot;&gt;gid&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
 			}
 		}
@@ -373,22 +381,22 @@ attribute__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=
 				&lt;TR&gt;&lt;TD PORT=&quot;last_mod_file_time_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;last_mod_file_time_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;last_mod_file_time_type&quot;&gt;last_mod_file_time&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;last_mod_file_date_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;last_mod_file_date_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;last_mod_file_date_type&quot;&gt;last_mod_file_date&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;crc32_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;crc32_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;crc32_type&quot;&gt;crc32&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;compressed_size_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;compressed_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;compressed_size_type&quot;&gt;compressed_size&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;uncompressed_size_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;uncompressed_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;uncompressed_size_type&quot;&gt;uncompressed_size&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;file_name_len_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;file_name_len_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;file_name_len_type&quot;&gt;file_name_len&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;extra_len_pos&quot;&gt;26&lt;/TD&gt;&lt;TD PORT=&quot;extra_len_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;extra_len_type&quot;&gt;extra_len&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;comment_len_pos&quot;&gt;28&lt;/TD&gt;&lt;TD PORT=&quot;comment_len_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;comment_len_type&quot;&gt;comment_len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_body_compressed_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;len_body_compressed_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_body_compressed_type&quot;&gt;len_body_compressed&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_body_uncompressed_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;len_body_uncompressed_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_body_uncompressed_type&quot;&gt;len_body_uncompressed&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_file_name_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;len_file_name_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;len_file_name_type&quot;&gt;len_file_name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_extra_pos&quot;&gt;26&lt;/TD&gt;&lt;TD PORT=&quot;len_extra_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;len_extra_type&quot;&gt;len_extra&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_comment_pos&quot;&gt;28&lt;/TD&gt;&lt;TD PORT=&quot;len_comment_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;len_comment_type&quot;&gt;len_comment&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;disk_number_start_pos&quot;&gt;30&lt;/TD&gt;&lt;TD PORT=&quot;disk_number_start_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;disk_number_start_type&quot;&gt;disk_number_start&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;int_file_attr_pos&quot;&gt;32&lt;/TD&gt;&lt;TD PORT=&quot;int_file_attr_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;int_file_attr_type&quot;&gt;int_file_attr&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;ext_file_attr_pos&quot;&gt;34&lt;/TD&gt;&lt;TD PORT=&quot;ext_file_attr_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;ext_file_attr_type&quot;&gt;ext_file_attr&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;local_header_offset_pos&quot;&gt;38&lt;/TD&gt;&lt;TD PORT=&quot;local_header_offset_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;s4le&lt;/TD&gt;&lt;TD PORT=&quot;local_header_offset_type&quot;&gt;local_header_offset&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;file_name_pos&quot;&gt;42&lt;/TD&gt;&lt;TD PORT=&quot;file_name_size&quot;&gt;file_name_len&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;file_name_type&quot;&gt;file_name&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;extra_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;extra_size&quot;&gt;extra_len&lt;/TD&gt;&lt;TD&gt;Extras&lt;/TD&gt;&lt;TD PORT=&quot;extra_type&quot;&gt;extra&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;comment_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;comment_size&quot;&gt;comment_len&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;comment_type&quot;&gt;comment&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;ofs_local_header_pos&quot;&gt;38&lt;/TD&gt;&lt;TD PORT=&quot;ofs_local_header_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;s4le&lt;/TD&gt;&lt;TD PORT=&quot;ofs_local_header_type&quot;&gt;ofs_local_header&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;file_name_pos&quot;&gt;42&lt;/TD&gt;&lt;TD PORT=&quot;file_name_size&quot;&gt;len_file_name&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;file_name_type&quot;&gt;file_name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;extra_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;extra_size&quot;&gt;len_extra&lt;/TD&gt;&lt;TD&gt;Extras&lt;/TD&gt;&lt;TD PORT=&quot;extra_type&quot;&gt;extra&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;comment_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;comment_size&quot;&gt;len_comment&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;comment_type&quot;&gt;comment&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 			central_dir_entry__inst__local_header [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;local_header_pos&quot;&gt;local_header_offset&lt;/TD&gt;&lt;TD PORT=&quot;local_header_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;PkSection&lt;/TD&gt;&lt;TD PORT=&quot;local_header_type&quot;&gt;local_header&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;local_header_pos&quot;&gt;ofs_local_header&lt;/TD&gt;&lt;TD PORT=&quot;local_header_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;PkSection&lt;/TD&gt;&lt;TD PORT=&quot;local_header_type&quot;&gt;local_header&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__pk_section {
@@ -431,12 +439,12 @@ pk_section__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER
 				&lt;TR&gt;&lt;TD PORT=&quot;file_mod_time_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;file_mod_time_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;file_mod_time_type&quot;&gt;file_mod_time&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;file_mod_date_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;file_mod_date_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;file_mod_date_type&quot;&gt;file_mod_date&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;crc32_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;crc32_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;crc32_type&quot;&gt;crc32&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;compressed_size_pos&quot;&gt;14&lt;/TD&gt;&lt;TD PORT=&quot;compressed_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;compressed_size_type&quot;&gt;compressed_size&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;uncompressed_size_pos&quot;&gt;18&lt;/TD&gt;&lt;TD PORT=&quot;uncompressed_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;uncompressed_size_type&quot;&gt;uncompressed_size&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;file_name_len_pos&quot;&gt;22&lt;/TD&gt;&lt;TD PORT=&quot;file_name_len_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;file_name_len_type&quot;&gt;file_name_len&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;extra_len_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;extra_len_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;extra_len_type&quot;&gt;extra_len&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;file_name_pos&quot;&gt;26&lt;/TD&gt;&lt;TD PORT=&quot;file_name_size&quot;&gt;file_name_len&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;file_name_type&quot;&gt;file_name&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;extra_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;extra_size&quot;&gt;extra_len&lt;/TD&gt;&lt;TD&gt;Extras&lt;/TD&gt;&lt;TD PORT=&quot;extra_type&quot;&gt;extra&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_body_compressed_pos&quot;&gt;14&lt;/TD&gt;&lt;TD PORT=&quot;len_body_compressed_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_body_compressed_type&quot;&gt;len_body_compressed&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_body_uncompressed_pos&quot;&gt;18&lt;/TD&gt;&lt;TD PORT=&quot;len_body_uncompressed_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_body_uncompressed_type&quot;&gt;len_body_uncompressed&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_file_name_pos&quot;&gt;22&lt;/TD&gt;&lt;TD PORT=&quot;len_file_name_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;len_file_name_type&quot;&gt;len_file_name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_extra_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;len_extra_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;len_extra_type&quot;&gt;len_extra&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;file_name_pos&quot;&gt;26&lt;/TD&gt;&lt;TD PORT=&quot;file_name_size&quot;&gt;len_file_name&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;file_name_type&quot;&gt;file_name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;extra_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;extra_size&quot;&gt;len_extra&lt;/TD&gt;&lt;TD&gt;Extras&lt;/TD&gt;&lt;TD PORT=&quot;extra_type&quot;&gt;extra&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__end_of_central_dir {
@@ -447,18 +455,18 @@ pk_section__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;disk_of_end_of_central_dir_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;disk_of_end_of_central_dir_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;disk_of_end_of_central_dir_type&quot;&gt;disk_of_end_of_central_dir&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;disk_of_central_dir_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;disk_of_central_dir_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;disk_of_central_dir_type&quot;&gt;disk_of_central_dir&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;qty_central_dir_entries_on_disk_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;qty_central_dir_entries_on_disk_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;qty_central_dir_entries_on_disk_type&quot;&gt;qty_central_dir_entries_on_disk&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;qty_central_dir_entries_total_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;qty_central_dir_entries_total_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;qty_central_dir_entries_total_type&quot;&gt;qty_central_dir_entries_total&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;central_dir_size_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;central_dir_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;central_dir_size_type&quot;&gt;central_dir_size&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;central_dir_offset_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;central_dir_offset_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;central_dir_offset_type&quot;&gt;central_dir_offset&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;comment_len_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;comment_len_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;comment_len_type&quot;&gt;comment_len&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;comment_pos&quot;&gt;18&lt;/TD&gt;&lt;TD PORT=&quot;comment_size&quot;&gt;comment_len&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;comment_type&quot;&gt;comment&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_central_dir_entries_on_disk_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;num_central_dir_entries_on_disk_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;num_central_dir_entries_on_disk_type&quot;&gt;num_central_dir_entries_on_disk&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_central_dir_entries_total_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;num_central_dir_entries_total_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;num_central_dir_entries_total_type&quot;&gt;num_central_dir_entries_total&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_central_dir_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;len_central_dir_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_central_dir_type&quot;&gt;len_central_dir&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;ofs_central_dir_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;ofs_central_dir_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;ofs_central_dir_type&quot;&gt;ofs_central_dir&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_comment_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;len_comment_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;len_comment_type&quot;&gt;len_comment&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;comment_pos&quot;&gt;18&lt;/TD&gt;&lt;TD PORT=&quot;comment_size&quot;&gt;len_comment&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;comment_type&quot;&gt;comment&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 	}
 	zip__seq:sections_type -&gt; pk_section__seq [style=bold];
 	local_file__seq:header_type -&gt; local_file_header__seq [style=bold];
-	local_file_header__seq:compressed_size_type -&gt; local_file__seq:body_size [color=&quot;#404040&quot;];
+	local_file_header__seq:len_body_compressed_type -&gt; local_file__seq:body_size [color=&quot;#404040&quot;];
 	extra_field__seq:body_type -&gt; extra_field__seq_body_switch [style=bold];
 	extra_field__seq_body_switch:case0 -&gt; ntfs__seq [style=bold];
 	extra_field__seq_body_switch:case1 -&gt; extended_timestamp__seq [style=bold];
@@ -468,13 +476,13 @@ pk_section__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER
 	attribute__seq:body_type -&gt; attribute__seq_body_switch [style=bold];
 	attribute__seq_body_switch:case0 -&gt; attribute_1__seq [style=bold];
 	attribute__seq:tag_type -&gt; attribute__seq:body_type [color=&quot;#404040&quot;];
-	infozip_unix_var_size__seq:uid_size_type -&gt; infozip_unix_var_size__seq:uid_size [color=&quot;#404040&quot;];
-	infozip_unix_var_size__seq:gid_size_type -&gt; infozip_unix_var_size__seq:gid_size [color=&quot;#404040&quot;];
-	central_dir_entry__seq:file_name_len_type -&gt; central_dir_entry__seq:file_name_size [color=&quot;#404040&quot;];
-	central_dir_entry__seq:extra_len_type -&gt; central_dir_entry__seq:extra_size [color=&quot;#404040&quot;];
+	infozip_unix_var_size__seq:len_uid_type -&gt; infozip_unix_var_size__seq:uid_size [color=&quot;#404040&quot;];
+	infozip_unix_var_size__seq:len_gid_type -&gt; infozip_unix_var_size__seq:gid_size [color=&quot;#404040&quot;];
+	central_dir_entry__seq:len_file_name_type -&gt; central_dir_entry__seq:file_name_size [color=&quot;#404040&quot;];
+	central_dir_entry__seq:len_extra_type -&gt; central_dir_entry__seq:extra_size [color=&quot;#404040&quot;];
 	central_dir_entry__seq:extra_type -&gt; extras__seq [style=bold];
-	central_dir_entry__seq:comment_len_type -&gt; central_dir_entry__seq:comment_size [color=&quot;#404040&quot;];
-	central_dir_entry__seq:local_header_offset_type -&gt; central_dir_entry__inst__local_header:local_header_pos [color=&quot;#404040&quot;];
+	central_dir_entry__seq:len_comment_type -&gt; central_dir_entry__seq:comment_size [color=&quot;#404040&quot;];
+	central_dir_entry__seq:ofs_local_header_type -&gt; central_dir_entry__inst__local_header:local_header_pos [color=&quot;#404040&quot;];
 	central_dir_entry__inst__local_header:local_header_type -&gt; pk_section__seq [style=bold];
 	pk_section__seq:body_type -&gt; pk_section__seq_body_switch [style=bold];
 	pk_section__seq_body_switch:case0 -&gt; central_dir_entry__seq [style=bold];
@@ -483,10 +491,10 @@ pk_section__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER
 	pk_section__seq_body_switch:case3 -&gt; data_descriptor__seq [style=bold];
 	pk_section__seq:section_type_type -&gt; pk_section__seq:body_type [color=&quot;#404040&quot;];
 	extras__seq:entries_type -&gt; extra_field__seq [style=bold];
-	local_file_header__seq:file_name_len_type -&gt; local_file_header__seq:file_name_size [color=&quot;#404040&quot;];
-	local_file_header__seq:extra_len_type -&gt; local_file_header__seq:extra_size [color=&quot;#404040&quot;];
+	local_file_header__seq:len_file_name_type -&gt; local_file_header__seq:file_name_size [color=&quot;#404040&quot;];
+	local_file_header__seq:len_extra_type -&gt; local_file_header__seq:extra_size [color=&quot;#404040&quot;];
 	local_file_header__seq:extra_type -&gt; extras__seq [style=bold];
-	end_of_central_dir__seq:comment_len_type -&gt; end_of_central_dir__seq:comment_size [color=&quot;#404040&quot;];
+	end_of_central_dir__seq:len_comment_type -&gt; end_of_central_dir__seq:comment_size [color=&quot;#404040&quot;];
 }
 </code></pre>
             

@@ -98,7 +98,15 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+and originally implemented in PKZIP utility by PKWARE.</p>
+<p>Thanks to solid support of it in most desktop environments and
+operating systems, and algorithms / specs availability in public
+domain, it quickly became tool of choice for implementing file
+containers.</p>
+<p>For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+are actually ZIP archives.</p>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -251,6 +259,19 @@ section#format-index .row {
             <pre><code class="php">&lt;?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+ * and originally implemented in PKZIP utility by PKWARE.
+ * 
+ * Thanks to solid support of it in most desktop environments and
+ * operating systems, and algorithms / specs availability in public
+ * domain, it quickly became tool of choice for implementing file
+ * containers.
+ * 
+ * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+ * are actually ZIP archives.
+ */
+
 class Zip extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Zip $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -279,7 +300,7 @@ class LocalFile extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this-&gt;_m_header = new \Zip\LocalFileHeader($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;header()-&gt;compressedSize());
+        $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;header()-&gt;lenBodyCompressed());
     }
     protected $_m_header;
     protected $_m_body;
@@ -297,15 +318,15 @@ class DataDescriptor extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this-&gt;_m_crc32 = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_compressedSize = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_uncompressedSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenBodyCompressed = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenBodyUncompressed = $this-&gt;_io-&gt;readU4le();
     }
     protected $_m_crc32;
-    protected $_m_compressedSize;
-    protected $_m_uncompressedSize;
+    protected $_m_lenBodyCompressed;
+    protected $_m_lenBodyUncompressed;
     public function crc32() { return $this-&gt;_m_crc32; }
-    public function compressedSize() { return $this-&gt;_m_compressedSize; }
-    public function uncompressedSize() { return $this-&gt;_m_uncompressedSize; }
+    public function lenBodyCompressed() { return $this-&gt;_m_lenBodyCompressed; }
+    public function lenBodyUncompressed() { return $this-&gt;_m_lenBodyUncompressed; }
 }
 
 namespace \Zip;
@@ -318,34 +339,34 @@ class ExtraField extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this-&gt;_m_code = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_size = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_lenBody = $this-&gt;_io-&gt;readU2le();
         switch ($this-&gt;code()) {
             case \Zip\ExtraCodes::NTFS:
-                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
+                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;lenBody());
                 $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
                 $this-&gt;_m_body = new \Zip\ExtraField\Ntfs($io, $this, $this-&gt;_root);
                 break;
             case \Zip\ExtraCodes::EXTENDED_TIMESTAMP:
-                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
+                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;lenBody());
                 $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
                 $this-&gt;_m_body = new \Zip\ExtraField\ExtendedTimestamp($io, $this, $this-&gt;_root);
                 break;
             case \Zip\ExtraCodes::INFOZIP_UNIX_VAR_SIZE:
-                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
+                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;lenBody());
                 $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
                 $this-&gt;_m_body = new \Zip\ExtraField\InfozipUnixVarSize($io, $this, $this-&gt;_root);
                 break;
             default:
-                $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
+                $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;lenBody());
                 break;
         }
     }
     protected $_m_code;
-    protected $_m_size;
+    protected $_m_lenBody;
     protected $_m_body;
     protected $_m__raw_body;
     public function code() { return $this-&gt;_m_code; }
-    public function size() { return $this-&gt;_m_size; }
+    public function lenBody() { return $this-&gt;_m_lenBody; }
     public function body() { return $this-&gt;_m_body; }
     public function _raw_body() { return $this-&gt;_m__raw_body; }
 }
@@ -383,24 +404,24 @@ class Attribute extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this-&gt;_m_tag = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_size = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_lenBody = $this-&gt;_io-&gt;readU2le();
         switch ($this-&gt;tag()) {
             case 1:
-                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
+                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;lenBody());
                 $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
                 $this-&gt;_m_body = new \Zip\ExtraField\Ntfs\Attribute1($io, $this, $this-&gt;_root);
                 break;
             default:
-                $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;size());
+                $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;lenBody());
                 break;
         }
     }
     protected $_m_tag;
-    protected $_m_size;
+    protected $_m_lenBody;
     protected $_m_body;
     protected $_m__raw_body;
     public function tag() { return $this-&gt;_m_tag; }
-    public function size() { return $this-&gt;_m_size; }
+    public function lenBody() { return $this-&gt;_m_lenBody; }
     public function body() { return $this-&gt;_m_body; }
     public function _raw_body() { return $this-&gt;_m__raw_body; }
 }
@@ -464,15 +485,15 @@ class InfozipUnixVarSize extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this-&gt;_m_version = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_uidSize = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_uid = $this-&gt;_io-&gt;readBytes($this-&gt;uidSize());
-        $this-&gt;_m_gidSize = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_gid = $this-&gt;_io-&gt;readBytes($this-&gt;gidSize());
+        $this-&gt;_m_lenUid = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_uid = $this-&gt;_io-&gt;readBytes($this-&gt;lenUid());
+        $this-&gt;_m_lenGid = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_gid = $this-&gt;_io-&gt;readBytes($this-&gt;lenGid());
     }
     protected $_m_version;
-    protected $_m_uidSize;
+    protected $_m_lenUid;
     protected $_m_uid;
-    protected $_m_gidSize;
+    protected $_m_lenGid;
     protected $_m_gid;
 
     /**
@@ -483,7 +504,7 @@ class InfozipUnixVarSize extends \Kaitai\Struct\Struct {
     /**
      * Size of UID field
      */
-    public function uidSize() { return $this-&gt;_m_uidSize; }
+    public function lenUid() { return $this-&gt;_m_lenUid; }
 
     /**
      * UID (User ID) for a file
@@ -493,7 +514,7 @@ class InfozipUnixVarSize extends \Kaitai\Struct\Struct {
     /**
      * Size of GID field
      */
-    public function gidSize() { return $this-&gt;_m_gidSize; }
+    public function lenGid() { return $this-&gt;_m_lenGid; }
 
     /**
      * GID (Group ID) for a file
@@ -517,27 +538,27 @@ class CentralDirEntry extends \Kaitai\Struct\Struct {
         $this-&gt;_m_lastModFileTime = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_lastModFileDate = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_crc32 = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_compressedSize = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_uncompressedSize = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_fileNameLen = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_extraLen = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_commentLen = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_lenBodyCompressed = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenBodyUncompressed = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenFileName = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_lenExtra = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_lenComment = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_diskNumberStart = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_intFileAttr = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_extFileAttr = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_localHeaderOffset = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_fileName = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;fileNameLen()), &quot;UTF-8&quot;);
-        $this-&gt;_m__raw_extra = $this-&gt;_io-&gt;readBytes($this-&gt;extraLen());
+        $this-&gt;_m_ofsLocalHeader = $this-&gt;_io-&gt;readS4le();
+        $this-&gt;_m_fileName = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenFileName()), &quot;UTF-8&quot;);
+        $this-&gt;_m__raw_extra = $this-&gt;_io-&gt;readBytes($this-&gt;lenExtra());
         $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_extra);
         $this-&gt;_m_extra = new \Zip\Extras($io, $this, $this-&gt;_root);
-        $this-&gt;_m_comment = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;commentLen()), &quot;UTF-8&quot;);
+        $this-&gt;_m_comment = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenComment()), &quot;UTF-8&quot;);
     }
     protected $_m_localHeader;
     public function localHeader() {
         if ($this-&gt;_m_localHeader !== null)
             return $this-&gt;_m_localHeader;
         $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek($this-&gt;localHeaderOffset());
+        $this-&gt;_io-&gt;seek($this-&gt;ofsLocalHeader());
         $this-&gt;_m_localHeader = new \Zip\PkSection($this-&gt;_io, $this, $this-&gt;_root);
         $this-&gt;_io-&gt;seek($_pos);
         return $this-&gt;_m_localHeader;
@@ -549,15 +570,15 @@ class CentralDirEntry extends \Kaitai\Struct\Struct {
     protected $_m_lastModFileTime;
     protected $_m_lastModFileDate;
     protected $_m_crc32;
-    protected $_m_compressedSize;
-    protected $_m_uncompressedSize;
-    protected $_m_fileNameLen;
-    protected $_m_extraLen;
-    protected $_m_commentLen;
+    protected $_m_lenBodyCompressed;
+    protected $_m_lenBodyUncompressed;
+    protected $_m_lenFileName;
+    protected $_m_lenExtra;
+    protected $_m_lenComment;
     protected $_m_diskNumberStart;
     protected $_m_intFileAttr;
     protected $_m_extFileAttr;
-    protected $_m_localHeaderOffset;
+    protected $_m_ofsLocalHeader;
     protected $_m_fileName;
     protected $_m_extra;
     protected $_m_comment;
@@ -569,15 +590,15 @@ class CentralDirEntry extends \Kaitai\Struct\Struct {
     public function lastModFileTime() { return $this-&gt;_m_lastModFileTime; }
     public function lastModFileDate() { return $this-&gt;_m_lastModFileDate; }
     public function crc32() { return $this-&gt;_m_crc32; }
-    public function compressedSize() { return $this-&gt;_m_compressedSize; }
-    public function uncompressedSize() { return $this-&gt;_m_uncompressedSize; }
-    public function fileNameLen() { return $this-&gt;_m_fileNameLen; }
-    public function extraLen() { return $this-&gt;_m_extraLen; }
-    public function commentLen() { return $this-&gt;_m_commentLen; }
+    public function lenBodyCompressed() { return $this-&gt;_m_lenBodyCompressed; }
+    public function lenBodyUncompressed() { return $this-&gt;_m_lenBodyUncompressed; }
+    public function lenFileName() { return $this-&gt;_m_lenFileName; }
+    public function lenExtra() { return $this-&gt;_m_lenExtra; }
+    public function lenComment() { return $this-&gt;_m_lenComment; }
     public function diskNumberStart() { return $this-&gt;_m_diskNumberStart; }
     public function intFileAttr() { return $this-&gt;_m_intFileAttr; }
     public function extFileAttr() { return $this-&gt;_m_extFileAttr; }
-    public function localHeaderOffset() { return $this-&gt;_m_localHeaderOffset; }
+    public function ofsLocalHeader() { return $this-&gt;_m_ofsLocalHeader; }
     public function fileName() { return $this-&gt;_m_fileName; }
     public function extra() { return $this-&gt;_m_extra; }
     public function comment() { return $this-&gt;_m_comment; }
@@ -653,12 +674,12 @@ class LocalFileHeader extends \Kaitai\Struct\Struct {
         $this-&gt;_m_fileModTime = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_fileModDate = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_crc32 = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_compressedSize = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_uncompressedSize = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_fileNameLen = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_extraLen = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_fileName = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;fileNameLen()), &quot;UTF-8&quot;);
-        $this-&gt;_m__raw_extra = $this-&gt;_io-&gt;readBytes($this-&gt;extraLen());
+        $this-&gt;_m_lenBodyCompressed = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenBodyUncompressed = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenFileName = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_lenExtra = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_fileName = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenFileName()), &quot;UTF-8&quot;);
+        $this-&gt;_m__raw_extra = $this-&gt;_io-&gt;readBytes($this-&gt;lenExtra());
         $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_extra);
         $this-&gt;_m_extra = new \Zip\Extras($io, $this, $this-&gt;_root);
     }
@@ -668,10 +689,10 @@ class LocalFileHeader extends \Kaitai\Struct\Struct {
     protected $_m_fileModTime;
     protected $_m_fileModDate;
     protected $_m_crc32;
-    protected $_m_compressedSize;
-    protected $_m_uncompressedSize;
-    protected $_m_fileNameLen;
-    protected $_m_extraLen;
+    protected $_m_lenBodyCompressed;
+    protected $_m_lenBodyUncompressed;
+    protected $_m_lenFileName;
+    protected $_m_lenExtra;
     protected $_m_fileName;
     protected $_m_extra;
     protected $_m__raw_extra;
@@ -681,10 +702,10 @@ class LocalFileHeader extends \Kaitai\Struct\Struct {
     public function fileModTime() { return $this-&gt;_m_fileModTime; }
     public function fileModDate() { return $this-&gt;_m_fileModDate; }
     public function crc32() { return $this-&gt;_m_crc32; }
-    public function compressedSize() { return $this-&gt;_m_compressedSize; }
-    public function uncompressedSize() { return $this-&gt;_m_uncompressedSize; }
-    public function fileNameLen() { return $this-&gt;_m_fileNameLen; }
-    public function extraLen() { return $this-&gt;_m_extraLen; }
+    public function lenBodyCompressed() { return $this-&gt;_m_lenBodyCompressed; }
+    public function lenBodyUncompressed() { return $this-&gt;_m_lenBodyUncompressed; }
+    public function lenFileName() { return $this-&gt;_m_lenFileName; }
+    public function lenExtra() { return $this-&gt;_m_lenExtra; }
     public function fileName() { return $this-&gt;_m_fileName; }
     public function extra() { return $this-&gt;_m_extra; }
     public function _raw_extra() { return $this-&gt;_m__raw_extra; }
@@ -701,28 +722,28 @@ class EndOfCentralDir extends \Kaitai\Struct\Struct {
     private function _read() {
         $this-&gt;_m_diskOfEndOfCentralDir = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_diskOfCentralDir = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_qtyCentralDirEntriesOnDisk = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_qtyCentralDirEntriesTotal = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_centralDirSize = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_centralDirOffset = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_commentLen = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_comment = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;commentLen()), &quot;UTF-8&quot;);
+        $this-&gt;_m_numCentralDirEntriesOnDisk = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_numCentralDirEntriesTotal = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_lenCentralDir = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_ofsCentralDir = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenComment = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_comment = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenComment()), &quot;UTF-8&quot;);
     }
     protected $_m_diskOfEndOfCentralDir;
     protected $_m_diskOfCentralDir;
-    protected $_m_qtyCentralDirEntriesOnDisk;
-    protected $_m_qtyCentralDirEntriesTotal;
-    protected $_m_centralDirSize;
-    protected $_m_centralDirOffset;
-    protected $_m_commentLen;
+    protected $_m_numCentralDirEntriesOnDisk;
+    protected $_m_numCentralDirEntriesTotal;
+    protected $_m_lenCentralDir;
+    protected $_m_ofsCentralDir;
+    protected $_m_lenComment;
     protected $_m_comment;
     public function diskOfEndOfCentralDir() { return $this-&gt;_m_diskOfEndOfCentralDir; }
     public function diskOfCentralDir() { return $this-&gt;_m_diskOfCentralDir; }
-    public function qtyCentralDirEntriesOnDisk() { return $this-&gt;_m_qtyCentralDirEntriesOnDisk; }
-    public function qtyCentralDirEntriesTotal() { return $this-&gt;_m_qtyCentralDirEntriesTotal; }
-    public function centralDirSize() { return $this-&gt;_m_centralDirSize; }
-    public function centralDirOffset() { return $this-&gt;_m_centralDirOffset; }
-    public function commentLen() { return $this-&gt;_m_commentLen; }
+    public function numCentralDirEntriesOnDisk() { return $this-&gt;_m_numCentralDirEntriesOnDisk; }
+    public function numCentralDirEntriesTotal() { return $this-&gt;_m_numCentralDirEntriesTotal; }
+    public function lenCentralDir() { return $this-&gt;_m_lenCentralDir; }
+    public function ofsCentralDir() { return $this-&gt;_m_ofsCentralDir; }
+    public function lenComment() { return $this-&gt;_m_lenComment; }
     public function comment() { return $this-&gt;_m_comment; }
 }
 

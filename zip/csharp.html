@@ -98,7 +98,15 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+and originally implemented in PKZIP utility by PKWARE.</p>
+<p>Thanks to solid support of it in most desktop environments and
+operating systems, and algorithms / specs availability in public
+domain, it quickly became tool of choice for implementing file
+containers.</p>
+<p>For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+are actually ZIP archives.</p>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -277,6 +285,18 @@ using System.Collections.Generic;
 namespace Kaitai
 {
 
+    /// &lt;summary&gt;
+    /// ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+    /// and originally implemented in PKZIP utility by PKWARE.
+    /// 
+    /// Thanks to solid support of it in most desktop environments and
+    /// operating systems, and algorithms / specs availability in public
+    /// domain, it quickly became tool of choice for implementing file
+    /// containers.
+    /// 
+    /// For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+    /// are actually ZIP archives.
+    /// &lt;/summary&gt;
     /// &lt;remarks&gt;
     /// Reference: &lt;a href=&quot;https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT&quot;&gt;Source&lt;/a&gt;
     /// &lt;/remarks&gt;
@@ -363,7 +383,7 @@ namespace Kaitai
             private void _read()
             {
                 _header = new LocalFileHeader(m_io, this, m_root);
-                _body = m_io.ReadBytes(Header.CompressedSize);
+                _body = m_io.ReadBytes(Header.LenBodyCompressed);
             }
             private LocalFileHeader _header;
             private byte[] _body;
@@ -390,17 +410,17 @@ namespace Kaitai
             private void _read()
             {
                 _crc32 = m_io.ReadU4le();
-                _compressedSize = m_io.ReadU4le();
-                _uncompressedSize = m_io.ReadU4le();
+                _lenBodyCompressed = m_io.ReadU4le();
+                _lenBodyUncompressed = m_io.ReadU4le();
             }
             private uint _crc32;
-            private uint _compressedSize;
-            private uint _uncompressedSize;
+            private uint _lenBodyCompressed;
+            private uint _lenBodyUncompressed;
             private Zip m_root;
             private Zip.PkSection m_parent;
             public uint Crc32 { get { return _crc32; } }
-            public uint CompressedSize { get { return _compressedSize; } }
-            public uint UncompressedSize { get { return _uncompressedSize; } }
+            public uint LenBodyCompressed { get { return _lenBodyCompressed; } }
+            public uint LenBodyUncompressed { get { return _lenBodyUncompressed; } }
             public Zip M_Root { get { return m_root; } }
             public Zip.PkSection M_Parent { get { return m_parent; } }
         }
@@ -420,28 +440,28 @@ namespace Kaitai
             private void _read()
             {
                 _code = ((Zip.ExtraCodes) m_io.ReadU2le());
-                _size = m_io.ReadU2le();
+                _lenBody = m_io.ReadU2le();
                 switch (Code) {
                 case Zip.ExtraCodes.Ntfs: {
-                    __raw_body = m_io.ReadBytes(Size);
+                    __raw_body = m_io.ReadBytes(LenBody);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new Ntfs(io___raw_body, this, m_root);
                     break;
                 }
                 case Zip.ExtraCodes.ExtendedTimestamp: {
-                    __raw_body = m_io.ReadBytes(Size);
+                    __raw_body = m_io.ReadBytes(LenBody);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new ExtendedTimestamp(io___raw_body, this, m_root);
                     break;
                 }
                 case Zip.ExtraCodes.InfozipUnixVarSize: {
-                    __raw_body = m_io.ReadBytes(Size);
+                    __raw_body = m_io.ReadBytes(LenBody);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new InfozipUnixVarSize(io___raw_body, this, m_root);
                     break;
                 }
                 default: {
-                    _body = m_io.ReadBytes(Size);
+                    _body = m_io.ReadBytes(LenBody);
                     break;
                 }
                 }
@@ -491,28 +511,28 @@ namespace Kaitai
                     private void _read()
                     {
                         _tag = m_io.ReadU2le();
-                        _size = m_io.ReadU2le();
+                        _lenBody = m_io.ReadU2le();
                         switch (Tag) {
                         case 1: {
-                            __raw_body = m_io.ReadBytes(Size);
+                            __raw_body = m_io.ReadBytes(LenBody);
                             var io___raw_body = new KaitaiStream(__raw_body);
                             _body = new Attribute1(io___raw_body, this, m_root);
                             break;
                         }
                         default: {
-                            _body = m_io.ReadBytes(Size);
+                            _body = m_io.ReadBytes(LenBody);
                             break;
                         }
                         }
                     }
                     private ushort _tag;
-                    private ushort _size;
+                    private ushort _lenBody;
                     private object _body;
                     private Zip m_root;
                     private Zip.ExtraField.Ntfs m_parent;
                     private byte[] __raw_body;
                     public ushort Tag { get { return _tag; } }
-                    public ushort Size { get { return _size; } }
+                    public ushort LenBody { get { return _lenBody; } }
                     public object Body { get { return _body; } }
                     public Zip M_Root { get { return m_root; } }
                     public Zip.ExtraField.Ntfs M_Parent { get { return m_parent; } }
@@ -618,15 +638,15 @@ namespace Kaitai
                 private void _read()
                 {
                     _version = m_io.ReadU1();
-                    _uidSize = m_io.ReadU1();
-                    _uid = m_io.ReadBytes(UidSize);
-                    _gidSize = m_io.ReadU1();
-                    _gid = m_io.ReadBytes(GidSize);
+                    _lenUid = m_io.ReadU1();
+                    _uid = m_io.ReadBytes(LenUid);
+                    _lenGid = m_io.ReadU1();
+                    _gid = m_io.ReadBytes(LenGid);
                 }
                 private byte _version;
-                private byte _uidSize;
+                private byte _lenUid;
                 private byte[] _uid;
-                private byte _gidSize;
+                private byte _lenGid;
                 private byte[] _gid;
                 private Zip m_root;
                 private Zip.ExtraField m_parent;
@@ -639,7 +659,7 @@ namespace Kaitai
                 /// &lt;summary&gt;
                 /// Size of UID field
                 /// &lt;/summary&gt;
-                public byte UidSize { get { return _uidSize; } }
+                public byte LenUid { get { return _lenUid; } }
 
                 /// &lt;summary&gt;
                 /// UID (User ID) for a file
@@ -649,7 +669,7 @@ namespace Kaitai
                 /// &lt;summary&gt;
                 /// Size of GID field
                 /// &lt;/summary&gt;
-                public byte GidSize { get { return _gidSize; } }
+                public byte LenGid { get { return _lenGid; } }
 
                 /// &lt;summary&gt;
                 /// GID (Group ID) for a file
@@ -659,13 +679,13 @@ namespace Kaitai
                 public Zip.ExtraField M_Parent { get { return m_parent; } }
             }
             private ExtraCodes _code;
-            private ushort _size;
+            private ushort _lenBody;
             private object _body;
             private Zip m_root;
             private Zip.Extras m_parent;
             private byte[] __raw_body;
             public ExtraCodes Code { get { return _code; } }
-            public ushort Size { get { return _size; } }
+            public ushort LenBody { get { return _lenBody; } }
             public object Body { get { return _body; } }
             public Zip M_Root { get { return m_root; } }
             public Zip.Extras M_Parent { get { return m_parent; } }
@@ -698,20 +718,20 @@ namespace Kaitai
                 _lastModFileTime = m_io.ReadU2le();
                 _lastModFileDate = m_io.ReadU2le();
                 _crc32 = m_io.ReadU4le();
-                _compressedSize = m_io.ReadU4le();
-                _uncompressedSize = m_io.ReadU4le();
-                _fileNameLen = m_io.ReadU2le();
-                _extraLen = m_io.ReadU2le();
-                _commentLen = m_io.ReadU2le();
+                _lenBodyCompressed = m_io.ReadU4le();
+                _lenBodyUncompressed = m_io.ReadU4le();
+                _lenFileName = m_io.ReadU2le();
+                _lenExtra = m_io.ReadU2le();
+                _lenComment = m_io.ReadU2le();
                 _diskNumberStart = m_io.ReadU2le();
                 _intFileAttr = m_io.ReadU2le();
                 _extFileAttr = m_io.ReadU4le();
-                _localHeaderOffset = m_io.ReadS4le();
-                _fileName = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(FileNameLen));
-                __raw_extra = m_io.ReadBytes(ExtraLen);
+                _ofsLocalHeader = m_io.ReadS4le();
+                _fileName = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(LenFileName));
+                __raw_extra = m_io.ReadBytes(LenExtra);
                 var io___raw_extra = new KaitaiStream(__raw_extra);
                 _extra = new Extras(io___raw_extra, this, m_root);
-                _comment = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(CommentLen));
+                _comment = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(LenComment));
             }
             private bool f_localHeader;
             private PkSection _localHeader;
@@ -722,7 +742,7 @@ namespace Kaitai
                     if (f_localHeader)
                         return _localHeader;
                     long _pos = m_io.Pos;
-                    m_io.Seek(LocalHeaderOffset);
+                    m_io.Seek(OfsLocalHeader);
                     _localHeader = new PkSection(m_io, this, m_root);
                     m_io.Seek(_pos);
                     f_localHeader = true;
@@ -736,15 +756,15 @@ namespace Kaitai
             private ushort _lastModFileTime;
             private ushort _lastModFileDate;
             private uint _crc32;
-            private uint _compressedSize;
-            private uint _uncompressedSize;
-            private ushort _fileNameLen;
-            private ushort _extraLen;
-            private ushort _commentLen;
+            private uint _lenBodyCompressed;
+            private uint _lenBodyUncompressed;
+            private ushort _lenFileName;
+            private ushort _lenExtra;
+            private ushort _lenComment;
             private ushort _diskNumberStart;
             private ushort _intFileAttr;
             private uint _extFileAttr;
-            private int _localHeaderOffset;
+            private int _ofsLocalHeader;
             private string _fileName;
             private Extras _extra;
             private string _comment;
@@ -758,15 +778,15 @@ namespace Kaitai
             public ushort LastModFileTime { get { return _lastModFileTime; } }
             public ushort LastModFileDate { get { return _lastModFileDate; } }
             public uint Crc32 { get { return _crc32; } }
-            public uint CompressedSize { get { return _compressedSize; } }
-            public uint UncompressedSize { get { return _uncompressedSize; } }
-            public ushort FileNameLen { get { return _fileNameLen; } }
-            public ushort ExtraLen { get { return _extraLen; } }
-            public ushort CommentLen { get { return _commentLen; } }
+            public uint LenBodyCompressed { get { return _lenBodyCompressed; } }
+            public uint LenBodyUncompressed { get { return _lenBodyUncompressed; } }
+            public ushort LenFileName { get { return _lenFileName; } }
+            public ushort LenExtra { get { return _lenExtra; } }
+            public ushort LenComment { get { return _lenComment; } }
             public ushort DiskNumberStart { get { return _diskNumberStart; } }
             public ushort IntFileAttr { get { return _intFileAttr; } }
             public uint ExtFileAttr { get { return _extFileAttr; } }
-            public int LocalHeaderOffset { get { return _localHeaderOffset; } }
+            public int OfsLocalHeader { get { return _ofsLocalHeader; } }
             public string FileName { get { return _fileName; } }
             public Extras Extra { get { return _extra; } }
             public string Comment { get { return _comment; } }
@@ -873,12 +893,12 @@ namespace Kaitai
                 _fileModTime = m_io.ReadU2le();
                 _fileModDate = m_io.ReadU2le();
                 _crc32 = m_io.ReadU4le();
-                _compressedSize = m_io.ReadU4le();
-                _uncompressedSize = m_io.ReadU4le();
-                _fileNameLen = m_io.ReadU2le();
-                _extraLen = m_io.ReadU2le();
-                _fileName = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(FileNameLen));
-                __raw_extra = m_io.ReadBytes(ExtraLen);
+                _lenBodyCompressed = m_io.ReadU4le();
+                _lenBodyUncompressed = m_io.ReadU4le();
+                _lenFileName = m_io.ReadU2le();
+                _lenExtra = m_io.ReadU2le();
+                _fileName = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(LenFileName));
+                __raw_extra = m_io.ReadBytes(LenExtra);
                 var io___raw_extra = new KaitaiStream(__raw_extra);
                 _extra = new Extras(io___raw_extra, this, m_root);
             }
@@ -888,10 +908,10 @@ namespace Kaitai
             private ushort _fileModTime;
             private ushort _fileModDate;
             private uint _crc32;
-            private uint _compressedSize;
-            private uint _uncompressedSize;
-            private ushort _fileNameLen;
-            private ushort _extraLen;
+            private uint _lenBodyCompressed;
+            private uint _lenBodyUncompressed;
+            private ushort _lenFileName;
+            private ushort _lenExtra;
             private string _fileName;
             private Extras _extra;
             private Zip m_root;
@@ -903,10 +923,10 @@ namespace Kaitai
             public ushort FileModTime { get { return _fileModTime; } }
             public ushort FileModDate { get { return _fileModDate; } }
             public uint Crc32 { get { return _crc32; } }
-            public uint CompressedSize { get { return _compressedSize; } }
-            public uint UncompressedSize { get { return _uncompressedSize; } }
-            public ushort FileNameLen { get { return _fileNameLen; } }
-            public ushort ExtraLen { get { return _extraLen; } }
+            public uint LenBodyCompressed { get { return _lenBodyCompressed; } }
+            public uint LenBodyUncompressed { get { return _lenBodyUncompressed; } }
+            public ushort LenFileName { get { return _lenFileName; } }
+            public ushort LenExtra { get { return _lenExtra; } }
             public string FileName { get { return _fileName; } }
             public Extras Extra { get { return _extra; } }
             public Zip M_Root { get { return m_root; } }
@@ -930,30 +950,30 @@ namespace Kaitai
             {
                 _diskOfEndOfCentralDir = m_io.ReadU2le();
                 _diskOfCentralDir = m_io.ReadU2le();
-                _qtyCentralDirEntriesOnDisk = m_io.ReadU2le();
-                _qtyCentralDirEntriesTotal = m_io.ReadU2le();
-                _centralDirSize = m_io.ReadU4le();
-                _centralDirOffset = m_io.ReadU4le();
-                _commentLen = m_io.ReadU2le();
-                _comment = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(CommentLen));
+                _numCentralDirEntriesOnDisk = m_io.ReadU2le();
+                _numCentralDirEntriesTotal = m_io.ReadU2le();
+                _lenCentralDir = m_io.ReadU4le();
+                _ofsCentralDir = m_io.ReadU4le();
+                _lenComment = m_io.ReadU2le();
+                _comment = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(LenComment));
             }
             private ushort _diskOfEndOfCentralDir;
             private ushort _diskOfCentralDir;
-            private ushort _qtyCentralDirEntriesOnDisk;
-            private ushort _qtyCentralDirEntriesTotal;
-            private uint _centralDirSize;
-            private uint _centralDirOffset;
-            private ushort _commentLen;
+            private ushort _numCentralDirEntriesOnDisk;
+            private ushort _numCentralDirEntriesTotal;
+            private uint _lenCentralDir;
+            private uint _ofsCentralDir;
+            private ushort _lenComment;
             private string _comment;
             private Zip m_root;
             private Zip.PkSection m_parent;
             public ushort DiskOfEndOfCentralDir { get { return _diskOfEndOfCentralDir; } }
             public ushort DiskOfCentralDir { get { return _diskOfCentralDir; } }
-            public ushort QtyCentralDirEntriesOnDisk { get { return _qtyCentralDirEntriesOnDisk; } }
-            public ushort QtyCentralDirEntriesTotal { get { return _qtyCentralDirEntriesTotal; } }
-            public uint CentralDirSize { get { return _centralDirSize; } }
-            public uint CentralDirOffset { get { return _centralDirOffset; } }
-            public ushort CommentLen { get { return _commentLen; } }
+            public ushort NumCentralDirEntriesOnDisk { get { return _numCentralDirEntriesOnDisk; } }
+            public ushort NumCentralDirEntriesTotal { get { return _numCentralDirEntriesTotal; } }
+            public uint LenCentralDir { get { return _lenCentralDir; } }
+            public uint OfsCentralDir { get { return _ofsCentralDir; } }
+            public ushort LenComment { get { return _lenComment; } }
             public string Comment { get { return _comment; } }
             public Zip M_Root { get { return m_root; } }
             public Zip.PkSection M_Parent { get { return m_parent; } }

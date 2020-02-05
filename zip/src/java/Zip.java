@@ -11,6 +11,16 @@ import java.nio.charset.Charset;
 
 
 /**
+ * ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+ * and originally implemented in PKZIP utility by PKWARE.
+ * 
+ * Thanks to solid support of it in most desktop environments and
+ * operating systems, and algorithms / specs availability in public
+ * domain, it quickly became tool of choice for implementing file
+ * containers.
+ * 
+ * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+ * are actually ZIP archives.
  * @see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">Source</a>
  */
 public class Zip extends KaitaiStruct {
@@ -124,7 +134,7 @@ public class Zip extends KaitaiStruct {
         }
         private void _read() {
             this.header = new LocalFileHeader(this._io, this, _root);
-            this.body = this._io.readBytes(header().compressedSize());
+            this.body = this._io.readBytes(header().lenBodyCompressed());
         }
         private LocalFileHeader header;
         private byte[] body;
@@ -156,17 +166,17 @@ public class Zip extends KaitaiStruct {
         }
         private void _read() {
             this.crc32 = this._io.readU4le();
-            this.compressedSize = this._io.readU4le();
-            this.uncompressedSize = this._io.readU4le();
+            this.lenBodyCompressed = this._io.readU4le();
+            this.lenBodyUncompressed = this._io.readU4le();
         }
         private long crc32;
-        private long compressedSize;
-        private long uncompressedSize;
+        private long lenBodyCompressed;
+        private long lenBodyUncompressed;
         private Zip _root;
         private Zip.PkSection _parent;
         public long crc32() { return crc32; }
-        public long compressedSize() { return compressedSize; }
-        public long uncompressedSize() { return uncompressedSize; }
+        public long lenBodyCompressed() { return lenBodyCompressed; }
+        public long lenBodyUncompressed() { return lenBodyUncompressed; }
         public Zip _root() { return _root; }
         public Zip.PkSection _parent() { return _parent; }
     }
@@ -191,28 +201,28 @@ public class Zip extends KaitaiStruct {
         }
         private void _read() {
             this.code = Zip.ExtraCodes.byId(this._io.readU2le());
-            this.size = this._io.readU2le();
+            this.lenBody = this._io.readU2le();
             switch (code()) {
             case NTFS: {
-                this._raw_body = this._io.readBytes(size());
+                this._raw_body = this._io.readBytes(lenBody());
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new Ntfs(_io__raw_body, this, _root);
                 break;
             }
             case EXTENDED_TIMESTAMP: {
-                this._raw_body = this._io.readBytes(size());
+                this._raw_body = this._io.readBytes(lenBody());
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new ExtendedTimestamp(_io__raw_body, this, _root);
                 break;
             }
             case INFOZIP_UNIX_VAR_SIZE: {
-                this._raw_body = this._io.readBytes(size());
+                this._raw_body = this._io.readBytes(lenBody());
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new InfozipUnixVarSize(_io__raw_body, this, _root);
                 break;
             }
             default: {
-                this.body = this._io.readBytes(size());
+                this.body = this._io.readBytes(lenBody());
                 break;
             }
             }
@@ -272,28 +282,28 @@ public class Zip extends KaitaiStruct {
                 }
                 private void _read() {
                     this.tag = this._io.readU2le();
-                    this.size = this._io.readU2le();
+                    this.lenBody = this._io.readU2le();
                     switch (tag()) {
                     case 1: {
-                        this._raw_body = this._io.readBytes(size());
+                        this._raw_body = this._io.readBytes(lenBody());
                         KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                         this.body = new Attribute1(_io__raw_body, this, _root);
                         break;
                     }
                     default: {
-                        this.body = this._io.readBytes(size());
+                        this.body = this._io.readBytes(lenBody());
                         break;
                     }
                     }
                 }
                 private int tag;
-                private int size;
+                private int lenBody;
                 private Object body;
                 private Zip _root;
                 private Zip.ExtraField.Ntfs _parent;
                 private byte[] _raw_body;
                 public int tag() { return tag; }
-                public int size() { return size; }
+                public int lenBody() { return lenBody; }
                 public Object body() { return body; }
                 public Zip _root() { return _root; }
                 public Zip.ExtraField.Ntfs _parent() { return _parent; }
@@ -414,15 +424,15 @@ public class Zip extends KaitaiStruct {
             }
             private void _read() {
                 this.version = this._io.readU1();
-                this.uidSize = this._io.readU1();
-                this.uid = this._io.readBytes(uidSize());
-                this.gidSize = this._io.readU1();
-                this.gid = this._io.readBytes(gidSize());
+                this.lenUid = this._io.readU1();
+                this.uid = this._io.readBytes(lenUid());
+                this.lenGid = this._io.readU1();
+                this.gid = this._io.readBytes(lenGid());
             }
             private int version;
-            private int uidSize;
+            private int lenUid;
             private byte[] uid;
-            private int gidSize;
+            private int lenGid;
             private byte[] gid;
             private Zip _root;
             private Zip.ExtraField _parent;
@@ -435,7 +445,7 @@ public class Zip extends KaitaiStruct {
             /**
              * Size of UID field
              */
-            public int uidSize() { return uidSize; }
+            public int lenUid() { return lenUid; }
 
             /**
              * UID (User ID) for a file
@@ -445,7 +455,7 @@ public class Zip extends KaitaiStruct {
             /**
              * Size of GID field
              */
-            public int gidSize() { return gidSize; }
+            public int lenGid() { return lenGid; }
 
             /**
              * GID (Group ID) for a file
@@ -455,13 +465,13 @@ public class Zip extends KaitaiStruct {
             public Zip.ExtraField _parent() { return _parent; }
         }
         private ExtraCodes code;
-        private int size;
+        private int lenBody;
         private Object body;
         private Zip _root;
         private Zip.Extras _parent;
         private byte[] _raw_body;
         public ExtraCodes code() { return code; }
-        public int size() { return size; }
+        public int lenBody() { return lenBody; }
         public Object body() { return body; }
         public Zip _root() { return _root; }
         public Zip.Extras _parent() { return _parent; }
@@ -498,27 +508,27 @@ public class Zip extends KaitaiStruct {
             this.lastModFileTime = this._io.readU2le();
             this.lastModFileDate = this._io.readU2le();
             this.crc32 = this._io.readU4le();
-            this.compressedSize = this._io.readU4le();
-            this.uncompressedSize = this._io.readU4le();
-            this.fileNameLen = this._io.readU2le();
-            this.extraLen = this._io.readU2le();
-            this.commentLen = this._io.readU2le();
+            this.lenBodyCompressed = this._io.readU4le();
+            this.lenBodyUncompressed = this._io.readU4le();
+            this.lenFileName = this._io.readU2le();
+            this.lenExtra = this._io.readU2le();
+            this.lenComment = this._io.readU2le();
             this.diskNumberStart = this._io.readU2le();
             this.intFileAttr = this._io.readU2le();
             this.extFileAttr = this._io.readU4le();
-            this.localHeaderOffset = this._io.readS4le();
-            this.fileName = new String(this._io.readBytes(fileNameLen()), Charset.forName("UTF-8"));
-            this._raw_extra = this._io.readBytes(extraLen());
+            this.ofsLocalHeader = this._io.readS4le();
+            this.fileName = new String(this._io.readBytes(lenFileName()), Charset.forName("UTF-8"));
+            this._raw_extra = this._io.readBytes(lenExtra());
             KaitaiStream _io__raw_extra = new ByteBufferKaitaiStream(_raw_extra);
             this.extra = new Extras(_io__raw_extra, this, _root);
-            this.comment = new String(this._io.readBytes(commentLen()), Charset.forName("UTF-8"));
+            this.comment = new String(this._io.readBytes(lenComment()), Charset.forName("UTF-8"));
         }
         private PkSection localHeader;
         public PkSection localHeader() {
             if (this.localHeader != null)
                 return this.localHeader;
             long _pos = this._io.pos();
-            this._io.seek(localHeaderOffset());
+            this._io.seek(ofsLocalHeader());
             this.localHeader = new PkSection(this._io, this, _root);
             this._io.seek(_pos);
             return this.localHeader;
@@ -530,15 +540,15 @@ public class Zip extends KaitaiStruct {
         private int lastModFileTime;
         private int lastModFileDate;
         private long crc32;
-        private long compressedSize;
-        private long uncompressedSize;
-        private int fileNameLen;
-        private int extraLen;
-        private int commentLen;
+        private long lenBodyCompressed;
+        private long lenBodyUncompressed;
+        private int lenFileName;
+        private int lenExtra;
+        private int lenComment;
         private int diskNumberStart;
         private int intFileAttr;
         private long extFileAttr;
-        private int localHeaderOffset;
+        private int ofsLocalHeader;
         private String fileName;
         private Extras extra;
         private String comment;
@@ -552,15 +562,15 @@ public class Zip extends KaitaiStruct {
         public int lastModFileTime() { return lastModFileTime; }
         public int lastModFileDate() { return lastModFileDate; }
         public long crc32() { return crc32; }
-        public long compressedSize() { return compressedSize; }
-        public long uncompressedSize() { return uncompressedSize; }
-        public int fileNameLen() { return fileNameLen; }
-        public int extraLen() { return extraLen; }
-        public int commentLen() { return commentLen; }
+        public long lenBodyCompressed() { return lenBodyCompressed; }
+        public long lenBodyUncompressed() { return lenBodyUncompressed; }
+        public int lenFileName() { return lenFileName; }
+        public int lenExtra() { return lenExtra; }
+        public int lenComment() { return lenComment; }
         public int diskNumberStart() { return diskNumberStart; }
         public int intFileAttr() { return intFileAttr; }
         public long extFileAttr() { return extFileAttr; }
-        public int localHeaderOffset() { return localHeaderOffset; }
+        public int ofsLocalHeader() { return ofsLocalHeader; }
         public String fileName() { return fileName; }
         public Extras extra() { return extra; }
         public String comment() { return comment; }
@@ -682,12 +692,12 @@ public class Zip extends KaitaiStruct {
             this.fileModTime = this._io.readU2le();
             this.fileModDate = this._io.readU2le();
             this.crc32 = this._io.readU4le();
-            this.compressedSize = this._io.readU4le();
-            this.uncompressedSize = this._io.readU4le();
-            this.fileNameLen = this._io.readU2le();
-            this.extraLen = this._io.readU2le();
-            this.fileName = new String(this._io.readBytes(fileNameLen()), Charset.forName("UTF-8"));
-            this._raw_extra = this._io.readBytes(extraLen());
+            this.lenBodyCompressed = this._io.readU4le();
+            this.lenBodyUncompressed = this._io.readU4le();
+            this.lenFileName = this._io.readU2le();
+            this.lenExtra = this._io.readU2le();
+            this.fileName = new String(this._io.readBytes(lenFileName()), Charset.forName("UTF-8"));
+            this._raw_extra = this._io.readBytes(lenExtra());
             KaitaiStream _io__raw_extra = new ByteBufferKaitaiStream(_raw_extra);
             this.extra = new Extras(_io__raw_extra, this, _root);
         }
@@ -697,10 +707,10 @@ public class Zip extends KaitaiStruct {
         private int fileModTime;
         private int fileModDate;
         private long crc32;
-        private long compressedSize;
-        private long uncompressedSize;
-        private int fileNameLen;
-        private int extraLen;
+        private long lenBodyCompressed;
+        private long lenBodyUncompressed;
+        private int lenFileName;
+        private int lenExtra;
         private String fileName;
         private Extras extra;
         private Zip _root;
@@ -712,10 +722,10 @@ public class Zip extends KaitaiStruct {
         public int fileModTime() { return fileModTime; }
         public int fileModDate() { return fileModDate; }
         public long crc32() { return crc32; }
-        public long compressedSize() { return compressedSize; }
-        public long uncompressedSize() { return uncompressedSize; }
-        public int fileNameLen() { return fileNameLen; }
-        public int extraLen() { return extraLen; }
+        public long lenBodyCompressed() { return lenBodyCompressed; }
+        public long lenBodyUncompressed() { return lenBodyUncompressed; }
+        public int lenFileName() { return lenFileName; }
+        public int lenExtra() { return lenExtra; }
         public String fileName() { return fileName; }
         public Extras extra() { return extra; }
         public Zip _root() { return _root; }
@@ -744,30 +754,30 @@ public class Zip extends KaitaiStruct {
         private void _read() {
             this.diskOfEndOfCentralDir = this._io.readU2le();
             this.diskOfCentralDir = this._io.readU2le();
-            this.qtyCentralDirEntriesOnDisk = this._io.readU2le();
-            this.qtyCentralDirEntriesTotal = this._io.readU2le();
-            this.centralDirSize = this._io.readU4le();
-            this.centralDirOffset = this._io.readU4le();
-            this.commentLen = this._io.readU2le();
-            this.comment = new String(this._io.readBytes(commentLen()), Charset.forName("UTF-8"));
+            this.numCentralDirEntriesOnDisk = this._io.readU2le();
+            this.numCentralDirEntriesTotal = this._io.readU2le();
+            this.lenCentralDir = this._io.readU4le();
+            this.ofsCentralDir = this._io.readU4le();
+            this.lenComment = this._io.readU2le();
+            this.comment = new String(this._io.readBytes(lenComment()), Charset.forName("UTF-8"));
         }
         private int diskOfEndOfCentralDir;
         private int diskOfCentralDir;
-        private int qtyCentralDirEntriesOnDisk;
-        private int qtyCentralDirEntriesTotal;
-        private long centralDirSize;
-        private long centralDirOffset;
-        private int commentLen;
+        private int numCentralDirEntriesOnDisk;
+        private int numCentralDirEntriesTotal;
+        private long lenCentralDir;
+        private long ofsCentralDir;
+        private int lenComment;
         private String comment;
         private Zip _root;
         private Zip.PkSection _parent;
         public int diskOfEndOfCentralDir() { return diskOfEndOfCentralDir; }
         public int diskOfCentralDir() { return diskOfCentralDir; }
-        public int qtyCentralDirEntriesOnDisk() { return qtyCentralDirEntriesOnDisk; }
-        public int qtyCentralDirEntriesTotal() { return qtyCentralDirEntriesTotal; }
-        public long centralDirSize() { return centralDirSize; }
-        public long centralDirOffset() { return centralDirOffset; }
-        public int commentLen() { return commentLen; }
+        public int numCentralDirEntriesOnDisk() { return numCentralDirEntriesOnDisk; }
+        public int numCentralDirEntriesTotal() { return numCentralDirEntriesTotal; }
+        public long lenCentralDir() { return lenCentralDir; }
+        public long ofsCentralDir() { return ofsCentralDir; }
+        public int lenComment() { return lenComment; }
         public String comment() { return comment; }
         public Zip _root() { return _root; }
         public Zip.PkSection _parent() { return _parent; }

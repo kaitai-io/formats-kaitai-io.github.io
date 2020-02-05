@@ -10,6 +10,16 @@
   }
 }(this, function (KaitaiStream) {
 /**
+ * ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+ * and originally implemented in PKZIP utility by PKWARE.
+ * 
+ * Thanks to solid support of it in most desktop environments and
+ * operating systems, and algorithms / specs availability in public
+ * domain, it quickly became tool of choice for implementing file
+ * containers.
+ * 
+ * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+ * are actually ZIP archives.
  * @see {@link https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT|Source}
  */
 
@@ -118,7 +128,7 @@ var Zip = (function() {
     }
     LocalFile.prototype._read = function() {
       this.header = new LocalFileHeader(this._io, this, this._root);
-      this.body = this._io.readBytes(this.header.compressedSize);
+      this.body = this._io.readBytes(this.header.lenBodyCompressed);
     }
 
     return LocalFile;
@@ -134,8 +144,8 @@ var Zip = (function() {
     }
     DataDescriptor.prototype._read = function() {
       this.crc32 = this._io.readU4le();
-      this.compressedSize = this._io.readU4le();
-      this.uncompressedSize = this._io.readU4le();
+      this.lenBodyCompressed = this._io.readU4le();
+      this.lenBodyUncompressed = this._io.readU4le();
     }
 
     return DataDescriptor;
@@ -151,25 +161,25 @@ var Zip = (function() {
     }
     ExtraField.prototype._read = function() {
       this.code = this._io.readU2le();
-      this.size = this._io.readU2le();
+      this.lenBody = this._io.readU2le();
       switch (this.code) {
       case Zip.ExtraCodes.NTFS:
-        this._raw_body = this._io.readBytes(this.size);
+        this._raw_body = this._io.readBytes(this.lenBody);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new Ntfs(_io__raw_body, this, this._root);
         break;
       case Zip.ExtraCodes.EXTENDED_TIMESTAMP:
-        this._raw_body = this._io.readBytes(this.size);
+        this._raw_body = this._io.readBytes(this.lenBody);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new ExtendedTimestamp(_io__raw_body, this, this._root);
         break;
       case Zip.ExtraCodes.INFOZIP_UNIX_VAR_SIZE:
-        this._raw_body = this._io.readBytes(this.size);
+        this._raw_body = this._io.readBytes(this.lenBody);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new InfozipUnixVarSize(_io__raw_body, this, this._root);
         break;
       default:
-        this.body = this._io.readBytes(this.size);
+        this.body = this._io.readBytes(this.lenBody);
         break;
       }
     }
@@ -206,15 +216,15 @@ var Zip = (function() {
         }
         Attribute.prototype._read = function() {
           this.tag = this._io.readU2le();
-          this.size = this._io.readU2le();
+          this.lenBody = this._io.readU2le();
           switch (this.tag) {
           case 1:
-            this._raw_body = this._io.readBytes(this.size);
+            this._raw_body = this._io.readBytes(this.lenBody);
             var _io__raw_body = new KaitaiStream(this._raw_body);
             this.body = new Attribute1(_io__raw_body, this, this._root);
             break;
           default:
-            this.body = this._io.readBytes(this.size);
+            this.body = this._io.readBytes(this.lenBody);
             break;
           }
         }
@@ -282,10 +292,10 @@ var Zip = (function() {
       }
       InfozipUnixVarSize.prototype._read = function() {
         this.version = this._io.readU1();
-        this.uidSize = this._io.readU1();
-        this.uid = this._io.readBytes(this.uidSize);
-        this.gidSize = this._io.readU1();
-        this.gid = this._io.readBytes(this.gidSize);
+        this.lenUid = this._io.readU1();
+        this.uid = this._io.readBytes(this.lenUid);
+        this.lenGid = this._io.readU1();
+        this.gid = this._io.readBytes(this.lenGid);
       }
 
       /**
@@ -334,27 +344,27 @@ var Zip = (function() {
       this.lastModFileTime = this._io.readU2le();
       this.lastModFileDate = this._io.readU2le();
       this.crc32 = this._io.readU4le();
-      this.compressedSize = this._io.readU4le();
-      this.uncompressedSize = this._io.readU4le();
-      this.fileNameLen = this._io.readU2le();
-      this.extraLen = this._io.readU2le();
-      this.commentLen = this._io.readU2le();
+      this.lenBodyCompressed = this._io.readU4le();
+      this.lenBodyUncompressed = this._io.readU4le();
+      this.lenFileName = this._io.readU2le();
+      this.lenExtra = this._io.readU2le();
+      this.lenComment = this._io.readU2le();
       this.diskNumberStart = this._io.readU2le();
       this.intFileAttr = this._io.readU2le();
       this.extFileAttr = this._io.readU4le();
-      this.localHeaderOffset = this._io.readS4le();
-      this.fileName = KaitaiStream.bytesToStr(this._io.readBytes(this.fileNameLen), "UTF-8");
-      this._raw_extra = this._io.readBytes(this.extraLen);
+      this.ofsLocalHeader = this._io.readS4le();
+      this.fileName = KaitaiStream.bytesToStr(this._io.readBytes(this.lenFileName), "UTF-8");
+      this._raw_extra = this._io.readBytes(this.lenExtra);
       var _io__raw_extra = new KaitaiStream(this._raw_extra);
       this.extra = new Extras(_io__raw_extra, this, this._root);
-      this.comment = KaitaiStream.bytesToStr(this._io.readBytes(this.commentLen), "UTF-8");
+      this.comment = KaitaiStream.bytesToStr(this._io.readBytes(this.lenComment), "UTF-8");
     }
     Object.defineProperty(CentralDirEntry.prototype, 'localHeader', {
       get: function() {
         if (this._m_localHeader !== undefined)
           return this._m_localHeader;
         var _pos = this._io.pos;
-        this._io.seek(this.localHeaderOffset);
+        this._io.seek(this.ofsLocalHeader);
         this._m_localHeader = new PkSection(this._io, this, this._root);
         this._io.seek(_pos);
         return this._m_localHeader;
@@ -429,12 +439,12 @@ var Zip = (function() {
       this.fileModTime = this._io.readU2le();
       this.fileModDate = this._io.readU2le();
       this.crc32 = this._io.readU4le();
-      this.compressedSize = this._io.readU4le();
-      this.uncompressedSize = this._io.readU4le();
-      this.fileNameLen = this._io.readU2le();
-      this.extraLen = this._io.readU2le();
-      this.fileName = KaitaiStream.bytesToStr(this._io.readBytes(this.fileNameLen), "UTF-8");
-      this._raw_extra = this._io.readBytes(this.extraLen);
+      this.lenBodyCompressed = this._io.readU4le();
+      this.lenBodyUncompressed = this._io.readU4le();
+      this.lenFileName = this._io.readU2le();
+      this.lenExtra = this._io.readU2le();
+      this.fileName = KaitaiStream.bytesToStr(this._io.readBytes(this.lenFileName), "UTF-8");
+      this._raw_extra = this._io.readBytes(this.lenExtra);
       var _io__raw_extra = new KaitaiStream(this._raw_extra);
       this.extra = new Extras(_io__raw_extra, this, this._root);
     }
@@ -453,12 +463,12 @@ var Zip = (function() {
     EndOfCentralDir.prototype._read = function() {
       this.diskOfEndOfCentralDir = this._io.readU2le();
       this.diskOfCentralDir = this._io.readU2le();
-      this.qtyCentralDirEntriesOnDisk = this._io.readU2le();
-      this.qtyCentralDirEntriesTotal = this._io.readU2le();
-      this.centralDirSize = this._io.readU4le();
-      this.centralDirOffset = this._io.readU4le();
-      this.commentLen = this._io.readU2le();
-      this.comment = KaitaiStream.bytesToStr(this._io.readBytes(this.commentLen), "UTF-8");
+      this.numCentralDirEntriesOnDisk = this._io.readU2le();
+      this.numCentralDirEntriesTotal = this._io.readU2le();
+      this.lenCentralDir = this._io.readU4le();
+      this.ofsCentralDir = this._io.readU4le();
+      this.lenComment = this._io.readU2le();
+      this.comment = KaitaiStream.bytesToStr(this._io.readBytes(this.lenComment), "UTF-8");
     }
 
     return EndOfCentralDir;

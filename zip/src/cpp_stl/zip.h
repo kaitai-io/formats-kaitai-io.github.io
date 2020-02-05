@@ -13,6 +13,16 @@
 #endif
 
 /**
+ * ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+ * and originally implemented in PKZIP utility by PKWARE.
+ * 
+ * Thanks to solid support of it in most desktop environments and
+ * operating systems, and algorithms / specs availability in public
+ * domain, it quickly became tool of choice for implementing file
+ * containers.
+ * 
+ * For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+ * are actually ZIP archives.
  * \sa Source
  */
 
@@ -116,15 +126,15 @@ public:
 
     private:
         uint32_t m_crc32;
-        uint32_t m_compressed_size;
-        uint32_t m_uncompressed_size;
+        uint32_t m_len_body_compressed;
+        uint32_t m_len_body_uncompressed;
         zip_t* m__root;
         zip_t::pk_section_t* m__parent;
 
     public:
         uint32_t crc32() const { return m_crc32; }
-        uint32_t compressed_size() const { return m_compressed_size; }
-        uint32_t uncompressed_size() const { return m_uncompressed_size; }
+        uint32_t len_body_compressed() const { return m_len_body_compressed; }
+        uint32_t len_body_uncompressed() const { return m_len_body_uncompressed; }
         zip_t* _root() const { return m__root; }
         zip_t::pk_section_t* _parent() const { return m__parent; }
     };
@@ -176,7 +186,7 @@ public:
 
             private:
                 uint16_t m_tag;
-                uint16_t m_size;
+                uint16_t m_len_body;
                 attribute_1_t* m_body;
                 bool n_body;
 
@@ -191,7 +201,7 @@ public:
 
             public:
                 uint16_t tag() const { return m_tag; }
-                uint16_t size() const { return m_size; }
+                uint16_t len_body() const { return m_len_body; }
                 attribute_1_t* body() const { return m_body; }
                 zip_t* _root() const { return m__root; }
                 zip_t::extra_field_t::ntfs_t* _parent() const { return m__parent; }
@@ -302,9 +312,9 @@ public:
 
         private:
             uint8_t m_version;
-            uint8_t m_uid_size;
+            uint8_t m_len_uid;
             std::string m_uid;
-            uint8_t m_gid_size;
+            uint8_t m_len_gid;
             std::string m_gid;
             zip_t* m__root;
             zip_t::extra_field_t* m__parent;
@@ -319,7 +329,7 @@ public:
             /**
              * Size of UID field
              */
-            uint8_t uid_size() const { return m_uid_size; }
+            uint8_t len_uid() const { return m_len_uid; }
 
             /**
              * UID (User ID) for a file
@@ -329,7 +339,7 @@ public:
             /**
              * Size of GID field
              */
-            uint8_t gid_size() const { return m_gid_size; }
+            uint8_t len_gid() const { return m_len_gid; }
 
             /**
              * GID (Group ID) for a file
@@ -341,7 +351,7 @@ public:
 
     private:
         extra_codes_t m_code;
-        uint16_t m_size;
+        uint16_t m_len_body;
         kaitai::kstruct* m_body;
         bool n_body;
 
@@ -356,7 +366,7 @@ public:
 
     public:
         extra_codes_t code() const { return m_code; }
-        uint16_t size() const { return m_size; }
+        uint16_t len_body() const { return m_len_body; }
         kaitai::kstruct* body() const { return m_body; }
         zip_t* _root() const { return m__root; }
         zip_t::extras_t* _parent() const { return m__parent; }
@@ -395,15 +405,15 @@ public:
         uint16_t m_last_mod_file_time;
         uint16_t m_last_mod_file_date;
         uint32_t m_crc32;
-        uint32_t m_compressed_size;
-        uint32_t m_uncompressed_size;
-        uint16_t m_file_name_len;
-        uint16_t m_extra_len;
-        uint16_t m_comment_len;
+        uint32_t m_len_body_compressed;
+        uint32_t m_len_body_uncompressed;
+        uint16_t m_len_file_name;
+        uint16_t m_len_extra;
+        uint16_t m_len_comment;
         uint16_t m_disk_number_start;
         uint16_t m_int_file_attr;
         uint32_t m_ext_file_attr;
-        int32_t m_local_header_offset;
+        int32_t m_ofs_local_header;
         std::string m_file_name;
         extras_t* m_extra;
         std::string m_comment;
@@ -420,15 +430,15 @@ public:
         uint16_t last_mod_file_time() const { return m_last_mod_file_time; }
         uint16_t last_mod_file_date() const { return m_last_mod_file_date; }
         uint32_t crc32() const { return m_crc32; }
-        uint32_t compressed_size() const { return m_compressed_size; }
-        uint32_t uncompressed_size() const { return m_uncompressed_size; }
-        uint16_t file_name_len() const { return m_file_name_len; }
-        uint16_t extra_len() const { return m_extra_len; }
-        uint16_t comment_len() const { return m_comment_len; }
+        uint32_t len_body_compressed() const { return m_len_body_compressed; }
+        uint32_t len_body_uncompressed() const { return m_len_body_uncompressed; }
+        uint16_t len_file_name() const { return m_len_file_name; }
+        uint16_t len_extra() const { return m_len_extra; }
+        uint16_t len_comment() const { return m_len_comment; }
         uint16_t disk_number_start() const { return m_disk_number_start; }
         uint16_t int_file_attr() const { return m_int_file_attr; }
         uint32_t ext_file_attr() const { return m_ext_file_attr; }
-        int32_t local_header_offset() const { return m_local_header_offset; }
+        int32_t ofs_local_header() const { return m_ofs_local_header; }
         std::string file_name() const { return m_file_name; }
         extras_t* extra() const { return m_extra; }
         std::string comment() const { return m_comment; }
@@ -513,10 +523,10 @@ public:
         uint16_t m_file_mod_time;
         uint16_t m_file_mod_date;
         uint32_t m_crc32;
-        uint32_t m_compressed_size;
-        uint32_t m_uncompressed_size;
-        uint16_t m_file_name_len;
-        uint16_t m_extra_len;
+        uint32_t m_len_body_compressed;
+        uint32_t m_len_body_uncompressed;
+        uint16_t m_len_file_name;
+        uint16_t m_len_extra;
         std::string m_file_name;
         extras_t* m_extra;
         zip_t* m__root;
@@ -531,10 +541,10 @@ public:
         uint16_t file_mod_time() const { return m_file_mod_time; }
         uint16_t file_mod_date() const { return m_file_mod_date; }
         uint32_t crc32() const { return m_crc32; }
-        uint32_t compressed_size() const { return m_compressed_size; }
-        uint32_t uncompressed_size() const { return m_uncompressed_size; }
-        uint16_t file_name_len() const { return m_file_name_len; }
-        uint16_t extra_len() const { return m_extra_len; }
+        uint32_t len_body_compressed() const { return m_len_body_compressed; }
+        uint32_t len_body_uncompressed() const { return m_len_body_uncompressed; }
+        uint16_t len_file_name() const { return m_len_file_name; }
+        uint16_t len_extra() const { return m_len_extra; }
         std::string file_name() const { return m_file_name; }
         extras_t* extra() const { return m_extra; }
         zip_t* _root() const { return m__root; }
@@ -558,11 +568,11 @@ public:
     private:
         uint16_t m_disk_of_end_of_central_dir;
         uint16_t m_disk_of_central_dir;
-        uint16_t m_qty_central_dir_entries_on_disk;
-        uint16_t m_qty_central_dir_entries_total;
-        uint32_t m_central_dir_size;
-        uint32_t m_central_dir_offset;
-        uint16_t m_comment_len;
+        uint16_t m_num_central_dir_entries_on_disk;
+        uint16_t m_num_central_dir_entries_total;
+        uint32_t m_len_central_dir;
+        uint32_t m_ofs_central_dir;
+        uint16_t m_len_comment;
         std::string m_comment;
         zip_t* m__root;
         zip_t::pk_section_t* m__parent;
@@ -570,11 +580,11 @@ public:
     public:
         uint16_t disk_of_end_of_central_dir() const { return m_disk_of_end_of_central_dir; }
         uint16_t disk_of_central_dir() const { return m_disk_of_central_dir; }
-        uint16_t qty_central_dir_entries_on_disk() const { return m_qty_central_dir_entries_on_disk; }
-        uint16_t qty_central_dir_entries_total() const { return m_qty_central_dir_entries_total; }
-        uint32_t central_dir_size() const { return m_central_dir_size; }
-        uint32_t central_dir_offset() const { return m_central_dir_offset; }
-        uint16_t comment_len() const { return m_comment_len; }
+        uint16_t num_central_dir_entries_on_disk() const { return m_num_central_dir_entries_on_disk; }
+        uint16_t num_central_dir_entries_total() const { return m_num_central_dir_entries_total; }
+        uint32_t len_central_dir() const { return m_len_central_dir; }
+        uint32_t ofs_central_dir() const { return m_ofs_central_dir; }
+        uint16_t len_comment() const { return m_len_comment; }
         std::string comment() const { return m_comment; }
         zip_t* _root() const { return m__root; }
         zip_t::pk_section_t* _parent() const { return m__parent; }

@@ -17,7 +17,7 @@ digraph {
 			local_file__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>LocalFileHeader</TD><TD PORT="header_type">header</TD></TR>
-				<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">header.compressed_size</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+				<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">header.len_body_compressed</TD><TD></TD><TD PORT="body_type">body</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__data_descriptor {
@@ -27,8 +27,8 @@ digraph {
 			data_descriptor__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="crc32_pos">0</TD><TD PORT="crc32_size">4</TD><TD>u4le</TD><TD PORT="crc32_type">crc32</TD></TR>
-				<TR><TD PORT="compressed_size_pos">4</TD><TD PORT="compressed_size_size">4</TD><TD>u4le</TD><TD PORT="compressed_size_type">compressed_size</TD></TR>
-				<TR><TD PORT="uncompressed_size_pos">8</TD><TD PORT="uncompressed_size_size">4</TD><TD>u4le</TD><TD PORT="uncompressed_size_type">uncompressed_size</TD></TR>
+				<TR><TD PORT="len_body_compressed_pos">4</TD><TD PORT="len_body_compressed_size">4</TD><TD>u4le</TD><TD PORT="len_body_compressed_type">len_body_compressed</TD></TR>
+				<TR><TD PORT="len_body_uncompressed_pos">8</TD><TD PORT="len_body_uncompressed_size">4</TD><TD>u4le</TD><TD PORT="len_body_uncompressed_type">len_body_uncompressed</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__extra_field {
@@ -38,7 +38,7 @@ digraph {
 			extra_field__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="code_pos">0</TD><TD PORT="code_size">2</TD><TD>u2le→ExtraCodes</TD><TD PORT="code_type">code</TD></TR>
-				<TR><TD PORT="size_pos">2</TD><TD PORT="size_size">2</TD><TD>u2le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="len_body_pos">2</TD><TD PORT="len_body_size">2</TD><TD>u2le</TD><TD PORT="len_body_type">len_body</TD></TR>
 				<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">...</TD><TD>switch (code)</TD><TD PORT="body_type">body</TD></TR>
 			</TABLE>>];
 extra_field__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
@@ -64,7 +64,7 @@ extra_field__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 					attribute__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 						<TR><TD PORT="tag_pos">0</TD><TD PORT="tag_size">2</TD><TD>u2le</TD><TD PORT="tag_type">tag</TD></TR>
-						<TR><TD PORT="size_pos">2</TD><TD PORT="size_size">2</TD><TD>u2le</TD><TD PORT="size_type">size</TD></TR>
+						<TR><TD PORT="len_body_pos">2</TD><TD PORT="len_body_size">2</TD><TD>u2le</TD><TD PORT="len_body_type">len_body</TD></TR>
 						<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">...</TD><TD>switch (tag)</TD><TD PORT="body_type">body</TD></TR>
 					</TABLE>>];
 attribute__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
@@ -103,10 +103,10 @@ attribute__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 				infozip_unix_var_size__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
-					<TR><TD PORT="uid_size_pos">1</TD><TD PORT="uid_size_size">1</TD><TD>u1</TD><TD PORT="uid_size_type">uid_size</TD></TR>
-					<TR><TD PORT="uid_pos">2</TD><TD PORT="uid_size">uid_size</TD><TD></TD><TD PORT="uid_type">uid</TD></TR>
-					<TR><TD PORT="gid_size_pos">...</TD><TD PORT="gid_size_size">1</TD><TD>u1</TD><TD PORT="gid_size_type">gid_size</TD></TR>
-					<TR><TD PORT="gid_pos">...</TD><TD PORT="gid_size">gid_size</TD><TD></TD><TD PORT="gid_type">gid</TD></TR>
+					<TR><TD PORT="len_uid_pos">1</TD><TD PORT="len_uid_size">1</TD><TD>u1</TD><TD PORT="len_uid_type">len_uid</TD></TR>
+					<TR><TD PORT="uid_pos">2</TD><TD PORT="uid_size">len_uid</TD><TD></TD><TD PORT="uid_type">uid</TD></TR>
+					<TR><TD PORT="len_gid_pos">...</TD><TD PORT="len_gid_size">1</TD><TD>u1</TD><TD PORT="len_gid_type">len_gid</TD></TR>
+					<TR><TD PORT="gid_pos">...</TD><TD PORT="gid_size">len_gid</TD><TD></TD><TD PORT="gid_type">gid</TD></TR>
 				</TABLE>>];
 			}
 		}
@@ -123,22 +123,22 @@ attribute__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 				<TR><TD PORT="last_mod_file_time_pos">8</TD><TD PORT="last_mod_file_time_size">2</TD><TD>u2le</TD><TD PORT="last_mod_file_time_type">last_mod_file_time</TD></TR>
 				<TR><TD PORT="last_mod_file_date_pos">10</TD><TD PORT="last_mod_file_date_size">2</TD><TD>u2le</TD><TD PORT="last_mod_file_date_type">last_mod_file_date</TD></TR>
 				<TR><TD PORT="crc32_pos">12</TD><TD PORT="crc32_size">4</TD><TD>u4le</TD><TD PORT="crc32_type">crc32</TD></TR>
-				<TR><TD PORT="compressed_size_pos">16</TD><TD PORT="compressed_size_size">4</TD><TD>u4le</TD><TD PORT="compressed_size_type">compressed_size</TD></TR>
-				<TR><TD PORT="uncompressed_size_pos">20</TD><TD PORT="uncompressed_size_size">4</TD><TD>u4le</TD><TD PORT="uncompressed_size_type">uncompressed_size</TD></TR>
-				<TR><TD PORT="file_name_len_pos">24</TD><TD PORT="file_name_len_size">2</TD><TD>u2le</TD><TD PORT="file_name_len_type">file_name_len</TD></TR>
-				<TR><TD PORT="extra_len_pos">26</TD><TD PORT="extra_len_size">2</TD><TD>u2le</TD><TD PORT="extra_len_type">extra_len</TD></TR>
-				<TR><TD PORT="comment_len_pos">28</TD><TD PORT="comment_len_size">2</TD><TD>u2le</TD><TD PORT="comment_len_type">comment_len</TD></TR>
+				<TR><TD PORT="len_body_compressed_pos">16</TD><TD PORT="len_body_compressed_size">4</TD><TD>u4le</TD><TD PORT="len_body_compressed_type">len_body_compressed</TD></TR>
+				<TR><TD PORT="len_body_uncompressed_pos">20</TD><TD PORT="len_body_uncompressed_size">4</TD><TD>u4le</TD><TD PORT="len_body_uncompressed_type">len_body_uncompressed</TD></TR>
+				<TR><TD PORT="len_file_name_pos">24</TD><TD PORT="len_file_name_size">2</TD><TD>u2le</TD><TD PORT="len_file_name_type">len_file_name</TD></TR>
+				<TR><TD PORT="len_extra_pos">26</TD><TD PORT="len_extra_size">2</TD><TD>u2le</TD><TD PORT="len_extra_type">len_extra</TD></TR>
+				<TR><TD PORT="len_comment_pos">28</TD><TD PORT="len_comment_size">2</TD><TD>u2le</TD><TD PORT="len_comment_type">len_comment</TD></TR>
 				<TR><TD PORT="disk_number_start_pos">30</TD><TD PORT="disk_number_start_size">2</TD><TD>u2le</TD><TD PORT="disk_number_start_type">disk_number_start</TD></TR>
 				<TR><TD PORT="int_file_attr_pos">32</TD><TD PORT="int_file_attr_size">2</TD><TD>u2le</TD><TD PORT="int_file_attr_type">int_file_attr</TD></TR>
 				<TR><TD PORT="ext_file_attr_pos">34</TD><TD PORT="ext_file_attr_size">4</TD><TD>u4le</TD><TD PORT="ext_file_attr_type">ext_file_attr</TD></TR>
-				<TR><TD PORT="local_header_offset_pos">38</TD><TD PORT="local_header_offset_size">4</TD><TD>s4le</TD><TD PORT="local_header_offset_type">local_header_offset</TD></TR>
-				<TR><TD PORT="file_name_pos">42</TD><TD PORT="file_name_size">file_name_len</TD><TD>str(UTF-8)</TD><TD PORT="file_name_type">file_name</TD></TR>
-				<TR><TD PORT="extra_pos">...</TD><TD PORT="extra_size">extra_len</TD><TD>Extras</TD><TD PORT="extra_type">extra</TD></TR>
-				<TR><TD PORT="comment_pos">...</TD><TD PORT="comment_size">comment_len</TD><TD>str(UTF-8)</TD><TD PORT="comment_type">comment</TD></TR>
+				<TR><TD PORT="ofs_local_header_pos">38</TD><TD PORT="ofs_local_header_size">4</TD><TD>s4le</TD><TD PORT="ofs_local_header_type">ofs_local_header</TD></TR>
+				<TR><TD PORT="file_name_pos">42</TD><TD PORT="file_name_size">len_file_name</TD><TD>str(UTF-8)</TD><TD PORT="file_name_type">file_name</TD></TR>
+				<TR><TD PORT="extra_pos">...</TD><TD PORT="extra_size">len_extra</TD><TD>Extras</TD><TD PORT="extra_type">extra</TD></TR>
+				<TR><TD PORT="comment_pos">...</TD><TD PORT="comment_size">len_comment</TD><TD>str(UTF-8)</TD><TD PORT="comment_type">comment</TD></TR>
 			</TABLE>>];
 			central_dir_entry__inst__local_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="local_header_pos">local_header_offset</TD><TD PORT="local_header_size">...</TD><TD>PkSection</TD><TD PORT="local_header_type">local_header</TD></TR>
+				<TR><TD PORT="local_header_pos">ofs_local_header</TD><TD PORT="local_header_size">...</TD><TD>PkSection</TD><TD PORT="local_header_type">local_header</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__pk_section {
@@ -181,12 +181,12 @@ pk_section__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD PORT="file_mod_time_pos">6</TD><TD PORT="file_mod_time_size">2</TD><TD>u2le</TD><TD PORT="file_mod_time_type">file_mod_time</TD></TR>
 				<TR><TD PORT="file_mod_date_pos">8</TD><TD PORT="file_mod_date_size">2</TD><TD>u2le</TD><TD PORT="file_mod_date_type">file_mod_date</TD></TR>
 				<TR><TD PORT="crc32_pos">10</TD><TD PORT="crc32_size">4</TD><TD>u4le</TD><TD PORT="crc32_type">crc32</TD></TR>
-				<TR><TD PORT="compressed_size_pos">14</TD><TD PORT="compressed_size_size">4</TD><TD>u4le</TD><TD PORT="compressed_size_type">compressed_size</TD></TR>
-				<TR><TD PORT="uncompressed_size_pos">18</TD><TD PORT="uncompressed_size_size">4</TD><TD>u4le</TD><TD PORT="uncompressed_size_type">uncompressed_size</TD></TR>
-				<TR><TD PORT="file_name_len_pos">22</TD><TD PORT="file_name_len_size">2</TD><TD>u2le</TD><TD PORT="file_name_len_type">file_name_len</TD></TR>
-				<TR><TD PORT="extra_len_pos">24</TD><TD PORT="extra_len_size">2</TD><TD>u2le</TD><TD PORT="extra_len_type">extra_len</TD></TR>
-				<TR><TD PORT="file_name_pos">26</TD><TD PORT="file_name_size">file_name_len</TD><TD>str(UTF-8)</TD><TD PORT="file_name_type">file_name</TD></TR>
-				<TR><TD PORT="extra_pos">...</TD><TD PORT="extra_size">extra_len</TD><TD>Extras</TD><TD PORT="extra_type">extra</TD></TR>
+				<TR><TD PORT="len_body_compressed_pos">14</TD><TD PORT="len_body_compressed_size">4</TD><TD>u4le</TD><TD PORT="len_body_compressed_type">len_body_compressed</TD></TR>
+				<TR><TD PORT="len_body_uncompressed_pos">18</TD><TD PORT="len_body_uncompressed_size">4</TD><TD>u4le</TD><TD PORT="len_body_uncompressed_type">len_body_uncompressed</TD></TR>
+				<TR><TD PORT="len_file_name_pos">22</TD><TD PORT="len_file_name_size">2</TD><TD>u2le</TD><TD PORT="len_file_name_type">len_file_name</TD></TR>
+				<TR><TD PORT="len_extra_pos">24</TD><TD PORT="len_extra_size">2</TD><TD>u2le</TD><TD PORT="len_extra_type">len_extra</TD></TR>
+				<TR><TD PORT="file_name_pos">26</TD><TD PORT="file_name_size">len_file_name</TD><TD>str(UTF-8)</TD><TD PORT="file_name_type">file_name</TD></TR>
+				<TR><TD PORT="extra_pos">...</TD><TD PORT="extra_size">len_extra</TD><TD>Extras</TD><TD PORT="extra_type">extra</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__end_of_central_dir {
@@ -197,18 +197,18 @@ pk_section__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="disk_of_end_of_central_dir_pos">0</TD><TD PORT="disk_of_end_of_central_dir_size">2</TD><TD>u2le</TD><TD PORT="disk_of_end_of_central_dir_type">disk_of_end_of_central_dir</TD></TR>
 				<TR><TD PORT="disk_of_central_dir_pos">2</TD><TD PORT="disk_of_central_dir_size">2</TD><TD>u2le</TD><TD PORT="disk_of_central_dir_type">disk_of_central_dir</TD></TR>
-				<TR><TD PORT="qty_central_dir_entries_on_disk_pos">4</TD><TD PORT="qty_central_dir_entries_on_disk_size">2</TD><TD>u2le</TD><TD PORT="qty_central_dir_entries_on_disk_type">qty_central_dir_entries_on_disk</TD></TR>
-				<TR><TD PORT="qty_central_dir_entries_total_pos">6</TD><TD PORT="qty_central_dir_entries_total_size">2</TD><TD>u2le</TD><TD PORT="qty_central_dir_entries_total_type">qty_central_dir_entries_total</TD></TR>
-				<TR><TD PORT="central_dir_size_pos">8</TD><TD PORT="central_dir_size_size">4</TD><TD>u4le</TD><TD PORT="central_dir_size_type">central_dir_size</TD></TR>
-				<TR><TD PORT="central_dir_offset_pos">12</TD><TD PORT="central_dir_offset_size">4</TD><TD>u4le</TD><TD PORT="central_dir_offset_type">central_dir_offset</TD></TR>
-				<TR><TD PORT="comment_len_pos">16</TD><TD PORT="comment_len_size">2</TD><TD>u2le</TD><TD PORT="comment_len_type">comment_len</TD></TR>
-				<TR><TD PORT="comment_pos">18</TD><TD PORT="comment_size">comment_len</TD><TD>str(UTF-8)</TD><TD PORT="comment_type">comment</TD></TR>
+				<TR><TD PORT="num_central_dir_entries_on_disk_pos">4</TD><TD PORT="num_central_dir_entries_on_disk_size">2</TD><TD>u2le</TD><TD PORT="num_central_dir_entries_on_disk_type">num_central_dir_entries_on_disk</TD></TR>
+				<TR><TD PORT="num_central_dir_entries_total_pos">6</TD><TD PORT="num_central_dir_entries_total_size">2</TD><TD>u2le</TD><TD PORT="num_central_dir_entries_total_type">num_central_dir_entries_total</TD></TR>
+				<TR><TD PORT="len_central_dir_pos">8</TD><TD PORT="len_central_dir_size">4</TD><TD>u4le</TD><TD PORT="len_central_dir_type">len_central_dir</TD></TR>
+				<TR><TD PORT="ofs_central_dir_pos">12</TD><TD PORT="ofs_central_dir_size">4</TD><TD>u4le</TD><TD PORT="ofs_central_dir_type">ofs_central_dir</TD></TR>
+				<TR><TD PORT="len_comment_pos">16</TD><TD PORT="len_comment_size">2</TD><TD>u2le</TD><TD PORT="len_comment_type">len_comment</TD></TR>
+				<TR><TD PORT="comment_pos">18</TD><TD PORT="comment_size">len_comment</TD><TD>str(UTF-8)</TD><TD PORT="comment_type">comment</TD></TR>
 			</TABLE>>];
 		}
 	}
 	zip__seq:sections_type -> pk_section__seq [style=bold];
 	local_file__seq:header_type -> local_file_header__seq [style=bold];
-	local_file_header__seq:compressed_size_type -> local_file__seq:body_size [color="#404040"];
+	local_file_header__seq:len_body_compressed_type -> local_file__seq:body_size [color="#404040"];
 	extra_field__seq:body_type -> extra_field__seq_body_switch [style=bold];
 	extra_field__seq_body_switch:case0 -> ntfs__seq [style=bold];
 	extra_field__seq_body_switch:case1 -> extended_timestamp__seq [style=bold];
@@ -218,13 +218,13 @@ pk_section__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	attribute__seq:body_type -> attribute__seq_body_switch [style=bold];
 	attribute__seq_body_switch:case0 -> attribute_1__seq [style=bold];
 	attribute__seq:tag_type -> attribute__seq:body_type [color="#404040"];
-	infozip_unix_var_size__seq:uid_size_type -> infozip_unix_var_size__seq:uid_size [color="#404040"];
-	infozip_unix_var_size__seq:gid_size_type -> infozip_unix_var_size__seq:gid_size [color="#404040"];
-	central_dir_entry__seq:file_name_len_type -> central_dir_entry__seq:file_name_size [color="#404040"];
-	central_dir_entry__seq:extra_len_type -> central_dir_entry__seq:extra_size [color="#404040"];
+	infozip_unix_var_size__seq:len_uid_type -> infozip_unix_var_size__seq:uid_size [color="#404040"];
+	infozip_unix_var_size__seq:len_gid_type -> infozip_unix_var_size__seq:gid_size [color="#404040"];
+	central_dir_entry__seq:len_file_name_type -> central_dir_entry__seq:file_name_size [color="#404040"];
+	central_dir_entry__seq:len_extra_type -> central_dir_entry__seq:extra_size [color="#404040"];
 	central_dir_entry__seq:extra_type -> extras__seq [style=bold];
-	central_dir_entry__seq:comment_len_type -> central_dir_entry__seq:comment_size [color="#404040"];
-	central_dir_entry__seq:local_header_offset_type -> central_dir_entry__inst__local_header:local_header_pos [color="#404040"];
+	central_dir_entry__seq:len_comment_type -> central_dir_entry__seq:comment_size [color="#404040"];
+	central_dir_entry__seq:ofs_local_header_type -> central_dir_entry__inst__local_header:local_header_pos [color="#404040"];
 	central_dir_entry__inst__local_header:local_header_type -> pk_section__seq [style=bold];
 	pk_section__seq:body_type -> pk_section__seq_body_switch [style=bold];
 	pk_section__seq_body_switch:case0 -> central_dir_entry__seq [style=bold];
@@ -233,8 +233,8 @@ pk_section__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	pk_section__seq_body_switch:case3 -> data_descriptor__seq [style=bold];
 	pk_section__seq:section_type_type -> pk_section__seq:body_type [color="#404040"];
 	extras__seq:entries_type -> extra_field__seq [style=bold];
-	local_file_header__seq:file_name_len_type -> local_file_header__seq:file_name_size [color="#404040"];
-	local_file_header__seq:extra_len_type -> local_file_header__seq:extra_size [color="#404040"];
+	local_file_header__seq:len_file_name_type -> local_file_header__seq:file_name_size [color="#404040"];
+	local_file_header__seq:len_extra_type -> local_file_header__seq:extra_size [color="#404040"];
 	local_file_header__seq:extra_type -> extras__seq [style=bold];
-	end_of_central_dir__seq:comment_len_type -> end_of_central_dir__seq:comment_size [color="#404040"];
+	end_of_central_dir__seq:len_comment_type -> end_of_central_dir__seq:comment_size [color="#404040"];
 }

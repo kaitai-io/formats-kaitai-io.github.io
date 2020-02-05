@@ -98,7 +98,15 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+and originally implemented in PKZIP utility by PKWARE.</p>
+<p>Thanks to solid support of it in most desktop environments and
+operating systems, and algorithms / specs availability in public
+domain, it quickly became tool of choice for implementing file
+containers.</p>
+<p>For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+are actually ZIP archives.</p>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -280,6 +288,16 @@ end
 
 
 ##
+# ZIP is a popular archive file format, introduced in 1989 by Phil Katz
+# and originally implemented in PKZIP utility by PKWARE.
+# 
+# Thanks to solid support of it in most desktop environments and
+# operating systems, and algorithms / specs availability in public
+# domain, it quickly became tool of choice for implementing file
+# containers.
+# 
+# For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
+# are actually ZIP archives.
 # @see https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT Source
 class Zip &lt; Kaitai::Struct::Struct
 
@@ -347,7 +365,7 @@ class Zip &lt; Kaitai::Struct::Struct
 
     def _read
       @header = LocalFileHeader.new(@_io, self, @_root)
-      @body = @_io.read_bytes(header.compressed_size)
+      @body = @_io.read_bytes(header.len_body_compressed)
       self
     end
     attr_reader :header
@@ -361,13 +379,13 @@ class Zip &lt; Kaitai::Struct::Struct
 
     def _read
       @crc32 = @_io.read_u4le
-      @compressed_size = @_io.read_u4le
-      @uncompressed_size = @_io.read_u4le
+      @len_body_compressed = @_io.read_u4le
+      @len_body_uncompressed = @_io.read_u4le
       self
     end
     attr_reader :crc32
-    attr_reader :compressed_size
-    attr_reader :uncompressed_size
+    attr_reader :len_body_compressed
+    attr_reader :len_body_uncompressed
   end
   class ExtraField &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -377,22 +395,22 @@ class Zip &lt; Kaitai::Struct::Struct
 
     def _read
       @code = Kaitai::Struct::Stream::resolve_enum(EXTRA_CODES, @_io.read_u2le)
-      @size = @_io.read_u2le
+      @len_body = @_io.read_u2le
       case code
       when :extra_codes_ntfs
-        @_raw_body = @_io.read_bytes(size)
+        @_raw_body = @_io.read_bytes(len_body)
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = Ntfs.new(io, self, @_root)
       when :extra_codes_extended_timestamp
-        @_raw_body = @_io.read_bytes(size)
+        @_raw_body = @_io.read_bytes(len_body)
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = ExtendedTimestamp.new(io, self, @_root)
       when :extra_codes_infozip_unix_var_size
-        @_raw_body = @_io.read_bytes(size)
+        @_raw_body = @_io.read_bytes(len_body)
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = InfozipUnixVarSize.new(io, self, @_root)
       else
-        @body = @_io.read_bytes(size)
+        @body = @_io.read_bytes(len_body)
       end
       self
     end
@@ -423,19 +441,19 @@ class Zip &lt; Kaitai::Struct::Struct
 
         def _read
           @tag = @_io.read_u2le
-          @size = @_io.read_u2le
+          @len_body = @_io.read_u2le
           case tag
           when 1
-            @_raw_body = @_io.read_bytes(size)
+            @_raw_body = @_io.read_bytes(len_body)
             io = Kaitai::Struct::Stream.new(@_raw_body)
             @body = Attribute1.new(io, self, @_root)
           else
-            @body = @_io.read_bytes(size)
+            @body = @_io.read_bytes(len_body)
           end
           self
         end
         attr_reader :tag
-        attr_reader :size
+        attr_reader :len_body
         attr_reader :body
         attr_reader :_raw_body
       end
@@ -494,10 +512,10 @@ class Zip &lt; Kaitai::Struct::Struct
 
       def _read
         @version = @_io.read_u1
-        @uid_size = @_io.read_u1
-        @uid = @_io.read_bytes(uid_size)
-        @gid_size = @_io.read_u1
-        @gid = @_io.read_bytes(gid_size)
+        @len_uid = @_io.read_u1
+        @uid = @_io.read_bytes(len_uid)
+        @len_gid = @_io.read_u1
+        @gid = @_io.read_bytes(len_gid)
         self
       end
 
@@ -507,7 +525,7 @@ class Zip &lt; Kaitai::Struct::Struct
 
       ##
       # Size of UID field
-      attr_reader :uid_size
+      attr_reader :len_uid
 
       ##
       # UID (User ID) for a file
@@ -515,14 +533,14 @@ class Zip &lt; Kaitai::Struct::Struct
 
       ##
       # Size of GID field
-      attr_reader :gid_size
+      attr_reader :len_gid
 
       ##
       # GID (Group ID) for a file
       attr_reader :gid
     end
     attr_reader :code
-    attr_reader :size
+    attr_reader :len_body
     attr_reader :body
     attr_reader :_raw_body
   end
@@ -543,26 +561,26 @@ class Zip &lt; Kaitai::Struct::Struct
       @last_mod_file_time = @_io.read_u2le
       @last_mod_file_date = @_io.read_u2le
       @crc32 = @_io.read_u4le
-      @compressed_size = @_io.read_u4le
-      @uncompressed_size = @_io.read_u4le
-      @file_name_len = @_io.read_u2le
-      @extra_len = @_io.read_u2le
-      @comment_len = @_io.read_u2le
+      @len_body_compressed = @_io.read_u4le
+      @len_body_uncompressed = @_io.read_u4le
+      @len_file_name = @_io.read_u2le
+      @len_extra = @_io.read_u2le
+      @len_comment = @_io.read_u2le
       @disk_number_start = @_io.read_u2le
       @int_file_attr = @_io.read_u2le
       @ext_file_attr = @_io.read_u4le
-      @local_header_offset = @_io.read_s4le
-      @file_name = (@_io.read_bytes(file_name_len)).force_encoding(&quot;UTF-8&quot;)
-      @_raw_extra = @_io.read_bytes(extra_len)
+      @ofs_local_header = @_io.read_s4le
+      @file_name = (@_io.read_bytes(len_file_name)).force_encoding(&quot;UTF-8&quot;)
+      @_raw_extra = @_io.read_bytes(len_extra)
       io = Kaitai::Struct::Stream.new(@_raw_extra)
       @extra = Extras.new(io, self, @_root)
-      @comment = (@_io.read_bytes(comment_len)).force_encoding(&quot;UTF-8&quot;)
+      @comment = (@_io.read_bytes(len_comment)).force_encoding(&quot;UTF-8&quot;)
       self
     end
     def local_header
       return @local_header unless @local_header.nil?
       _pos = @_io.pos
-      @_io.seek(local_header_offset)
+      @_io.seek(ofs_local_header)
       @local_header = PkSection.new(@_io, self, @_root)
       @_io.seek(_pos)
       @local_header
@@ -574,15 +592,15 @@ class Zip &lt; Kaitai::Struct::Struct
     attr_reader :last_mod_file_time
     attr_reader :last_mod_file_date
     attr_reader :crc32
-    attr_reader :compressed_size
-    attr_reader :uncompressed_size
-    attr_reader :file_name_len
-    attr_reader :extra_len
-    attr_reader :comment_len
+    attr_reader :len_body_compressed
+    attr_reader :len_body_uncompressed
+    attr_reader :len_file_name
+    attr_reader :len_extra
+    attr_reader :len_comment
     attr_reader :disk_number_start
     attr_reader :int_file_attr
     attr_reader :ext_file_attr
-    attr_reader :local_header_offset
+    attr_reader :ofs_local_header
     attr_reader :file_name
     attr_reader :extra
     attr_reader :comment
@@ -643,12 +661,12 @@ class Zip &lt; Kaitai::Struct::Struct
       @file_mod_time = @_io.read_u2le
       @file_mod_date = @_io.read_u2le
       @crc32 = @_io.read_u4le
-      @compressed_size = @_io.read_u4le
-      @uncompressed_size = @_io.read_u4le
-      @file_name_len = @_io.read_u2le
-      @extra_len = @_io.read_u2le
-      @file_name = (@_io.read_bytes(file_name_len)).force_encoding(&quot;UTF-8&quot;)
-      @_raw_extra = @_io.read_bytes(extra_len)
+      @len_body_compressed = @_io.read_u4le
+      @len_body_uncompressed = @_io.read_u4le
+      @len_file_name = @_io.read_u2le
+      @len_extra = @_io.read_u2le
+      @file_name = (@_io.read_bytes(len_file_name)).force_encoding(&quot;UTF-8&quot;)
+      @_raw_extra = @_io.read_bytes(len_extra)
       io = Kaitai::Struct::Stream.new(@_raw_extra)
       @extra = Extras.new(io, self, @_root)
       self
@@ -659,10 +677,10 @@ class Zip &lt; Kaitai::Struct::Struct
     attr_reader :file_mod_time
     attr_reader :file_mod_date
     attr_reader :crc32
-    attr_reader :compressed_size
-    attr_reader :uncompressed_size
-    attr_reader :file_name_len
-    attr_reader :extra_len
+    attr_reader :len_body_compressed
+    attr_reader :len_body_uncompressed
+    attr_reader :len_file_name
+    attr_reader :len_extra
     attr_reader :file_name
     attr_reader :extra
     attr_reader :_raw_extra
@@ -676,21 +694,21 @@ class Zip &lt; Kaitai::Struct::Struct
     def _read
       @disk_of_end_of_central_dir = @_io.read_u2le
       @disk_of_central_dir = @_io.read_u2le
-      @qty_central_dir_entries_on_disk = @_io.read_u2le
-      @qty_central_dir_entries_total = @_io.read_u2le
-      @central_dir_size = @_io.read_u4le
-      @central_dir_offset = @_io.read_u4le
-      @comment_len = @_io.read_u2le
-      @comment = (@_io.read_bytes(comment_len)).force_encoding(&quot;UTF-8&quot;)
+      @num_central_dir_entries_on_disk = @_io.read_u2le
+      @num_central_dir_entries_total = @_io.read_u2le
+      @len_central_dir = @_io.read_u4le
+      @ofs_central_dir = @_io.read_u4le
+      @len_comment = @_io.read_u2le
+      @comment = (@_io.read_bytes(len_comment)).force_encoding(&quot;UTF-8&quot;)
       self
     end
     attr_reader :disk_of_end_of_central_dir
     attr_reader :disk_of_central_dir
-    attr_reader :qty_central_dir_entries_on_disk
-    attr_reader :qty_central_dir_entries_total
-    attr_reader :central_dir_size
-    attr_reader :central_dir_offset
-    attr_reader :comment_len
+    attr_reader :num_central_dir_entries_on_disk
+    attr_reader :num_central_dir_entries_total
+    attr_reader :len_central_dir
+    attr_reader :ofs_central_dir
+    attr_reader :len_comment
     attr_reader :comment
   end
   attr_reader :sections
