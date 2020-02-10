@@ -31,7 +31,9 @@ end
 # * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
 # * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
 #   https://www.python.org/dev/peps/pep-3154/
-# @see https://github.com/python/cpython/blob/v3.7.3/Lib/pickletools.py Source
+# * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
+#   https://www.python.org/dev/peps/pep-0574/
+# @see https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py Source
 class PythonPickle < Kaitai::Struct::Struct
 
   OPCODE = {
@@ -100,6 +102,9 @@ class PythonPickle < Kaitai::Struct::Struct
     147 => :opcode_stack_global,
     148 => :opcode_memoize,
     149 => :opcode_frame,
+    150 => :opcode_bytearray8,
+    151 => :opcode_next_buffer,
+    152 => :opcode_read_buffer,
   }
   I__OPCODE = OPCODE.invert
   def initialize(_io, _parent = nil, _root = self)
@@ -337,6 +342,25 @@ class PythonPickle < Kaitai::Struct::Struct
   end
 
   ##
+  # Length prefixed string, between 0 and 2**64-1 bytes long.
+  # 
+  # The contents are deserilised into a `bytearray` object.
+  class Bytearray8 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len = @_io.read_u8le
+      @val = @_io.read_bytes(len)
+      self
+    end
+    attr_reader :len
+    attr_reader :val
+  end
+
+  ##
   # Integer or boolean, encoded with the ASCII characters [0-9-].
   # 
   # The values '00' and '01' encode the Python values `False` and `True`.
@@ -439,6 +463,8 @@ class PythonPickle < Kaitai::Struct::Struct
         @arg = NoArg.new(@_io, self, @_root)
       when :opcode_ext2
         @arg = @_io.read_u2le
+      when :opcode_readonly_buffer
+        @arg = NoArg.new(@_io, self, @_root)
       when :opcode_stop
         @arg = NoArg.new(@_io, self, @_root)
       when :opcode_binunicode
@@ -491,6 +517,8 @@ class PythonPickle < Kaitai::Struct::Struct
         @arg = NoArg.new(@_io, self, @_root)
       when :opcode_binbytes
         @arg = Bytes4.new(@_io, self, @_root)
+      when :opcode_next_buffer
+        @arg = NoArg.new(@_io, self, @_root)
       when :opcode_binbytes8
         @arg = Bytes8.new(@_io, self, @_root)
       when :opcode_setitem
@@ -533,6 +561,8 @@ class PythonPickle < Kaitai::Struct::Struct
         @arg = @_io.read_f8be
       when :opcode_dup
         @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_bytearray8
+        @arg = Bytearray8.new(@_io, self, @_root)
       when :opcode_long4
         @arg = Long4.new(@_io, self, @_root)
       when :opcode_short_binunicode

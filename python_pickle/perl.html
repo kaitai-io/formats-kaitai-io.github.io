@@ -119,6 +119,8 @@ https://www.python.org/dev/peps/pep-0307/</li>
 <li>Protocol 3: Python 3.0+. Dedicated opcodes for <code>bytes</code> objects.</li>
 <li>Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, <code>set</code>.
 https://www.python.org/dev/peps/pep-3154/</li>
+<li>Protocol 5: Python 3.8+: Opcodes for <code>bytearray</code> and out of band data
+https://www.python.org/dev/peps/pep-0574/</li>
 </ul>
 </p>
             </div>
@@ -355,6 +357,9 @@ our $OPCODE_NEWOBJ_EX = 146;
 our $OPCODE_STACK_GLOBAL = 147;
 our $OPCODE_MEMOIZE = 148;
 our $OPCODE_FRAME = 149;
+our $OPCODE_BYTEARRAY8 = 150;
+our $OPCODE_NEXT_BUFFER = 151;
+our $OPCODE_READ_BUFFER = 152;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -882,6 +887,50 @@ sub val {
 }
 
 ########################################################################
+package PythonPickle::Bytearray8;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{val} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len());
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
 package PythonPickle::DecimalnlShort;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
@@ -1127,6 +1176,9 @@ sub _read {
     elsif ($_on == $OPCODE_EXT2) {
         $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2le();
     }
+    elsif ($_on == $OPCODE_READONLY_BUFFER) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
     elsif ($_on == $OPCODE_STOP) {
         $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
@@ -1205,6 +1257,9 @@ sub _read {
     elsif ($_on == $OPCODE_BINBYTES) {
         $self-&gt;{arg} = PythonPickle::Bytes4-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
+    elsif ($_on == $OPCODE_NEXT_BUFFER) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
     elsif ($_on == $OPCODE_BINBYTES8) {
         $self-&gt;{arg} = PythonPickle::Bytes8-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
@@ -1267,6 +1322,9 @@ sub _read {
     }
     elsif ($_on == $OPCODE_DUP) {
         $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BYTEARRAY8) {
+        $self-&gt;{arg} = PythonPickle::Bytearray8-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
     elsif ($_on == $OPCODE_LONG4) {
         $self-&gt;{arg} = PythonPickle::Long4-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});

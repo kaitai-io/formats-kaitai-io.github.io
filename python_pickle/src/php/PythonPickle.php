@@ -25,6 +25,8 @@
  * * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
  * * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
  *   https://www.python.org/dev/peps/pep-3154/
+ * * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
+ *   https://www.python.org/dev/peps/pep-0574/
  */
 
 class PythonPickle extends \Kaitai\Struct\Struct {
@@ -319,6 +321,30 @@ class String1 extends \Kaitai\Struct\Struct {
 }
 
 /**
+ * Length prefixed string, between 0 and 2**64-1 bytes long.
+ * 
+ * The contents are deserilised into a `bytearray` object.
+ */
+
+namespace \PythonPickle;
+
+class Bytearray8 extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_len = $this->_io->readU8le();
+        $this->_m_val = $this->_io->readBytes($this->len());
+    }
+    protected $_m_len;
+    protected $_m_val;
+    public function len() { return $this->_m_len; }
+    public function val() { return $this->_m_val; }
+}
+
+/**
  * Integer or boolean, encoded with the ASCII characters [0-9-].
  * 
  * The values '00' and '01' encode the Python values `False` and `True`.
@@ -448,6 +474,9 @@ class Op extends \Kaitai\Struct\Struct {
             case \PythonPickle\Opcode::EXT2:
                 $this->_m_arg = $this->_io->readU2le();
                 break;
+            case \PythonPickle\Opcode::READONLY_BUFFER:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
             case \PythonPickle\Opcode::STOP:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
@@ -526,6 +555,9 @@ class Op extends \Kaitai\Struct\Struct {
             case \PythonPickle\Opcode::BINBYTES:
                 $this->_m_arg = new \PythonPickle\Bytes4($this->_io, $this, $this->_root);
                 break;
+            case \PythonPickle\Opcode::NEXT_BUFFER:
+                $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
             case \PythonPickle\Opcode::BINBYTES8:
                 $this->_m_arg = new \PythonPickle\Bytes8($this->_io, $this, $this->_root);
                 break;
@@ -588,6 +620,9 @@ class Op extends \Kaitai\Struct\Struct {
                 break;
             case \PythonPickle\Opcode::DUP:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                break;
+            case \PythonPickle\Opcode::BYTEARRAY8:
+                $this->_m_arg = new \PythonPickle\Bytearray8($this->_io, $this, $this->_root);
                 break;
             case \PythonPickle\Opcode::LONG4:
                 $this->_m_arg = new \PythonPickle\Long4($this->_io, $this, $this->_root);
@@ -1004,4 +1039,19 @@ class Opcode {
      * indicate the beginning of a new frame
      */
     const FRAME = 149;
+
+    /**
+     * push bytearray
+     */
+    const BYTEARRAY8 = 150;
+
+    /**
+     * push next out-of-band buffer
+     */
+    const NEXT_BUFFER = 151;
+
+    /**
+     * make top of stack readonly
+     */
+    const READ_BUFFER = 152;
 }

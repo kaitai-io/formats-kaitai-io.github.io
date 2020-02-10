@@ -32,9 +32,11 @@ class PythonPickle(KaitaiStruct):
     * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
     * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
       https://www.python.org/dev/peps/pep-3154/
+    * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
+      https://www.python.org/dev/peps/pep-0574/
     
     .. seealso::
-       Source - https://github.com/python/cpython/blob/v3.7.3/Lib/pickletools.py
+       Source - https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py
     """
 
     class Opcode(Enum):
@@ -103,6 +105,9 @@ class PythonPickle(KaitaiStruct):
         stack_global = 147
         memoize = 148
         frame = 149
+        bytearray8 = 150
+        next_buffer = 151
+        read_buffer = 152
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -301,6 +306,22 @@ class PythonPickle(KaitaiStruct):
             self.val = self._io.read_bytes(self.len)
 
 
+    class Bytearray8(KaitaiStruct):
+        """Length prefixed string, between 0 and 2**64-1 bytes long.
+        
+        The contents are deserilised into a `bytearray` object.
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.len = self._io.read_u8le()
+            self.val = self._io.read_bytes(self.len)
+
+
     class DecimalnlShort(KaitaiStruct):
         """Integer or boolean, encoded with the ASCII characters [0-9-].
         
@@ -392,6 +413,8 @@ class PythonPickle(KaitaiStruct):
                 self.arg = self._root.NoArg(self._io, self, self._root)
             elif _on == self._root.Opcode.ext2:
                 self.arg = self._io.read_u2le()
+            elif _on == self._root.Opcode.readonly_buffer:
+                self.arg = self._root.NoArg(self._io, self, self._root)
             elif _on == self._root.Opcode.stop:
                 self.arg = self._root.NoArg(self._io, self, self._root)
             elif _on == self._root.Opcode.binunicode:
@@ -444,6 +467,8 @@ class PythonPickle(KaitaiStruct):
                 self.arg = self._root.NoArg(self._io, self, self._root)
             elif _on == self._root.Opcode.binbytes:
                 self.arg = self._root.Bytes4(self._io, self, self._root)
+            elif _on == self._root.Opcode.next_buffer:
+                self.arg = self._root.NoArg(self._io, self, self._root)
             elif _on == self._root.Opcode.binbytes8:
                 self.arg = self._root.Bytes8(self._io, self, self._root)
             elif _on == self._root.Opcode.setitem:
@@ -486,6 +511,8 @@ class PythonPickle(KaitaiStruct):
                 self.arg = self._io.read_f8be()
             elif _on == self._root.Opcode.dup:
                 self.arg = self._root.NoArg(self._io, self, self._root)
+            elif _on == self._root.Opcode.bytearray8:
+                self.arg = self._root.Bytearray8(self._io, self, self._root)
             elif _on == self._root.Opcode.long4:
                 self.arg = self._root.Long4(self._io, self, self._root)
             elif _on == self._root.Opcode.short_binunicode:

@@ -34,7 +34,9 @@ import java.nio.charset.Charset;
  * * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
  * * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
  *   https://www.python.org/dev/peps/pep-3154/
- * @see <a href="https://github.com/python/cpython/blob/v3.7.3/Lib/pickletools.py">Source</a>
+ * * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
+ *   https://www.python.org/dev/peps/pep-0574/
+ * @see <a href="https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py">Source</a>
  */
 public class PythonPickle extends KaitaiStruct {
     public static PythonPickle fromFile(String fileName) throws IOException {
@@ -106,12 +108,15 @@ public class PythonPickle extends KaitaiStruct {
         NEWOBJ_EX(146),
         STACK_GLOBAL(147),
         MEMOIZE(148),
-        FRAME(149);
+        FRAME(149),
+        BYTEARRAY8(150),
+        NEXT_BUFFER(151),
+        READ_BUFFER(152);
 
         private final long id;
         Opcode(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Opcode> byId = new HashMap<Long, Opcode>(65);
+        private static final Map<Long, Opcode> byId = new HashMap<Long, Opcode>(68);
         static {
             for (Opcode e : Opcode.values())
                 byId.put(e.id(), e);
@@ -587,6 +592,44 @@ public class PythonPickle extends KaitaiStruct {
     }
 
     /**
+     * Length prefixed string, between 0 and 2**64-1 bytes long.
+     * 
+     * The contents are deserilised into a `bytearray` object.
+     */
+    public static class Bytearray8 extends KaitaiStruct {
+        public static Bytearray8 fromFile(String fileName) throws IOException {
+            return new Bytearray8(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Bytearray8(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Bytearray8(KaitaiStream _io, PythonPickle.Op _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Bytearray8(KaitaiStream _io, PythonPickle.Op _parent, PythonPickle _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.len = this._io.readU8le();
+            this.val = this._io.readBytes(len());
+        }
+        private long len;
+        private byte[] val;
+        private PythonPickle _root;
+        private PythonPickle.Op _parent;
+        public long len() { return len; }
+        public byte[] val() { return val; }
+        public PythonPickle _root() { return _root; }
+        public PythonPickle.Op _parent() { return _parent; }
+    }
+
+    /**
      * Integer or boolean, encoded with the ASCII characters [0-9-].
      * 
      * The values '00' and '01' encode the Python values `False` and `True`.
@@ -799,6 +842,10 @@ public class PythonPickle extends KaitaiStruct {
                 this.arg = (Object) (this._io.readU2le());
                 break;
             }
+            case READONLY_BUFFER: {
+                this.arg = new NoArg(this._io, this, _root);
+                break;
+            }
             case STOP: {
                 this.arg = new NoArg(this._io, this, _root);
                 break;
@@ -903,6 +950,10 @@ public class PythonPickle extends KaitaiStruct {
                 this.arg = new Bytes4(this._io, this, _root);
                 break;
             }
+            case NEXT_BUFFER: {
+                this.arg = new NoArg(this._io, this, _root);
+                break;
+            }
             case BINBYTES8: {
                 this.arg = new Bytes8(this._io, this, _root);
                 break;
@@ -985,6 +1036,10 @@ public class PythonPickle extends KaitaiStruct {
             }
             case DUP: {
                 this.arg = new NoArg(this._io, this, _root);
+                break;
+            }
+            case BYTEARRAY8: {
+                this.arg = new Bytearray8(this._io, this, _root);
                 break;
             }
             case LONG4: {

@@ -29,9 +29,11 @@ namespace Kaitai
     /// * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
     /// * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
     ///   https://www.python.org/dev/peps/pep-3154/
+    /// * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
+    ///   https://www.python.org/dev/peps/pep-0574/
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/python/cpython/blob/v3.7.3/Lib/pickletools.py">Source</a>
+    /// Reference: <a href="https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py">Source</a>
     /// </remarks>
     public partial class PythonPickle : KaitaiStruct
     {
@@ -108,6 +110,9 @@ namespace Kaitai
             StackGlobal = 147,
             Memoize = 148,
             Frame = 149,
+            Bytearray8 = 150,
+            NextBuffer = 151,
+            ReadBuffer = 152,
         }
         public PythonPickle(KaitaiStream p__io, KaitaiStruct p__parent = null, PythonPickle p__root = null) : base(p__io)
         {
@@ -512,6 +517,39 @@ namespace Kaitai
         }
 
         /// <summary>
+        /// Length prefixed string, between 0 and 2**64-1 bytes long.
+        /// 
+        /// The contents are deserilised into a `bytearray` object.
+        /// </summary>
+        public partial class Bytearray8 : KaitaiStruct
+        {
+            public static Bytearray8 FromFile(string fileName)
+            {
+                return new Bytearray8(new KaitaiStream(fileName));
+            }
+
+            public Bytearray8(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _len = m_io.ReadU8le();
+                _val = m_io.ReadBytes(Len);
+            }
+            private ulong _len;
+            private byte[] _val;
+            private PythonPickle m_root;
+            private PythonPickle.Op m_parent;
+            public ulong Len { get { return _len; } }
+            public byte[] Val { get { return _val; } }
+            public PythonPickle M_Root { get { return m_root; } }
+            public PythonPickle.Op M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
         /// Integer or boolean, encoded with the ASCII characters [0-9-].
         /// 
         /// The values '00' and '01' encode the Python values `False` and `True`.
@@ -696,6 +734,10 @@ namespace Kaitai
                     _arg = m_io.ReadU2le();
                     break;
                 }
+                case PythonPickle.Opcode.ReadonlyBuffer: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
                 case PythonPickle.Opcode.Stop: {
                     _arg = new NoArg(m_io, this, m_root);
                     break;
@@ -800,6 +842,10 @@ namespace Kaitai
                     _arg = new Bytes4(m_io, this, m_root);
                     break;
                 }
+                case PythonPickle.Opcode.NextBuffer: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
                 case PythonPickle.Opcode.Binbytes8: {
                     _arg = new Bytes8(m_io, this, m_root);
                     break;
@@ -882,6 +928,10 @@ namespace Kaitai
                 }
                 case PythonPickle.Opcode.Dup: {
                     _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Bytearray8: {
+                    _arg = new Bytearray8(m_io, this, m_root);
                     break;
                 }
                 case PythonPickle.Opcode.Long4: {

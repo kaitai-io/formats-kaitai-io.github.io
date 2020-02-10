@@ -33,7 +33,9 @@
  * * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
  * * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
  *   https://www.python.org/dev/peps/pep-3154/
- * @see {@link https://github.com/python/cpython/blob/v3.7.3/Lib/pickletools.py|Source}
+ * * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
+ *   https://www.python.org/dev/peps/pep-0574/
+ * @see {@link https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py|Source}
  */
 
 var PythonPickle = (function() {
@@ -103,6 +105,9 @@ var PythonPickle = (function() {
     STACK_GLOBAL: 147,
     MEMOIZE: 148,
     FRAME: 149,
+    BYTEARRAY8: 150,
+    NEXT_BUFFER: 151,
+    READ_BUFFER: 152,
 
     40: "MARK",
     41: "EMPTY_TUPLE",
@@ -169,6 +174,9 @@ var PythonPickle = (function() {
     147: "STACK_GLOBAL",
     148: "MEMOIZE",
     149: "FRAME",
+    150: "BYTEARRAY8",
+    151: "NEXT_BUFFER",
+    152: "READ_BUFFER",
   });
 
   function PythonPickle(_io, _parent, _root) {
@@ -448,6 +456,28 @@ var PythonPickle = (function() {
   })();
 
   /**
+   * Length prefixed string, between 0 and 2**64-1 bytes long.
+   * 
+   * The contents are deserilised into a `bytearray` object.
+   */
+
+  var Bytearray8 = PythonPickle.Bytearray8 = (function() {
+    function Bytearray8(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Bytearray8.prototype._read = function() {
+      this.len = this._io.readU8le();
+      this.val = this._io.readBytes(this.len);
+    }
+
+    return Bytearray8;
+  })();
+
+  /**
    * Integer or boolean, encoded with the ASCII characters [0-9-].
    * 
    * The values '00' and '01' encode the Python values `False` and `True`.
@@ -572,6 +602,9 @@ var PythonPickle = (function() {
       case PythonPickle.Opcode.EXT2:
         this.arg = this._io.readU2le();
         break;
+      case PythonPickle.Opcode.READONLY_BUFFER:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
       case PythonPickle.Opcode.STOP:
         this.arg = new NoArg(this._io, this, this._root);
         break;
@@ -650,6 +683,9 @@ var PythonPickle = (function() {
       case PythonPickle.Opcode.BINBYTES:
         this.arg = new Bytes4(this._io, this, this._root);
         break;
+      case PythonPickle.Opcode.NEXT_BUFFER:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
       case PythonPickle.Opcode.BINBYTES8:
         this.arg = new Bytes8(this._io, this, this._root);
         break;
@@ -712,6 +748,9 @@ var PythonPickle = (function() {
         break;
       case PythonPickle.Opcode.DUP:
         this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BYTEARRAY8:
+        this.arg = new Bytearray8(this._io, this, this._root);
         break;
       case PythonPickle.Opcode.LONG4:
         this.arg = new Long4(this._io, this, this._root);
