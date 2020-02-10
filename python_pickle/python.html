@@ -414,10 +414,12 @@ class PythonPickle(KaitaiStruct):
     def _read(self):
         self.ops = []
         i = 0
-        while not self._io.is_eof():
-            self.ops.append(self._root.Op(self._io, self, self._root))
+        while True:
+            _ = self._root.Op(self._io, self, self._root)
+            self.ops.append(_)
+            if _.code == self._root.Opcode.stop:
+                break
             i += 1
-
 
     class Unicodestring8(KaitaiStruct):
         &quot;&quot;&quot;Length prefixed string, between 0 and 2**64-1 bytes long.

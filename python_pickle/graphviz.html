@@ -281,7 +281,7 @@ https://www.python.org/dev/peps/pep-0574/</li>
 		python_pickle__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;ops_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;ops_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Op&lt;/TD&gt;&lt;TD PORT=&quot;ops_type&quot;&gt;ops&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;ops__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;ops__repeat&quot;&gt;repeat until _.code == :opcode_stop&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
 		subgraph cluster__unicodestring8 {
 			label=&quot;PythonPickle::Unicodestring8&quot;;
@@ -535,6 +535,7 @@ op__seq_arg_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&
 		}
 	}
 	python_pickle__seq:ops_type -&gt; op__seq [style=bold];
+	op__seq:code_type -&gt; python_pickle__seq:ops__repeat [color=&quot;#404040&quot;];
 	unicodestring8__seq:len_type -&gt; unicodestring8__seq:val_size [color=&quot;#404040&quot;];
 	long1__seq:len_type -&gt; long1__seq:val_size [color=&quot;#404040&quot;];
 	bytes8__seq:len_type -&gt; bytes8__seq:val_size [color=&quot;#404040&quot;];

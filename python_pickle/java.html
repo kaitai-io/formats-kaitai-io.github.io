@@ -436,11 +436,13 @@ public class PythonPickle extends KaitaiStruct {
     private void _read() {
         this.ops = new ArrayList&lt;Op&gt;();
         {
+            Op _it;
             int i = 0;
-            while (!this._io.isEof()) {
-                this.ops.add(new Op(this._io, this, _root));
+            do {
+                _it = new Op(this._io, this, _root);
+                this.ops.add(_it);
                 i++;
-            }
+            } while (!(_it.code() == Opcode.STOP));
         }
     }
 

@@ -8,7 +8,7 @@ digraph {
 		python_pickle__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="ops_pos">0</TD><TD PORT="ops_size">...</TD><TD>Op</TD><TD PORT="ops_type">ops</TD></TR>
-			<TR><TD COLSPAN="4" PORT="ops__repeat">repeat to end of stream</TD></TR>
+			<TR><TD COLSPAN="4" PORT="ops__repeat">repeat until _.code == :opcode_stop</TD></TR>
 		</TABLE>>];
 		subgraph cluster__unicodestring8 {
 			label="PythonPickle::Unicodestring8";
@@ -262,6 +262,7 @@ op__seq_arg_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 		}
 	}
 	python_pickle__seq:ops_type -> op__seq [style=bold];
+	op__seq:code_type -> python_pickle__seq:ops__repeat [color="#404040"];
 	unicodestring8__seq:len_type -> unicodestring8__seq:val_size [color="#404040"];
 	long1__seq:len_type -> long1__seq:val_size [color="#404040"];
 	bytes8__seq:len_type -> bytes8__seq:val_size [color="#404040"];

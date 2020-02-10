@@ -105,9 +105,10 @@ sub _read {
     my ($self) = @_;
 
     $self->{ops} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{ops}}, PythonPickle::Op->new($self->{_io}, $self, $self->{_root});
-    }
+    do {
+        $_ = PythonPickle::Op->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{ops}}, $_;
+    } until ($_->code() == $OPCODE_STOP);
 }
 
 sub ops {

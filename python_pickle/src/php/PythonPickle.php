@@ -38,10 +38,11 @@ class PythonPickle extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_ops = [];
         $i = 0;
-        while (!$this->_io->isEof()) {
-            $this->_m_ops[] = new \PythonPickle\Op($this->_io, $this, $this->_root);
+        do {
+            $_ = new \PythonPickle\Op($this->_io, $this, $this->_root);
+            $this->_m_ops[] = $_;
             $i++;
-        }
+        } while (!($_->code() == \PythonPickle\Opcode::STOP));
     }
     protected $_m_ops;
     public function ops() { return $this->_m_ops; }

@@ -410,10 +410,11 @@ class PythonPickle &lt; Kaitai::Struct::Struct
   def _read
     @ops = []
     i = 0
-    while not @_io.eof?
-      @ops &lt;&lt; Op.new(@_io, self, @_root)
+    begin
+      _ = Op.new(@_io, self, @_root)
+      @ops &lt;&lt; _
       i += 1
-    end
+    end until _.code == :opcode_stop
     self
   end
 

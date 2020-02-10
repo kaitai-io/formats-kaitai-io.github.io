@@ -187,12 +187,13 @@ var PythonPickle = (function() {
     this._read();
   }
   PythonPickle.prototype._read = function() {
-    this.ops = [];
+    this.ops = []
     var i = 0;
-    while (!this._io.isEof()) {
-      this.ops.push(new Op(this._io, this, this._root));
+    do {
+      var _ = new Op(this._io, this, this._root);
+      this.ops.push(_);
       i++;
-    }
+    } while (!(_.code == PythonPickle.Opcode.STOP));
   }
 
   /**
