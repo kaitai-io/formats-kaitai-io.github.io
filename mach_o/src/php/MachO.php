@@ -790,6 +790,55 @@ class CsMagic {
 
 namespace \MachO;
 
+class BuildVersionCommand extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_platform = $this->_io->readU4le();
+        $this->_m_minos = $this->_io->readU4le();
+        $this->_m_sdk = $this->_io->readU4le();
+        $this->_m_ntools = $this->_io->readU4le();
+        $this->_m_tools = [];
+        $n = $this->ntools();
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_tools[] = new \MachO\BuildVersionCommand\BuildToolVersion($this->_io, $this, $this->_root);
+        }
+    }
+    protected $_m_platform;
+    protected $_m_minos;
+    protected $_m_sdk;
+    protected $_m_ntools;
+    protected $_m_tools;
+    public function platform() { return $this->_m_platform; }
+    public function minos() { return $this->_m_minos; }
+    public function sdk() { return $this->_m_sdk; }
+    public function ntools() { return $this->_m_ntools; }
+    public function tools() { return $this->_m_tools; }
+}
+
+namespace \MachO\BuildVersionCommand;
+
+class BuildToolVersion extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\BuildVersionCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_tool = $this->_io->readU4le();
+        $this->_m_version = $this->_io->readU4le();
+    }
+    protected $_m_tool;
+    protected $_m_version;
+    public function tool() { return $this->_m_tool; }
+    public function version() { return $this->_m_version; }
+}
+
+namespace \MachO;
+
 class RoutinesCommand extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -1551,7 +1600,7 @@ class StringList extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class VmProt extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64 $_parent = null, \MachO $_root = null) {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
         parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
@@ -2259,6 +2308,108 @@ class DylibCommand extends \Kaitai\Struct\Struct {
 
 namespace \MachO;
 
+class SegmentCommand extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_segname = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(16), 0), "ascii");
+        $this->_m_vmaddr = $this->_io->readU4le();
+        $this->_m_vmsize = $this->_io->readU4le();
+        $this->_m_fileoff = $this->_io->readU4le();
+        $this->_m_filesize = $this->_io->readU4le();
+        $this->_m_maxprot = new \MachO\VmProt($this->_io, $this, $this->_root);
+        $this->_m_initprot = new \MachO\VmProt($this->_io, $this, $this->_root);
+        $this->_m_nsects = $this->_io->readU4le();
+        $this->_m_flags = $this->_io->readU4le();
+        $this->_m_sections = [];
+        $n = $this->nsects();
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_sections[] = new \MachO\SegmentCommand\Section($this->_io, $this, $this->_root);
+        }
+    }
+    protected $_m_segname;
+    protected $_m_vmaddr;
+    protected $_m_vmsize;
+    protected $_m_fileoff;
+    protected $_m_filesize;
+    protected $_m_maxprot;
+    protected $_m_initprot;
+    protected $_m_nsects;
+    protected $_m_flags;
+    protected $_m_sections;
+    public function segname() { return $this->_m_segname; }
+    public function vmaddr() { return $this->_m_vmaddr; }
+    public function vmsize() { return $this->_m_vmsize; }
+    public function fileoff() { return $this->_m_fileoff; }
+    public function filesize() { return $this->_m_filesize; }
+    public function maxprot() { return $this->_m_maxprot; }
+    public function initprot() { return $this->_m_initprot; }
+    public function nsects() { return $this->_m_nsects; }
+    public function flags() { return $this->_m_flags; }
+    public function sections() { return $this->_m_sections; }
+}
+
+namespace \MachO\SegmentCommand;
+
+class Section extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_sectName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(16), 0), "ascii");
+        $this->_m_segName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(16), 0), "ascii");
+        $this->_m_addr = $this->_io->readU4le();
+        $this->_m_size = $this->_io->readU4le();
+        $this->_m_offset = $this->_io->readU4le();
+        $this->_m_align = $this->_io->readU4le();
+        $this->_m_reloff = $this->_io->readU4le();
+        $this->_m_nreloc = $this->_io->readU4le();
+        $this->_m_flags = $this->_io->readU4le();
+        $this->_m_reserved1 = $this->_io->readU4le();
+        $this->_m_reserved2 = $this->_io->readU4le();
+    }
+    protected $_m_data;
+    public function data() {
+        if ($this->_m_data !== null)
+            return $this->_m_data;
+        $io = $this->_root()->_io();
+        $_pos = $io->pos();
+        $io->seek($this->offset());
+        $this->_m_data = $io->readBytes($this->size());
+        $io->seek($_pos);
+        return $this->_m_data;
+    }
+    protected $_m_sectName;
+    protected $_m_segName;
+    protected $_m_addr;
+    protected $_m_size;
+    protected $_m_offset;
+    protected $_m_align;
+    protected $_m_reloff;
+    protected $_m_nreloc;
+    protected $_m_flags;
+    protected $_m_reserved1;
+    protected $_m_reserved2;
+    public function sectName() { return $this->_m_sectName; }
+    public function segName() { return $this->_m_segName; }
+    public function addr() { return $this->_m_addr; }
+    public function size() { return $this->_m_size; }
+    public function offset() { return $this->_m_offset; }
+    public function align() { return $this->_m_align; }
+    public function reloff() { return $this->_m_reloff; }
+    public function nreloc() { return $this->_m_nreloc; }
+    public function flags() { return $this->_m_flags; }
+    public function reserved1() { return $this->_m_reserved1; }
+    public function reserved2() { return $this->_m_reserved2; }
+}
+
+namespace \MachO;
+
 class LcStr extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -2331,6 +2482,11 @@ class LoadCommand extends \Kaitai\Struct\Struct {
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
                 $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::BUILD_VERSION:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\BuildVersionCommand($io, $this, $this->_root);
                 break;
             case \MachO\LoadCommandType::VERSION_MIN_IPHONEOS:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
@@ -2447,6 +2603,11 @@ class LoadCommand extends \Kaitai\Struct\Struct {
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
                 $this->_m_body = new \MachO\SubCommand($io, $this, $this->_root);
                 break;
+            case \MachO\LoadCommandType::SEGMENT:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SegmentCommand($io, $this, $this->_root);
+                break;
             case \MachO\LoadCommandType::ROUTINES:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -2531,7 +2692,20 @@ class SymtabCommand extends \Kaitai\Struct\Struct {
         $this->_m_symbols = [];
         $n = $this->nSyms();
         for ($i = 0; $i < $n; $i++) {
-            $this->_m_symbols[] = new \MachO\SymtabCommand\Nlist64($io, $this, $this->_root);
+            switch ($this->_root()->magic()) {
+                case \MachO\MagicType::MACHO_LE_X64:
+                    $this->_m_symbols[] = new \MachO\SymtabCommand\Nlist64($io, $this, $this->_root);
+                    break;
+                case \MachO\MagicType::MACHO_BE_X64:
+                    $this->_m_symbols[] = new \MachO\SymtabCommand\Nlist64($io, $this, $this->_root);
+                    break;
+                case \MachO\MagicType::MACHO_LE_X86:
+                    $this->_m_symbols[] = new \MachO\SymtabCommand\Nlist($io, $this, $this->_root);
+                    break;
+                case \MachO\MagicType::MACHO_BE_X86:
+                    $this->_m_symbols[] = new \MachO\SymtabCommand\Nlist($io, $this, $this->_root);
+                    break;
+            }
         }
         $io->seek($_pos);
         return $this->_m_symbols;
@@ -2574,7 +2748,7 @@ class StrTable extends \Kaitai\Struct\Struct {
         $this->_m_items = [];
         $i = 0;
         do {
-            $_ = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ascii");
+            $_ = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, false), "utf-8");
             $this->_m_items[] = $_;
             $i++;
         } while (!($_ == ""));
@@ -2599,6 +2773,57 @@ class Nlist64 extends \Kaitai\Struct\Struct {
         $this->_m_sect = $this->_io->readU1();
         $this->_m_desc = $this->_io->readU2le();
         $this->_m_value = $this->_io->readU8le();
+    }
+    protected $_m_name;
+    public function name() {
+        if ($this->_m_name !== null)
+            return $this->_m_name;
+        if ($this->un() != 0) {
+            $_pos = $this->_io->pos();
+            $this->_io->seek(($this->_parent()->strOff() + $this->un()));
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "utf-8");
+            $this->_io->seek($_pos);
+        }
+        return $this->_m_name;
+    }
+    protected $_m_un;
+    protected $_m_type;
+    protected $_m_sect;
+    protected $_m_desc;
+    protected $_m_value;
+    public function un() { return $this->_m_un; }
+    public function type() { return $this->_m_type; }
+    public function sect() { return $this->_m_sect; }
+    public function desc() { return $this->_m_desc; }
+    public function value() { return $this->_m_value; }
+}
+
+namespace \MachO\SymtabCommand;
+
+class Nlist extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SymtabCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_un = $this->_io->readU4le();
+        $this->_m_type = $this->_io->readU1();
+        $this->_m_sect = $this->_io->readU1();
+        $this->_m_desc = $this->_io->readU2le();
+        $this->_m_value = $this->_io->readU4le();
+    }
+    protected $_m_name;
+    public function name() {
+        if ($this->_m_name !== null)
+            return $this->_m_name;
+        if ($this->un() != 0) {
+            $_pos = $this->_io->pos();
+            $this->_io->seek(($this->_parent()->strOff() + $this->un()));
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "utf-8");
+            $this->_io->seek($_pos);
+        }
+        return $this->_m_name;
     }
     protected $_m_un;
     protected $_m_type;
@@ -2746,6 +2971,7 @@ class LoadCommandType {
     const LINKER_OPTIMIZATION_HINT = 46;
     const VERSION_MIN_TVOS = 47;
     const VERSION_MIN_WATCHOS = 48;
+    const BUILD_VERSION = 50;
     const REQ_DYLD = 2147483648;
     const LOAD_WEAK_DYLIB = 2147483672;
     const RPATH = 2147483676;

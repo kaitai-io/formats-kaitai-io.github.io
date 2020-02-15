@@ -97,6 +97,7 @@ class MachO(KaitaiStruct):
         linker_optimization_hint = 46
         version_min_tvos = 47
         version_min_watchos = 48
+        build_version = 50
         req_dyld = 2147483648
         load_weak_dylib = 2147483672
         rpath = 2147483676
@@ -655,6 +656,36 @@ class MachO(KaitaiStruct):
                 self._m_value = self._root.CsBlob(self._io, self, self._root)
                 self._io.seek(_pos)
                 return self._m_value if hasattr(self, '_m_value') else None
+
+
+
+    class BuildVersionCommand(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.platform = self._io.read_u4le()
+            self.minos = self._io.read_u4le()
+            self.sdk = self._io.read_u4le()
+            self.ntools = self._io.read_u4le()
+            self.tools = [None] * (self.ntools)
+            for i in range(self.ntools):
+                self.tools[i] = self._root.BuildVersionCommand.BuildToolVersion(self._io, self, self._root)
+
+
+        class BuildToolVersion(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.tool = self._io.read_u4le()
+                self.version = self._io.read_u4le()
 
 
 
@@ -1685,6 +1716,62 @@ class MachO(KaitaiStruct):
             self.name = (self._io.read_bytes_term(0, False, True, True)).decode(u"utf-8")
 
 
+    class SegmentCommand(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.segname = (KaitaiStream.bytes_strip_right(self._io.read_bytes(16), 0)).decode(u"ascii")
+            self.vmaddr = self._io.read_u4le()
+            self.vmsize = self._io.read_u4le()
+            self.fileoff = self._io.read_u4le()
+            self.filesize = self._io.read_u4le()
+            self.maxprot = self._root.VmProt(self._io, self, self._root)
+            self.initprot = self._root.VmProt(self._io, self, self._root)
+            self.nsects = self._io.read_u4le()
+            self.flags = self._io.read_u4le()
+            self.sections = [None] * (self.nsects)
+            for i in range(self.nsects):
+                self.sections[i] = self._root.SegmentCommand.Section(self._io, self, self._root)
+
+
+        class Section(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.sect_name = (KaitaiStream.bytes_strip_right(self._io.read_bytes(16), 0)).decode(u"ascii")
+                self.seg_name = (KaitaiStream.bytes_strip_right(self._io.read_bytes(16), 0)).decode(u"ascii")
+                self.addr = self._io.read_u4le()
+                self.size = self._io.read_u4le()
+                self.offset = self._io.read_u4le()
+                self.align = self._io.read_u4le()
+                self.reloff = self._io.read_u4le()
+                self.nreloc = self._io.read_u4le()
+                self.flags = self._io.read_u4le()
+                self.reserved1 = self._io.read_u4le()
+                self.reserved2 = self._io.read_u4le()
+
+            @property
+            def data(self):
+                if hasattr(self, '_m_data'):
+                    return self._m_data if hasattr(self, '_m_data') else None
+
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(self.offset)
+                self._m_data = io.read_bytes(self.size)
+                io.seek(_pos)
+                return self._m_data if hasattr(self, '_m_data') else None
+
+
+
     class LcStr(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -1744,6 +1831,10 @@ class MachO(KaitaiStruct):
                 self._raw_body = self._io.read_bytes((self.size - 8))
                 io = KaitaiStream(BytesIO(self._raw_body))
                 self.body = self._root.DylibCommand(io, self, self._root)
+            elif _on == self._root.LoadCommandType.build_version:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.BuildVersionCommand(io, self, self._root)
             elif _on == self._root.LoadCommandType.version_min_iphoneos:
                 self._raw_body = self._io.read_bytes((self.size - 8))
                 io = KaitaiStream(BytesIO(self._raw_body))
@@ -1836,6 +1927,10 @@ class MachO(KaitaiStruct):
                 self._raw_body = self._io.read_bytes((self.size - 8))
                 io = KaitaiStream(BytesIO(self._raw_body))
                 self.body = self._root.SubCommand(io, self, self._root)
+            elif _on == self._root.LoadCommandType.segment:
+                self._raw_body = self._io.read_bytes((self.size - 8))
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.SegmentCommand(io, self, self._root)
             elif _on == self._root.LoadCommandType.routines:
                 self._raw_body = self._io.read_bytes((self.size - 8))
                 io = KaitaiStream(BytesIO(self._raw_body))
@@ -1900,7 +1995,7 @@ class MachO(KaitaiStruct):
                 self.items = []
                 i = 0
                 while True:
-                    _ = (self._io.read_bytes_term(0, False, True, True)).decode(u"ascii")
+                    _ = (self._io.read_bytes_term(0, False, True, False)).decode(u"utf-8")
                     self.items.append(_)
                     if _ == u"":
                         break
@@ -1921,6 +2016,47 @@ class MachO(KaitaiStruct):
                 self.desc = self._io.read_u2le()
                 self.value = self._io.read_u8le()
 
+            @property
+            def name(self):
+                if hasattr(self, '_m_name'):
+                    return self._m_name if hasattr(self, '_m_name') else None
+
+                if self.un != 0:
+                    _pos = self._io.pos()
+                    self._io.seek((self._parent.str_off + self.un))
+                    self._m_name = (self._io.read_bytes_term(0, False, True, True)).decode(u"utf-8")
+                    self._io.seek(_pos)
+
+                return self._m_name if hasattr(self, '_m_name') else None
+
+
+        class Nlist(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.un = self._io.read_u4le()
+                self.type = self._io.read_u1()
+                self.sect = self._io.read_u1()
+                self.desc = self._io.read_u2le()
+                self.value = self._io.read_u4le()
+
+            @property
+            def name(self):
+                if hasattr(self, '_m_name'):
+                    return self._m_name if hasattr(self, '_m_name') else None
+
+                if self.un != 0:
+                    _pos = self._io.pos()
+                    self._io.seek((self._parent.str_off + self.un))
+                    self._m_name = (self._io.read_bytes_term(0, False, True, True)).decode(u"utf-8")
+                    self._io.seek(_pos)
+
+                return self._m_name if hasattr(self, '_m_name') else None
+
 
         @property
         def symbols(self):
@@ -1932,7 +2068,15 @@ class MachO(KaitaiStruct):
             io.seek(self.sym_off)
             self._m_symbols = [None] * (self.n_syms)
             for i in range(self.n_syms):
-                self._m_symbols[i] = self._root.SymtabCommand.Nlist64(io, self, self._root)
+                _on = self._root.magic
+                if _on == self._root.MagicType.macho_le_x64:
+                    self._m_symbols[i] = self._root.SymtabCommand.Nlist64(io, self, self._root)
+                elif _on == self._root.MagicType.macho_be_x64:
+                    self._m_symbols[i] = self._root.SymtabCommand.Nlist64(io, self, self._root)
+                elif _on == self._root.MagicType.macho_le_x86:
+                    self._m_symbols[i] = self._root.SymtabCommand.Nlist(io, self, self._root)
+                elif _on == self._root.MagicType.macho_be_x86:
+                    self._m_symbols[i] = self._root.SymtabCommand.Nlist(io, self, self._root)
 
             io.seek(_pos)
             return self._m_symbols if hasattr(self, '_m_symbols') else None

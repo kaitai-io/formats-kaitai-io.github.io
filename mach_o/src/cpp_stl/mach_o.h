@@ -19,6 +19,7 @@ public:
     class uleb128_t;
     class source_version_command_t;
     class cs_blob_t;
+    class build_version_command_t;
     class routines_command_t;
     class macho_flags_t;
     class routines_command_64_t;
@@ -36,6 +37,7 @@ public:
     class dyld_info_command_t;
     class dylinker_command_t;
     class dylib_command_t;
+    class segment_command_t;
     class lc_str_t;
     class load_command_t;
     class uuid_command_t;
@@ -133,6 +135,7 @@ public:
         LOAD_COMMAND_TYPE_LINKER_OPTIMIZATION_HINT = 46,
         LOAD_COMMAND_TYPE_VERSION_MIN_TVOS = 47,
         LOAD_COMMAND_TYPE_VERSION_MIN_WATCHOS = 48,
+        LOAD_COMMAND_TYPE_BUILD_VERSION = 50,
         LOAD_COMMAND_TYPE_REQ_DYLD = 2147483648,
         LOAD_COMMAND_TYPE_LOAD_WEAK_DYLIB = 2147483672,
         LOAD_COMMAND_TYPE_RPATH = 2147483676,
@@ -1036,6 +1039,63 @@ public:
         kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
     };
 
+    class build_version_command_t : public kaitai::kstruct {
+
+    public:
+        class build_tool_version_t;
+
+        build_version_command_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent = 0, mach_o_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~build_version_command_t();
+
+        class build_tool_version_t : public kaitai::kstruct {
+
+        public:
+
+            build_tool_version_t(kaitai::kstream* p__io, mach_o_t::build_version_command_t* p__parent = 0, mach_o_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~build_tool_version_t();
+
+        private:
+            uint32_t m_tool;
+            uint32_t m_version;
+            mach_o_t* m__root;
+            mach_o_t::build_version_command_t* m__parent;
+
+        public:
+            uint32_t tool() const { return m_tool; }
+            uint32_t version() const { return m_version; }
+            mach_o_t* _root() const { return m__root; }
+            mach_o_t::build_version_command_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        uint32_t m_platform;
+        uint32_t m_minos;
+        uint32_t m_sdk;
+        uint32_t m_ntools;
+        std::vector<build_tool_version_t*>* m_tools;
+        mach_o_t* m__root;
+        mach_o_t::load_command_t* m__parent;
+
+    public:
+        uint32_t platform() const { return m_platform; }
+        uint32_t minos() const { return m_minos; }
+        uint32_t sdk() const { return m_sdk; }
+        uint32_t ntools() const { return m_ntools; }
+        std::vector<build_tool_version_t*>* tools() const { return m_tools; }
+        mach_o_t* _root() const { return m__root; }
+        mach_o_t::load_command_t* _parent() const { return m__parent; }
+    };
+
     class routines_command_t : public kaitai::kstruct {
 
     public:
@@ -1786,7 +1846,7 @@ public:
 
     public:
 
-        vm_prot_t(kaitai::kstream* p__io, mach_o_t::segment_command_64_t* p__parent = 0, mach_o_t* p__root = 0);
+        vm_prot_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, mach_o_t* p__root = 0);
 
     private:
         void _read();
@@ -1805,7 +1865,7 @@ public:
         bool m_read;
         uint64_t m_reserved1;
         mach_o_t* m__root;
-        mach_o_t::segment_command_64_t* m__parent;
+        kaitai::kstruct* m__parent;
 
     public:
 
@@ -1854,7 +1914,7 @@ public:
          */
         uint64_t reserved1() const { return m_reserved1; }
         mach_o_t* _root() const { return m__root; }
-        mach_o_t::segment_command_64_t* _parent() const { return m__parent; }
+        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
     class dysymtab_command_t : public kaitai::kstruct {
@@ -2560,6 +2620,98 @@ public:
         mach_o_t::load_command_t* _parent() const { return m__parent; }
     };
 
+    class segment_command_t : public kaitai::kstruct {
+
+    public:
+        class section_t;
+
+        segment_command_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent = 0, mach_o_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~segment_command_t();
+
+        class section_t : public kaitai::kstruct {
+
+        public:
+
+            section_t(kaitai::kstream* p__io, mach_o_t::segment_command_t* p__parent = 0, mach_o_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~section_t();
+
+        private:
+            bool f_data;
+            std::string m_data;
+
+        public:
+            std::string data();
+
+        private:
+            std::string m_sect_name;
+            std::string m_seg_name;
+            uint32_t m_addr;
+            uint32_t m_size;
+            uint32_t m_offset;
+            uint32_t m_align;
+            uint32_t m_reloff;
+            uint32_t m_nreloc;
+            uint32_t m_flags;
+            uint32_t m_reserved1;
+            uint32_t m_reserved2;
+            mach_o_t* m__root;
+            mach_o_t::segment_command_t* m__parent;
+
+        public:
+            std::string sect_name() const { return m_sect_name; }
+            std::string seg_name() const { return m_seg_name; }
+            uint32_t addr() const { return m_addr; }
+            uint32_t size() const { return m_size; }
+            uint32_t offset() const { return m_offset; }
+            uint32_t align() const { return m_align; }
+            uint32_t reloff() const { return m_reloff; }
+            uint32_t nreloc() const { return m_nreloc; }
+            uint32_t flags() const { return m_flags; }
+            uint32_t reserved1() const { return m_reserved1; }
+            uint32_t reserved2() const { return m_reserved2; }
+            mach_o_t* _root() const { return m__root; }
+            mach_o_t::segment_command_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        std::string m_segname;
+        uint32_t m_vmaddr;
+        uint32_t m_vmsize;
+        uint32_t m_fileoff;
+        uint32_t m_filesize;
+        vm_prot_t* m_maxprot;
+        vm_prot_t* m_initprot;
+        uint32_t m_nsects;
+        uint32_t m_flags;
+        std::vector<section_t*>* m_sections;
+        mach_o_t* m__root;
+        mach_o_t::load_command_t* m__parent;
+
+    public:
+        std::string segname() const { return m_segname; }
+        uint32_t vmaddr() const { return m_vmaddr; }
+        uint32_t vmsize() const { return m_vmsize; }
+        uint32_t fileoff() const { return m_fileoff; }
+        uint32_t filesize() const { return m_filesize; }
+        vm_prot_t* maxprot() const { return m_maxprot; }
+        vm_prot_t* initprot() const { return m_initprot; }
+        uint32_t nsects() const { return m_nsects; }
+        uint32_t flags() const { return m_flags; }
+        std::vector<section_t*>* sections() const { return m_sections; }
+        mach_o_t* _root() const { return m__root; }
+        mach_o_t::load_command_t* _parent() const { return m__parent; }
+    };
+
     class lc_str_t : public kaitai::kstruct {
 
     public:
@@ -2650,6 +2802,7 @@ public:
     public:
         class str_table_t;
         class nlist_64_t;
+        class nlist_t;
 
         symtab_command_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent = 0, mach_o_t* p__root = 0);
 
@@ -2697,6 +2850,19 @@ public:
             ~nlist_64_t();
 
         private:
+            bool f_name;
+            std::string m_name;
+            bool n_name;
+
+        public:
+            bool _is_null_name() { name(); return n_name; };
+
+        private:
+
+        public:
+            std::string name();
+
+        private:
             uint32_t m_un;
             uint8_t m_type;
             uint8_t m_sect;
@@ -2715,12 +2881,62 @@ public:
             mach_o_t::symtab_command_t* _parent() const { return m__parent; }
         };
 
+        class nlist_t : public kaitai::kstruct {
+
+        public:
+
+            nlist_t(kaitai::kstream* p__io, mach_o_t::symtab_command_t* p__parent = 0, mach_o_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~nlist_t();
+
+        private:
+            bool f_name;
+            std::string m_name;
+            bool n_name;
+
+        public:
+            bool _is_null_name() { name(); return n_name; };
+
+        private:
+
+        public:
+            std::string name();
+
+        private:
+            uint32_t m_un;
+            uint8_t m_type;
+            uint8_t m_sect;
+            uint16_t m_desc;
+            uint32_t m_value;
+            mach_o_t* m__root;
+            mach_o_t::symtab_command_t* m__parent;
+
+        public:
+            uint32_t un() const { return m_un; }
+            uint8_t type() const { return m_type; }
+            uint8_t sect() const { return m_sect; }
+            uint16_t desc() const { return m_desc; }
+            uint32_t value() const { return m_value; }
+            mach_o_t* _root() const { return m__root; }
+            mach_o_t::symtab_command_t* _parent() const { return m__parent; }
+        };
+
     private:
         bool f_symbols;
-        std::vector<nlist_64_t*>* m_symbols;
+        std::vector<kaitai::kstruct*>* m_symbols;
+        bool n_symbols;
 
     public:
-        std::vector<nlist_64_t*>* symbols();
+        bool _is_null_symbols() { symbols(); return n_symbols; };
+
+    private:
+
+    public:
+        std::vector<kaitai::kstruct*>* symbols();
 
     private:
         bool f_strs;

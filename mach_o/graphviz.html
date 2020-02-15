@@ -542,6 +542,30 @@ expr__seq_data_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot
 				&lt;/TABLE&gt;&gt;];
 			}
 		}
+		subgraph cluster__build_version_command {
+			label=&quot;MachO::BuildVersionCommand&quot;;
+			graph[style=dotted];
+
+			build_version_command__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;platform_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;platform_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;platform_type&quot;&gt;platform&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;minos_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;minos_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;minos_type&quot;&gt;minos&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;sdk_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;sdk_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;sdk_type&quot;&gt;sdk&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;ntools_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;ntools_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;ntools_type&quot;&gt;ntools&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;tools_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;tools_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;BuildToolVersion&lt;/TD&gt;&lt;TD PORT=&quot;tools_type&quot;&gt;tools&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;tools__repeat&quot;&gt;repeat ntools times&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			subgraph cluster__build_tool_version {
+				label=&quot;MachO::BuildVersionCommand::BuildToolVersion&quot;;
+				graph[style=dotted];
+
+				build_tool_version__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;tool_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;tool_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;tool_type&quot;&gt;tool&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;version_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;version_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;version_type&quot;&gt;version&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+			}
+		}
 		subgraph cluster__routines_command {
 			label=&quot;MachO::RoutinesCommand&quot;;
 			graph[style=dotted];
@@ -1138,6 +1162,48 @@ eh_frame_item__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBOR
 				&lt;TR&gt;&lt;TD PORT=&quot;name_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;name_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(utf-8)&lt;/TD&gt;&lt;TD PORT=&quot;name_type&quot;&gt;name&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
+		subgraph cluster__segment_command {
+			label=&quot;MachO::SegmentCommand&quot;;
+			graph[style=dotted];
+
+			segment_command__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;segname_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;segname_size&quot;&gt;16&lt;/TD&gt;&lt;TD&gt;str(ascii)&lt;/TD&gt;&lt;TD PORT=&quot;segname_type&quot;&gt;segname&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vmaddr_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;vmaddr_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;vmaddr_type&quot;&gt;vmaddr&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vmsize_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;vmsize_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;vmsize_type&quot;&gt;vmsize&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;fileoff_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;fileoff_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;fileoff_type&quot;&gt;fileoff&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;filesize_pos&quot;&gt;28&lt;/TD&gt;&lt;TD PORT=&quot;filesize_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;filesize_type&quot;&gt;filesize&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;maxprot_pos&quot;&gt;32&lt;/TD&gt;&lt;TD PORT=&quot;maxprot_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;VmProt&lt;/TD&gt;&lt;TD PORT=&quot;maxprot_type&quot;&gt;maxprot&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;initprot_pos&quot;&gt;36&lt;/TD&gt;&lt;TD PORT=&quot;initprot_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;VmProt&lt;/TD&gt;&lt;TD PORT=&quot;initprot_type&quot;&gt;initprot&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;nsects_pos&quot;&gt;40&lt;/TD&gt;&lt;TD PORT=&quot;nsects_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;nsects_type&quot;&gt;nsects&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;flags_pos&quot;&gt;44&lt;/TD&gt;&lt;TD PORT=&quot;flags_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;flags_type&quot;&gt;flags&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;sections_pos&quot;&gt;48&lt;/TD&gt;&lt;TD PORT=&quot;sections_size&quot;&gt;68&lt;/TD&gt;&lt;TD&gt;Section&lt;/TD&gt;&lt;TD PORT=&quot;sections_type&quot;&gt;sections&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;sections__repeat&quot;&gt;repeat nsects times&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			subgraph cluster__section {
+				label=&quot;MachO::SegmentCommand::Section&quot;;
+				graph[style=dotted];
+
+				section__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;sect_name_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;sect_name_size&quot;&gt;16&lt;/TD&gt;&lt;TD&gt;str(ascii)&lt;/TD&gt;&lt;TD PORT=&quot;sect_name_type&quot;&gt;sect_name&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;seg_name_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;seg_name_size&quot;&gt;16&lt;/TD&gt;&lt;TD&gt;str(ascii)&lt;/TD&gt;&lt;TD PORT=&quot;seg_name_type&quot;&gt;seg_name&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;addr_pos&quot;&gt;32&lt;/TD&gt;&lt;TD PORT=&quot;addr_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;addr_type&quot;&gt;addr&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;size_pos&quot;&gt;36&lt;/TD&gt;&lt;TD PORT=&quot;size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;size_type&quot;&gt;size&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;offset_pos&quot;&gt;40&lt;/TD&gt;&lt;TD PORT=&quot;offset_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;offset_type&quot;&gt;offset&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;align_pos&quot;&gt;44&lt;/TD&gt;&lt;TD PORT=&quot;align_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;align_type&quot;&gt;align&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;reloff_pos&quot;&gt;48&lt;/TD&gt;&lt;TD PORT=&quot;reloff_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;reloff_type&quot;&gt;reloff&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;nreloc_pos&quot;&gt;52&lt;/TD&gt;&lt;TD PORT=&quot;nreloc_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;nreloc_type&quot;&gt;nreloc&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;flags_pos&quot;&gt;56&lt;/TD&gt;&lt;TD PORT=&quot;flags_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;flags_type&quot;&gt;flags&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;reserved1_pos&quot;&gt;60&lt;/TD&gt;&lt;TD PORT=&quot;reserved1_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;reserved1_type&quot;&gt;reserved1&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;reserved2_pos&quot;&gt;64&lt;/TD&gt;&lt;TD PORT=&quot;reserved2_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;reserved2_type&quot;&gt;reserved2&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				section__inst__data [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;data_pos&quot;&gt;offset&lt;/TD&gt;&lt;TD PORT=&quot;data_size&quot;&gt;size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;data_type&quot;&gt;data&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+			}
+		}
 		subgraph cluster__lc_str {
 			label=&quot;MachO::LcStr&quot;;
 			graph[style=dotted];
@@ -1169,35 +1235,37 @@ load_command__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 	&lt;TR&gt;&lt;TD&gt;:load_command_type_load_dylinker&lt;/TD&gt;&lt;TD PORT=&quot;case6&quot;&gt;DylinkerCommand&lt;/TD&gt;&lt;/TR&gt;
 	&lt;TR&gt;&lt;TD&gt;:load_command_type_sub_framework&lt;/TD&gt;&lt;TD PORT=&quot;case7&quot;&gt;SubCommand&lt;/TD&gt;&lt;/TR&gt;
 	&lt;TR&gt;&lt;TD&gt;:load_command_type_load_weak_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case8&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_version_min_iphoneos&lt;/TD&gt;&lt;TD PORT=&quot;case9&quot;&gt;VersionMinCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_linker_optimization_hint&lt;/TD&gt;&lt;TD PORT=&quot;case10&quot;&gt;LinkeditDataCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_dyld_environment&lt;/TD&gt;&lt;TD PORT=&quot;case11&quot;&gt;DylinkerCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_load_upward_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case12&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_dylib_code_sign_drs&lt;/TD&gt;&lt;TD PORT=&quot;case13&quot;&gt;LinkeditDataCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_dyld_info&lt;/TD&gt;&lt;TD PORT=&quot;case14&quot;&gt;DyldInfoCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_reexport_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case15&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_symtab&lt;/TD&gt;&lt;TD PORT=&quot;case16&quot;&gt;SymtabCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_routines_64&lt;/TD&gt;&lt;TD PORT=&quot;case17&quot;&gt;RoutinesCommand64&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_id_dylinker&lt;/TD&gt;&lt;TD PORT=&quot;case18&quot;&gt;DylinkerCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_main&lt;/TD&gt;&lt;TD PORT=&quot;case19&quot;&gt;EntryPointCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_function_starts&lt;/TD&gt;&lt;TD PORT=&quot;case20&quot;&gt;LinkeditDataCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_version_min_macosx&lt;/TD&gt;&lt;TD PORT=&quot;case21&quot;&gt;VersionMinCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_data_in_code&lt;/TD&gt;&lt;TD PORT=&quot;case22&quot;&gt;LinkeditDataCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_version_min_watchos&lt;/TD&gt;&lt;TD PORT=&quot;case23&quot;&gt;VersionMinCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_encryption_info&lt;/TD&gt;&lt;TD PORT=&quot;case24&quot;&gt;EncryptionInfoCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_sub_umbrella&lt;/TD&gt;&lt;TD PORT=&quot;case25&quot;&gt;SubCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_linker_option&lt;/TD&gt;&lt;TD PORT=&quot;case26&quot;&gt;LinkerOptionCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_twolevel_hints&lt;/TD&gt;&lt;TD PORT=&quot;case27&quot;&gt;TwolevelHintsCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_uuid&lt;/TD&gt;&lt;TD PORT=&quot;case28&quot;&gt;UuidCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_dyld_info_only&lt;/TD&gt;&lt;TD PORT=&quot;case29&quot;&gt;DyldInfoCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_lazy_load_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case30&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_sub_client&lt;/TD&gt;&lt;TD PORT=&quot;case31&quot;&gt;SubCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_routines&lt;/TD&gt;&lt;TD PORT=&quot;case32&quot;&gt;RoutinesCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_code_signature&lt;/TD&gt;&lt;TD PORT=&quot;case33&quot;&gt;CodeSignatureCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_dysymtab&lt;/TD&gt;&lt;TD PORT=&quot;case34&quot;&gt;DysymtabCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_load_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case35&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_segment_64&lt;/TD&gt;&lt;TD PORT=&quot;case36&quot;&gt;SegmentCommand64&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:load_command_type_id_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case37&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_build_version&lt;/TD&gt;&lt;TD PORT=&quot;case9&quot;&gt;BuildVersionCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_version_min_iphoneos&lt;/TD&gt;&lt;TD PORT=&quot;case10&quot;&gt;VersionMinCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_linker_optimization_hint&lt;/TD&gt;&lt;TD PORT=&quot;case11&quot;&gt;LinkeditDataCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_dyld_environment&lt;/TD&gt;&lt;TD PORT=&quot;case12&quot;&gt;DylinkerCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_load_upward_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case13&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_dylib_code_sign_drs&lt;/TD&gt;&lt;TD PORT=&quot;case14&quot;&gt;LinkeditDataCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_dyld_info&lt;/TD&gt;&lt;TD PORT=&quot;case15&quot;&gt;DyldInfoCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_reexport_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case16&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_symtab&lt;/TD&gt;&lt;TD PORT=&quot;case17&quot;&gt;SymtabCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_routines_64&lt;/TD&gt;&lt;TD PORT=&quot;case18&quot;&gt;RoutinesCommand64&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_id_dylinker&lt;/TD&gt;&lt;TD PORT=&quot;case19&quot;&gt;DylinkerCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_main&lt;/TD&gt;&lt;TD PORT=&quot;case20&quot;&gt;EntryPointCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_function_starts&lt;/TD&gt;&lt;TD PORT=&quot;case21&quot;&gt;LinkeditDataCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_version_min_macosx&lt;/TD&gt;&lt;TD PORT=&quot;case22&quot;&gt;VersionMinCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_data_in_code&lt;/TD&gt;&lt;TD PORT=&quot;case23&quot;&gt;LinkeditDataCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_version_min_watchos&lt;/TD&gt;&lt;TD PORT=&quot;case24&quot;&gt;VersionMinCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_encryption_info&lt;/TD&gt;&lt;TD PORT=&quot;case25&quot;&gt;EncryptionInfoCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_sub_umbrella&lt;/TD&gt;&lt;TD PORT=&quot;case26&quot;&gt;SubCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_linker_option&lt;/TD&gt;&lt;TD PORT=&quot;case27&quot;&gt;LinkerOptionCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_twolevel_hints&lt;/TD&gt;&lt;TD PORT=&quot;case28&quot;&gt;TwolevelHintsCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_uuid&lt;/TD&gt;&lt;TD PORT=&quot;case29&quot;&gt;UuidCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_dyld_info_only&lt;/TD&gt;&lt;TD PORT=&quot;case30&quot;&gt;DyldInfoCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_lazy_load_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case31&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_sub_client&lt;/TD&gt;&lt;TD PORT=&quot;case32&quot;&gt;SubCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_segment&lt;/TD&gt;&lt;TD PORT=&quot;case33&quot;&gt;SegmentCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_routines&lt;/TD&gt;&lt;TD PORT=&quot;case34&quot;&gt;RoutinesCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_code_signature&lt;/TD&gt;&lt;TD PORT=&quot;case35&quot;&gt;CodeSignatureCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_dysymtab&lt;/TD&gt;&lt;TD PORT=&quot;case36&quot;&gt;DysymtabCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_load_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case37&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_segment_64&lt;/TD&gt;&lt;TD PORT=&quot;case38&quot;&gt;SegmentCommand64&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:load_command_type_id_dylib&lt;/TD&gt;&lt;TD PORT=&quot;case39&quot;&gt;DylibCommand&lt;/TD&gt;&lt;/TR&gt;
 &lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__uuid_command {
@@ -1222,13 +1290,20 @@ load_command__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 			&lt;/TABLE&gt;&gt;];
 			symtab_command__inst__symbols [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;symbols_pos&quot;&gt;sym_off&lt;/TD&gt;&lt;TD PORT=&quot;symbols_size&quot;&gt;16&lt;/TD&gt;&lt;TD&gt;Nlist64&lt;/TD&gt;&lt;TD PORT=&quot;symbols_type&quot;&gt;symbols&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;symbols_pos&quot;&gt;sym_off&lt;/TD&gt;&lt;TD PORT=&quot;symbols_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_root.magic)&lt;/TD&gt;&lt;TD PORT=&quot;symbols_type&quot;&gt;symbols&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;symbols__repeat&quot;&gt;repeat n_syms times&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 			symtab_command__inst__strs [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;strs_pos&quot;&gt;str_off&lt;/TD&gt;&lt;TD PORT=&quot;strs_size&quot;&gt;str_size&lt;/TD&gt;&lt;TD&gt;StrTable&lt;/TD&gt;&lt;TD PORT=&quot;strs_type&quot;&gt;strs&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
+symtab_command__inst__symbols_symbols_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:magic_type_macho_le_x64&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;Nlist64&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:magic_type_macho_be_x64&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;Nlist64&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:magic_type_macho_le_x86&lt;/TD&gt;&lt;TD PORT=&quot;case2&quot;&gt;Nlist&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:magic_type_macho_be_x86&lt;/TD&gt;&lt;TD PORT=&quot;case3&quot;&gt;Nlist&lt;/TD&gt;&lt;/TR&gt;
+&lt;/TABLE&gt;&gt;];
 			subgraph cluster__str_table {
 				label=&quot;MachO::SymtabCommand::StrTable&quot;;
 				graph[style=dotted];
@@ -1236,7 +1311,7 @@ load_command__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 				str_table__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;unknown_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;unknown_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;unknown_type&quot;&gt;unknown&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;items_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;items_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(ascii)&lt;/TD&gt;&lt;TD PORT=&quot;items_type&quot;&gt;items&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;items_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;items_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(ignore EOS, utf-8)&lt;/TD&gt;&lt;TD PORT=&quot;items_type&quot;&gt;items&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;items__repeat&quot;&gt;repeat until _ == &amp;quot;&amp;quot;&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
 			}
@@ -1251,6 +1326,27 @@ load_command__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 					&lt;TR&gt;&lt;TD PORT=&quot;sect_pos&quot;&gt;5&lt;/TD&gt;&lt;TD PORT=&quot;sect_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;sect_type&quot;&gt;sect&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;desc_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;desc_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;desc_type&quot;&gt;desc&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;value_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;value_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;u8le&lt;/TD&gt;&lt;TD PORT=&quot;value_type&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				nlist_64__inst__name [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;name_pos&quot;&gt;(_parent.str_off + un)&lt;/TD&gt;&lt;TD PORT=&quot;name_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(utf-8)&lt;/TD&gt;&lt;TD PORT=&quot;name_type&quot;&gt;name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+			}
+			subgraph cluster__nlist {
+				label=&quot;MachO::SymtabCommand::Nlist&quot;;
+				graph[style=dotted];
+
+				nlist__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;un_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;un_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;un_type&quot;&gt;un&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;type_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;type_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;type_type&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;sect_pos&quot;&gt;5&lt;/TD&gt;&lt;TD PORT=&quot;sect_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;sect_type&quot;&gt;sect&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;desc_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;desc_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;desc_type&quot;&gt;desc&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;value_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;value_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;value_type&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				nlist__inst__name [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;name_pos&quot;&gt;(_parent.str_off + un)&lt;/TD&gt;&lt;TD PORT=&quot;name_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(utf-8)&lt;/TD&gt;&lt;TD PORT=&quot;name_type&quot;&gt;name&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
 			}
 		}
@@ -1355,6 +1451,8 @@ load_command__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 	requirements__seq:count_type -&gt; requirements__seq:items__repeat [color=&quot;#404040&quot;];
 	requirements_blob_index__seq:offset_type -&gt; requirements_blob_index__inst__value:value_pos [color=&quot;#404040&quot;];
 	requirements_blob_index__inst__value:value_type -&gt; cs_blob__seq [style=bold];
+	build_version_command__seq:tools_type -&gt; build_tool_version__seq [style=bold];
+	build_version_command__seq:ntools_type -&gt; build_version_command__seq:tools__repeat [color=&quot;#404040&quot;];
 	macho_flags__params:value_type -&gt; macho_flags__inst__subsections_via_symbols [color=&quot;#404040&quot;];
 	macho_flags__params:value_type -&gt; macho_flags__inst__dead_strippable_dylib [color=&quot;#404040&quot;];
 	macho_flags__params:value_type -&gt; macho_flags__inst__weak_defines [color=&quot;#404040&quot;];
@@ -1457,6 +1555,12 @@ load_command__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 	bind_item__inst__opcode:opcode_type -&gt; bind_data__seq:items__repeat [color=&quot;#404040&quot;];
 	lazy_bind_data__seq:items_type -&gt; bind_item__seq [style=bold];
 	dylinker_command__seq:name_type -&gt; lc_str__seq [style=bold];
+	segment_command__seq:maxprot_type -&gt; vm_prot__seq [style=bold];
+	segment_command__seq:initprot_type -&gt; vm_prot__seq [style=bold];
+	segment_command__seq:sections_type -&gt; section__seq [style=bold];
+	segment_command__seq:nsects_type -&gt; segment_command__seq:sections__repeat [color=&quot;#404040&quot;];
+	section__seq:offset_type -&gt; section__inst__data:data_pos [color=&quot;#404040&quot;];
+	section__seq:size_type -&gt; section__inst__data:data_size [color=&quot;#404040&quot;];
 	load_command__seq:body_type -&gt; load_command__seq_body_switch [style=bold];
 	load_command__seq_body_switch:case0 -&gt; sub_command__seq [style=bold];
 	load_command__seq_body_switch:case1 -&gt; linkedit_data_command__seq [style=bold];
@@ -1467,42 +1571,53 @@ load_command__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 	load_command__seq_body_switch:case6 -&gt; dylinker_command__seq [style=bold];
 	load_command__seq_body_switch:case7 -&gt; sub_command__seq [style=bold];
 	load_command__seq_body_switch:case8 -&gt; dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case9 -&gt; version_min_command__seq [style=bold];
-	load_command__seq_body_switch:case10 -&gt; linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case11 -&gt; dylinker_command__seq [style=bold];
-	load_command__seq_body_switch:case12 -&gt; dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case13 -&gt; linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case14 -&gt; dyld_info_command__seq [style=bold];
-	load_command__seq_body_switch:case15 -&gt; dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case16 -&gt; symtab_command__seq [style=bold];
-	load_command__seq_body_switch:case17 -&gt; routines_command_64__seq [style=bold];
-	load_command__seq_body_switch:case18 -&gt; dylinker_command__seq [style=bold];
-	load_command__seq_body_switch:case19 -&gt; entry_point_command__seq [style=bold];
-	load_command__seq_body_switch:case20 -&gt; linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case21 -&gt; version_min_command__seq [style=bold];
-	load_command__seq_body_switch:case22 -&gt; linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case23 -&gt; version_min_command__seq [style=bold];
-	load_command__seq_body_switch:case24 -&gt; encryption_info_command__seq [style=bold];
-	load_command__seq_body_switch:case25 -&gt; sub_command__seq [style=bold];
-	load_command__seq_body_switch:case26 -&gt; linker_option_command__seq [style=bold];
-	load_command__seq_body_switch:case27 -&gt; twolevel_hints_command__seq [style=bold];
-	load_command__seq_body_switch:case28 -&gt; uuid_command__seq [style=bold];
-	load_command__seq_body_switch:case29 -&gt; dyld_info_command__seq [style=bold];
-	load_command__seq_body_switch:case30 -&gt; dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case31 -&gt; sub_command__seq [style=bold];
-	load_command__seq_body_switch:case32 -&gt; routines_command__seq [style=bold];
-	load_command__seq_body_switch:case33 -&gt; code_signature_command__seq [style=bold];
-	load_command__seq_body_switch:case34 -&gt; dysymtab_command__seq [style=bold];
-	load_command__seq_body_switch:case35 -&gt; dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case36 -&gt; segment_command_64__seq [style=bold];
+	load_command__seq_body_switch:case9 -&gt; build_version_command__seq [style=bold];
+	load_command__seq_body_switch:case10 -&gt; version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case11 -&gt; linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case12 -&gt; dylinker_command__seq [style=bold];
+	load_command__seq_body_switch:case13 -&gt; dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case14 -&gt; linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case15 -&gt; dyld_info_command__seq [style=bold];
+	load_command__seq_body_switch:case16 -&gt; dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case17 -&gt; symtab_command__seq [style=bold];
+	load_command__seq_body_switch:case18 -&gt; routines_command_64__seq [style=bold];
+	load_command__seq_body_switch:case19 -&gt; dylinker_command__seq [style=bold];
+	load_command__seq_body_switch:case20 -&gt; entry_point_command__seq [style=bold];
+	load_command__seq_body_switch:case21 -&gt; linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case22 -&gt; version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case23 -&gt; linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case24 -&gt; version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case25 -&gt; encryption_info_command__seq [style=bold];
+	load_command__seq_body_switch:case26 -&gt; sub_command__seq [style=bold];
+	load_command__seq_body_switch:case27 -&gt; linker_option_command__seq [style=bold];
+	load_command__seq_body_switch:case28 -&gt; twolevel_hints_command__seq [style=bold];
+	load_command__seq_body_switch:case29 -&gt; uuid_command__seq [style=bold];
+	load_command__seq_body_switch:case30 -&gt; dyld_info_command__seq [style=bold];
+	load_command__seq_body_switch:case31 -&gt; dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case32 -&gt; sub_command__seq [style=bold];
+	load_command__seq_body_switch:case33 -&gt; segment_command__seq [style=bold];
+	load_command__seq_body_switch:case34 -&gt; routines_command__seq [style=bold];
+	load_command__seq_body_switch:case35 -&gt; code_signature_command__seq [style=bold];
+	load_command__seq_body_switch:case36 -&gt; dysymtab_command__seq [style=bold];
 	load_command__seq_body_switch:case37 -&gt; dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case38 -&gt; segment_command_64__seq [style=bold];
+	load_command__seq_body_switch:case39 -&gt; dylib_command__seq [style=bold];
 	load_command__seq:type_type -&gt; load_command__seq:body_type [color=&quot;#404040&quot;];
 	symtab_command__seq:sym_off_type -&gt; symtab_command__inst__symbols:symbols_pos [color=&quot;#404040&quot;];
-	symtab_command__inst__symbols:symbols_type -&gt; nlist_64__seq [style=bold];
+	symtab_command__inst__symbols:symbols_type -&gt; symtab_command__inst__symbols_symbols_switch [style=bold];
+	symtab_command__inst__symbols_symbols_switch:case0 -&gt; nlist_64__seq [style=bold];
+	symtab_command__inst__symbols_symbols_switch:case1 -&gt; nlist_64__seq [style=bold];
+	symtab_command__inst__symbols_symbols_switch:case2 -&gt; nlist__seq [style=bold];
+	symtab_command__inst__symbols_symbols_switch:case3 -&gt; nlist__seq [style=bold];
+	mach_o__seq:magic_type -&gt; symtab_command__inst__symbols:symbols_type [color=&quot;#404040&quot;];
 	symtab_command__seq:n_syms_type -&gt; symtab_command__inst__symbols:symbols__repeat [color=&quot;#404040&quot;];
 	symtab_command__seq:str_off_type -&gt; symtab_command__inst__strs:strs_pos [color=&quot;#404040&quot;];
 	symtab_command__seq:str_size_type -&gt; symtab_command__inst__strs:strs_size [color=&quot;#404040&quot;];
 	symtab_command__inst__strs:strs_type -&gt; str_table__seq [style=bold];
+	symtab_command__seq:str_off_type -&gt; nlist_64__inst__name:name_pos [color=&quot;#404040&quot;];
+	nlist_64__seq:un_type -&gt; nlist_64__inst__name:name_pos [color=&quot;#404040&quot;];
+	symtab_command__seq:str_off_type -&gt; nlist__inst__name:name_pos [color=&quot;#404040&quot;];
+	nlist__seq:un_type -&gt; nlist__inst__name:name_pos [color=&quot;#404040&quot;];
 	version_min_command__seq:version_type -&gt; version__seq [style=bold];
 	version_min_command__seq:sdk_type -&gt; version__seq [style=bold];
 }

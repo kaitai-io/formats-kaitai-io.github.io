@@ -731,6 +731,46 @@ mach_o_t::cs_blob_t* mach_o_t::cs_blob_t::requirements_blob_index_t::value() {
     return m_value;
 }
 
+mach_o_t::build_version_command_t::build_version_command_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void mach_o_t::build_version_command_t::_read() {
+    m_platform = m__io->read_u4le();
+    m_minos = m__io->read_u4le();
+    m_sdk = m__io->read_u4le();
+    m_ntools = m__io->read_u4le();
+    int l_tools = ntools();
+    m_tools = new std::vector<build_tool_version_t*>();
+    m_tools->reserve(l_tools);
+    for (int i = 0; i < l_tools; i++) {
+        m_tools->push_back(new build_tool_version_t(m__io, this, m__root));
+    }
+}
+
+mach_o_t::build_version_command_t::~build_version_command_t() {
+    for (std::vector<build_tool_version_t*>::iterator it = m_tools->begin(); it != m_tools->end(); ++it) {
+        delete *it;
+    }
+    delete m_tools;
+}
+
+mach_o_t::build_version_command_t::build_tool_version_t::build_tool_version_t(kaitai::kstream* p__io, mach_o_t::build_version_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void mach_o_t::build_version_command_t::build_tool_version_t::_read() {
+    m_tool = m__io->read_u4le();
+    m_version = m__io->read_u4le();
+}
+
+mach_o_t::build_version_command_t::build_tool_version_t::~build_tool_version_t() {
+}
+
 mach_o_t::routines_command_t::routines_command_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -1429,7 +1469,7 @@ kaitai::kstruct* mach_o_t::segment_command_64_t::section_64_t::data() {
     return m_data;
 }
 
-mach_o_t::vm_prot_t::vm_prot_t(kaitai::kstream* p__io, mach_o_t::segment_command_64_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+mach_o_t::vm_prot_t::vm_prot_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     _read();
@@ -2013,6 +2053,77 @@ void mach_o_t::dylib_command_t::_read() {
 mach_o_t::dylib_command_t::~dylib_command_t() {
 }
 
+mach_o_t::segment_command_t::segment_command_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void mach_o_t::segment_command_t::_read() {
+    m_segname = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(16), 0), std::string("ascii"));
+    m_vmaddr = m__io->read_u4le();
+    m_vmsize = m__io->read_u4le();
+    m_fileoff = m__io->read_u4le();
+    m_filesize = m__io->read_u4le();
+    m_maxprot = new vm_prot_t(m__io, this, m__root);
+    m_initprot = new vm_prot_t(m__io, this, m__root);
+    m_nsects = m__io->read_u4le();
+    m_flags = m__io->read_u4le();
+    int l_sections = nsects();
+    m_sections = new std::vector<section_t*>();
+    m_sections->reserve(l_sections);
+    for (int i = 0; i < l_sections; i++) {
+        m_sections->push_back(new section_t(m__io, this, m__root));
+    }
+}
+
+mach_o_t::segment_command_t::~segment_command_t() {
+    delete m_maxprot;
+    delete m_initprot;
+    for (std::vector<section_t*>::iterator it = m_sections->begin(); it != m_sections->end(); ++it) {
+        delete *it;
+    }
+    delete m_sections;
+}
+
+mach_o_t::segment_command_t::section_t::section_t(kaitai::kstream* p__io, mach_o_t::segment_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_data = false;
+    _read();
+}
+
+void mach_o_t::segment_command_t::section_t::_read() {
+    m_sect_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(16), 0), std::string("ascii"));
+    m_seg_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(16), 0), std::string("ascii"));
+    m_addr = m__io->read_u4le();
+    m_size = m__io->read_u4le();
+    m_offset = m__io->read_u4le();
+    m_align = m__io->read_u4le();
+    m_reloff = m__io->read_u4le();
+    m_nreloc = m__io->read_u4le();
+    m_flags = m__io->read_u4le();
+    m_reserved1 = m__io->read_u4le();
+    m_reserved2 = m__io->read_u4le();
+}
+
+mach_o_t::segment_command_t::section_t::~section_t() {
+    if (f_data) {
+    }
+}
+
+std::string mach_o_t::segment_command_t::section_t::data() {
+    if (f_data)
+        return m_data;
+    kaitai::kstream *io = _root()->_io();
+    std::streampos _pos = io->pos();
+    io->seek(offset());
+    m_data = io->read_bytes(size());
+    io->seek(_pos);
+    f_data = true;
+    return m_data;
+}
+
 mach_o_t::lc_str_t::lc_str_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -2099,6 +2210,13 @@ void mach_o_t::load_command_t::_read() {
         m__raw_body = m__io->read_bytes((size() - 8));
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new dylib_command_t(m__io__raw_body, this, m__root);
+        break;
+    }
+    case LOAD_COMMAND_TYPE_BUILD_VERSION: {
+        n_body = false;
+        m__raw_body = m__io->read_bytes((size() - 8));
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new build_version_command_t(m__io__raw_body, this, m__root);
         break;
     }
     case LOAD_COMMAND_TYPE_VERSION_MIN_IPHONEOS: {
@@ -2262,6 +2380,13 @@ void mach_o_t::load_command_t::_read() {
         m_body = new sub_command_t(m__io__raw_body, this, m__root);
         break;
     }
+    case LOAD_COMMAND_TYPE_SEGMENT: {
+        n_body = false;
+        m__raw_body = m__io->read_bytes((size() - 8));
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new segment_command_t(m__io__raw_body, this, m__root);
+        break;
+    }
     case LOAD_COMMAND_TYPE_ROUTINES: {
         n_body = false;
         m__raw_body = m__io->read_bytes((size() - 8));
@@ -2347,8 +2472,8 @@ void mach_o_t::symtab_command_t::_read() {
 }
 
 mach_o_t::symtab_command_t::~symtab_command_t() {
-    if (f_symbols) {
-        for (std::vector<nlist_64_t*>::iterator it = m_symbols->begin(); it != m_symbols->end(); ++it) {
+    if (f_symbols && !n_symbols) {
+        for (std::vector<kaitai::kstruct*>::iterator it = m_symbols->begin(); it != m_symbols->end(); ++it) {
             delete *it;
         }
         delete m_symbols;
@@ -2372,7 +2497,7 @@ void mach_o_t::symtab_command_t::str_table_t::_read() {
         int i = 0;
         std::string _;
         do {
-            _ = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ascii"));
+            _ = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, false), std::string("utf-8"));
             m_items->push_back(_);
             i++;
         } while (!(_ == (std::string(""))));
@@ -2386,6 +2511,7 @@ mach_o_t::symtab_command_t::str_table_t::~str_table_t() {
 mach_o_t::symtab_command_t::nlist_64_t::nlist_64_t(kaitai::kstream* p__io, mach_o_t::symtab_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_name = false;
     _read();
 }
 
@@ -2398,19 +2524,93 @@ void mach_o_t::symtab_command_t::nlist_64_t::_read() {
 }
 
 mach_o_t::symtab_command_t::nlist_64_t::~nlist_64_t() {
+    if (f_name && !n_name) {
+    }
 }
 
-std::vector<mach_o_t::symtab_command_t::nlist_64_t*>* mach_o_t::symtab_command_t::symbols() {
+std::string mach_o_t::symtab_command_t::nlist_64_t::name() {
+    if (f_name)
+        return m_name;
+    n_name = true;
+    if (un() != 0) {
+        n_name = false;
+        std::streampos _pos = m__io->pos();
+        m__io->seek((_parent()->str_off() + un()));
+        m_name = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("utf-8"));
+        m__io->seek(_pos);
+    }
+    f_name = true;
+    return m_name;
+}
+
+mach_o_t::symtab_command_t::nlist_t::nlist_t(kaitai::kstream* p__io, mach_o_t::symtab_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_name = false;
+    _read();
+}
+
+void mach_o_t::symtab_command_t::nlist_t::_read() {
+    m_un = m__io->read_u4le();
+    m_type = m__io->read_u1();
+    m_sect = m__io->read_u1();
+    m_desc = m__io->read_u2le();
+    m_value = m__io->read_u4le();
+}
+
+mach_o_t::symtab_command_t::nlist_t::~nlist_t() {
+    if (f_name && !n_name) {
+    }
+}
+
+std::string mach_o_t::symtab_command_t::nlist_t::name() {
+    if (f_name)
+        return m_name;
+    n_name = true;
+    if (un() != 0) {
+        n_name = false;
+        std::streampos _pos = m__io->pos();
+        m__io->seek((_parent()->str_off() + un()));
+        m_name = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("utf-8"));
+        m__io->seek(_pos);
+    }
+    f_name = true;
+    return m_name;
+}
+
+std::vector<kaitai::kstruct*>* mach_o_t::symtab_command_t::symbols() {
     if (f_symbols)
         return m_symbols;
     kaitai::kstream *io = _root()->_io();
     std::streampos _pos = io->pos();
     io->seek(sym_off());
     int l_symbols = n_syms();
-    m_symbols = new std::vector<nlist_64_t*>();
+    m_symbols = new std::vector<kaitai::kstruct*>();
     m_symbols->reserve(l_symbols);
     for (int i = 0; i < l_symbols; i++) {
-        m_symbols->push_back(new nlist_64_t(io, this, m__root));
+        n_symbols = true;
+        switch (_root()->magic()) {
+        case MAGIC_TYPE_MACHO_LE_X64: {
+            n_symbols = false;
+            m_symbols->push_back(new nlist_64_t(io, this, m__root));
+            break;
+        }
+        case MAGIC_TYPE_MACHO_BE_X64: {
+            n_symbols = false;
+            m_symbols->push_back(new nlist_64_t(io, this, m__root));
+            break;
+        }
+        case MAGIC_TYPE_MACHO_LE_X86: {
+            n_symbols = false;
+            m_symbols->push_back(new nlist_t(io, this, m__root));
+            break;
+        }
+        case MAGIC_TYPE_MACHO_BE_X86: {
+            n_symbols = false;
+            m_symbols->push_back(new nlist_t(io, this, m__root));
+            break;
+        }
+        }
     }
     io->seek(_pos);
     f_symbols = true;

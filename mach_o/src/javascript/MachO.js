@@ -140,6 +140,7 @@ var MachO = (function() {
     LINKER_OPTIMIZATION_HINT: 46,
     VERSION_MIN_TVOS: 47,
     VERSION_MIN_WATCHOS: 48,
+    BUILD_VERSION: 50,
     REQ_DYLD: 2147483648,
     LOAD_WEAK_DYLIB: 2147483672,
     RPATH: 2147483676,
@@ -191,6 +192,7 @@ var MachO = (function() {
     46: "LINKER_OPTIMIZATION_HINT",
     47: "VERSION_MIN_TVOS",
     48: "VERSION_MIN_WATCHOS",
+    50: "BUILD_VERSION",
     2147483648: "REQ_DYLD",
     2147483672: "LOAD_WEAK_DYLIB",
     2147483676: "RPATH",
@@ -935,6 +937,44 @@ var MachO = (function() {
     })();
 
     return CsBlob;
+  })();
+
+  var BuildVersionCommand = MachO.BuildVersionCommand = (function() {
+    function BuildVersionCommand(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    BuildVersionCommand.prototype._read = function() {
+      this.platform = this._io.readU4le();
+      this.minos = this._io.readU4le();
+      this.sdk = this._io.readU4le();
+      this.ntools = this._io.readU4le();
+      this.tools = new Array(this.ntools);
+      for (var i = 0; i < this.ntools; i++) {
+        this.tools[i] = new BuildToolVersion(this._io, this, this._root);
+      }
+    }
+
+    var BuildToolVersion = BuildVersionCommand.BuildToolVersion = (function() {
+      function BuildToolVersion(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      BuildToolVersion.prototype._read = function() {
+        this.tool = this._io.readU4le();
+        this.version = this._io.readU4le();
+      }
+
+      return BuildToolVersion;
+    })();
+
+    return BuildVersionCommand;
   })();
 
   var RoutinesCommand = MachO.RoutinesCommand = (function() {
@@ -2247,6 +2287,70 @@ var MachO = (function() {
     return DylibCommand;
   })();
 
+  var SegmentCommand = MachO.SegmentCommand = (function() {
+    function SegmentCommand(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    SegmentCommand.prototype._read = function() {
+      this.segname = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(16), 0), "ascii");
+      this.vmaddr = this._io.readU4le();
+      this.vmsize = this._io.readU4le();
+      this.fileoff = this._io.readU4le();
+      this.filesize = this._io.readU4le();
+      this.maxprot = new VmProt(this._io, this, this._root);
+      this.initprot = new VmProt(this._io, this, this._root);
+      this.nsects = this._io.readU4le();
+      this.flags = this._io.readU4le();
+      this.sections = new Array(this.nsects);
+      for (var i = 0; i < this.nsects; i++) {
+        this.sections[i] = new Section(this._io, this, this._root);
+      }
+    }
+
+    var Section = SegmentCommand.Section = (function() {
+      function Section(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      Section.prototype._read = function() {
+        this.sectName = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(16), 0), "ascii");
+        this.segName = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(16), 0), "ascii");
+        this.addr = this._io.readU4le();
+        this.size = this._io.readU4le();
+        this.offset = this._io.readU4le();
+        this.align = this._io.readU4le();
+        this.reloff = this._io.readU4le();
+        this.nreloc = this._io.readU4le();
+        this.flags = this._io.readU4le();
+        this.reserved1 = this._io.readU4le();
+        this.reserved2 = this._io.readU4le();
+      }
+      Object.defineProperty(Section.prototype, 'data', {
+        get: function() {
+          if (this._m_data !== undefined)
+            return this._m_data;
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.offset);
+          this._m_data = io.readBytes(this.size);
+          io.seek(_pos);
+          return this._m_data;
+        }
+      });
+
+      return Section;
+    })();
+
+    return SegmentCommand;
+  })();
+
   var LcStr = MachO.LcStr = (function() {
     function LcStr(_io, _parent, _root) {
       this._io = _io;
@@ -2319,6 +2423,11 @@ var MachO = (function() {
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new DylibCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.BUILD_VERSION:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new BuildVersionCommand(_io__raw_body, this, this._root);
         break;
       case MachO.LoadCommandType.VERSION_MIN_IPHONEOS:
         this._raw_body = this._io.readBytes((this.size - 8));
@@ -2435,6 +2544,11 @@ var MachO = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new SubCommand(_io__raw_body, this, this._root);
         break;
+      case MachO.LoadCommandType.SEGMENT:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SegmentCommand(_io__raw_body, this, this._root);
+        break;
       case MachO.LoadCommandType.ROUTINES:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -2517,7 +2631,7 @@ var MachO = (function() {
         this.items = []
         var i = 0;
         do {
-          var _ = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ascii");
+          var _ = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, false), "utf-8");
           this.items.push(_);
           i++;
         } while (!(_ == ""));
@@ -2541,8 +2655,53 @@ var MachO = (function() {
         this.desc = this._io.readU2le();
         this.value = this._io.readU8le();
       }
+      Object.defineProperty(Nlist64.prototype, 'name', {
+        get: function() {
+          if (this._m_name !== undefined)
+            return this._m_name;
+          if (this.un != 0) {
+            var _pos = this._io.pos;
+            this._io.seek((this._parent.strOff + this.un));
+            this._m_name = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "utf-8");
+            this._io.seek(_pos);
+          }
+          return this._m_name;
+        }
+      });
 
       return Nlist64;
+    })();
+
+    var Nlist = SymtabCommand.Nlist = (function() {
+      function Nlist(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      Nlist.prototype._read = function() {
+        this.un = this._io.readU4le();
+        this.type = this._io.readU1();
+        this.sect = this._io.readU1();
+        this.desc = this._io.readU2le();
+        this.value = this._io.readU4le();
+      }
+      Object.defineProperty(Nlist.prototype, 'name', {
+        get: function() {
+          if (this._m_name !== undefined)
+            return this._m_name;
+          if (this.un != 0) {
+            var _pos = this._io.pos;
+            this._io.seek((this._parent.strOff + this.un));
+            this._m_name = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "utf-8");
+            this._io.seek(_pos);
+          }
+          return this._m_name;
+        }
+      });
+
+      return Nlist;
     })();
     Object.defineProperty(SymtabCommand.prototype, 'symbols', {
       get: function() {
@@ -2553,7 +2712,20 @@ var MachO = (function() {
         io.seek(this.symOff);
         this._m_symbols = new Array(this.nSyms);
         for (var i = 0; i < this.nSyms; i++) {
-          this._m_symbols[i] = new Nlist64(io, this, this._root);
+          switch (this._root.magic) {
+          case MachO.MagicType.MACHO_LE_X64:
+            this._m_symbols[i] = new Nlist64(io, this, this._root);
+            break;
+          case MachO.MagicType.MACHO_BE_X64:
+            this._m_symbols[i] = new Nlist64(io, this, this._root);
+            break;
+          case MachO.MagicType.MACHO_LE_X86:
+            this._m_symbols[i] = new Nlist(io, this, this._root);
+            break;
+          case MachO.MagicType.MACHO_BE_X86:
+            this._m_symbols[i] = new Nlist(io, this, this._root);
+            break;
+          }
         }
         io.seek(_pos);
         return this._m_symbols;

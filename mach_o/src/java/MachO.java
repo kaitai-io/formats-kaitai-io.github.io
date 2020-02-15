@@ -134,6 +134,7 @@ public class MachO extends KaitaiStruct {
         LINKER_OPTIMIZATION_HINT(46),
         VERSION_MIN_TVOS(47),
         VERSION_MIN_WATCHOS(48),
+        BUILD_VERSION(50),
         REQ_DYLD(2147483648),
         LOAD_WEAK_DYLIB(2147483672),
         RPATH(2147483676),
@@ -145,7 +146,7 @@ public class MachO extends KaitaiStruct {
         private final long id;
         LoadCommandType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, LoadCommandType> byId = new HashMap<Long, LoadCommandType>(50);
+        private static final Map<Long, LoadCommandType> byId = new HashMap<Long, LoadCommandType>(51);
         static {
             for (LoadCommandType e : LoadCommandType.values())
                 byId.put(e.id(), e);
@@ -1356,6 +1357,82 @@ public class MachO extends KaitaiStruct {
         public KaitaiStruct _parent() { return _parent; }
         public byte[] _raw_body() { return _raw_body; }
     }
+    public static class BuildVersionCommand extends KaitaiStruct {
+        public static BuildVersionCommand fromFile(String fileName) throws IOException {
+            return new BuildVersionCommand(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BuildVersionCommand(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BuildVersionCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BuildVersionCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.platform = this._io.readU4le();
+            this.minos = this._io.readU4le();
+            this.sdk = this._io.readU4le();
+            this.ntools = this._io.readU4le();
+            tools = new ArrayList<BuildToolVersion>((int) (ntools()));
+            for (int i = 0; i < ntools(); i++) {
+                this.tools.add(new BuildToolVersion(this._io, this, _root));
+            }
+        }
+        public static class BuildToolVersion extends KaitaiStruct {
+            public static BuildToolVersion fromFile(String fileName) throws IOException {
+                return new BuildToolVersion(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public BuildToolVersion(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public BuildToolVersion(KaitaiStream _io, MachO.BuildVersionCommand _parent) {
+                this(_io, _parent, null);
+            }
+
+            public BuildToolVersion(KaitaiStream _io, MachO.BuildVersionCommand _parent, MachO _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.tool = this._io.readU4le();
+                this.version = this._io.readU4le();
+            }
+            private long tool;
+            private long version;
+            private MachO _root;
+            private MachO.BuildVersionCommand _parent;
+            public long tool() { return tool; }
+            public long version() { return version; }
+            public MachO _root() { return _root; }
+            public MachO.BuildVersionCommand _parent() { return _parent; }
+        }
+        private long platform;
+        private long minos;
+        private long sdk;
+        private long ntools;
+        private ArrayList<BuildToolVersion> tools;
+        private MachO _root;
+        private MachO.LoadCommand _parent;
+        public long platform() { return platform; }
+        public long minos() { return minos; }
+        public long sdk() { return sdk; }
+        public long ntools() { return ntools; }
+        public ArrayList<BuildToolVersion> tools() { return tools; }
+        public MachO _root() { return _root; }
+        public MachO.LoadCommand _parent() { return _parent; }
+    }
     public static class RoutinesCommand extends KaitaiStruct {
         public static RoutinesCommand fromFile(String fileName) throws IOException {
             return new RoutinesCommand(new ByteBufferKaitaiStream(fileName));
@@ -2384,11 +2461,11 @@ public class MachO extends KaitaiStruct {
             this(_io, null, null);
         }
 
-        public VmProt(KaitaiStream _io, MachO.SegmentCommand64 _parent) {
+        public VmProt(KaitaiStream _io, KaitaiStruct _parent) {
             this(_io, _parent, null);
         }
 
-        public VmProt(KaitaiStream _io, MachO.SegmentCommand64 _parent, MachO _root) {
+        public VmProt(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -2415,7 +2492,7 @@ public class MachO extends KaitaiStruct {
         private boolean read;
         private long reserved1;
         private MachO _root;
-        private MachO.SegmentCommand64 _parent;
+        private KaitaiStruct _parent;
 
         /**
          * Special marker to support execute-only protection.
@@ -2462,7 +2539,7 @@ public class MachO extends KaitaiStruct {
          */
         public long reserved1() { return reserved1; }
         public MachO _root() { return _root; }
-        public MachO.SegmentCommand64 _parent() { return _parent; }
+        public KaitaiStruct _parent() { return _parent; }
     }
     public static class DysymtabCommand extends KaitaiStruct {
         public static DysymtabCommand fromFile(String fileName) throws IOException {
@@ -3374,6 +3451,135 @@ public class MachO extends KaitaiStruct {
         public MachO _root() { return _root; }
         public MachO.LoadCommand _parent() { return _parent; }
     }
+    public static class SegmentCommand extends KaitaiStruct {
+        public static SegmentCommand fromFile(String fileName) throws IOException {
+            return new SegmentCommand(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public SegmentCommand(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SegmentCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SegmentCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.segname = new String(KaitaiStream.bytesStripRight(this._io.readBytes(16), (byte) 0), Charset.forName("ascii"));
+            this.vmaddr = this._io.readU4le();
+            this.vmsize = this._io.readU4le();
+            this.fileoff = this._io.readU4le();
+            this.filesize = this._io.readU4le();
+            this.maxprot = new VmProt(this._io, this, _root);
+            this.initprot = new VmProt(this._io, this, _root);
+            this.nsects = this._io.readU4le();
+            this.flags = this._io.readU4le();
+            sections = new ArrayList<Section>((int) (nsects()));
+            for (int i = 0; i < nsects(); i++) {
+                this.sections.add(new Section(this._io, this, _root));
+            }
+        }
+        public static class Section extends KaitaiStruct {
+            public static Section fromFile(String fileName) throws IOException {
+                return new Section(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Section(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Section(KaitaiStream _io, MachO.SegmentCommand _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Section(KaitaiStream _io, MachO.SegmentCommand _parent, MachO _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.sectName = new String(KaitaiStream.bytesStripRight(this._io.readBytes(16), (byte) 0), Charset.forName("ascii"));
+                this.segName = new String(KaitaiStream.bytesStripRight(this._io.readBytes(16), (byte) 0), Charset.forName("ascii"));
+                this.addr = this._io.readU4le();
+                this.size = this._io.readU4le();
+                this.offset = this._io.readU4le();
+                this.align = this._io.readU4le();
+                this.reloff = this._io.readU4le();
+                this.nreloc = this._io.readU4le();
+                this.flags = this._io.readU4le();
+                this.reserved1 = this._io.readU4le();
+                this.reserved2 = this._io.readU4le();
+            }
+            private byte[] data;
+            public byte[] data() {
+                if (this.data != null)
+                    return this.data;
+                KaitaiStream io = _root._io();
+                long _pos = io.pos();
+                io.seek(offset());
+                this.data = io.readBytes(size());
+                io.seek(_pos);
+                return this.data;
+            }
+            private String sectName;
+            private String segName;
+            private long addr;
+            private long size;
+            private long offset;
+            private long align;
+            private long reloff;
+            private long nreloc;
+            private long flags;
+            private long reserved1;
+            private long reserved2;
+            private MachO _root;
+            private MachO.SegmentCommand _parent;
+            public String sectName() { return sectName; }
+            public String segName() { return segName; }
+            public long addr() { return addr; }
+            public long size() { return size; }
+            public long offset() { return offset; }
+            public long align() { return align; }
+            public long reloff() { return reloff; }
+            public long nreloc() { return nreloc; }
+            public long flags() { return flags; }
+            public long reserved1() { return reserved1; }
+            public long reserved2() { return reserved2; }
+            public MachO _root() { return _root; }
+            public MachO.SegmentCommand _parent() { return _parent; }
+        }
+        private String segname;
+        private long vmaddr;
+        private long vmsize;
+        private long fileoff;
+        private long filesize;
+        private VmProt maxprot;
+        private VmProt initprot;
+        private long nsects;
+        private long flags;
+        private ArrayList<Section> sections;
+        private MachO _root;
+        private MachO.LoadCommand _parent;
+        public String segname() { return segname; }
+        public long vmaddr() { return vmaddr; }
+        public long vmsize() { return vmsize; }
+        public long fileoff() { return fileoff; }
+        public long filesize() { return filesize; }
+        public VmProt maxprot() { return maxprot; }
+        public VmProt initprot() { return initprot; }
+        public long nsects() { return nsects; }
+        public long flags() { return flags; }
+        public ArrayList<Section> sections() { return sections; }
+        public MachO _root() { return _root; }
+        public MachO.LoadCommand _parent() { return _parent; }
+    }
     public static class LcStr extends KaitaiStruct {
         public static LcStr fromFile(String fileName) throws IOException {
             return new LcStr(new ByteBufferKaitaiStream(fileName));
@@ -3481,6 +3687,12 @@ public class MachO extends KaitaiStruct {
                 this._raw_body = this._io.readBytes((size() - 8));
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new DylibCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case BUILD_VERSION: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new BuildVersionCommand(_io__raw_body, this, _root);
                 break;
             }
             case VERSION_MIN_IPHONEOS: {
@@ -3621,6 +3833,12 @@ public class MachO extends KaitaiStruct {
                 this.body = new SubCommand(_io__raw_body, this, _root);
                 break;
             }
+            case SEGMENT: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new SegmentCommand(_io__raw_body, this, _root);
+                break;
+            }
             case ROUTINES: {
                 this._raw_body = this._io.readBytes((size() - 8));
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
@@ -3756,7 +3974,7 @@ public class MachO extends KaitaiStruct {
                     String _it;
                     int i = 0;
                     do {
-                        _it = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ascii"));
+                        _it = new String(this._io.readBytesTerm(0, false, true, false), Charset.forName("utf-8"));
                         this.items.add(_it);
                         i++;
                     } while (!(_it.equals("")));
@@ -3797,6 +4015,18 @@ public class MachO extends KaitaiStruct {
                 this.desc = this._io.readU2le();
                 this.value = this._io.readU8le();
             }
+            private String name;
+            public String name() {
+                if (this.name != null)
+                    return this.name;
+                if (un() != 0) {
+                    long _pos = this._io.pos();
+                    this._io.seek((_parent().strOff() + un()));
+                    this.name = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("utf-8"));
+                    this._io.seek(_pos);
+                }
+                return this.name;
+            }
             private long un;
             private int type;
             private int sect;
@@ -3812,16 +4042,86 @@ public class MachO extends KaitaiStruct {
             public MachO _root() { return _root; }
             public MachO.SymtabCommand _parent() { return _parent; }
         }
-        private ArrayList<Nlist64> symbols;
-        public ArrayList<Nlist64> symbols() {
+        public static class Nlist extends KaitaiStruct {
+            public static Nlist fromFile(String fileName) throws IOException {
+                return new Nlist(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Nlist(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Nlist(KaitaiStream _io, MachO.SymtabCommand _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Nlist(KaitaiStream _io, MachO.SymtabCommand _parent, MachO _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.un = this._io.readU4le();
+                this.type = this._io.readU1();
+                this.sect = this._io.readU1();
+                this.desc = this._io.readU2le();
+                this.value = this._io.readU4le();
+            }
+            private String name;
+            public String name() {
+                if (this.name != null)
+                    return this.name;
+                if (un() != 0) {
+                    long _pos = this._io.pos();
+                    this._io.seek((_parent().strOff() + un()));
+                    this.name = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("utf-8"));
+                    this._io.seek(_pos);
+                }
+                return this.name;
+            }
+            private long un;
+            private int type;
+            private int sect;
+            private int desc;
+            private long value;
+            private MachO _root;
+            private MachO.SymtabCommand _parent;
+            public long un() { return un; }
+            public int type() { return type; }
+            public int sect() { return sect; }
+            public int desc() { return desc; }
+            public long value() { return value; }
+            public MachO _root() { return _root; }
+            public MachO.SymtabCommand _parent() { return _parent; }
+        }
+        private ArrayList<KaitaiStruct> symbols;
+        public ArrayList<KaitaiStruct> symbols() {
             if (this.symbols != null)
                 return this.symbols;
             KaitaiStream io = _root._io();
             long _pos = io.pos();
             io.seek(symOff());
-            symbols = new ArrayList<Nlist64>((int) (nSyms()));
+            symbols = new ArrayList<KaitaiStruct>((int) (nSyms()));
             for (int i = 0; i < nSyms(); i++) {
-                this.symbols.add(new Nlist64(io, this, _root));
+                switch (_root.magic()) {
+                case MACHO_LE_X64: {
+                    this.symbols.add(new Nlist64(io, this, _root));
+                    break;
+                }
+                case MACHO_BE_X64: {
+                    this.symbols.add(new Nlist64(io, this, _root));
+                    break;
+                }
+                case MACHO_LE_X86: {
+                    this.symbols.add(new Nlist(io, this, _root));
+                    break;
+                }
+                case MACHO_BE_X86: {
+                    this.symbols.add(new Nlist(io, this, _root));
+                    break;
+                }
+                }
             }
             io.seek(_pos);
             return this.symbols;

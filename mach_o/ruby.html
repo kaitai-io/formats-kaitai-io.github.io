@@ -329,6 +329,7 @@ class MachO &lt; Kaitai::Struct::Struct
     46 =&gt; :load_command_type_linker_optimization_hint,
     47 =&gt; :load_command_type_version_min_tvos,
     48 =&gt; :load_command_type_version_min_watchos,
+    50 =&gt; :load_command_type_build_version,
     2147483648 =&gt; :load_command_type_req_dyld,
     2147483672 =&gt; :load_command_type_load_weak_dylib,
     2147483676 =&gt; :load_command_type_rpath,
@@ -952,6 +953,43 @@ class MachO &lt; Kaitai::Struct::Struct
     attr_reader :length
     attr_reader :body
     attr_reader :_raw_body
+  end
+  class BuildVersionCommand &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @platform = @_io.read_u4le
+      @minos = @_io.read_u4le
+      @sdk = @_io.read_u4le
+      @ntools = @_io.read_u4le
+      @tools = Array.new(ntools)
+      (ntools).times { |i|
+        @tools[i] = BuildToolVersion.new(@_io, self, @_root)
+      }
+      self
+    end
+    class BuildToolVersion &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @tool = @_io.read_u4le
+        @version = @_io.read_u4le
+        self
+      end
+      attr_reader :tool
+      attr_reader :version
+    end
+    attr_reader :platform
+    attr_reader :minos
+    attr_reader :sdk
+    attr_reader :ntools
+    attr_reader :tools
   end
   class RoutinesCommand &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -2078,6 +2116,80 @@ class MachO &lt; Kaitai::Struct::Struct
     attr_reader :compatibility_version
     attr_reader :name
   end
+  class SegmentCommand &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @segname = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(16), 0)).force_encoding(&quot;ascii&quot;)
+      @vmaddr = @_io.read_u4le
+      @vmsize = @_io.read_u4le
+      @fileoff = @_io.read_u4le
+      @filesize = @_io.read_u4le
+      @maxprot = VmProt.new(@_io, self, @_root)
+      @initprot = VmProt.new(@_io, self, @_root)
+      @nsects = @_io.read_u4le
+      @flags = @_io.read_u4le
+      @sections = Array.new(nsects)
+      (nsects).times { |i|
+        @sections[i] = Section.new(@_io, self, @_root)
+      }
+      self
+    end
+    class Section &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @sect_name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(16), 0)).force_encoding(&quot;ascii&quot;)
+        @seg_name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(16), 0)).force_encoding(&quot;ascii&quot;)
+        @addr = @_io.read_u4le
+        @size = @_io.read_u4le
+        @offset = @_io.read_u4le
+        @align = @_io.read_u4le
+        @reloff = @_io.read_u4le
+        @nreloc = @_io.read_u4le
+        @flags = @_io.read_u4le
+        @reserved1 = @_io.read_u4le
+        @reserved2 = @_io.read_u4le
+        self
+      end
+      def data
+        return @data unless @data.nil?
+        io = _root._io
+        _pos = io.pos
+        io.seek(offset)
+        @data = io.read_bytes(size)
+        io.seek(_pos)
+        @data
+      end
+      attr_reader :sect_name
+      attr_reader :seg_name
+      attr_reader :addr
+      attr_reader :size
+      attr_reader :offset
+      attr_reader :align
+      attr_reader :reloff
+      attr_reader :nreloc
+      attr_reader :flags
+      attr_reader :reserved1
+      attr_reader :reserved2
+    end
+    attr_reader :segname
+    attr_reader :vmaddr
+    attr_reader :vmsize
+    attr_reader :fileoff
+    attr_reader :filesize
+    attr_reader :maxprot
+    attr_reader :initprot
+    attr_reader :nsects
+    attr_reader :flags
+    attr_reader :sections
+  end
   class LcStr &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -2138,6 +2250,10 @@ class MachO &lt; Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = DylibCommand.new(io, self, @_root)
+      when :load_command_type_build_version
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = BuildVersionCommand.new(io, self, @_root)
       when :load_command_type_version_min_iphoneos
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
@@ -2230,6 +2346,10 @@ class MachO &lt; Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = SubCommand.new(io, self, @_root)
+      when :load_command_type_segment
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SegmentCommand.new(io, self, @_root)
       when :load_command_type_routines
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
@@ -2300,7 +2420,7 @@ class MachO &lt; Kaitai::Struct::Struct
         @items = []
         i = 0
         begin
-          _ = (@_io.read_bytes_term(0, false, true, true)).force_encoding(&quot;ascii&quot;)
+          _ = (@_io.read_bytes_term(0, false, true, false)).force_encoding(&quot;utf-8&quot;)
           @items &lt;&lt; _
           i += 1
         end until _ == &quot;&quot;
@@ -2323,6 +2443,46 @@ class MachO &lt; Kaitai::Struct::Struct
         @value = @_io.read_u8le
         self
       end
+      def name
+        return @name unless @name.nil?
+        if un != 0
+          _pos = @_io.pos
+          @_io.seek((_parent.str_off + un))
+          @name = (@_io.read_bytes_term(0, false, true, true)).force_encoding(&quot;utf-8&quot;)
+          @_io.seek(_pos)
+        end
+        @name
+      end
+      attr_reader :un
+      attr_reader :type
+      attr_reader :sect
+      attr_reader :desc
+      attr_reader :value
+    end
+    class Nlist &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @un = @_io.read_u4le
+        @type = @_io.read_u1
+        @sect = @_io.read_u1
+        @desc = @_io.read_u2le
+        @value = @_io.read_u4le
+        self
+      end
+      def name
+        return @name unless @name.nil?
+        if un != 0
+          _pos = @_io.pos
+          @_io.seek((_parent.str_off + un))
+          @name = (@_io.read_bytes_term(0, false, true, true)).force_encoding(&quot;utf-8&quot;)
+          @_io.seek(_pos)
+        end
+        @name
+      end
       attr_reader :un
       attr_reader :type
       attr_reader :sect
@@ -2336,7 +2496,16 @@ class MachO &lt; Kaitai::Struct::Struct
       io.seek(sym_off)
       @symbols = Array.new(n_syms)
       (n_syms).times { |i|
-        @symbols[i] = Nlist64.new(io, self, @_root)
+        case _root.magic
+        when :magic_type_macho_le_x64
+          @symbols[i] = Nlist64.new(io, self, @_root)
+        when :magic_type_macho_be_x64
+          @symbols[i] = Nlist64.new(io, self, @_root)
+        when :magic_type_macho_le_x86
+          @symbols[i] = Nlist.new(io, self, @_root)
+        when :magic_type_macho_be_x86
+          @symbols[i] = Nlist.new(io, self, @_root)
+        end
       }
       io.seek(_pos)
       @symbols

@@ -106,6 +106,7 @@ namespace Kaitai
             LinkerOptimizationHint = 46,
             VersionMinTvos = 47,
             VersionMinWatchos = 48,
+            BuildVersion = 50,
             ReqDyld = 2147483648,
             LoadWeakDylib = 2147483672,
             Rpath = 2147483676,
@@ -1182,6 +1183,73 @@ namespace Kaitai
             public MachO M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
+        }
+        public partial class BuildVersionCommand : KaitaiStruct
+        {
+            public static BuildVersionCommand FromFile(string fileName)
+            {
+                return new BuildVersionCommand(new KaitaiStream(fileName));
+            }
+
+            public BuildVersionCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _platform = m_io.ReadU4le();
+                _minos = m_io.ReadU4le();
+                _sdk = m_io.ReadU4le();
+                _ntools = m_io.ReadU4le();
+                _tools = new List<BuildToolVersion>((int) (Ntools));
+                for (var i = 0; i < Ntools; i++)
+                {
+                    _tools.Add(new BuildToolVersion(m_io, this, m_root));
+                }
+            }
+            public partial class BuildToolVersion : KaitaiStruct
+            {
+                public static BuildToolVersion FromFile(string fileName)
+                {
+                    return new BuildToolVersion(new KaitaiStream(fileName));
+                }
+
+                public BuildToolVersion(KaitaiStream p__io, MachO.BuildVersionCommand p__parent = null, MachO p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _tool = m_io.ReadU4le();
+                    _version = m_io.ReadU4le();
+                }
+                private uint _tool;
+                private uint _version;
+                private MachO m_root;
+                private MachO.BuildVersionCommand m_parent;
+                public uint Tool { get { return _tool; } }
+                public uint Version { get { return _version; } }
+                public MachO M_Root { get { return m_root; } }
+                public MachO.BuildVersionCommand M_Parent { get { return m_parent; } }
+            }
+            private uint _platform;
+            private uint _minos;
+            private uint _sdk;
+            private uint _ntools;
+            private List<BuildToolVersion> _tools;
+            private MachO m_root;
+            private MachO.LoadCommand m_parent;
+            public uint Platform { get { return _platform; } }
+            public uint Minos { get { return _minos; } }
+            public uint Sdk { get { return _sdk; } }
+            public uint Ntools { get { return _ntools; } }
+            public List<BuildToolVersion> Tools { get { return _tools; } }
+            public MachO M_Root { get { return m_root; } }
+            public MachO.LoadCommand M_Parent { get { return m_parent; } }
         }
         public partial class RoutinesCommand : KaitaiStruct
         {
@@ -2297,7 +2365,7 @@ namespace Kaitai
                 return new VmProt(new KaitaiStream(fileName));
             }
 
-            public VmProt(KaitaiStream p__io, MachO.SegmentCommand64 p__parent = null, MachO p__root = null) : base(p__io)
+            public VmProt(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -2325,7 +2393,7 @@ namespace Kaitai
             private bool _read;
             private ulong _reserved1;
             private MachO m_root;
-            private MachO.SegmentCommand64 m_parent;
+            private KaitaiStruct m_parent;
 
             /// <summary>
             /// Special marker to support execute-only protection.
@@ -2372,7 +2440,7 @@ namespace Kaitai
             /// </summary>
             public ulong Reserved1 { get { return _reserved1; } }
             public MachO M_Root { get { return m_root; } }
-            public MachO.SegmentCommand64 M_Parent { get { return m_parent; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         public partial class DysymtabCommand : KaitaiStruct
         {
@@ -3260,6 +3328,133 @@ namespace Kaitai
             public MachO M_Root { get { return m_root; } }
             public MachO.LoadCommand M_Parent { get { return m_parent; } }
         }
+        public partial class SegmentCommand : KaitaiStruct
+        {
+            public static SegmentCommand FromFile(string fileName)
+            {
+                return new SegmentCommand(new KaitaiStream(fileName));
+            }
+
+            public SegmentCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _segname = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(16), 0));
+                _vmaddr = m_io.ReadU4le();
+                _vmsize = m_io.ReadU4le();
+                _fileoff = m_io.ReadU4le();
+                _filesize = m_io.ReadU4le();
+                _maxprot = new VmProt(m_io, this, m_root);
+                _initprot = new VmProt(m_io, this, m_root);
+                _nsects = m_io.ReadU4le();
+                _flags = m_io.ReadU4le();
+                _sections = new List<Section>((int) (Nsects));
+                for (var i = 0; i < Nsects; i++)
+                {
+                    _sections.Add(new Section(m_io, this, m_root));
+                }
+            }
+            public partial class Section : KaitaiStruct
+            {
+                public static Section FromFile(string fileName)
+                {
+                    return new Section(new KaitaiStream(fileName));
+                }
+
+                public Section(KaitaiStream p__io, MachO.SegmentCommand p__parent = null, MachO p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    f_data = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    _sectName = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(16), 0));
+                    _segName = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(16), 0));
+                    _addr = m_io.ReadU4le();
+                    _size = m_io.ReadU4le();
+                    _offset = m_io.ReadU4le();
+                    _align = m_io.ReadU4le();
+                    _reloff = m_io.ReadU4le();
+                    _nreloc = m_io.ReadU4le();
+                    _flags = m_io.ReadU4le();
+                    _reserved1 = m_io.ReadU4le();
+                    _reserved2 = m_io.ReadU4le();
+                }
+                private bool f_data;
+                private byte[] _data;
+                public byte[] Data
+                {
+                    get
+                    {
+                        if (f_data)
+                            return _data;
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(Offset);
+                        _data = io.ReadBytes(Size);
+                        io.Seek(_pos);
+                        f_data = true;
+                        return _data;
+                    }
+                }
+                private string _sectName;
+                private string _segName;
+                private uint _addr;
+                private uint _size;
+                private uint _offset;
+                private uint _align;
+                private uint _reloff;
+                private uint _nreloc;
+                private uint _flags;
+                private uint _reserved1;
+                private uint _reserved2;
+                private MachO m_root;
+                private MachO.SegmentCommand m_parent;
+                public string SectName { get { return _sectName; } }
+                public string SegName { get { return _segName; } }
+                public uint Addr { get { return _addr; } }
+                public uint Size { get { return _size; } }
+                public uint Offset { get { return _offset; } }
+                public uint Align { get { return _align; } }
+                public uint Reloff { get { return _reloff; } }
+                public uint Nreloc { get { return _nreloc; } }
+                public uint Flags { get { return _flags; } }
+                public uint Reserved1 { get { return _reserved1; } }
+                public uint Reserved2 { get { return _reserved2; } }
+                public MachO M_Root { get { return m_root; } }
+                public MachO.SegmentCommand M_Parent { get { return m_parent; } }
+            }
+            private string _segname;
+            private uint _vmaddr;
+            private uint _vmsize;
+            private uint _fileoff;
+            private uint _filesize;
+            private VmProt _maxprot;
+            private VmProt _initprot;
+            private uint _nsects;
+            private uint _flags;
+            private List<Section> _sections;
+            private MachO m_root;
+            private MachO.LoadCommand m_parent;
+            public string Segname { get { return _segname; } }
+            public uint Vmaddr { get { return _vmaddr; } }
+            public uint Vmsize { get { return _vmsize; } }
+            public uint Fileoff { get { return _fileoff; } }
+            public uint Filesize { get { return _filesize; } }
+            public VmProt Maxprot { get { return _maxprot; } }
+            public VmProt Initprot { get { return _initprot; } }
+            public uint Nsects { get { return _nsects; } }
+            public uint Flags { get { return _flags; } }
+            public List<Section> Sections { get { return _sections; } }
+            public MachO M_Root { get { return m_root; } }
+            public MachO.LoadCommand M_Parent { get { return m_parent; } }
+        }
         public partial class LcStr : KaitaiStruct
         {
             public static LcStr FromFile(string fileName)
@@ -3357,6 +3552,12 @@ namespace Kaitai
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new DylibCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.BuildVersion: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new BuildVersionCommand(io___raw_body, this, m_root);
                     break;
                 }
                 case MachO.LoadCommandType.VersionMinIphoneos: {
@@ -3497,6 +3698,12 @@ namespace Kaitai
                     _body = new SubCommand(io___raw_body, this, m_root);
                     break;
                 }
+                case MachO.LoadCommandType.Segment: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SegmentCommand(io___raw_body, this, m_root);
+                    break;
+                }
                 case MachO.LoadCommandType.Routines: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
@@ -3619,7 +3826,7 @@ namespace Kaitai
                         var i = 0;
                         string M_;
                         do {
-                            M_ = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, true));
+                            M_ = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytesTerm(0, false, true, false));
                             _items.Add(M_);
                             i++;
                         } while (!(M_ == ""));
@@ -3645,6 +3852,7 @@ namespace Kaitai
                 {
                     m_parent = p__parent;
                     m_root = p__root;
+                    f_name = false;
                     _read();
                 }
                 private void _read()
@@ -3654,6 +3862,24 @@ namespace Kaitai
                     _sect = m_io.ReadU1();
                     _desc = m_io.ReadU2le();
                     _value = m_io.ReadU8le();
+                }
+                private bool f_name;
+                private string _name;
+                public string Name
+                {
+                    get
+                    {
+                        if (f_name)
+                            return _name;
+                        if (Un != 0) {
+                            long _pos = m_io.Pos;
+                            m_io.Seek((M_Parent.StrOff + Un));
+                            _name = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
+                            m_io.Seek(_pos);
+                        }
+                        f_name = true;
+                        return _name;
+                    }
                 }
                 private uint _un;
                 private byte _type;
@@ -3670,9 +3896,64 @@ namespace Kaitai
                 public MachO M_Root { get { return m_root; } }
                 public MachO.SymtabCommand M_Parent { get { return m_parent; } }
             }
+            public partial class Nlist : KaitaiStruct
+            {
+                public static Nlist FromFile(string fileName)
+                {
+                    return new Nlist(new KaitaiStream(fileName));
+                }
+
+                public Nlist(KaitaiStream p__io, MachO.SymtabCommand p__parent = null, MachO p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    f_name = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    _un = m_io.ReadU4le();
+                    _type = m_io.ReadU1();
+                    _sect = m_io.ReadU1();
+                    _desc = m_io.ReadU2le();
+                    _value = m_io.ReadU4le();
+                }
+                private bool f_name;
+                private string _name;
+                public string Name
+                {
+                    get
+                    {
+                        if (f_name)
+                            return _name;
+                        if (Un != 0) {
+                            long _pos = m_io.Pos;
+                            m_io.Seek((M_Parent.StrOff + Un));
+                            _name = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
+                            m_io.Seek(_pos);
+                        }
+                        f_name = true;
+                        return _name;
+                    }
+                }
+                private uint _un;
+                private byte _type;
+                private byte _sect;
+                private ushort _desc;
+                private uint _value;
+                private MachO m_root;
+                private MachO.SymtabCommand m_parent;
+                public uint Un { get { return _un; } }
+                public byte Type { get { return _type; } }
+                public byte Sect { get { return _sect; } }
+                public ushort Desc { get { return _desc; } }
+                public uint Value { get { return _value; } }
+                public MachO M_Root { get { return m_root; } }
+                public MachO.SymtabCommand M_Parent { get { return m_parent; } }
+            }
             private bool f_symbols;
-            private List<Nlist64> _symbols;
-            public List<Nlist64> Symbols
+            private List<KaitaiStruct> _symbols;
+            public List<KaitaiStruct> Symbols
             {
                 get
                 {
@@ -3681,10 +3962,27 @@ namespace Kaitai
                     KaitaiStream io = M_Root.M_Io;
                     long _pos = io.Pos;
                     io.Seek(SymOff);
-                    _symbols = new List<Nlist64>((int) (NSyms));
+                    _symbols = new List<KaitaiStruct>((int) (NSyms));
                     for (var i = 0; i < NSyms; i++)
                     {
-                        _symbols.Add(new Nlist64(io, this, m_root));
+                        switch (M_Root.Magic) {
+                        case MachO.MagicType.MachoLeX64: {
+                            _symbols.Add(new Nlist64(io, this, m_root));
+                            break;
+                        }
+                        case MachO.MagicType.MachoBeX64: {
+                            _symbols.Add(new Nlist64(io, this, m_root));
+                            break;
+                        }
+                        case MachO.MagicType.MachoLeX86: {
+                            _symbols.Add(new Nlist(io, this, m_root));
+                            break;
+                        }
+                        case MachO.MagicType.MachoBeX86: {
+                            _symbols.Add(new Nlist(io, this, m_root));
+                            break;
+                        }
+                        }
                     }
                     io.Seek(_pos);
                     f_symbols = true;
