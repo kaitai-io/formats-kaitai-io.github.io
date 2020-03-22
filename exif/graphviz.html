@@ -214,18 +214,81 @@ section#format-index .row {
 		exif__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;endianness_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;endianness_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;endianness_type&quot;&gt;endianness&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (endianness)&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;6&lt;/TD&gt;&lt;TD&gt;ExifBody&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
-exif__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
-	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;18761&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;ExifLe&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;19789&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;ExifBe&lt;/TD&gt;&lt;/TR&gt;
-&lt;/TABLE&gt;&gt;];
+		subgraph cluster__exif_body {
+			label=&quot;Exif::ExifBody&quot;;
+			graph[style=dotted];
+
+			exif_body__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;version_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;version_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2&lt;/TD&gt;&lt;TD PORT=&quot;version_type&quot;&gt;version&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;ifd0_ofs_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;ifd0_ofs_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4&lt;/TD&gt;&lt;TD PORT=&quot;ifd0_ofs_type&quot;&gt;ifd0_ofs&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			exif_body__inst__ifd0 [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;ifd0_pos&quot;&gt;ifd0_ofs&lt;/TD&gt;&lt;TD PORT=&quot;ifd0_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Ifd&lt;/TD&gt;&lt;TD PORT=&quot;ifd0_type&quot;&gt;ifd0&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			subgraph cluster__ifd {
+				label=&quot;Exif::ExifBody::Ifd&quot;;
+				graph[style=dotted];
+
+				ifd__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;num_fields_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;num_fields_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2&lt;/TD&gt;&lt;TD PORT=&quot;num_fields_type&quot;&gt;num_fields&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;fields_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;fields_size&quot;&gt;12&lt;/TD&gt;&lt;TD&gt;IfdField&lt;/TD&gt;&lt;TD PORT=&quot;fields_type&quot;&gt;fields&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;fields__repeat&quot;&gt;repeat num_fields times&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;next_ifd_ofs_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;next_ifd_ofs_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4&lt;/TD&gt;&lt;TD PORT=&quot;next_ifd_ofs_type&quot;&gt;next_ifd_ofs&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				ifd__inst__next_ifd [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;next_ifd_pos&quot;&gt;next_ifd_ofs&lt;/TD&gt;&lt;TD PORT=&quot;next_ifd_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Ifd&lt;/TD&gt;&lt;TD PORT=&quot;next_ifd_type&quot;&gt;next_ifd&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+			}
+			subgraph cluster__ifd_field {
+				label=&quot;Exif::ExifBody::IfdField&quot;;
+				graph[style=dotted];
+
+				ifd_field__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;tag_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;tag_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2→TagEnum&lt;/TD&gt;&lt;TD PORT=&quot;tag_type&quot;&gt;tag&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;field_type_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;field_type_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2→FieldTypeEnum&lt;/TD&gt;&lt;TD PORT=&quot;field_type_type&quot;&gt;field_type&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;length_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;length_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4&lt;/TD&gt;&lt;TD PORT=&quot;length_type&quot;&gt;length&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;ofs_or_data_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;ofs_or_data_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4&lt;/TD&gt;&lt;TD PORT=&quot;ofs_or_data_type&quot;&gt;ofs_or_data&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				ifd_field__inst__type_byte_length [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD&gt;type_byte_length&lt;/TD&gt;&lt;TD&gt;(field_type == :field_type_enum_word ? 2 : (field_type == :field_type_enum_dword ? 4 : 1))&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				ifd_field__inst__byte_length [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD&gt;byte_length&lt;/TD&gt;&lt;TD&gt;(length * type_byte_length)&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				ifd_field__inst__is_immediate_data [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD&gt;is_immediate_data&lt;/TD&gt;&lt;TD&gt;byte_length &amp;lt;= 4&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				ifd_field__inst__data [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;data_pos&quot;&gt;ofs_or_data&lt;/TD&gt;&lt;TD PORT=&quot;data_size&quot;&gt;byte_length&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;data_type&quot;&gt;data&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+			}
+		}
 	}
-	exif__seq:body_type -&gt; exif__seq_body_switch [style=bold];
-	exif__seq_body_switch:case0 -&gt; exif_le__seq [style=bold];
-	exif__seq_body_switch:case1 -&gt; exif_be__seq [style=bold];
-	exif__seq:endianness_type -&gt; exif__seq:body_type [color=&quot;#404040&quot;];
+	exif__seq:body_type -&gt; exif_body__seq [style=bold];
+	exif_body__seq:ifd0_ofs_type -&gt; exif_body__inst__ifd0:ifd0_pos [color=&quot;#404040&quot;];
+	exif_body__inst__ifd0:ifd0_type -&gt; ifd__seq [style=bold];
+	ifd__seq:fields_type -&gt; ifd_field__seq [style=bold];
+	ifd__seq:num_fields_type -&gt; ifd__seq:fields__repeat [color=&quot;#404040&quot;];
+	ifd__seq:next_ifd_ofs_type -&gt; ifd__inst__next_ifd:next_ifd_pos [color=&quot;#404040&quot;];
+	ifd__inst__next_ifd:next_ifd_type -&gt; ifd__seq [style=bold];
+	ifd_field__seq:field_type_type -&gt; ifd_field__inst__type_byte_length [color=&quot;#404040&quot;];
+	ifd_field__seq:field_type_type -&gt; ifd_field__inst__type_byte_length [color=&quot;#404040&quot;];
+	ifd_field__seq:length_type -&gt; ifd_field__inst__byte_length [color=&quot;#404040&quot;];
+	ifd_field__inst__type_byte_length:type_byte_length_type -&gt; ifd_field__inst__byte_length [color=&quot;#404040&quot;];
+	ifd_field__inst__byte_length:byte_length_type -&gt; ifd_field__inst__is_immediate_data [color=&quot;#404040&quot;];
+	ifd_field__seq:ofs_or_data_type -&gt; ifd_field__inst__data:data_pos [color=&quot;#404040&quot;];
+	ifd_field__inst__byte_length:byte_length_type -&gt; ifd_field__inst__data:data_size [color=&quot;#404040&quot;];
 }
 </code></pre>
             
