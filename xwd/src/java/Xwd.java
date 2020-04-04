@@ -91,8 +91,8 @@ public class Xwd extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.headerSize = this._io.readU4be();
-        this._raw_hdr = this._io.readBytes((headerSize() - 4));
+        this.lenHeader = this._io.readU4be();
+        this._raw_hdr = this._io.readBytes((lenHeader() - 4));
         KaitaiStream _io__raw_hdr = new ByteBufferKaitaiStream(_raw_hdr);
         this.hdr = new Header(_io__raw_hdr, this, _root);
         this._raw_colorMap = new ArrayList<byte[]>((int) (hdr().colorMapEntries()));
@@ -352,7 +352,7 @@ public class Xwd extends KaitaiStruct {
         public Xwd _root() { return _root; }
         public Xwd _parent() { return _parent; }
     }
-    private long headerSize;
+    private long lenHeader;
     private Header hdr;
     private ArrayList<ColorMapEntry> colorMap;
     private Xwd _root;
@@ -363,7 +363,7 @@ public class Xwd extends KaitaiStruct {
     /**
      * Size of the header in bytes
      */
-    public long headerSize() { return headerSize; }
+    public long lenHeader() { return lenHeader; }
     public Header hdr() { return hdr; }
     public ArrayList<ColorMapEntry> colorMap() { return colorMap; }
     public Xwd _root() { return _root; }

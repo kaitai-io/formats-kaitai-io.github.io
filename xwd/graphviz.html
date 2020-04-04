@@ -238,8 +238,8 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 
 		xwd__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;header_size_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;header_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;header_size_type&quot;&gt;header_size&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;hdr_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;hdr_size&quot;&gt;(header_size - 4)&lt;/TD&gt;&lt;TD&gt;Header&lt;/TD&gt;&lt;TD PORT=&quot;hdr_type&quot;&gt;hdr&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;len_header_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_header_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;len_header_type&quot;&gt;len_header&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;hdr_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;hdr_size&quot;&gt;(len_header - 4)&lt;/TD&gt;&lt;TD&gt;Header&lt;/TD&gt;&lt;TD PORT=&quot;hdr_type&quot;&gt;hdr&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;color_map_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;color_map_size&quot;&gt;12&lt;/TD&gt;&lt;TD&gt;ColorMapEntry&lt;/TD&gt;&lt;TD PORT=&quot;color_map_type&quot;&gt;color_map&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;color_map__repeat&quot;&gt;repeat hdr.color_map_entries times&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
@@ -291,7 +291,7 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 			&lt;/TABLE&gt;&gt;];
 		}
 	}
-	xwd__seq:header_size_type -&gt; xwd__seq:hdr_size [color=&quot;#404040&quot;];
+	xwd__seq:len_header_type -&gt; xwd__seq:hdr_size [color=&quot;#404040&quot;];
 	xwd__seq:hdr_type -&gt; header__seq [style=bold];
 	xwd__seq:color_map_type -&gt; color_map_entry__seq [style=bold];
 	header__seq:color_map_entries_type -&gt; xwd__seq:color_map__repeat [color=&quot;#404040&quot;];

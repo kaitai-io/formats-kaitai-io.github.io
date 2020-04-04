@@ -43,8 +43,8 @@ class Xwd(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header_size = self._io.read_u4be()
-        self._raw_hdr = self._io.read_bytes((self.header_size - 4))
+        self.len_header = self._io.read_u4be()
+        self._raw_hdr = self._io.read_bytes((self.len_header - 4))
         io = KaitaiStream(BytesIO(self._raw_hdr))
         self.hdr = self._root.Header(io, self, self._root)
         self._raw_color_map = [None] * (self.hdr.color_map_entries)

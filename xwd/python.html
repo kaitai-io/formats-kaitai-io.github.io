@@ -226,7 +226,7 @@ data = Xwd(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="python">data.header_size # => Size of the header in bytes</code></pre>
+<pre><code class="python">data.len_header # => Size of the header in bytes</code></pre>
 
     </div>
 </section>
@@ -298,8 +298,8 @@ class Xwd(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header_size = self._io.read_u4be()
-        self._raw_hdr = self._io.read_bytes((self.header_size - 4))
+        self.len_header = self._io.read_u4be()
+        self._raw_hdr = self._io.read_bytes((self.len_header - 4))
         io = KaitaiStream(BytesIO(self._raw_hdr))
         self.hdr = self._root.Header(io, self, self._root)
         self._raw_color_map = [None] * (self.hdr.color_map_entries)

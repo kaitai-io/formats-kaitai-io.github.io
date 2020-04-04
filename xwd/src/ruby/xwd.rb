@@ -47,8 +47,8 @@ class Xwd < Kaitai::Struct::Struct
   end
 
   def _read
-    @header_size = @_io.read_u4be
-    @_raw_hdr = @_io.read_bytes((header_size - 4))
+    @len_header = @_io.read_u4be
+    @_raw_hdr = @_io.read_bytes((len_header - 4))
     io = Kaitai::Struct::Stream.new(@_raw_hdr)
     @hdr = Header.new(io, self, @_root)
     @_raw_color_map = Array.new(hdr.color_map_entries)
@@ -223,7 +223,7 @@ class Xwd < Kaitai::Struct::Struct
 
   ##
   # Size of the header in bytes
-  attr_reader :header_size
+  attr_reader :len_header
   attr_reader :hdr
   attr_reader :color_map
   attr_reader :_raw_hdr

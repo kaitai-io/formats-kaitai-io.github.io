@@ -267,7 +267,7 @@ public:
     };
 
 private:
-    uint32_t m_header_size;
+    uint32_t m_len_header;
     header_t* m_hdr;
     std::vector<color_map_entry_t*>* m_color_map;
     xwd_t* m__root;
@@ -282,7 +282,7 @@ public:
     /**
      * Size of the header in bytes
      */
-    uint32_t header_size() const { return m_header_size; }
+    uint32_t len_header() const { return m_len_header; }
     header_t* hdr() const { return m_hdr; }
     std::vector<color_map_entry_t*>* color_map() const { return m_color_map; }
     xwd_t* _root() const { return m__root; }

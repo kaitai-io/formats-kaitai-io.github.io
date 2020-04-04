@@ -64,8 +64,8 @@ var Xwd = (function() {
     this._read();
   }
   Xwd.prototype._read = function() {
-    this.headerSize = this._io.readU4be();
-    this._raw_hdr = this._io.readBytes((this.headerSize - 4));
+    this.lenHeader = this._io.readU4be();
+    this._raw_hdr = this._io.readBytes((this.lenHeader - 4));
     var _io__raw_hdr = new KaitaiStream(this._raw_hdr);
     this.hdr = new Header(_io__raw_hdr, this, this._root);
     this._raw_colorMap = new Array(this.hdr.colorMapEntries);

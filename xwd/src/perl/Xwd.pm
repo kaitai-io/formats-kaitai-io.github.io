@@ -49,8 +49,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{header_size} = $self->{_io}->read_u4be();
-    $self->{_raw_hdr} = $self->{_io}->read_bytes(($self->header_size() - 4));
+    $self->{len_header} = $self->{_io}->read_u4be();
+    $self->{_raw_hdr} = $self->{_io}->read_bytes(($self->len_header() - 4));
     my $io__raw_hdr = IO::KaitaiStruct::Stream->new($self->{_raw_hdr});
     $self->{hdr} = Xwd::Header->new($io__raw_hdr, $self, $self->{_root});
     $self->{_raw_color_map} = ();
@@ -63,9 +63,9 @@ sub _read {
     }
 }
 
-sub header_size {
+sub len_header {
     my ($self) = @_;
-    return $self->{header_size};
+    return $self->{len_header};
 }
 
 sub hdr {

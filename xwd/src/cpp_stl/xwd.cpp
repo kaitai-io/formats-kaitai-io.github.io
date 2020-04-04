@@ -11,8 +11,8 @@ xwd_t::xwd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, xwd_t* p__root)
 }
 
 void xwd_t::_read() {
-    m_header_size = m__io->read_u4be();
-    m__raw_hdr = m__io->read_bytes((header_size() - 4));
+    m_len_header = m__io->read_u4be();
+    m__raw_hdr = m__io->read_bytes((len_header() - 4));
     m__io__raw_hdr = new kaitai::kstream(m__raw_hdr);
     m_hdr = new header_t(m__io__raw_hdr, this, m__root);
     int l_color_map = hdr()->color_map_entries();

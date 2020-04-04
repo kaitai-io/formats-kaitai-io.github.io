@@ -54,8 +54,8 @@ namespace Kaitai
         }
         private void _read()
         {
-            _headerSize = m_io.ReadU4be();
-            __raw_hdr = m_io.ReadBytes((HeaderSize - 4));
+            _lenHeader = m_io.ReadU4be();
+            __raw_hdr = m_io.ReadBytes((LenHeader - 4));
             var io___raw_hdr = new KaitaiStream(__raw_hdr);
             _hdr = new Header(io___raw_hdr, this, m_root);
             __raw_colorMap = new List<byte[]>((int) (Hdr.ColorMapEntries));
@@ -306,7 +306,7 @@ namespace Kaitai
             public Xwd M_Root { get { return m_root; } }
             public Xwd M_Parent { get { return m_parent; } }
         }
-        private uint _headerSize;
+        private uint _lenHeader;
         private Header _hdr;
         private List<ColorMapEntry> _colorMap;
         private Xwd m_root;
@@ -317,7 +317,7 @@ namespace Kaitai
         /// <summary>
         /// Size of the header in bytes
         /// </summary>
-        public uint HeaderSize { get { return _headerSize; } }
+        public uint LenHeader { get { return _lenHeader; } }
         public Header Hdr { get { return _hdr; } }
         public List<ColorMapEntry> ColorMap { get { return _colorMap; } }
         public Xwd M_Root { get { return m_root; } }

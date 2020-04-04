@@ -251,8 +251,8 @@ class Xwd extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_headerSize = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m__raw_hdr = $this-&gt;_io-&gt;readBytes(($this-&gt;headerSize() - 4));
+        $this-&gt;_m_lenHeader = $this-&gt;_io-&gt;readU4be();
+        $this-&gt;_m__raw_hdr = $this-&gt;_io-&gt;readBytes(($this-&gt;lenHeader() - 4));
         $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_hdr);
         $this-&gt;_m_hdr = new \Xwd\Header($io, $this, $this-&gt;_root);
         $this-&gt;_m__raw_colorMap = [];
@@ -264,7 +264,7 @@ class Xwd extends \Kaitai\Struct\Struct {
             $this-&gt;_m_colorMap[] = new \Xwd\ColorMapEntry($io, $this, $this-&gt;_root);
         }
     }
-    protected $_m_headerSize;
+    protected $_m_lenHeader;
     protected $_m_hdr;
     protected $_m_colorMap;
     protected $_m__raw_hdr;
@@ -273,7 +273,7 @@ class Xwd extends \Kaitai\Struct\Struct {
     /**
      * Size of the header in bytes
      */
-    public function headerSize() { return $this-&gt;_m_headerSize; }
+    public function lenHeader() { return $this-&gt;_m_lenHeader; }
     public function hdr() { return $this-&gt;_m_hdr; }
     public function colorMap() { return $this-&gt;_m_colorMap; }
     public function _raw_hdr() { return $this-&gt;_m__raw_hdr; }

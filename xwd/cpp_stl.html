@@ -257,7 +257,7 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="cpp">data.header_size() // => Size of the header in bytes</code></pre>
+<pre><code class="cpp">data.len_header() // => Size of the header in bytes</code></pre>
 
     </div>
 </section>
@@ -553,7 +553,7 @@ public:
     };
 
 private:
-    uint32_t m_header_size;
+    uint32_t m_len_header;
     header_t* m_hdr;
     std::vector&lt;color_map_entry_t*&gt;* m_color_map;
     xwd_t* m__root;
@@ -568,7 +568,7 @@ public:
     /**
      * Size of the header in bytes
      */
-    uint32_t header_size() const { return m_header_size; }
+    uint32_t len_header() const { return m_len_header; }
     header_t* hdr() const { return m_hdr; }
     std::vector&lt;color_map_entry_t*&gt;* color_map() const { return m_color_map; }
     xwd_t* _root() const { return m__root; }
@@ -609,8 +609,8 @@ xwd_t::xwd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, xwd_t* p__root)
 }
 
 void xwd_t::_read() {
-    m_header_size = m__io-&gt;read_u4be();
-    m__raw_hdr = m__io-&gt;read_bytes((header_size() - 4));
+    m_len_header = m__io-&gt;read_u4be();
+    m__raw_hdr = m__io-&gt;read_bytes((len_header() - 4));
     m__io__raw_hdr = new kaitai::kstream(m__raw_hdr);
     m_hdr = new header_t(m__io__raw_hdr, this, m__root);
     int l_color_map = hdr()-&gt;color_map_entries();

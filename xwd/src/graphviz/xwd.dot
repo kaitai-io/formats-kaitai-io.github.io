@@ -7,8 +7,8 @@ digraph {
 
 		xwd__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="header_size_pos">0</TD><TD PORT="header_size_size">4</TD><TD>u4be</TD><TD PORT="header_size_type">header_size</TD></TR>
-			<TR><TD PORT="hdr_pos">4</TD><TD PORT="hdr_size">(header_size - 4)</TD><TD>Header</TD><TD PORT="hdr_type">hdr</TD></TR>
+			<TR><TD PORT="len_header_pos">0</TD><TD PORT="len_header_size">4</TD><TD>u4be</TD><TD PORT="len_header_type">len_header</TD></TR>
+			<TR><TD PORT="hdr_pos">4</TD><TD PORT="hdr_size">(len_header - 4)</TD><TD>Header</TD><TD PORT="hdr_type">hdr</TD></TR>
 			<TR><TD PORT="color_map_pos">...</TD><TD PORT="color_map_size">12</TD><TD>ColorMapEntry</TD><TD PORT="color_map_type">color_map</TD></TR>
 			<TR><TD COLSPAN="4" PORT="color_map__repeat">repeat hdr.color_map_entries times</TD></TR>
 		</TABLE>>];
@@ -60,7 +60,7 @@ digraph {
 			</TABLE>>];
 		}
 	}
-	xwd__seq:header_size_type -> xwd__seq:hdr_size [color="#404040"];
+	xwd__seq:len_header_type -> xwd__seq:hdr_size [color="#404040"];
 	xwd__seq:hdr_type -> header__seq [style=bold];
 	xwd__seq:color_map_type -> color_map_entry__seq [style=bold];
 	header__seq:color_map_entries_type -> xwd__seq:color_map__repeat [color="#404040"];
