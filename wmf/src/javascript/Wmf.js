@@ -236,6 +236,10 @@ var Wmf = (function() {
     } while (!(_.function == Wmf.Func.EOF));
   }
 
+  /**
+   * @see section 2.3.5.31
+   */
+
   var ParamsSetwindoworg = Wmf.ParamsSetwindoworg = (function() {
     function ParamsSetwindoworg(_io, _parent, _root) {
       this._io = _io;
@@ -260,6 +264,10 @@ var Wmf = (function() {
     return ParamsSetwindoworg;
   })();
 
+  /**
+   * @see section 2.3.5.15
+   */
+
   var ParamsSetbkmode = Wmf.ParamsSetbkmode = (function() {
     function ParamsSetbkmode(_io, _parent, _root) {
       this._io = _io;
@@ -278,6 +286,10 @@ var Wmf = (function() {
 
     return ParamsSetbkmode;
   })();
+
+  /**
+   * @see section 2.2.1.12
+   */
 
   var PointS = Wmf.PointS = (function() {
     function PointS(_io, _parent, _root) {
@@ -303,6 +315,10 @@ var Wmf = (function() {
     return PointS;
   })();
 
+  /**
+   * @see section 2.3.5.30
+   */
+
   var ParamsSetwindowext = Wmf.ParamsSetwindowext = (function() {
     function ParamsSetwindowext(_io, _parent, _root) {
       this._io = _io;
@@ -326,6 +342,10 @@ var Wmf = (function() {
 
     return ParamsSetwindowext;
   })();
+
+  /**
+   * @see section 2.3.3.15 = params_polyline
+   */
 
   var ParamsPolygon = Wmf.ParamsPolygon = (function() {
     function ParamsPolygon(_io, _parent, _root) {
@@ -375,6 +395,10 @@ var Wmf = (function() {
     return Header;
   })();
 
+  /**
+   * @see section 2.2.1.7
+   */
+
   var ColorRef = Wmf.ColorRef = (function() {
     function ColorRef(_io, _parent, _root) {
       this._io = _io;
@@ -392,6 +416,10 @@ var Wmf = (function() {
 
     return ColorRef;
   })();
+
+  /**
+   * @see section 2.3.5.22
+   */
 
   var ParamsSetrop2 = Wmf.ParamsSetrop2 = (function() {
     function ParamsSetrop2(_io, _parent, _root) {
@@ -412,6 +440,10 @@ var Wmf = (function() {
     return ParamsSetrop2;
   })();
 
+  /**
+   * @see section 2.3.5.20
+   */
+
   var ParamsSetpolyfillmode = Wmf.ParamsSetpolyfillmode = (function() {
     function ParamsSetpolyfillmode(_io, _parent, _root) {
       this._io = _io;
@@ -430,6 +462,10 @@ var Wmf = (function() {
 
     return ParamsSetpolyfillmode;
   })();
+
+  /**
+   * @see section 2.3.3.14
+   */
 
   var ParamsPolyline = Wmf.ParamsPolyline = (function() {
     function ParamsPolyline(_io, _parent, _root) {

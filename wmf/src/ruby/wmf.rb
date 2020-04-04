@@ -140,6 +140,9 @@ class Wmf < Kaitai::Struct::Struct
     end until _.function == :func_eof
     self
   end
+
+  ##
+  # @see '' section 2.3.5.31
   class ParamsSetwindoworg < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -160,6 +163,9 @@ class Wmf < Kaitai::Struct::Struct
     # X coordinate of the window origin, in logical units.
     attr_reader :x
   end
+
+  ##
+  # @see '' section 2.3.5.15
   class ParamsSetbkmode < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -175,6 +181,9 @@ class Wmf < Kaitai::Struct::Struct
     # Defines current graphic context background mix mode.
     attr_reader :bk_mode
   end
+
+  ##
+  # @see '' section 2.2.1.12
   class PointS < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -195,6 +204,9 @@ class Wmf < Kaitai::Struct::Struct
     # Y coordinate of the point, in logical units.
     attr_reader :y
   end
+
+  ##
+  # @see '' section 2.3.5.30
   class ParamsSetwindowext < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -215,6 +227,9 @@ class Wmf < Kaitai::Struct::Struct
     # Horizontal extent of the window in logical units.
     attr_reader :x
   end
+
+  ##
+  # @see '' section 2.3.3.15 = params_polyline
   class ParamsPolygon < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -262,6 +277,9 @@ class Wmf < Kaitai::Struct::Struct
     attr_reader :max_record
     attr_reader :number_of_members
   end
+
+  ##
+  # @see '' section 2.2.1.7
   class ColorRef < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -280,6 +298,9 @@ class Wmf < Kaitai::Struct::Struct
     attr_reader :blue
     attr_reader :reserved
   end
+
+  ##
+  # @see '' section 2.3.5.22
   class ParamsSetrop2 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -295,6 +316,9 @@ class Wmf < Kaitai::Struct::Struct
     # Defines current foreground binary raster operation mixing mode.
     attr_reader :draw_mode
   end
+
+  ##
+  # @see '' section 2.3.5.20
   class ParamsSetpolyfillmode < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -310,6 +334,9 @@ class Wmf < Kaitai::Struct::Struct
     # Defines current polygon fill mode.
     attr_reader :poly_fill_mode
   end
+
+  ##
+  # @see '' section 2.3.3.14
   class ParamsPolyline < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

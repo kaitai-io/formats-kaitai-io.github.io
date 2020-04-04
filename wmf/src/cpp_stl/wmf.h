@@ -149,6 +149,10 @@ private:
 public:
     ~wmf_t();
 
+    /**
+     * \sa section 2.3.5.31
+     */
+
     class params_setwindoworg_t : public kaitai::kstruct {
 
     public:
@@ -182,6 +186,10 @@ public:
         wmf_t::record_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa section 2.3.5.15
+     */
+
     class params_setbkmode_t : public kaitai::kstruct {
 
     public:
@@ -208,6 +216,10 @@ public:
         wmf_t* _root() const { return m__root; }
         wmf_t::record_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa section 2.2.1.12
+     */
 
     class point_s_t : public kaitai::kstruct {
 
@@ -242,6 +254,10 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa section 2.3.5.30
+     */
+
     class params_setwindowext_t : public kaitai::kstruct {
 
     public:
@@ -274,6 +290,10 @@ public:
         wmf_t* _root() const { return m__root; }
         wmf_t::record_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa section 2.3.3.15 = params_polyline
+     */
 
     class params_polygon_t : public kaitai::kstruct {
 
@@ -340,6 +360,10 @@ public:
         wmf_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa section 2.2.1.7
+     */
+
     class color_ref_t : public kaitai::kstruct {
 
     public:
@@ -369,6 +393,10 @@ public:
         wmf_t::record_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa section 2.3.5.22
+     */
+
     class params_setrop2_t : public kaitai::kstruct {
 
     public:
@@ -396,6 +424,10 @@ public:
         wmf_t::record_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa section 2.3.5.20
+     */
+
     class params_setpolyfillmode_t : public kaitai::kstruct {
 
     public:
@@ -422,6 +454,10 @@ public:
         wmf_t* _root() const { return m__root; }
         wmf_t::record_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa section 2.3.3.14
+     */
 
     class params_polyline_t : public kaitai::kstruct {
 

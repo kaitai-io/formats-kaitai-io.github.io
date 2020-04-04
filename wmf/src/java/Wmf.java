@@ -194,6 +194,10 @@ public class Wmf extends KaitaiStruct {
             } while (!(_it.function() == Func.EOF));
         }
     }
+
+    /**
+     * @see "section 2.3.5.31"
+     */
     public static class ParamsSetwindoworg extends KaitaiStruct {
         public static ParamsSetwindoworg fromFile(String fileName) throws IOException {
             return new ParamsSetwindoworg(new ByteBufferKaitaiStream(fileName));
@@ -234,6 +238,10 @@ public class Wmf extends KaitaiStruct {
         public Wmf _root() { return _root; }
         public Wmf.Record _parent() { return _parent; }
     }
+
+    /**
+     * @see "section 2.3.5.15"
+     */
     public static class ParamsSetbkmode extends KaitaiStruct {
         public static ParamsSetbkmode fromFile(String fileName) throws IOException {
             return new ParamsSetbkmode(new ByteBufferKaitaiStream(fileName));
@@ -267,6 +275,10 @@ public class Wmf extends KaitaiStruct {
         public Wmf _root() { return _root; }
         public Wmf.Record _parent() { return _parent; }
     }
+
+    /**
+     * @see "section 2.2.1.12"
+     */
     public static class PointS extends KaitaiStruct {
         public static PointS fromFile(String fileName) throws IOException {
             return new PointS(new ByteBufferKaitaiStream(fileName));
@@ -307,6 +319,10 @@ public class Wmf extends KaitaiStruct {
         public Wmf _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
+
+    /**
+     * @see "section 2.3.5.30"
+     */
     public static class ParamsSetwindowext extends KaitaiStruct {
         public static ParamsSetwindowext fromFile(String fileName) throws IOException {
             return new ParamsSetwindowext(new ByteBufferKaitaiStream(fileName));
@@ -347,6 +363,10 @@ public class Wmf extends KaitaiStruct {
         public Wmf _root() { return _root; }
         public Wmf.Record _parent() { return _parent; }
     }
+
+    /**
+     * @see "section 2.3.3.15 = params_polyline"
+     */
     public static class ParamsPolygon extends KaitaiStruct {
         public static ParamsPolygon fromFile(String fileName) throws IOException {
             return new ParamsPolygon(new ByteBufferKaitaiStream(fileName));
@@ -444,6 +464,10 @@ public class Wmf extends KaitaiStruct {
         public Wmf _root() { return _root; }
         public Wmf _parent() { return _parent; }
     }
+
+    /**
+     * @see "section 2.2.1.7"
+     */
     public static class ColorRef extends KaitaiStruct {
         public static ColorRef fromFile(String fileName) throws IOException {
             return new ColorRef(new ByteBufferKaitaiStream(fileName));
@@ -482,6 +506,10 @@ public class Wmf extends KaitaiStruct {
         public Wmf _root() { return _root; }
         public Wmf.Record _parent() { return _parent; }
     }
+
+    /**
+     * @see "section 2.3.5.22"
+     */
     public static class ParamsSetrop2 extends KaitaiStruct {
         public static ParamsSetrop2 fromFile(String fileName) throws IOException {
             return new ParamsSetrop2(new ByteBufferKaitaiStream(fileName));
@@ -515,6 +543,10 @@ public class Wmf extends KaitaiStruct {
         public Wmf _root() { return _root; }
         public Wmf.Record _parent() { return _parent; }
     }
+
+    /**
+     * @see "section 2.3.5.20"
+     */
     public static class ParamsSetpolyfillmode extends KaitaiStruct {
         public static ParamsSetpolyfillmode fromFile(String fileName) throws IOException {
             return new ParamsSetpolyfillmode(new ByteBufferKaitaiStream(fileName));
@@ -548,6 +580,10 @@ public class Wmf extends KaitaiStruct {
         public Wmf _root() { return _root; }
         public Wmf.Record _parent() { return _parent; }
     }
+
+    /**
+     * @see "section 2.3.3.14"
+     */
     public static class ParamsPolyline extends KaitaiStruct {
         public static ParamsPolyline fromFile(String fileName) throws IOException {
             return new ParamsPolyline(new ByteBufferKaitaiStream(fileName));

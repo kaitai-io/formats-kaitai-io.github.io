@@ -151,6 +151,10 @@ namespace Kaitai
                 } while (!(M_.Function == Func.Eof));
             }
         }
+
+        /// <remarks>
+        /// Reference: section 2.3.5.31
+        /// </remarks>
         public partial class ParamsSetwindoworg : KaitaiStruct
         {
             public static ParamsSetwindoworg FromFile(string fileName)
@@ -186,6 +190,10 @@ namespace Kaitai
             public Wmf M_Root { get { return m_root; } }
             public Wmf.Record M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: section 2.3.5.15
+        /// </remarks>
         public partial class ParamsSetbkmode : KaitaiStruct
         {
             public static ParamsSetbkmode FromFile(string fileName)
@@ -214,6 +222,10 @@ namespace Kaitai
             public Wmf M_Root { get { return m_root; } }
             public Wmf.Record M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: section 2.2.1.12
+        /// </remarks>
         public partial class PointS : KaitaiStruct
         {
             public static PointS FromFile(string fileName)
@@ -249,6 +261,10 @@ namespace Kaitai
             public Wmf M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: section 2.3.5.30
+        /// </remarks>
         public partial class ParamsSetwindowext : KaitaiStruct
         {
             public static ParamsSetwindowext FromFile(string fileName)
@@ -284,6 +300,10 @@ namespace Kaitai
             public Wmf M_Root { get { return m_root; } }
             public Wmf.Record M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: section 2.3.3.15 = params_polyline
+        /// </remarks>
         public partial class ParamsPolygon : KaitaiStruct
         {
             public static ParamsPolygon FromFile(string fileName)
@@ -363,6 +383,10 @@ namespace Kaitai
             public Wmf M_Root { get { return m_root; } }
             public Wmf M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: section 2.2.1.7
+        /// </remarks>
         public partial class ColorRef : KaitaiStruct
         {
             public static ColorRef FromFile(string fileName)
@@ -396,6 +420,10 @@ namespace Kaitai
             public Wmf M_Root { get { return m_root; } }
             public Wmf.Record M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: section 2.3.5.22
+        /// </remarks>
         public partial class ParamsSetrop2 : KaitaiStruct
         {
             public static ParamsSetrop2 FromFile(string fileName)
@@ -424,6 +452,10 @@ namespace Kaitai
             public Wmf M_Root { get { return m_root; } }
             public Wmf.Record M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: section 2.3.5.20
+        /// </remarks>
         public partial class ParamsSetpolyfillmode : KaitaiStruct
         {
             public static ParamsSetpolyfillmode FromFile(string fileName)
@@ -452,6 +484,10 @@ namespace Kaitai
             public Wmf M_Root { get { return m_root; } }
             public Wmf.Record M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: section 2.3.3.14
+        /// </remarks>
         public partial class ParamsPolyline : KaitaiStruct
         {
             public static ParamsPolyline FromFile(string fileName)

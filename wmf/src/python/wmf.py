@@ -137,6 +137,10 @@ class Wmf(KaitaiStruct):
             i += 1
 
     class ParamsSetwindoworg(KaitaiStruct):
+        """
+        .. seealso::
+           section 2.3.5.31
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -149,6 +153,10 @@ class Wmf(KaitaiStruct):
 
 
     class ParamsSetbkmode(KaitaiStruct):
+        """
+        .. seealso::
+           section 2.3.5.15
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -160,6 +168,10 @@ class Wmf(KaitaiStruct):
 
 
     class PointS(KaitaiStruct):
+        """
+        .. seealso::
+           section 2.2.1.12
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -172,6 +184,10 @@ class Wmf(KaitaiStruct):
 
 
     class ParamsSetwindowext(KaitaiStruct):
+        """
+        .. seealso::
+           section 2.3.5.30
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -184,6 +200,10 @@ class Wmf(KaitaiStruct):
 
 
     class ParamsPolygon(KaitaiStruct):
+        """
+        .. seealso::
+           section 2.3.3.15 = params_polyline
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -220,6 +240,10 @@ class Wmf(KaitaiStruct):
 
 
     class ColorRef(KaitaiStruct):
+        """
+        .. seealso::
+           section 2.2.1.7
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -234,6 +258,10 @@ class Wmf(KaitaiStruct):
 
 
     class ParamsSetrop2(KaitaiStruct):
+        """
+        .. seealso::
+           section 2.3.5.22
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -245,6 +273,10 @@ class Wmf(KaitaiStruct):
 
 
     class ParamsSetpolyfillmode(KaitaiStruct):
+        """
+        .. seealso::
+           section 2.3.5.20
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -256,6 +288,10 @@ class Wmf(KaitaiStruct):
 
 
     class ParamsPolyline(KaitaiStruct):
+        """
+        .. seealso::
+           section 2.3.3.14
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
