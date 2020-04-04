@@ -3,11 +3,11 @@
 #include "protocol_body.h"
 
 
-#include "tcp_segment.h"
-#include "icmp_packet.h"
-#include "ipv4_packet.h"
-#include "udp_datagram.h"
 #include "ipv6_packet.h"
+#include "tcp_segment.h"
+#include "ipv4_packet.h"
+#include "icmp_packet.h"
+#include "udp_datagram.h"
 
 protocol_body_t::protocol_body_t(uint8_t p_protocol_num, kaitai::kstream* p__io, kaitai::kstruct* p__parent, protocol_body_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
