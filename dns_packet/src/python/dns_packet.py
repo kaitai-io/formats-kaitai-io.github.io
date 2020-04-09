@@ -44,25 +44,25 @@ class DnsPacket(KaitaiStruct):
     def _read(self):
         self.transaction_id = self._io.read_u2be()
         self.flags = self._root.PacketFlags(self._io, self, self._root)
-        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+        if self.flags.is_opcode_valid:
             self.qdcount = self._io.read_u2be()
 
-        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+        if self.flags.is_opcode_valid:
             self.ancount = self._io.read_u2be()
 
-        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+        if self.flags.is_opcode_valid:
             self.nscount = self._io.read_u2be()
 
-        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+        if self.flags.is_opcode_valid:
             self.arcount = self._io.read_u2be()
 
-        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+        if self.flags.is_opcode_valid:
             self.queries = [None] * (self.qdcount)
             for i in range(self.qdcount):
                 self.queries[i] = self._root.Query(self._io, self, self._root)
 
 
-        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+        if self.flags.is_opcode_valid:
             self.answers = [None] * (self.ancount)
             for i in range(self.ancount):
                 self.answers[i] = self._root.Answer(self._io, self, self._root)
@@ -216,6 +216,14 @@ class DnsPacket(KaitaiStruct):
 
             self._m_tc = ((self.flag & 512) >> 9)
             return self._m_tc if hasattr(self, '_m_tc') else None
+
+        @property
+        def is_opcode_valid(self):
+            if hasattr(self, '_m_is_opcode_valid'):
+                return self._m_is_opcode_valid if hasattr(self, '_m_is_opcode_valid') else None
+
+            self._m_is_opcode_valid =  ((self.opcode == 0) or (self.opcode == 1) or (self.opcode == 2)) 
+            return self._m_is_opcode_valid if hasattr(self, '_m_is_opcode_valid') else None
 
         @property
         def rcode(self):

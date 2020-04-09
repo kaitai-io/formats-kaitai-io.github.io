@@ -300,26 +300,26 @@ sub _read {
 
     $self-&gt;{transaction_id} = $self-&gt;{_io}-&gt;read_u2be();
     $self-&gt;{flags} = DnsPacket::PacketFlags-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+    if ($self-&gt;flags()-&gt;is_opcode_valid()) {
         $self-&gt;{qdcount} = $self-&gt;{_io}-&gt;read_u2be();
     }
-    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+    if ($self-&gt;flags()-&gt;is_opcode_valid()) {
         $self-&gt;{ancount} = $self-&gt;{_io}-&gt;read_u2be();
     }
-    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+    if ($self-&gt;flags()-&gt;is_opcode_valid()) {
         $self-&gt;{nscount} = $self-&gt;{_io}-&gt;read_u2be();
     }
-    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+    if ($self-&gt;flags()-&gt;is_opcode_valid()) {
         $self-&gt;{arcount} = $self-&gt;{_io}-&gt;read_u2be();
     }
-    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+    if ($self-&gt;flags()-&gt;is_opcode_valid()) {
         $self-&gt;{queries} = ();
         my $n_queries = $self-&gt;qdcount();
         for (my $i = 0; $i &lt; $n_queries; $i++) {
             $self-&gt;{queries}[$i] = DnsPacket::Query-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
         }
     }
-    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+    if ($self-&gt;flags()-&gt;is_opcode_valid()) {
         $self-&gt;{answers} = ();
         my $n_answers = $self-&gt;ancount();
         for (my $i = 0; $i &lt; $n_answers; $i++) {
@@ -742,6 +742,13 @@ sub tc {
     return $self-&gt;{tc} if ($self-&gt;{tc});
     $self-&gt;{tc} = (($self-&gt;flag() &amp; 512) &gt;&gt; 9);
     return $self-&gt;{tc};
+}
+
+sub is_opcode_valid {
+    my ($self) = @_;
+    return $self-&gt;{is_opcode_valid} if ($self-&gt;{is_opcode_valid});
+    $self-&gt;{is_opcode_valid} =  (($self-&gt;opcode() == 0) || ($self-&gt;opcode() == 1) || ($self-&gt;opcode() == 2)) ;
+    return $self-&gt;{is_opcode_valid};
 }
 
 sub rcode {

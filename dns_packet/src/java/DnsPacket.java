@@ -81,25 +81,25 @@ public class DnsPacket extends KaitaiStruct {
     private void _read() {
         this.transactionId = this._io.readU2be();
         this.flags = new PacketFlags(this._io, this, _root);
-        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+        if (flags().isOpcodeValid()) {
             this.qdcount = this._io.readU2be();
         }
-        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+        if (flags().isOpcodeValid()) {
             this.ancount = this._io.readU2be();
         }
-        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+        if (flags().isOpcodeValid()) {
             this.nscount = this._io.readU2be();
         }
-        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+        if (flags().isOpcodeValid()) {
             this.arcount = this._io.readU2be();
         }
-        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+        if (flags().isOpcodeValid()) {
             queries = new ArrayList<Query>((int) (qdcount()));
             for (int i = 0; i < qdcount(); i++) {
                 this.queries.add(new Query(this._io, this, _root));
             }
         }
-        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+        if (flags().isOpcodeValid()) {
             answers = new ArrayList<Answer>((int) (ancount()));
             for (int i = 0; i < ancount(); i++) {
                 this.answers.add(new Answer(this._io, this, _root));
@@ -418,6 +418,14 @@ public class DnsPacket extends KaitaiStruct {
             int _tmp = (int) (((flag() & 512) >> 9));
             this.tc = _tmp;
             return this.tc;
+        }
+        private Boolean isOpcodeValid;
+        public Boolean isOpcodeValid() {
+            if (this.isOpcodeValid != null)
+                return this.isOpcodeValid;
+            boolean _tmp = (boolean) ( ((opcode() == 0) || (opcode() == 1) || (opcode() == 2)) );
+            this.isOpcodeValid = _tmp;
+            return this.isOpcodeValid;
         }
         private Integer rcode;
         public Integer rcode() {

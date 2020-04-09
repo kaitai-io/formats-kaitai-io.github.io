@@ -14,27 +14,27 @@ void dns_packet_t::_read() {
     m_transaction_id = m__io->read_u2be();
     m_flags = new packet_flags_t(m__io, this, m__root);
     n_qdcount = true;
-    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+    if (flags()->is_opcode_valid()) {
         n_qdcount = false;
         m_qdcount = m__io->read_u2be();
     }
     n_ancount = true;
-    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+    if (flags()->is_opcode_valid()) {
         n_ancount = false;
         m_ancount = m__io->read_u2be();
     }
     n_nscount = true;
-    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+    if (flags()->is_opcode_valid()) {
         n_nscount = false;
         m_nscount = m__io->read_u2be();
     }
     n_arcount = true;
-    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+    if (flags()->is_opcode_valid()) {
         n_arcount = false;
         m_arcount = m__io->read_u2be();
     }
     n_queries = true;
-    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+    if (flags()->is_opcode_valid()) {
         n_queries = false;
         int l_queries = qdcount();
         m_queries = new std::vector<query_t*>();
@@ -44,7 +44,7 @@ void dns_packet_t::_read() {
         }
     }
     n_answers = true;
-    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+    if (flags()->is_opcode_valid()) {
         n_answers = false;
         int l_answers = ancount();
         m_answers = new std::vector<answer_t*>();
@@ -246,6 +246,7 @@ dns_packet_t::packet_flags_t::packet_flags_t(kaitai::kstream* p__io, dns_packet_
     f_qr = false;
     f_ra = false;
     f_tc = false;
+    f_is_opcode_valid = false;
     f_rcode = false;
     f_opcode = false;
     f_aa = false;
@@ -285,6 +286,14 @@ int32_t dns_packet_t::packet_flags_t::tc() {
     m_tc = ((flag() & 512) >> 9);
     f_tc = true;
     return m_tc;
+}
+
+bool dns_packet_t::packet_flags_t::is_opcode_valid() {
+    if (f_is_opcode_valid)
+        return m_is_opcode_valid;
+    m_is_opcode_valid =  ((opcode() == 0) || (opcode() == 1) || (opcode() == 2)) ;
+    f_is_opcode_valid = true;
+    return m_is_opcode_valid;
 }
 
 int32_t dns_packet_t::packet_flags_t::rcode() {

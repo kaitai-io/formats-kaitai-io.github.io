@@ -315,6 +315,13 @@ public:
         int32_t tc();
 
     private:
+        bool f_is_opcode_valid;
+        bool m_is_opcode_valid;
+
+    public:
+        bool is_opcode_valid();
+
+    private:
         bool f_rcode;
         int32_t m_rcode;
 

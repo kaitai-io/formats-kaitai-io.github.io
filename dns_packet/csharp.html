@@ -316,26 +316,26 @@ namespace Kaitai
         {
             _transactionId = m_io.ReadU2be();
             _flags = new PacketFlags(m_io, this, m_root);
-            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+            if (Flags.IsOpcodeValid) {
                 _qdcount = m_io.ReadU2be();
             }
-            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+            if (Flags.IsOpcodeValid) {
                 _ancount = m_io.ReadU2be();
             }
-            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+            if (Flags.IsOpcodeValid) {
                 _nscount = m_io.ReadU2be();
             }
-            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+            if (Flags.IsOpcodeValid) {
                 _arcount = m_io.ReadU2be();
             }
-            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+            if (Flags.IsOpcodeValid) {
                 _queries = new List&lt;Query&gt;((int) (Qdcount));
                 for (var i = 0; i &lt; Qdcount; i++)
                 {
                     _queries.Add(new Query(m_io, this, m_root));
                 }
             }
-            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+            if (Flags.IsOpcodeValid) {
                 _answers = new List&lt;Answer&gt;((int) (Ancount));
                 for (var i = 0; i &lt; Ancount; i++)
                 {
@@ -608,6 +608,7 @@ namespace Kaitai
                 f_qr = false;
                 f_ra = false;
                 f_tc = false;
+                f_isOpcodeValid = false;
                 f_rcode = false;
                 f_opcode = false;
                 f_aa = false;
@@ -658,6 +659,19 @@ namespace Kaitai
                     _tc = (int) (((Flag &amp; 512) &gt;&gt; 9));
                     f_tc = true;
                     return _tc;
+                }
+            }
+            private bool f_isOpcodeValid;
+            private bool _isOpcodeValid;
+            public bool IsOpcodeValid
+            {
+                get
+                {
+                    if (f_isOpcodeValid)
+                        return _isOpcodeValid;
+                    _isOpcodeValid = (bool) ( ((Opcode == 0) || (Opcode == 1) || (Opcode == 2)) );
+                    f_isOpcodeValid = true;
+                    return _isOpcodeValid;
                 }
             }
             private bool f_rcode;

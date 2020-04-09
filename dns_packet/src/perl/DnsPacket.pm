@@ -59,26 +59,26 @@ sub _read {
 
     $self->{transaction_id} = $self->{_io}->read_u2be();
     $self->{flags} = DnsPacket::PacketFlags->new($self->{_io}, $self, $self->{_root});
-    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+    if ($self->flags()->is_opcode_valid()) {
         $self->{qdcount} = $self->{_io}->read_u2be();
     }
-    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+    if ($self->flags()->is_opcode_valid()) {
         $self->{ancount} = $self->{_io}->read_u2be();
     }
-    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+    if ($self->flags()->is_opcode_valid()) {
         $self->{nscount} = $self->{_io}->read_u2be();
     }
-    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+    if ($self->flags()->is_opcode_valid()) {
         $self->{arcount} = $self->{_io}->read_u2be();
     }
-    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+    if ($self->flags()->is_opcode_valid()) {
         $self->{queries} = ();
         my $n_queries = $self->qdcount();
         for (my $i = 0; $i < $n_queries; $i++) {
             $self->{queries}[$i] = DnsPacket::Query->new($self->{_io}, $self, $self->{_root});
         }
     }
-    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+    if ($self->flags()->is_opcode_valid()) {
         $self->{answers} = ();
         my $n_answers = $self->ancount();
         for (my $i = 0; $i < $n_answers; $i++) {
@@ -501,6 +501,13 @@ sub tc {
     return $self->{tc} if ($self->{tc});
     $self->{tc} = (($self->flag() & 512) >> 9);
     return $self->{tc};
+}
+
+sub is_opcode_valid {
+    my ($self) = @_;
+    return $self->{is_opcode_valid} if ($self->{is_opcode_valid});
+    $self->{is_opcode_valid} =  (($self->opcode() == 0) || ($self->opcode() == 1) || ($self->opcode() == 2)) ;
+    return $self->{is_opcode_valid};
 }
 
 sub rcode {

@@ -46,25 +46,25 @@ class DnsPacket < Kaitai::Struct::Struct
   def _read
     @transaction_id = @_io.read_u2be
     @flags = PacketFlags.new(@_io, self, @_root)
-    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+    if flags.is_opcode_valid
       @qdcount = @_io.read_u2be
     end
-    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+    if flags.is_opcode_valid
       @ancount = @_io.read_u2be
     end
-    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+    if flags.is_opcode_valid
       @nscount = @_io.read_u2be
     end
-    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+    if flags.is_opcode_valid
       @arcount = @_io.read_u2be
     end
-    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+    if flags.is_opcode_valid
       @queries = Array.new(qdcount)
       (qdcount).times { |i|
         @queries[i] = Query.new(@_io, self, @_root)
       }
     end
-    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+    if flags.is_opcode_valid
       @answers = Array.new(ancount)
       (ancount).times { |i|
         @answers[i] = Answer.new(@_io, self, @_root)
@@ -237,6 +237,11 @@ class DnsPacket < Kaitai::Struct::Struct
       return @tc unless @tc.nil?
       @tc = ((flag & 512) >> 9)
       @tc
+    end
+    def is_opcode_valid
+      return @is_opcode_valid unless @is_opcode_valid.nil?
+      @is_opcode_valid =  ((opcode == 0) || (opcode == 1) || (opcode == 2)) 
+      @is_opcode_valid
     end
     def rcode
       return @rcode unless @rcode.nil?

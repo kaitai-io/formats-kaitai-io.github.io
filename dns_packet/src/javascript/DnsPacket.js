@@ -72,25 +72,25 @@ var DnsPacket = (function() {
   DnsPacket.prototype._read = function() {
     this.transactionId = this._io.readU2be();
     this.flags = new PacketFlags(this._io, this, this._root);
-    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+    if (this.flags.isOpcodeValid) {
       this.qdcount = this._io.readU2be();
     }
-    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+    if (this.flags.isOpcodeValid) {
       this.ancount = this._io.readU2be();
     }
-    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+    if (this.flags.isOpcodeValid) {
       this.nscount = this._io.readU2be();
     }
-    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+    if (this.flags.isOpcodeValid) {
       this.arcount = this._io.readU2be();
     }
-    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+    if (this.flags.isOpcodeValid) {
       this.queries = new Array(this.qdcount);
       for (var i = 0; i < this.qdcount; i++) {
         this.queries[i] = new Query(this._io, this, this._root);
       }
     }
-    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+    if (this.flags.isOpcodeValid) {
       this.answers = new Array(this.ancount);
       for (var i = 0; i < this.ancount; i++) {
         this.answers[i] = new Answer(this._io, this, this._root);
@@ -292,6 +292,14 @@ var DnsPacket = (function() {
           return this._m_tc;
         this._m_tc = ((this.flag & 512) >>> 9);
         return this._m_tc;
+      }
+    });
+    Object.defineProperty(PacketFlags.prototype, 'isOpcodeValid', {
+      get: function() {
+        if (this._m_isOpcodeValid !== undefined)
+          return this._m_isOpcodeValid;
+        this._m_isOpcodeValid =  ((this.opcode == 0) || (this.opcode == 1) || (this.opcode == 2)) ;
+        return this._m_isOpcodeValid;
       }
     });
     Object.defineProperty(PacketFlags.prototype, 'rcode', {

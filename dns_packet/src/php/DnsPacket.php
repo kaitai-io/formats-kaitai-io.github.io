@@ -14,26 +14,26 @@ class DnsPacket extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_transactionId = $this->_io->readU2be();
         $this->_m_flags = new \DnsPacket\PacketFlags($this->_io, $this, $this->_root);
-        if ( (($this->flags()->opcode() == 0) || ($this->flags()->opcode() == 1) || ($this->flags()->opcode() == 2)) ) {
+        if ($this->flags()->isOpcodeValid()) {
             $this->_m_qdcount = $this->_io->readU2be();
         }
-        if ( (($this->flags()->opcode() == 0) || ($this->flags()->opcode() == 1) || ($this->flags()->opcode() == 2)) ) {
+        if ($this->flags()->isOpcodeValid()) {
             $this->_m_ancount = $this->_io->readU2be();
         }
-        if ( (($this->flags()->opcode() == 0) || ($this->flags()->opcode() == 1) || ($this->flags()->opcode() == 2)) ) {
+        if ($this->flags()->isOpcodeValid()) {
             $this->_m_nscount = $this->_io->readU2be();
         }
-        if ( (($this->flags()->opcode() == 0) || ($this->flags()->opcode() == 1) || ($this->flags()->opcode() == 2)) ) {
+        if ($this->flags()->isOpcodeValid()) {
             $this->_m_arcount = $this->_io->readU2be();
         }
-        if ( (($this->flags()->opcode() == 0) || ($this->flags()->opcode() == 1) || ($this->flags()->opcode() == 2)) ) {
+        if ($this->flags()->isOpcodeValid()) {
             $this->_m_queries = [];
             $n = $this->qdcount();
             for ($i = 0; $i < $n; $i++) {
                 $this->_m_queries[] = new \DnsPacket\Query($this->_io, $this, $this->_root);
             }
         }
-        if ( (($this->flags()->opcode() == 0) || ($this->flags()->opcode() == 1) || ($this->flags()->opcode() == 2)) ) {
+        if ($this->flags()->isOpcodeValid()) {
             $this->_m_answers = [];
             $n = $this->ancount();
             for ($i = 0; $i < $n; $i++) {
@@ -290,6 +290,13 @@ class PacketFlags extends \Kaitai\Struct\Struct {
             return $this->_m_tc;
         $this->_m_tc = (($this->flag() & 512) >> 9);
         return $this->_m_tc;
+    }
+    protected $_m_isOpcodeValid;
+    public function isOpcodeValid() {
+        if ($this->_m_isOpcodeValid !== null)
+            return $this->_m_isOpcodeValid;
+        $this->_m_isOpcodeValid =  (($this->opcode() == 0) || ($this->opcode() == 1) || ($this->opcode() == 2)) ;
+        return $this->_m_isOpcodeValid;
     }
     protected $_m_rcode;
     public function rcode() {
