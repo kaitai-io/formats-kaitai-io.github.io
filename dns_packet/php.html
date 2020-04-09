@@ -255,19 +255,31 @@ class DnsPacket extends \Kaitai\Struct\Struct {
     private function _read() {
         $this-&gt;_m_transactionId = $this-&gt;_io-&gt;readU2be();
         $this-&gt;_m_flags = new \DnsPacket\PacketFlags($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_qdcount = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_ancount = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_nscount = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_arcount = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_queries = [];
-        $n = $this-&gt;qdcount();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_queries[] = new \DnsPacket\Query($this-&gt;_io, $this, $this-&gt;_root);
+        if ( (($this-&gt;flags()-&gt;opcode() == 0) || ($this-&gt;flags()-&gt;opcode() == 1) || ($this-&gt;flags()-&gt;opcode() == 2)) ) {
+            $this-&gt;_m_qdcount = $this-&gt;_io-&gt;readU2be();
         }
-        $this-&gt;_m_answers = [];
-        $n = $this-&gt;ancount();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_answers[] = new \DnsPacket\Answer($this-&gt;_io, $this, $this-&gt;_root);
+        if ( (($this-&gt;flags()-&gt;opcode() == 0) || ($this-&gt;flags()-&gt;opcode() == 1) || ($this-&gt;flags()-&gt;opcode() == 2)) ) {
+            $this-&gt;_m_ancount = $this-&gt;_io-&gt;readU2be();
+        }
+        if ( (($this-&gt;flags()-&gt;opcode() == 0) || ($this-&gt;flags()-&gt;opcode() == 1) || ($this-&gt;flags()-&gt;opcode() == 2)) ) {
+            $this-&gt;_m_nscount = $this-&gt;_io-&gt;readU2be();
+        }
+        if ( (($this-&gt;flags()-&gt;opcode() == 0) || ($this-&gt;flags()-&gt;opcode() == 1) || ($this-&gt;flags()-&gt;opcode() == 2)) ) {
+            $this-&gt;_m_arcount = $this-&gt;_io-&gt;readU2be();
+        }
+        if ( (($this-&gt;flags()-&gt;opcode() == 0) || ($this-&gt;flags()-&gt;opcode() == 1) || ($this-&gt;flags()-&gt;opcode() == 2)) ) {
+            $this-&gt;_m_queries = [];
+            $n = $this-&gt;qdcount();
+            for ($i = 0; $i &lt; $n; $i++) {
+                $this-&gt;_m_queries[] = new \DnsPacket\Query($this-&gt;_io, $this, $this-&gt;_root);
+            }
+        }
+        if ( (($this-&gt;flags()-&gt;opcode() == 0) || ($this-&gt;flags()-&gt;opcode() == 1) || ($this-&gt;flags()-&gt;opcode() == 2)) ) {
+            $this-&gt;_m_answers = [];
+            $n = $this-&gt;ancount();
+            for ($i = 0; $i &lt; $n; $i++) {
+                $this-&gt;_m_answers[] = new \DnsPacket\Answer($this-&gt;_io, $this, $this-&gt;_root);
+            }
         }
     }
     protected $_m_transactionId;

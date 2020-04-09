@@ -13,34 +13,70 @@ dns_packet_t::dns_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, d
 void dns_packet_t::_read() {
     m_transaction_id = m__io->read_u2be();
     m_flags = new packet_flags_t(m__io, this, m__root);
-    m_qdcount = m__io->read_u2be();
-    m_ancount = m__io->read_u2be();
-    m_nscount = m__io->read_u2be();
-    m_arcount = m__io->read_u2be();
-    int l_queries = qdcount();
-    m_queries = new std::vector<query_t*>();
-    m_queries->reserve(l_queries);
-    for (int i = 0; i < l_queries; i++) {
-        m_queries->push_back(new query_t(m__io, this, m__root));
+    n_qdcount = true;
+    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+        n_qdcount = false;
+        m_qdcount = m__io->read_u2be();
     }
-    int l_answers = ancount();
-    m_answers = new std::vector<answer_t*>();
-    m_answers->reserve(l_answers);
-    for (int i = 0; i < l_answers; i++) {
-        m_answers->push_back(new answer_t(m__io, this, m__root));
+    n_ancount = true;
+    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+        n_ancount = false;
+        m_ancount = m__io->read_u2be();
+    }
+    n_nscount = true;
+    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+        n_nscount = false;
+        m_nscount = m__io->read_u2be();
+    }
+    n_arcount = true;
+    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+        n_arcount = false;
+        m_arcount = m__io->read_u2be();
+    }
+    n_queries = true;
+    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+        n_queries = false;
+        int l_queries = qdcount();
+        m_queries = new std::vector<query_t*>();
+        m_queries->reserve(l_queries);
+        for (int i = 0; i < l_queries; i++) {
+            m_queries->push_back(new query_t(m__io, this, m__root));
+        }
+    }
+    n_answers = true;
+    if ( ((flags()->opcode() == 0) || (flags()->opcode() == 1) || (flags()->opcode() == 2)) ) {
+        n_answers = false;
+        int l_answers = ancount();
+        m_answers = new std::vector<answer_t*>();
+        m_answers->reserve(l_answers);
+        for (int i = 0; i < l_answers; i++) {
+            m_answers->push_back(new answer_t(m__io, this, m__root));
+        }
     }
 }
 
 dns_packet_t::~dns_packet_t() {
     delete m_flags;
-    for (std::vector<query_t*>::iterator it = m_queries->begin(); it != m_queries->end(); ++it) {
-        delete *it;
+    if (!n_qdcount) {
     }
-    delete m_queries;
-    for (std::vector<answer_t*>::iterator it = m_answers->begin(); it != m_answers->end(); ++it) {
-        delete *it;
+    if (!n_ancount) {
     }
-    delete m_answers;
+    if (!n_nscount) {
+    }
+    if (!n_arcount) {
+    }
+    if (!n_queries) {
+        for (std::vector<query_t*>::iterator it = m_queries->begin(); it != m_queries->end(); ++it) {
+            delete *it;
+        }
+        delete m_queries;
+    }
+    if (!n_answers) {
+        for (std::vector<answer_t*>::iterator it = m_answers->begin(); it != m_answers->end(); ++it) {
+            delete *it;
+        }
+        delete m_answers;
+    }
 }
 
 dns_packet_t::pointer_struct_t::pointer_struct_t(kaitai::kstream* p__io, dns_packet_t::label_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {

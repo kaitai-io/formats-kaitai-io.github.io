@@ -316,19 +316,31 @@ namespace Kaitai
         {
             _transactionId = m_io.ReadU2be();
             _flags = new PacketFlags(m_io, this, m_root);
-            _qdcount = m_io.ReadU2be();
-            _ancount = m_io.ReadU2be();
-            _nscount = m_io.ReadU2be();
-            _arcount = m_io.ReadU2be();
-            _queries = new List&lt;Query&gt;((int) (Qdcount));
-            for (var i = 0; i &lt; Qdcount; i++)
-            {
-                _queries.Add(new Query(m_io, this, m_root));
+            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+                _qdcount = m_io.ReadU2be();
             }
-            _answers = new List&lt;Answer&gt;((int) (Ancount));
-            for (var i = 0; i &lt; Ancount; i++)
-            {
-                _answers.Add(new Answer(m_io, this, m_root));
+            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+                _ancount = m_io.ReadU2be();
+            }
+            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+                _nscount = m_io.ReadU2be();
+            }
+            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+                _arcount = m_io.ReadU2be();
+            }
+            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+                _queries = new List&lt;Query&gt;((int) (Qdcount));
+                for (var i = 0; i &lt; Qdcount; i++)
+                {
+                    _queries.Add(new Query(m_io, this, m_root));
+                }
+            }
+            if ( ((Flags.Opcode == 0) || (Flags.Opcode == 1) || (Flags.Opcode == 2)) ) {
+                _answers = new List&lt;Answer&gt;((int) (Ancount));
+                for (var i = 0; i &lt; Ancount; i++)
+                {
+                    _answers.Add(new Answer(m_io, this, m_root));
+                }
             }
         }
         public partial class PointerStruct : KaitaiStruct
@@ -748,10 +760,10 @@ namespace Kaitai
         }
         private ushort _transactionId;
         private PacketFlags _flags;
-        private ushort _qdcount;
-        private ushort _ancount;
-        private ushort _nscount;
-        private ushort _arcount;
+        private ushort? _qdcount;
+        private ushort? _ancount;
+        private ushort? _nscount;
+        private ushort? _arcount;
         private List&lt;Query&gt; _queries;
         private List&lt;Answer&gt; _answers;
         private DnsPacket m_root;
@@ -766,22 +778,22 @@ namespace Kaitai
         /// &lt;summary&gt;
         /// How many questions are there
         /// &lt;/summary&gt;
-        public ushort Qdcount { get { return _qdcount; } }
+        public ushort? Qdcount { get { return _qdcount; } }
 
         /// &lt;summary&gt;
         /// Number of resource records answering the question
         /// &lt;/summary&gt;
-        public ushort Ancount { get { return _ancount; } }
+        public ushort? Ancount { get { return _ancount; } }
 
         /// &lt;summary&gt;
         /// Number of resource records pointing toward an authority
         /// &lt;/summary&gt;
-        public ushort Nscount { get { return _nscount; } }
+        public ushort? Nscount { get { return _nscount; } }
 
         /// &lt;summary&gt;
         /// Number of resource records holding additional information
         /// &lt;/summary&gt;
-        public ushort Arcount { get { return _arcount; } }
+        public ushort? Arcount { get { return _arcount; } }
         public List&lt;Query&gt; Queries { get { return _queries; } }
         public List&lt;Answer&gt; Answers { get { return _answers; } }
         public DnsPacket M_Root { get { return m_root; } }

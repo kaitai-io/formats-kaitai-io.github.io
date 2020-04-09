@@ -72,17 +72,29 @@ var DnsPacket = (function() {
   DnsPacket.prototype._read = function() {
     this.transactionId = this._io.readU2be();
     this.flags = new PacketFlags(this._io, this, this._root);
-    this.qdcount = this._io.readU2be();
-    this.ancount = this._io.readU2be();
-    this.nscount = this._io.readU2be();
-    this.arcount = this._io.readU2be();
-    this.queries = new Array(this.qdcount);
-    for (var i = 0; i < this.qdcount; i++) {
-      this.queries[i] = new Query(this._io, this, this._root);
+    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+      this.qdcount = this._io.readU2be();
     }
-    this.answers = new Array(this.ancount);
-    for (var i = 0; i < this.ancount; i++) {
-      this.answers[i] = new Answer(this._io, this, this._root);
+    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+      this.ancount = this._io.readU2be();
+    }
+    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+      this.nscount = this._io.readU2be();
+    }
+    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+      this.arcount = this._io.readU2be();
+    }
+    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+      this.queries = new Array(this.qdcount);
+      for (var i = 0; i < this.qdcount; i++) {
+        this.queries[i] = new Query(this._io, this, this._root);
+      }
+    }
+    if ( ((this.flags.opcode == 0) || (this.flags.opcode == 1) || (this.flags.opcode == 2)) ) {
+      this.answers = new Array(this.ancount);
+      for (var i = 0; i < this.ancount; i++) {
+        this.answers[i] = new Answer(this._io, this, this._root);
+      }
     }
   }
 

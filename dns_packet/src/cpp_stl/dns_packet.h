@@ -378,11 +378,47 @@ private:
     uint16_t m_transaction_id;
     packet_flags_t* m_flags;
     uint16_t m_qdcount;
+    bool n_qdcount;
+
+public:
+    bool _is_null_qdcount() { qdcount(); return n_qdcount; };
+
+private:
     uint16_t m_ancount;
+    bool n_ancount;
+
+public:
+    bool _is_null_ancount() { ancount(); return n_ancount; };
+
+private:
     uint16_t m_nscount;
+    bool n_nscount;
+
+public:
+    bool _is_null_nscount() { nscount(); return n_nscount; };
+
+private:
     uint16_t m_arcount;
+    bool n_arcount;
+
+public:
+    bool _is_null_arcount() { arcount(); return n_arcount; };
+
+private:
     std::vector<query_t*>* m_queries;
+    bool n_queries;
+
+public:
+    bool _is_null_queries() { queries(); return n_queries; };
+
+private:
     std::vector<answer_t*>* m_answers;
+    bool n_answers;
+
+public:
+    bool _is_null_answers() { answers(); return n_answers; };
+
+private:
     dns_packet_t* m__root;
     kaitai::kstruct* m__parent;
 

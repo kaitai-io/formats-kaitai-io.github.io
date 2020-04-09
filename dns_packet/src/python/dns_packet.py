@@ -44,17 +44,29 @@ class DnsPacket(KaitaiStruct):
     def _read(self):
         self.transaction_id = self._io.read_u2be()
         self.flags = self._root.PacketFlags(self._io, self, self._root)
-        self.qdcount = self._io.read_u2be()
-        self.ancount = self._io.read_u2be()
-        self.nscount = self._io.read_u2be()
-        self.arcount = self._io.read_u2be()
-        self.queries = [None] * (self.qdcount)
-        for i in range(self.qdcount):
-            self.queries[i] = self._root.Query(self._io, self, self._root)
+        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+            self.qdcount = self._io.read_u2be()
 
-        self.answers = [None] * (self.ancount)
-        for i in range(self.ancount):
-            self.answers[i] = self._root.Answer(self._io, self, self._root)
+        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+            self.ancount = self._io.read_u2be()
+
+        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+            self.nscount = self._io.read_u2be()
+
+        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+            self.arcount = self._io.read_u2be()
+
+        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+            self.queries = [None] * (self.qdcount)
+            for i in range(self.qdcount):
+                self.queries[i] = self._root.Query(self._io, self, self._root)
+
+
+        if  ((self.flags.opcode == 0) or (self.flags.opcode == 1) or (self.flags.opcode == 2)) :
+            self.answers = [None] * (self.ancount)
+            for i in range(self.ancount):
+                self.answers[i] = self._root.Answer(self._io, self, self._root)
+
 
 
     class PointerStruct(KaitaiStruct):

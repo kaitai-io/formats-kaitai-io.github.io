@@ -46,18 +46,30 @@ class DnsPacket < Kaitai::Struct::Struct
   def _read
     @transaction_id = @_io.read_u2be
     @flags = PacketFlags.new(@_io, self, @_root)
-    @qdcount = @_io.read_u2be
-    @ancount = @_io.read_u2be
-    @nscount = @_io.read_u2be
-    @arcount = @_io.read_u2be
-    @queries = Array.new(qdcount)
-    (qdcount).times { |i|
-      @queries[i] = Query.new(@_io, self, @_root)
-    }
-    @answers = Array.new(ancount)
-    (ancount).times { |i|
-      @answers[i] = Answer.new(@_io, self, @_root)
-    }
+    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+      @qdcount = @_io.read_u2be
+    end
+    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+      @ancount = @_io.read_u2be
+    end
+    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+      @nscount = @_io.read_u2be
+    end
+    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+      @arcount = @_io.read_u2be
+    end
+    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+      @queries = Array.new(qdcount)
+      (qdcount).times { |i|
+        @queries[i] = Query.new(@_io, self, @_root)
+      }
+    end
+    if  ((flags.opcode == 0) || (flags.opcode == 1) || (flags.opcode == 2)) 
+      @answers = Array.new(ancount)
+      (ancount).times { |i|
+        @answers[i] = Answer.new(@_io, self, @_root)
+      }
+    end
     self
   end
   class PointerStruct < Kaitai::Struct::Struct

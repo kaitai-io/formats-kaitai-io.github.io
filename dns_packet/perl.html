@@ -300,19 +300,31 @@ sub _read {
 
     $self-&gt;{transaction_id} = $self-&gt;{_io}-&gt;read_u2be();
     $self-&gt;{flags} = DnsPacket::PacketFlags-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{qdcount} = $self-&gt;{_io}-&gt;read_u2be();
-    $self-&gt;{ancount} = $self-&gt;{_io}-&gt;read_u2be();
-    $self-&gt;{nscount} = $self-&gt;{_io}-&gt;read_u2be();
-    $self-&gt;{arcount} = $self-&gt;{_io}-&gt;read_u2be();
-    $self-&gt;{queries} = ();
-    my $n_queries = $self-&gt;qdcount();
-    for (my $i = 0; $i &lt; $n_queries; $i++) {
-        $self-&gt;{queries}[$i] = DnsPacket::Query-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+        $self-&gt;{qdcount} = $self-&gt;{_io}-&gt;read_u2be();
     }
-    $self-&gt;{answers} = ();
-    my $n_answers = $self-&gt;ancount();
-    for (my $i = 0; $i &lt; $n_answers; $i++) {
-        $self-&gt;{answers}[$i] = DnsPacket::Answer-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+        $self-&gt;{ancount} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+        $self-&gt;{nscount} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+        $self-&gt;{arcount} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+        $self-&gt;{queries} = ();
+        my $n_queries = $self-&gt;qdcount();
+        for (my $i = 0; $i &lt; $n_queries; $i++) {
+            $self-&gt;{queries}[$i] = DnsPacket::Query-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        }
+    }
+    if ( (($self-&gt;flags()-&gt;opcode() == 0) || ($self-&gt;flags()-&gt;opcode() == 1) || ($self-&gt;flags()-&gt;opcode() == 2)) ) {
+        $self-&gt;{answers} = ();
+        my $n_answers = $self-&gt;ancount();
+        for (my $i = 0; $i &lt; $n_answers; $i++) {
+            $self-&gt;{answers}[$i] = DnsPacket::Answer-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        }
     }
 }
 

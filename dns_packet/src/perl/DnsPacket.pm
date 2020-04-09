@@ -59,19 +59,31 @@ sub _read {
 
     $self->{transaction_id} = $self->{_io}->read_u2be();
     $self->{flags} = DnsPacket::PacketFlags->new($self->{_io}, $self, $self->{_root});
-    $self->{qdcount} = $self->{_io}->read_u2be();
-    $self->{ancount} = $self->{_io}->read_u2be();
-    $self->{nscount} = $self->{_io}->read_u2be();
-    $self->{arcount} = $self->{_io}->read_u2be();
-    $self->{queries} = ();
-    my $n_queries = $self->qdcount();
-    for (my $i = 0; $i < $n_queries; $i++) {
-        $self->{queries}[$i] = DnsPacket::Query->new($self->{_io}, $self, $self->{_root});
+    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+        $self->{qdcount} = $self->{_io}->read_u2be();
     }
-    $self->{answers} = ();
-    my $n_answers = $self->ancount();
-    for (my $i = 0; $i < $n_answers; $i++) {
-        $self->{answers}[$i] = DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
+    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+        $self->{ancount} = $self->{_io}->read_u2be();
+    }
+    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+        $self->{nscount} = $self->{_io}->read_u2be();
+    }
+    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+        $self->{arcount} = $self->{_io}->read_u2be();
+    }
+    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+        $self->{queries} = ();
+        my $n_queries = $self->qdcount();
+        for (my $i = 0; $i < $n_queries; $i++) {
+            $self->{queries}[$i] = DnsPacket::Query->new($self->{_io}, $self, $self->{_root});
+        }
+    }
+    if ( (($self->flags()->opcode() == 0) || ($self->flags()->opcode() == 1) || ($self->flags()->opcode() == 2)) ) {
+        $self->{answers} = ();
+        my $n_answers = $self->ancount();
+        for (my $i = 0; $i < $n_answers; $i++) {
+            $self->{answers}[$i] = DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
+        }
     }
 }
 

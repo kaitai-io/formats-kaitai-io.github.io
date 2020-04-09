@@ -81,17 +81,29 @@ public class DnsPacket extends KaitaiStruct {
     private void _read() {
         this.transactionId = this._io.readU2be();
         this.flags = new PacketFlags(this._io, this, _root);
-        this.qdcount = this._io.readU2be();
-        this.ancount = this._io.readU2be();
-        this.nscount = this._io.readU2be();
-        this.arcount = this._io.readU2be();
-        queries = new ArrayList<Query>((int) (qdcount()));
-        for (int i = 0; i < qdcount(); i++) {
-            this.queries.add(new Query(this._io, this, _root));
+        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+            this.qdcount = this._io.readU2be();
         }
-        answers = new ArrayList<Answer>((int) (ancount()));
-        for (int i = 0; i < ancount(); i++) {
-            this.answers.add(new Answer(this._io, this, _root));
+        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+            this.ancount = this._io.readU2be();
+        }
+        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+            this.nscount = this._io.readU2be();
+        }
+        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+            this.arcount = this._io.readU2be();
+        }
+        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+            queries = new ArrayList<Query>((int) (qdcount()));
+            for (int i = 0; i < qdcount(); i++) {
+                this.queries.add(new Query(this._io, this, _root));
+            }
+        }
+        if ( ((flags().opcode() == 0) || (flags().opcode() == 1) || (flags().opcode() == 2)) ) {
+            answers = new ArrayList<Answer>((int) (ancount()));
+            for (int i = 0; i < ancount(); i++) {
+                this.answers.add(new Answer(this._io, this, _root));
+            }
         }
     }
     public static class PointerStruct extends KaitaiStruct {
@@ -472,10 +484,10 @@ public class DnsPacket extends KaitaiStruct {
     }
     private int transactionId;
     private PacketFlags flags;
-    private int qdcount;
-    private int ancount;
-    private int nscount;
-    private int arcount;
+    private Integer qdcount;
+    private Integer ancount;
+    private Integer nscount;
+    private Integer arcount;
     private ArrayList<Query> queries;
     private ArrayList<Answer> answers;
     private DnsPacket _root;
@@ -490,22 +502,22 @@ public class DnsPacket extends KaitaiStruct {
     /**
      * How many questions are there
      */
-    public int qdcount() { return qdcount; }
+    public Integer qdcount() { return qdcount; }
 
     /**
      * Number of resource records answering the question
      */
-    public int ancount() { return ancount; }
+    public Integer ancount() { return ancount; }
 
     /**
      * Number of resource records pointing toward an authority
      */
-    public int nscount() { return nscount; }
+    public Integer nscount() { return nscount; }
 
     /**
      * Number of resource records holding additional information
      */
-    public int arcount() { return arcount; }
+    public Integer arcount() { return arcount; }
     public ArrayList<Query> queries() { return queries; }
     public ArrayList<Answer> answers() { return answers; }
     public DnsPacket _root() { return _root; }
