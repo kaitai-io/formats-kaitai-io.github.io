@@ -98,7 +98,8 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>Android apps using directly or indirectly OpenGL cache compiled shaders into com.android.opengl.shaders_cache file.</p>
+                <p><p>Android apps using directly or indirectly OpenGL cache compiled shaders
+into com.android.opengl.shaders_cache file.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -259,16 +260,16 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{signature} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (69, 71, 76, 36)));
+    $self-&gt;{magic} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (69, 71, 76, 36)));
     $self-&gt;{crc32} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{_raw_contents} = $self-&gt;{_io}-&gt;read_bytes_full();
     my $io__raw_contents = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_contents});
     $self-&gt;{contents} = AndroidOpenglShadersCache::Cache-&gt;new($io__raw_contents, $self, $self-&gt;{_root});
 }
 
-sub signature {
+sub magic {
     my ($self) = @_;
-    return $self-&gt;{signature};
+    return $self-&gt;{magic};
 }
 
 sub crc32 {
@@ -325,7 +326,7 @@ sub alignment {
 }
 
 ########################################################################
-package AndroidOpenglShadersCache::String;
+package AndroidOpenglShadersCache::PrefixedString;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
 
@@ -354,14 +355,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{length} = $self-&gt;{_io}-&gt;read_u4le();
-    $self-&gt;{str} = Encode::decode(&quot;ascii&quot;, IO::KaitaiStruct::Stream::bytes_terminate($self-&gt;{_io}-&gt;read_bytes($self-&gt;length()), 0, 0));
+    $self-&gt;{len_str} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{str} = Encode::decode(&quot;ascii&quot;, IO::KaitaiStruct::Stream::bytes_terminate($self-&gt;{_io}-&gt;read_bytes($self-&gt;len_str()), 0, 0));
     $self-&gt;{alignment} = AndroidOpenglShadersCache::Alignment-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
 }
 
-sub length {
+sub len_str {
     my ($self) = @_;
-    return $self-&gt;{length};
+    return $self-&gt;{len_str};
 }
 
 sub str {
@@ -404,23 +405,23 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{signature} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (36, 98, 66, 95)));
+    $self-&gt;{magic} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (36, 98, 66, 95)));
     $self-&gt;{version} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{device_version} = $self-&gt;{_io}-&gt;read_u4le();
-    $self-&gt;{count_of_entries} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{num_entries} = $self-&gt;{_io}-&gt;read_u4le();
     if ($self-&gt;version() &gt;= 3) {
-        $self-&gt;{build_id} = AndroidOpenglShadersCache::String-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        $self-&gt;{build_id} = AndroidOpenglShadersCache::PrefixedString-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
     $self-&gt;{entries} = ();
-    my $n_entries = $self-&gt;count_of_entries();
+    my $n_entries = $self-&gt;num_entries();
     for (my $i = 0; $i &lt; $n_entries; $i++) {
         $self-&gt;{entries}[$i] = AndroidOpenglShadersCache::Cache::Entry-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
 }
 
-sub signature {
+sub magic {
     my ($self) = @_;
-    return $self-&gt;{signature};
+    return $self-&gt;{magic};
 }
 
 sub version {
@@ -433,9 +434,9 @@ sub device_version {
     return $self-&gt;{device_version};
 }
 
-sub count_of_entries {
+sub num_entries {
     my ($self) = @_;
-    return $self-&gt;{count_of_entries};
+    return $self-&gt;{num_entries};
 }
 
 sub build_id {
@@ -478,21 +479,21 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{key_size} = $self-&gt;{_io}-&gt;read_u4le();
-    $self-&gt;{value_size} = $self-&gt;{_io}-&gt;read_u4le();
-    $self-&gt;{key} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;key_size());
-    $self-&gt;{value} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;value_size());
+    $self-&gt;{len_key} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{len_value} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{key} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_key());
+    $self-&gt;{value} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_value());
     $self-&gt;{alignment} = AndroidOpenglShadersCache::Alignment-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
 }
 
-sub key_size {
+sub len_key {
     my ($self) = @_;
-    return $self-&gt;{key_size};
+    return $self-&gt;{len_key};
 }
 
-sub value_size {
+sub len_value {
     my ($self) = @_;
-    return $self-&gt;{value_size};
+    return $self-&gt;{len_value};
 }
 
 sub key {

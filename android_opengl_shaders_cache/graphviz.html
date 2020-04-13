@@ -98,7 +98,8 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>Android apps using directly or indirectly OpenGL cache compiled shaders into com.android.opengl.shaders_cache file.</p>
+                <p><p>Android apps using directly or indirectly OpenGL cache compiled shaders
+into com.android.opengl.shaders_cache file.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -231,7 +232,7 @@ section#format-index .row {
 
 		android_opengl_shaders_cache__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;signature_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;signature_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;45 47 4C 24&lt;/TD&gt;&lt;TD PORT=&quot;signature_type&quot;&gt;signature&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;magic_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;magic_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;45 47 4C 24&lt;/TD&gt;&lt;TD PORT=&quot;magic_type&quot;&gt;magic&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;crc32_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;crc32_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;crc32_type&quot;&gt;crc32&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;contents_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;contents_size&quot;&gt;⇲&lt;/TD&gt;&lt;TD&gt;Cache&lt;/TD&gt;&lt;TD PORT=&quot;contents_type&quot;&gt;contents&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
@@ -244,14 +245,14 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD PORT=&quot;alignment_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;alignment_size&quot;&gt;((_io.pos + 3) &amp;amp; (~3 - _io.pos))&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;alignment_type&quot;&gt;alignment&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
-		subgraph cluster__string {
-			label=&quot;AndroidOpenglShadersCache::String&quot;;
+		subgraph cluster__prefixed_string {
+			label=&quot;AndroidOpenglShadersCache::PrefixedString&quot;;
 			graph[style=dotted];
 
-			string__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			prefixed_string__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;length_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;length_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;length_type&quot;&gt;length&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;str_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;str_size&quot;&gt;length&lt;/TD&gt;&lt;TD&gt;str(ascii)&lt;/TD&gt;&lt;TD PORT=&quot;str_type&quot;&gt;str&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_str_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_str_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_str_type&quot;&gt;len_str&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;str_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;str_size&quot;&gt;len_str&lt;/TD&gt;&lt;TD&gt;str(ascii)&lt;/TD&gt;&lt;TD PORT=&quot;str_type&quot;&gt;str&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;alignment_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;alignment_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Alignment&lt;/TD&gt;&lt;TD PORT=&quot;alignment_type&quot;&gt;alignment&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
@@ -261,13 +262,13 @@ section#format-index .row {
 
 			cache__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;signature_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;signature_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;24 62 42 5F&lt;/TD&gt;&lt;TD PORT=&quot;signature_type&quot;&gt;signature&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;magic_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;magic_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;24 62 42 5F&lt;/TD&gt;&lt;TD PORT=&quot;magic_type&quot;&gt;magic&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;version_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;version_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;version_type&quot;&gt;version&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;device_version_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;device_version_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;device_version_type&quot;&gt;device_version&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;count_of_entries_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;count_of_entries_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;count_of_entries_type&quot;&gt;count_of_entries&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;build_id_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;build_id_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;String&lt;/TD&gt;&lt;TD PORT=&quot;build_id_type&quot;&gt;build_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_entries_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;num_entries_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;num_entries_type&quot;&gt;num_entries&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;build_id_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;build_id_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;PrefixedString&lt;/TD&gt;&lt;TD PORT=&quot;build_id_type&quot;&gt;build_id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;entries_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;entries_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Entry&lt;/TD&gt;&lt;TD PORT=&quot;entries_type&quot;&gt;entries&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;entries__repeat&quot;&gt;repeat count_of_entries times&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;entries__repeat&quot;&gt;repeat num_entries times&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 			subgraph cluster__entry {
 				label=&quot;AndroidOpenglShadersCache::Cache::Entry&quot;;
@@ -275,23 +276,23 @@ section#format-index .row {
 
 				entry__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;key_size_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;key_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;key_size_type&quot;&gt;key_size&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;value_size_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;value_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;value_size_type&quot;&gt;value_size&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;key_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;key_size&quot;&gt;key_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;key_type&quot;&gt;key&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;value_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;value_size&quot;&gt;value_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;value_type&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;len_key_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_key_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_key_type&quot;&gt;len_key&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;len_value_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;len_value_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_value_type&quot;&gt;len_value&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;key_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;key_size&quot;&gt;len_key&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;key_type&quot;&gt;key&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;value_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;value_size&quot;&gt;len_value&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;value_type&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;alignment_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;alignment_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Alignment&lt;/TD&gt;&lt;TD PORT=&quot;alignment_type&quot;&gt;alignment&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
 			}
 		}
 	}
 	android_opengl_shaders_cache__seq:contents_type -&gt; cache__seq [style=bold];
-	string__seq:length_type -&gt; string__seq:str_size [color=&quot;#404040&quot;];
-	string__seq:alignment_type -&gt; alignment__seq [style=bold];
-	cache__seq:build_id_type -&gt; string__seq [style=bold];
+	prefixed_string__seq:len_str_type -&gt; prefixed_string__seq:str_size [color=&quot;#404040&quot;];
+	prefixed_string__seq:alignment_type -&gt; alignment__seq [style=bold];
+	cache__seq:build_id_type -&gt; prefixed_string__seq [style=bold];
 	cache__seq:entries_type -&gt; entry__seq [style=bold];
-	cache__seq:count_of_entries_type -&gt; cache__seq:entries__repeat [color=&quot;#404040&quot;];
-	entry__seq:key_size_type -&gt; entry__seq:key_size [color=&quot;#404040&quot;];
-	entry__seq:value_size_type -&gt; entry__seq:value_size [color=&quot;#404040&quot;];
+	cache__seq:num_entries_type -&gt; cache__seq:entries__repeat [color=&quot;#404040&quot;];
+	entry__seq:len_key_type -&gt; entry__seq:key_size [color=&quot;#404040&quot;];
+	entry__seq:len_value_type -&gt; entry__seq:value_size [color=&quot;#404040&quot;];
 	entry__seq:alignment_type -&gt; alignment__seq [style=bold];
 }
 </code></pre>

@@ -35,16 +35,16 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (69, 71, 76, 36)));
+    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (69, 71, 76, 36)));
     $self->{crc32} = $self->{_io}->read_u4le();
     $self->{_raw_contents} = $self->{_io}->read_bytes_full();
     my $io__raw_contents = IO::KaitaiStruct::Stream->new($self->{_raw_contents});
     $self->{contents} = AndroidOpenglShadersCache::Cache->new($io__raw_contents, $self, $self->{_root});
 }
 
-sub signature {
+sub magic {
     my ($self) = @_;
-    return $self->{signature};
+    return $self->{magic};
 }
 
 sub crc32 {
@@ -101,7 +101,7 @@ sub alignment {
 }
 
 ########################################################################
-package AndroidOpenglShadersCache::String;
+package AndroidOpenglShadersCache::PrefixedString;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -130,14 +130,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{length} = $self->{_io}->read_u4le();
-    $self->{str} = Encode::decode("ascii", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes($self->length()), 0, 0));
+    $self->{len_str} = $self->{_io}->read_u4le();
+    $self->{str} = Encode::decode("ascii", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes($self->len_str()), 0, 0));
     $self->{alignment} = AndroidOpenglShadersCache::Alignment->new($self->{_io}, $self, $self->{_root});
 }
 
-sub length {
+sub len_str {
     my ($self) = @_;
-    return $self->{length};
+    return $self->{len_str};
 }
 
 sub str {
@@ -180,23 +180,23 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (36, 98, 66, 95)));
+    $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (36, 98, 66, 95)));
     $self->{version} = $self->{_io}->read_u4le();
     $self->{device_version} = $self->{_io}->read_u4le();
-    $self->{count_of_entries} = $self->{_io}->read_u4le();
+    $self->{num_entries} = $self->{_io}->read_u4le();
     if ($self->version() >= 3) {
-        $self->{build_id} = AndroidOpenglShadersCache::String->new($self->{_io}, $self, $self->{_root});
+        $self->{build_id} = AndroidOpenglShadersCache::PrefixedString->new($self->{_io}, $self, $self->{_root});
     }
     $self->{entries} = ();
-    my $n_entries = $self->count_of_entries();
+    my $n_entries = $self->num_entries();
     for (my $i = 0; $i < $n_entries; $i++) {
         $self->{entries}[$i] = AndroidOpenglShadersCache::Cache::Entry->new($self->{_io}, $self, $self->{_root});
     }
 }
 
-sub signature {
+sub magic {
     my ($self) = @_;
-    return $self->{signature};
+    return $self->{magic};
 }
 
 sub version {
@@ -209,9 +209,9 @@ sub device_version {
     return $self->{device_version};
 }
 
-sub count_of_entries {
+sub num_entries {
     my ($self) = @_;
-    return $self->{count_of_entries};
+    return $self->{num_entries};
 }
 
 sub build_id {
@@ -254,21 +254,21 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{key_size} = $self->{_io}->read_u4le();
-    $self->{value_size} = $self->{_io}->read_u4le();
-    $self->{key} = $self->{_io}->read_bytes($self->key_size());
-    $self->{value} = $self->{_io}->read_bytes($self->value_size());
+    $self->{len_key} = $self->{_io}->read_u4le();
+    $self->{len_value} = $self->{_io}->read_u4le();
+    $self->{key} = $self->{_io}->read_bytes($self->len_key());
+    $self->{value} = $self->{_io}->read_bytes($self->len_value());
     $self->{alignment} = AndroidOpenglShadersCache::Alignment->new($self->{_io}, $self, $self->{_root});
 }
 
-sub key_size {
+sub len_key {
     my ($self) = @_;
-    return $self->{key_size};
+    return $self->{len_key};
 }
 
-sub value_size {
+sub len_value {
     my ($self) = @_;
-    return $self->{value_size};
+    return $self->{len_value};
 }
 
 sub key {

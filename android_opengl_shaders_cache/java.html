@@ -98,7 +98,8 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>Android apps using directly or indirectly OpenGL cache compiled shaders into com.android.opengl.shaders_cache file.</p>
+                <p><p>Android apps using directly or indirectly OpenGL cache compiled shaders
+into com.android.opengl.shaders_cache file.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -255,7 +256,8 @@ import java.util.ArrayList;
 
 
 /**
- * Android apps using directly or indirectly OpenGL cache compiled shaders into com.android.opengl.shaders_cache file.
+ * Android apps using directly or indirectly OpenGL cache compiled shaders
+ * into com.android.opengl.shaders_cache file.
  * @see &lt;a href=&quot;https://android.googlesource.com/platform/frameworks/native/+/master/opengl/libs/EGL/FileBlobCache.cpp&quot;&gt;Source&lt;/a&gt;
  */
 public class AndroidOpenglShadersCache extends KaitaiStruct {
@@ -278,7 +280,7 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.signature = this._io.ensureFixedContents(new byte[] { 69, 71, 76, 36 });
+        this.magic = this._io.ensureFixedContents(new byte[] { 69, 71, 76, 36 });
         this.crc32 = this._io.readU4le();
         this._raw_contents = this._io.readBytesFull();
         KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
@@ -317,36 +319,36 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
         public AndroidOpenglShadersCache _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
-    public static class String extends KaitaiStruct {
-        public static String fromFile(String fileName) throws IOException {
-            return new String(new ByteBufferKaitaiStream(fileName));
+    public static class PrefixedString extends KaitaiStruct {
+        public static PrefixedString fromFile(String fileName) throws IOException {
+            return new PrefixedString(new ByteBufferKaitaiStream(fileName));
         }
 
-        public String(KaitaiStream _io) {
+        public PrefixedString(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public String(KaitaiStream _io, AndroidOpenglShadersCache.Cache _parent) {
+        public PrefixedString(KaitaiStream _io, AndroidOpenglShadersCache.Cache _parent) {
             this(_io, _parent, null);
         }
 
-        public String(KaitaiStream _io, AndroidOpenglShadersCache.Cache _parent, AndroidOpenglShadersCache _root) {
+        public PrefixedString(KaitaiStream _io, AndroidOpenglShadersCache.Cache _parent, AndroidOpenglShadersCache _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.length = this._io.readU4le();
-            this.str = new String(KaitaiStream.bytesTerminate(this._io.readBytes(length()), (byte) 0, false), Charset.forName(&quot;ascii&quot;));
+            this.lenStr = this._io.readU4le();
+            this.str = new String(KaitaiStream.bytesTerminate(this._io.readBytes(lenStr()), (byte) 0, false), Charset.forName(&quot;ascii&quot;));
             this.alignment = new Alignment(this._io, this, _root);
         }
-        private long length;
+        private long lenStr;
         private String str;
         private Alignment alignment;
         private AndroidOpenglShadersCache _root;
         private AndroidOpenglShadersCache.Cache _parent;
-        public long length() { return length; }
+        public long lenStr() { return lenStr; }
         public String str() { return str; }
         public Alignment alignment() { return alignment; }
         public AndroidOpenglShadersCache _root() { return _root; }
@@ -376,15 +378,15 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.signature = this._io.ensureFixedContents(new byte[] { 36, 98, 66, 95 });
+            this.magic = this._io.ensureFixedContents(new byte[] { 36, 98, 66, 95 });
             this.version = this._io.readU4le();
             this.deviceVersion = this._io.readU4le();
-            this.countOfEntries = this._io.readU4le();
+            this.numEntries = this._io.readU4le();
             if (version() &gt;= 3) {
-                this.buildId = new String(this._io, this, _root);
+                this.buildId = new PrefixedString(this._io, this, _root);
             }
-            entries = new ArrayList&lt;Entry&gt;((int) (countOfEntries()));
-            for (int i = 0; i &lt; countOfEntries(); i++) {
+            entries = new ArrayList&lt;Entry&gt;((int) (numEntries()));
+            for (int i = 0; i &lt; numEntries(); i++) {
                 this.entries.add(new Entry(this._io, this, _root));
             }
         }
@@ -408,51 +410,51 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.keySize = this._io.readU4le();
-                this.valueSize = this._io.readU4le();
-                this.key = this._io.readBytes(keySize());
-                this.value = this._io.readBytes(valueSize());
+                this.lenKey = this._io.readU4le();
+                this.lenValue = this._io.readU4le();
+                this.key = this._io.readBytes(lenKey());
+                this.value = this._io.readBytes(lenValue());
                 this.alignment = new Alignment(this._io, this, _root);
             }
-            private long keySize;
-            private long valueSize;
+            private long lenKey;
+            private long lenValue;
             private byte[] key;
             private byte[] value;
             private Alignment alignment;
             private AndroidOpenglShadersCache _root;
             private AndroidOpenglShadersCache.Cache _parent;
-            public long keySize() { return keySize; }
-            public long valueSize() { return valueSize; }
+            public long lenKey() { return lenKey; }
+            public long lenValue() { return lenValue; }
             public byte[] key() { return key; }
             public byte[] value() { return value; }
             public Alignment alignment() { return alignment; }
             public AndroidOpenglShadersCache _root() { return _root; }
             public AndroidOpenglShadersCache.Cache _parent() { return _parent; }
         }
-        private byte[] signature;
+        private byte[] magic;
         private long version;
         private long deviceVersion;
-        private long countOfEntries;
-        private String buildId;
+        private long numEntries;
+        private PrefixedString buildId;
         private ArrayList&lt;Entry&gt; entries;
         private AndroidOpenglShadersCache _root;
         private AndroidOpenglShadersCache _parent;
-        public byte[] signature() { return signature; }
+        public byte[] magic() { return magic; }
         public long version() { return version; }
         public long deviceVersion() { return deviceVersion; }
-        public long countOfEntries() { return countOfEntries; }
-        public String buildId() { return buildId; }
+        public long numEntries() { return numEntries; }
+        public PrefixedString buildId() { return buildId; }
         public ArrayList&lt;Entry&gt; entries() { return entries; }
         public AndroidOpenglShadersCache _root() { return _root; }
         public AndroidOpenglShadersCache _parent() { return _parent; }
     }
-    private byte[] signature;
+    private byte[] magic;
     private long crc32;
     private Cache contents;
     private AndroidOpenglShadersCache _root;
     private KaitaiStruct _parent;
     private byte[] _raw_contents;
-    public byte[] signature() { return signature; }
+    public byte[] magic() { return magic; }
 
     /**
      * crc32 of `contents`
