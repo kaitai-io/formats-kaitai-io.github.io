@@ -203,7 +203,7 @@ particular hardware samplers or synths.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: fasttracker_xm_module
   title: Extended Module
@@ -250,7 +250,7 @@ types:
   preheader:
     seq:
       - id: signature0
-        contents: 'Extended Module: '
+        contents: &#39;Extended Module: &#39;
       - id: module_name
         size: 20
         type: strz
@@ -263,10 +263,10 @@ types:
         doc: Tracker name
       - id: version_number
         type: version
-        doc: "Format versions below [0x01, 0x04] have a LOT of differences. Check this field!"
+        doc: &quot;Format versions below [0x01, 0x04] have a LOT of differences. Check this field!&quot;
       - id: header_size
         type: u4
-        doc: Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
+        doc: Header size &lt;&lt; Calculated FROM THIS OFFSET, not from the beginning of the file! &gt;&gt;
     types:
       version:
         seq:
@@ -278,7 +278,7 @@ types:
             doc: currently 0x01
         instances:
           value:
-            value: (major<<8) | minor
+            value: (major&lt;&lt;8) | minor
   header:
     seq:
       - id: song_length
@@ -288,13 +288,13 @@ types:
         type: u2
       - id: num_channels
         type: u2
-        doc: "(2,4,6,8,10,...,32)"
+        doc: &quot;(2,4,6,8,10,...,32)&quot;
       - id: num_patterns
         type: u2
-        doc: "(max 256)"
+        doc: &quot;(max 256)&quot;
       - id: num_instruments
         type: u2
-        doc: "(max 128)"
+        doc: &quot;(max 128)&quot;
       - id: flags
         type: flags
       - id: default_tempo
@@ -303,7 +303,7 @@ types:
         type: u2
       - id: pattern_order_table
         type: u1
-        doc: "max 256"
+        doc: &quot;max 256&quot;
         repeat: expr
         #repeat-expr: song_length
         repeat-expr: 256
@@ -313,7 +313,7 @@ types:
         type: b15
       - id: freq_table_type
         type: b1
-        doc: "0 = Amiga frequency table (see below); 1 = Linear frequency table"
+        doc: &quot;0 = Amiga frequency table (see below); 1 = Linear frequency table&quot;
   pattern:
     seq:
       - id: header
@@ -347,14 +347,14 @@ types:
                   doc: Packed pattern data size
             instances:
               num_rows:
-                value: 'num_rows_raw + (_root.preheader.version_number.value == 0x0102 ? 1 : 0)'
+                value: &#39;num_rows_raw + (_root.preheader.version_number.value == 0x0102 ? 1 : 0)&#39;
   instrument:
     doc: |
-      XM's notion of "instrument" typically constitutes of a
+      XM&#39;s notion of &quot;instrument&quot; typically constitutes of a
       instrument metadata and one or several samples. Metadata
       includes:
 
-      * instrument's name
+      * instrument&#39;s name
       * instruction of which sample to use for which note
       * volume and panning envelopes and looping instructions
       * vibrato settings
@@ -362,8 +362,8 @@ types:
       - id: header_size
         type: u4
         doc: |
-          Instrument size << header that is >>
-          << "Instrument Size" field tends to be more than the actual size of the structure documented here (it includes also the extended instrument sample header above). So remember to check it and skip the additional bytes before the first sample header >>
+          Instrument size &lt;&lt; header that is &gt;&gt;
+          &lt;&lt; &quot;Instrument Size&quot; field tends to be more than the actual size of the structure documented here (it includes also the extended instrument sample header above). So remember to check it and skip the additional bytes before the first sample header &gt;&gt;
       - id: header
         size: header_size - 4
         type: header
@@ -383,12 +383,12 @@ types:
             type: strz
           - id: type
             type: u1
-            doc: Usually zero, but this seems pretty random, don't assume it's zero
+            doc: Usually zero, but this seems pretty random, don&#39;t assume it&#39;s zero
           - id: num_samples
             type: u2
           - id: extra_header
             type: extra_header
-            if: num_samples > 0
+            if: num_samples &gt; 0
       extra_header:
         seq:
           - id: len_sample_header
@@ -399,8 +399,8 @@ types:
             repeat-expr: 96
             doc: |
               Index of sample that should be used for any particular
-              note. In the simplest case, where it's only one sample
-              is available, it's an array of full of zeroes.
+              note. In the simplest case, where it&#39;s only one sample
+              is available, it&#39;s an array of full of zeroes.
           - id: volume_points
             type: envelope_point
             repeat: expr
@@ -484,7 +484,7 @@ types:
             type: sample_header
         seq:
           - id: data
-            size: 'header.sample_length * (header.type.is_sample_data_16_bit ? 2 : 1)'
+            size: &#39;header.sample_length * (header.type.is_sample_data_16_bit ? 2 : 1)&#39;
       sample_header:
         seq:
           - id: sample_length

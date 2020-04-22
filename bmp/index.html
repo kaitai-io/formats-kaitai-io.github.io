@@ -256,7 +256,7 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: bmp
   file-extension: bmp
@@ -291,13 +291,13 @@ doc: |
     http://entropymine.com/jason/bmpsuite/bmpsuite/html/bmpsuite.html
   ) (by Jason Summers)
 
-  If only there was such a comprehensive sample suite for every file format! It's like
+  If only there was such a comprehensive sample suite for every file format! It&#39;s like
   a dream for every developer of any binary file format parser. It contains a lot of
-  different types and variations of BMP files, even the tricky ones, where it's not clear
-  from the specification how to deal with them (marked there as "**q**uestionable").
+  different types and variations of BMP files, even the tricky ones, where it&#39;s not clear
+  from the specification how to deal with them (marked there as &quot;**q**uestionable&quot;).
 
-  If you make a program which will be able to read all the "**g**ood" and "**q**uestionable"
-  BMP files and won't crash on the "**b**ad" ones, it will definitely have one of the most
+  If you make a program which will be able to read all the &quot;**g**ood&quot; and &quot;**q**uestionable&quot;
+  BMP files and won&#39;t crash on the &quot;**b**ad&quot; ones, it will definitely have one of the most
   extensive support of BMP files in the universe!
 
   ## BITMAPV2INFOHEADER and BITMAPV3INFOHEADER
@@ -307,9 +307,9 @@ doc: |
     https://web.archive.org/web/20150127132443/https://forums.adobe.com/message/3272950
   )
 
-  In 2010, someone noticed that Photoshop generated BMP with an odd type of header. There wasn't
-  any documentation available for this header at the time (and still isn't).
-  However, Chris Cox (former Adobe employee) claimed that they hadn't invented any type
+  In 2010, someone noticed that Photoshop generated BMP with an odd type of header. There wasn&#39;t
+  any documentation available for this header at the time (and still isn&#39;t).
+  However, Chris Cox (former Adobe employee) claimed that they hadn&#39;t invented any type
   of proprietary header and everything they were writing was taken directly
   from the Microsoft documentation.
 
@@ -318,9 +318,9 @@ doc: |
   the documentation on MSDN has probably got lost and they have probably
   forgotten about this type of header.
 
-  This is the only source I could find about these structures, so we could't rely
-  on it so much, but I think supporting them as a read-only format won't harm anything.
-  Due to the fact that it isn't documented anywhere else, most applications don't support it.
+  This is the only source I could find about these structures, so we could&#39;t rely
+  on it so much, but I think supporting them as a read-only format won&#39;t harm anything.
+  Due to the fact that it isn&#39;t documented anywhere else, most applications don&#39;t support it.
 
   All Windows headers at once (including mentioned BITMAPV2INFOHEADER and BITMAPV3INFOHEADER):
   ![Bitmap headers overview](
@@ -371,7 +371,7 @@ types:
     seq:
       - id: file_type
         -orig-id: bfType
-        contents: "BM"
+        contents: &quot;BM&quot;
       - id: len_file
         -orig-id: bfSize
         type: u4
@@ -403,29 +403,29 @@ types:
       - id: color_table
         -orig-id: bmciColors
         size-eos: true
-        type: 'color_table(
+        type: &#39;color_table(
             not header.is_core_header,
             header.extends_bitmap_info ? header.bitmap_info_ext.num_colors_used : 0
-          )'
+          )&#39;
         if: not _io.eof
     instances:
       is_color_mask_here:
-        value: >-
+        value: &gt;-
           header.len_header == header_type::bitmap_info_header.to_i
             and (header.bitmap_info_ext.compression == compressions::bitfields or header.bitmap_info_ext.compression == compressions::alpha_bitfields)
       is_color_mask_given:
-        value: >-
+        value: &gt;-
           header.extends_bitmap_info
           and (header.bitmap_info_ext.compression == compressions::bitfields or header.bitmap_info_ext.compression == compressions::alpha_bitfields)
           and (is_color_mask_here or header.is_color_mask_here)
       color_mask_given:
-        value: >-
+        value: &gt;-
           is_color_mask_here
             ? color_mask
             : header.color_mask
         if: is_color_mask_given
       color_mask_red:
-        value: >-
+        value: &gt;-
           is_color_mask_given
             ? color_mask_given.red_mask
             : header.bits_per_pixel == 16
@@ -435,7 +435,7 @@ types:
                 : 0
         #         ^ uses fixed color palette, so color mask is N/A
       color_mask_green:
-        value: >-
+        value: &gt;-
           is_color_mask_given
             ? color_mask_given.green_mask
             : header.bits_per_pixel == 16
@@ -444,7 +444,7 @@ types:
                 ? 0x00_ff_00
                 : 0
       color_mask_blue:
-        value: >-
+        value: &gt;-
           is_color_mask_given
             ? color_mask_given.blue_mask
             : header.bits_per_pixel == 16
@@ -453,7 +453,7 @@ types:
                 ? 0x00_00_ff
                 : 0
       color_mask_alpha:
-        value: >-
+        value: &gt;-
           is_color_mask_given and color_mask_given.has_alpha_mask
             ? color_mask_given.alpha_mask
             : 0
@@ -484,7 +484,7 @@ types:
           cases:
             true: s2
             false: s4
-        doc: Image height, px (positive => bottom-up image, negative => top-down image)
+        doc: Image height, px (positive =&gt; bottom-up image, negative =&gt; top-down image)
       - id: num_planes
         -orig-id: biPlanes
         type: u2
@@ -513,17 +513,17 @@ types:
       is_core_header:
         value: len_header == header_type::bitmap_core_header.to_i
       extends_bitmap_info:
-        value: len_header >= header_type::bitmap_info_header.to_i
+        value: len_header &gt;= header_type::bitmap_info_header.to_i
       extends_os2_2x_bitmap:
         value: len_header == header_type::os2_2x_bitmap_header.to_i
       extends_bitmap_v4:
-        value: len_header >= header_type::bitmap_v4_header.to_i
+        value: len_header &gt;= header_type::bitmap_v4_header.to_i
       extends_bitmap_v5:
-        value: len_header >= header_type::bitmap_v5_header.to_i
+        value: len_header &gt;= header_type::bitmap_v5_header.to_i
       image_height:
-        value: 'image_height_raw < 0 ? -image_height_raw : image_height_raw'
+        value: &#39;image_height_raw &lt; 0 ? -image_height_raw : image_height_raw&#39;
       bottom_up:
-        value: image_height_raw > 0
+        value: image_height_raw &gt; 0
       is_color_mask_here:
         value: len_header == header_type::bitmap_v2_info_header.to_i
           or len_header == header_type::bitmap_v3_info_header.to_i
@@ -586,16 +586,16 @@ types:
         type: u4
         doc: |
           rendering == os2_rendering::error_diffusion
-            => error damping as a percentage in the range 0 through 100
+            =&gt; error damping as a percentage in the range 0 through 100
           rendering == os2_rendering::panda or rendering == os2_rendering::super_circle
-            => X dimension of the pattern used in pixels
+            =&gt; X dimension of the pattern used in pixels
       - id: size2
         type: u4
         doc: |
           rendering == os2_rendering::error_diffusion
-            => not used
+            =&gt; not used
           rendering == os2_rendering::panda or rendering == os2_rendering::super_circle
-            => Y dimension of the pattern used in pixels
+            =&gt; Y dimension of the pattern used in pixels
       - id: color_encoding
         type: u4
         doc: |
@@ -662,7 +662,7 @@ types:
         type: u4
     instances:
       has_profile:
-        value: >-
+        value: &gt;-
           _parent.bitmap_v4_ext.color_space_type == color_space::profile_linked
           or _parent.bitmap_v4_ext.color_space_type == color_space::profile_embedded
       profile_data:
@@ -674,10 +674,10 @@ types:
           cases:
             true: strz
         if: has_profile
-        doc-ref: https://docs.microsoft.com/en-us/previous-versions/windows/desktop/wcs/using-structures-in-wcs-1-0 "If the profile is embedded,
+        doc-ref: https://docs.microsoft.com/en-us/previous-versions/windows/desktop/wcs/using-structures-in-wcs-1-0 &quot;If the profile is embedded,
           profile data is the actual profile, and if it is linked, the profile data is the
           null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively
-          of characters from the Windows character set (code page 1252)."
+          of characters from the Windows character set (code page 1252).&quot;
 
   color_table:
     params:
@@ -694,10 +694,10 @@ types:
       - id: colors
         type: rgb_record(has_reserved_field)
         repeat: expr
-        repeat-expr: 'num_colors > 0 and num_colors < num_colors_present ? num_colors : num_colors_present'
+        repeat-expr: &#39;num_colors &gt; 0 and num_colors &lt; num_colors_present ? num_colors : num_colors_present&#39;
     instances:
       num_colors_present:
-        value: '_io.size / (has_reserved_field ? 4 : 3)'
+        value: &#39;_io.size / (has_reserved_field ? 4 : 3)&#39;
   color_mask:
     params:
       - id: has_alpha_mask
@@ -729,7 +729,7 @@ types:
       - id: reserved
         if: has_reserved_field
         type: u1
-    -webide-representation: "rgb({red:dec}, {green:dec}, {blue:dec})"
+    -webide-representation: &quot;rgb({red:dec}, {green:dec}, {blue:dec})&quot;
 # Common types
   fixed_point_2_dot_30:
     -orig-id: FXPT2DOT30
@@ -738,16 +738,16 @@ types:
         type: u4
     instances:
       value:
-        value: raw.as<f4> / (1 << 30)
-    -webide-representation: "{value}"
+        value: raw.as&lt;f4&gt; / (1 &lt;&lt; 30)
+    -webide-representation: &quot;{value}&quot;
   fixed_point_16_dot_16:
     seq:
       - id: raw
         type: u4
     instances:
       value:
-        value: raw.as<f4> / (1 << 16)
-    -webide-representation: "{value}"
+        value: raw.as&lt;f4&gt; / (1 &lt;&lt; 16)
+    -webide-representation: &quot;{value}&quot;
 enums:
   compressions:
     # https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header (search for bV5Compression)
@@ -813,16 +813,16 @@ enums:
       id: calibrated_rgb
       -orig-id: LCS_CALIBRATED_RGB
       doc: This value implies that endpoints and gamma values are given in the appropriate fields.
-    0x73524742: # 'sRGB'
+    0x73524742: # &#39;sRGB&#39;
       id: s_rgb
       -orig-id: LCS_sRGB
       doc: Specifies that the bitmap is in sRGB color space.
-    0x57696e20: # 'Win '
+    0x57696e20: # &#39;Win &#39;
       id: windows
       -orig-id: LCS_WINDOWS_COLOR_SPACE
       doc: This value indicates that the bitmap is in the system default color space, sRGB.
   # For BITMAPV5HEADER:
-    0x4c494e4b: # 'LINK'
+    0x4c494e4b: # &#39;LINK&#39;
       id: profile_linked
       -orig-id: PROFILE_LINKED
       doc: |
@@ -831,7 +831,7 @@ enums:
 
         If a profile is linked, the path of the profile can be any fully qualified name
         (including a network path) that can be opened using the Win32 CreateFile function.
-    0x4d424544: # 'MBED'
+    0x4d424544: # &#39;MBED&#39;
       id: profile_embedded
       -orig-id: PROFILE_EMBEDDED
       doc: |

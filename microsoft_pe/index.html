@@ -247,7 +247,7 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: microsoft_pe
   title: Microsoft PE (Portable Executable) file format
@@ -283,7 +283,7 @@ types:
   mz_placeholder:
     seq:
       - id: magic
-        contents: "MZ"
+        contents: &quot;MZ&quot;
       - id: data1
         size: 0x3a
       - id: ofs_pe
@@ -292,7 +292,7 @@ types:
   pe_header:
     seq:
       - id: pe_signature
-        contents: ["PE", 0, 0]
+        contents: [&quot;PE&quot;, 0, 0]
       - id: coff_hdr
         type: coff_header
       - id: optional_hdr
@@ -390,7 +390,7 @@ types:
         type: u1
     instances:
       #effective_name: 
-      #  value: name_zeroes == 0 ? name_from_offset : '"fixme"'
+      #  value: name_zeroes == 0 ? name_from_offset : &#39;&quot;fixme&quot;&#39;
       #name_from_offset:
       #  io: _root._io
       #  pos: name_zeroes == 0 ? _parent.symbol_name_table_offset + name_offset : 0
@@ -403,7 +403,7 @@ types:
         pos: section.pointer_to_raw_data + value
         size: 1
   annoyingstring:
-    -webide-representation: '{name}'
+    -webide-representation: &#39;{name}&#39;
     instances:
       name_zeroes:
         pos: 0
@@ -413,7 +413,7 @@ types:
         type: u4
       name_from_offset:
         io: _root._io
-        pos: 'name_zeroes == 0 ? _parent._parent.symbol_name_table_offset + name_offset : 0'
+        pos: &#39;name_zeroes == 0 ? _parent._parent.symbol_name_table_offset + name_offset : 0&#39;
         type: str
         terminator: 0
         encoding: ascii
@@ -427,7 +427,7 @@ types:
         eos-error: false
         if: name_zeroes != 0
       name:
-        value: 'name_zeroes == 0 ? name_from_offset : name_from_short'
+        value: &#39;name_zeroes == 0 ? name_from_offset : name_from_short&#39;
   optional_header:
     seq:
       - id: std
@@ -576,7 +576,7 @@ types:
       - id: size
         type: u4
   section:
-    -webide-representation: "{name}"
+    -webide-representation: &quot;{name}&quot;
     seq:
       - id: name
         type: str
@@ -629,10 +629,10 @@ types:
             Not Supported
         0x0002:
           id: pkcs_signed_data
-          doc: 'bCertificate contains a PKCS#7 SignedData structure'
+          doc: &#39;bCertificate contains a PKCS#7 SignedData structure&#39;
         0x0003:
           id: reserved_1
-          doc: 'Reserved'
+          doc: &#39;Reserved&#39;
         0x0004:
           id: ts_stack_signed
           doc: |
@@ -657,7 +657,7 @@ types:
         -orig-id: bCertificate
         size: length - 8
         doc: Contains a certificate, such as an Authenticode signature.
-    doc-ref: 'https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only'
+    doc-ref: &#39;https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only&#39;
 </code></pre>
     </div>
 </section>

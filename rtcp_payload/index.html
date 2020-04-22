@@ -208,7 +208,7 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: rtcp_payload
   title: rtcp network payload (single udp packet)
@@ -244,11 +244,11 @@ types:
         type:
           switch-on: payload_type
           cases:
-            'payload_type::sr': sr_packet
-            'payload_type::rr': rr_packet
-            'payload_type::sdes': sdes_packet
-            'payload_type::psfb': psfb_packet
-            'payload_type::rtpfb': rtpfb_packet
+            &#39;payload_type::sr&#39;: sr_packet
+            &#39;payload_type::rr&#39;: rr_packet
+            &#39;payload_type::sdes&#39;: sdes_packet
+            &#39;payload_type::psfb&#39;: psfb_packet
+            &#39;payload_type::rtpfb&#39;: rtpfb_packet
 
   sr_packet:
     seq:
@@ -270,7 +270,7 @@ types:
         repeat-expr: _parent.subtype
     instances:
       ntp:
-        value: (ntp_msw << 32) & ntp_lsw
+        value: (ntp_msw &lt;&lt; 32) &amp; ntp_lsw
 
   rr_packet:
     seq:
@@ -297,9 +297,9 @@ types:
         type: u4
     instances:
       fraction_lost:
-        value: lost_val >> 24
+        value: lost_val &gt;&gt; 24
       cumulative_packets_lost:
-        value: lost_val & 0x00ffffff
+        value: lost_val &amp; 0x00ffffff
 
   sdes_packet:
     seq:
@@ -341,7 +341,7 @@ types:
         type:
           switch-on: fmt
           cases:
-            'rtpfb_subtype::transport_feedback': rtpfb_transport_feedback_packet
+            &#39;rtpfb_subtype::transport_feedback&#39;: rtpfb_transport_feedback_packet
         size-eos: true
     instances:
       fmt:
@@ -360,9 +360,9 @@ types:
         size-eos: true
     instances:
       reference_time:
-        value: b4 >> 8
+        value: b4 &gt;&gt; 8
       fb_pkt_count:
-        value: b4 & 0xff
+        value: b4 &amp; 0xff
       packet_status:
         size: 0
       recv_delta:
@@ -386,7 +386,7 @@ types:
         if: t.to_i == 1
     instances:
       s:
-        value: '(t.to_i == 0) ? s2 : (s1.to_i == 0 ? 1 : 0)'
+        value: &#39;(t.to_i == 0) ? s2 : (s1.to_i == 0 ? 1 : 0)&#39;
 
   psfb_packet:
     seq:
@@ -398,7 +398,7 @@ types:
         type:
           switch-on: fmt
           cases:
-            'psfb_subtype::afb': psfb_afb_packet
+            &#39;psfb_subtype::afb&#39;: psfb_afb_packet
         size-eos: true
     instances:
       fmt:
@@ -430,7 +430,7 @@ types:
         repeat-expr: num_ssrc
     instances:
       max_total_bitrate:
-        value: br_mantissa * (1<<br_exp)
+        value: br_mantissa * (1&lt;&lt;br_exp)
 
 
 

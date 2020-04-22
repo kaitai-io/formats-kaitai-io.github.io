@@ -183,7 +183,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: php_serialized_value
   title: Serialized PHP value
@@ -196,9 +196,9 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
   # with no particular encoding.
   encoding: ASCII
 doc: |
-  A serialized PHP value, in the format used by PHP's built-in `serialize` and
-  `unserialize` functions. This format closely mirrors PHP's data model:
-  it supports all of PHP's scalar types (`NULL`, booleans, numbers, strings),
+  A serialized PHP value, in the format used by PHP&#39;s built-in `serialize` and
+  `unserialize` functions. This format closely mirrors PHP&#39;s data model:
+  it supports all of PHP&#39;s scalar types (`NULL`, booleans, numbers, strings),
   associative arrays, objects, and recursive data structures using references.
   The only PHP values not supported by this format are *resources*,
   which usually correspond to native file or connection handles and cannot be
@@ -212,11 +212,11 @@ doc: |
   PHP version can be unserialized on any newer PHP version.
   This spec supports serialized values from PHP 7.3 or any earlier version.
 doc-ref:
-  - 'https://www.php.net/manual/en/function.serialize.php'
-  - 'https://www.php.net/manual/en/function.serialize.php#66147'
-  - 'https://www.php.net/manual/en/function.unserialize.php'
-  - 'https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var_unserializer.re'
-  - 'https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var.c#L822'
+  - &#39;https://www.php.net/manual/en/function.serialize.php&#39;
+  - &#39;https://www.php.net/manual/en/function.serialize.php#66147&#39;
+  - &#39;https://www.php.net/manual/en/function.unserialize.php&#39;
+  - &#39;https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var_unserializer.re&#39;
+  - &#39;https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var.c#L822&#39;
 seq:
   - id: type
     type: u1
@@ -226,61 +226,61 @@ seq:
     type:
       switch-on: type
       cases:
-        'value_type::null': null_contents
-        'value_type::bool': bool_contents
-        'value_type::int': int_contents
-        'value_type::float': float_contents
-        'value_type::string': string_contents
-        'value_type::php_6_string': string_contents
-        'value_type::array': array_contents
-        'value_type::php_3_object': php_3_object_contents
-        'value_type::object': object_contents
-        'value_type::custom_serialized_object':
+        &#39;value_type::null&#39;: null_contents
+        &#39;value_type::bool&#39;: bool_contents
+        &#39;value_type::int&#39;: int_contents
+        &#39;value_type::float&#39;: float_contents
+        &#39;value_type::string&#39;: string_contents
+        &#39;value_type::php_6_string&#39;: string_contents
+        &#39;value_type::array&#39;: array_contents
+        &#39;value_type::php_3_object&#39;: php_3_object_contents
+        &#39;value_type::object&#39;: object_contents
+        &#39;value_type::custom_serialized_object&#39;:
           custom_serialized_object_contents
-        'value_type::variable_reference': int_contents
-        'value_type::object_reference': int_contents
+        &#39;value_type::variable_reference&#39;: int_contents
+        &#39;value_type::object_reference&#39;: int_contents
     doc: |
       The contents of the serialized value, which vary depending on the type.
 enums:
   value_type:
-    0x43: # 'C'
+    0x43: # &#39;C&#39;
       id: custom_serialized_object
       doc: |
         An `object` whose class implements a custom serialized format using
         `Serializable`. Available since PHP 5.1.
-    0x4e: # 'N'
-      id: 'null'
+    0x4e: # &#39;N&#39;
+      id: &#39;null&#39;
       doc: A `NULL` value.
-    0x4f: # 'O'
+    0x4f: # &#39;O&#39;
       id: object
       doc: |
         An `object` value (including its class name) serialized in the
         default format. Available since PHP 4.
-    0x52: # 'R'
+    0x52: # &#39;R&#39;
       id: variable_reference
       doc: |
         An additional reference to a value that has already appeared earlier.
         Available since PHP 4.0.4.
-    0x53: # 'S'
+    0x53: # &#39;S&#39;
       id: php_6_string
       doc: |
         A `string` value from PHP 6. PHP 6 was never released, but support for
         deserializing PHP 6 strings was added in PHP 5.2.1 and is still present
         as of PHP 7.3. In all versions that support them (other than PHP 6),
         they are deserialized exactly like regular strings.
-    0x61: # 'a'
+    0x61: # &#39;a&#39;
       id: array
       doc: An `array` value.
-    0x62: # 'b'
+    0x62: # &#39;b&#39;
       id: bool
       doc: A `bool` value. Available since PHP 4.
-    0x64: # 'd'
+    0x64: # &#39;d&#39;
       id: float
       doc: A `float` value.
-    0x69: # 'i'
+    0x69: # &#39;i&#39;
       id: int
       doc: An `int` value.
-    0x6f: # 'o'
+    0x6f: # &#39;o&#39;
       id: php_3_object
       doc: |
         An `object` value (without a class name), as serialized by PHP 3.
@@ -291,48 +291,48 @@ enums:
         has been broken ever since it was added - it cannot even deserialize
         a simple PHP 3 object like `o:0:{}`. If the code worked, PHP 3 objects
         deserialized under PHP 4 and higher would have the class `stdClass`.
-    0x72: # 'r'
+    0x72: # &#39;r&#39;
       id: object_reference
       doc: |
         An `object` value which shares its identity with another `object`
         that has already appeared earlier. Available since PHP 5.
-    0x73: # 's'
+    0x73: # &#39;s&#39;
       id: string
       doc: A `string` value.
   bool_value:
-    0x30: false # '0'
-    0x31: true # '1'
+    0x30: false # &#39;0&#39;
+    0x31: true # &#39;1&#39;
 types:
   null_contents:
     seq:
       - id: semicolon
-        contents: ';'
+        contents: &#39;;&#39;
     doc: |
       The contents of a null value (`value_type::null`). This structure
       contains no actual data, since there is only a single `NULL` value.
   bool_contents:
     seq:
       - id: colon
-        contents: ':'
+        contents: &#39;:&#39;
       - id: value_dec
         type: u1
         enum: bool_value
         doc: |
           The value of the `bool`: `0` for `false` or `1` for `true`.
       - id: semicolon
-        contents: ';'
+        contents: &#39;;&#39;
     instances:
       value:
-        value: 'value_dec == bool_value::true'
+        value: &#39;value_dec == bool_value::true&#39;
         doc: The value of the `bool`, parsed as a boolean.
     doc: The contents of a boolean value (`value_type::bool`).
   int_contents:
     seq:
       - id: colon
-        contents: ':'
+        contents: &#39;:&#39;
       - id: value_dec
         type: str
-        terminator: 0x3b # ';'
+        terminator: 0x3b # &#39;;&#39;
         doc: The value of the `int`, in ASCII decimal.
     instances:
       value:
@@ -345,12 +345,12 @@ types:
   float_contents:
     seq:
       - id: colon
-        contents: ':'
+        contents: &#39;:&#39;
       - id: value_dec
         type: str
-        terminator: 0x3b # ';'
+        terminator: 0x3b # &#39;;&#39;
         doc: |
-          The value of the `float`, in ASCII decimal, as generated by PHP's
+          The value of the `float`, in ASCII decimal, as generated by PHP&#39;s
           usual double-to-string conversion. In particular, this means that:
           
           * A decimal point may not be included (for integral numbers)
@@ -363,22 +363,22 @@ types:
     seq:
       - id: len_data_dec
         type: str
-        terminator: 0x3a # ':'
+        terminator: 0x3a # &#39;:&#39;
         doc: |
-          The length of the string's data in bytes, in ASCII decimal.
+          The length of the string&#39;s data in bytes, in ASCII decimal.
           The quotes are not counted in this length number.
       - id: opening_quote
-        contents: '"'
+        contents: &#39;&quot;&#39;
       - id: data
         size: len_data
         doc: The data contained in the string. The quotes are not included.
       - id: closing_quote
-        contents: '"'
+        contents: &#39;&quot;&#39;
     instances:
       len_data:
         value: len_data_dec.to_i
         doc: |
-          The length of the string's contents in bytes, parsed as an integer.
+          The length of the string&#39;s contents in bytes, parsed as an integer.
           The quotes are not counted in this size number.
     doc: |
       A quoted string prefixed with its length.
@@ -390,11 +390,11 @@ types:
   string_contents:
     seq:
       - id: colon
-        contents: ':'
+        contents: &#39;:&#39;
       - id: string
         type: length_prefixed_quoted_string
       - id: semicolon
-        contents: ';'
+        contents: &#39;;&#39;
     instances:
       value:
         value: string.data
@@ -417,17 +417,17 @@ types:
     seq:
       - id: num_entries_dec
         type: str
-        terminator: 0x3a # ':'
+        terminator: 0x3a # &#39;:&#39;
         doc: The number of key-value pairs in the mapping, in ASCII decimal.
       - id: opening_brace
-        contents: '{'
+        contents: &#39;{&#39;
       - id: entries
         type: mapping_entry
         repeat: expr
         repeat-expr: num_entries
         doc: The key-value pairs contained in the mapping.
       - id: closing_brace
-        contents: '}'
+        contents: &#39;}&#39;
     instances:
       num_entries:
         value: num_entries_dec.to_i
@@ -437,21 +437,21 @@ types:
   array_contents:
     seq:
       - id: colon
-        contents: ':'
+        contents: &#39;:&#39;
       - id: elements
         type: count_prefixed_mapping
         doc: |
-          The array's elements. Keys must be of type `int` or `string`,
+          The array&#39;s elements. Keys must be of type `int` or `string`,
           values may have any type.
     doc: The contents of an array value.
   php_3_object_contents:
     seq:
       - id: colon
-        contents: ':'
+        contents: &#39;:&#39;
       - id: properties
         type: count_prefixed_mapping
         doc: |
-          The object's properties. Keys must be of type `string`,
+          The object&#39;s properties. Keys must be of type `string`,
           values may have any type.
     doc: |
       The contents of a PHP 3 object value. Unlike its counterpart in PHP 4
@@ -459,16 +459,16 @@ types:
   object_contents:
     seq:
       - id: colon1
-        contents: ':'
+        contents: &#39;:&#39;
       - id: class_name
         type: length_prefixed_quoted_string
-        doc: The name of the object's class.
+        doc: The name of the object&#39;s class.
       - id: colon2
-        contents: ':'
+        contents: &#39;:&#39;
       - id: properties
         type: count_prefixed_mapping
         doc: |
-          The object's properties. Keys ust be of type `string`,
+          The object&#39;s properties. Keys ust be of type `string`,
           values may have any type.
     doc: |
       The contents of an object value serialized in the default format.
@@ -476,20 +476,20 @@ types:
   custom_serialized_object_contents:
     seq:
       - id: colon1
-        contents: ':'
+        contents: &#39;:&#39;
       - id: class_name
         type: length_prefixed_quoted_string
-        doc: The name of the object's class.
+        doc: The name of the object&#39;s class.
       - id: colon2
-        contents: ':'
+        contents: &#39;:&#39;
       - id: len_data_dec
         type: str
-        terminator: 0x3a # ':'
+        terminator: 0x3a # &#39;:&#39;
         doc: |
           The length of the serialized data in bytes, in ASCII decimal.
           The braces are not counted in this size number.
       - id: opening_brace
-        contents: '{'
+        contents: &#39;{&#39;
       - id: data
         size: len_data
         doc: |
@@ -500,7 +500,7 @@ types:
           it can contain arbitrary data that is not required to follow
           any common structure.
       - id: closing_quote
-        contents: '}'
+        contents: &#39;}&#39;
     instances:
       len_data:
         value: len_data_dec.to_i

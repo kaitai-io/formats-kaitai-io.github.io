@@ -203,7 +203,7 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: vfat
   # actually FAT12
@@ -255,7 +255,7 @@ types:
         value: bpb.bytes_per_ls * bpb.num_reserved_ls
         doc: Offset of FATs in bytes from start of filesystem
       ls_per_fat:
-        value: 'is_fat32 ? ebpb_fat32.ls_per_fat : bpb.ls_per_fat'
+        value: &#39;is_fat32 ? ebpb_fat32.ls_per_fat : bpb.ls_per_fat&#39;
       size_fat:
         value: bpb.bytes_per_ls * ls_per_fat
         doc: Size of one FAT in bytes
@@ -266,7 +266,7 @@ types:
         -orig-id: RootDirSectors
         value: (bpb.max_root_dir_rec * 32 + bpb.bytes_per_ls - 1) / bpb.bytes_per_ls
         doc: Size of root directory in logical sectors
-        doc-ref: 'FAT: General Overview of On-Disk Format, section "FAT Data Structure"'
+        doc-ref: &#39;FAT: General Overview of On-Disk Format, section &quot;FAT Data Structure&quot;&#39;
       size_root_dir:
         value: ls_per_root_dir * bpb.bytes_per_ls
         doc: Size of root directory in bytes
@@ -315,7 +315,7 @@ types:
           at offset 0x024 instead.
       # FIXME: DOS 3.0 and 3.2 BPBs continuation should follow here
       # and they differ from DOS 3.31+ that most modern
-      # implementations use. We'll skip them for now, as they seem to
+      # implementations use. We&#39;ll skip them for now, as they seem to
       # be very rare.
       #
       # DOS 3.31+ BPB
@@ -372,13 +372,13 @@ types:
         doc: |
           Volume ID (serial number).
 
-          Typically the serial number "xxxx-xxxx" is created by a
+          Typically the serial number &quot;xxxx-xxxx&quot; is created by a
           16-bit addition of both DX values returned by INT 21h/AH=2Ah
           (get system date) and INT 21h/AH=2Ch (get system time) for
           the high word and another 16-bit addition of both CX values
           for the low word of the serial number. Alternatively, some
           DR-DOS disk utilities provide a /# option to generate a
-          human-readable time stamp "mmdd-hhmm" build from BCD-encoded
+          human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded
           8-bit values for the month, day, hour and minute instead of
           a serial number.
       - id: partition_volume_label
@@ -402,7 +402,7 @@ types:
       - id: has_active_fat
         type: b1
         doc: |
-          If true, then there is "active" FAT, which is designated in
+          If true, then there is &quot;active&quot; FAT, which is designated in
           `active_fat` attribute. If false, all FATs are mirrored as
           usual.
       - id: reserved1
@@ -420,7 +420,7 @@ types:
         type: u4
         doc: |
           Cluster number of root directory start, typically 2 if it
-          contains no bad sector. (Microsoft's FAT32 implementation
+          contains no bad sector. (Microsoft&#39;s FAT32 implementation
           imposes an artificial limit of 65,535 entries per directory,
           whilst many third-party implementations do not.)
       - id: ls_fs_info
@@ -454,13 +454,13 @@ types:
         doc: |
           Volume ID (serial number).
 
-          Typically the serial number "xxxx-xxxx" is created by a
+          Typically the serial number &quot;xxxx-xxxx&quot; is created by a
           16-bit addition of both DX values returned by INT 21h/AH=2Ah
           (get system date) and INT 21h/AH=2Ch (get system time) for
           the high word and another 16-bit addition of both CX values
           for the low word of the serial number. Alternatively, some
           DR-DOS disk utilities provide a /# option to generate a
-          human-readable time stamp "mmdd-hhmm" build from BCD-encoded
+          human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded
           8-bit values for the month, day, hour and minute instead of
           a serial number.
       - id: partition_volume_label

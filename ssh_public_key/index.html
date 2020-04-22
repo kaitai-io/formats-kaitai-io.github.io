@@ -211,7 +211,7 @@ Implementation closely follows code in OpenSSH.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: ssh_public_key
   title: SSH public key
@@ -224,10 +224,10 @@ doc: |
   created the key, comment, etc, but the inner binary is always base64-encoded
   and follows the same internal format.
 
-  This format spec deals with this internal binary format (called "blob" in
+  This format spec deals with this internal binary format (called &quot;blob&quot; in
   openssh sources) only. Buffer is expected to be raw binary and not base64-d.
   Implementation closely follows code in OpenSSH.
-doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970'
+doc-ref: &#39;https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970&#39;
 seq:
   - id: key_name
     type: cstring
@@ -235,13 +235,13 @@ seq:
     type:
       switch-on: key_name.value
       cases:
-        '"ssh-rsa"': key_rsa
-        '"ecdsa-sha2-nistp256"': key_ecdsa
-        '"ssh-ed25519"': key_ed25519
-        '"ssh-dss"': key_dsa
+        &#39;&quot;ssh-rsa&quot;&#39;: key_rsa
+        &#39;&quot;ecdsa-sha2-nistp256&quot;&#39;: key_ecdsa
+        &#39;&quot;ssh-ed25519&quot;&#39;: key_ed25519
+        &#39;&quot;ssh-dss&quot;&#39;: key_dsa
 types:
   key_rsa:
-    doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028'
+    doc-ref: &#39;https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028&#39;
     seq:
       - id: rsa_e
         type: bignum2
@@ -250,21 +250,21 @@ types:
         type: bignum2
         doc: |
           Modulus of both public and private keys, designated `n` in RSA
-          documentation. Its length in bits is designated as "key length".
+          documentation. Its length in bits is designated as &quot;key length&quot;.
     instances:
       key_length:
         -webide-parse-mode: eager
         value: rsa_n.length_in_bits
         doc: Key length in bits
   key_ecdsa:
-    doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103'
+    doc-ref: &#39;https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103&#39;
     seq:
       - id: curve_name
         type: cstring
       - id: ec
         type: elliptic_curve
   key_ed25519:
-    doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124'
+    doc-ref: &#39;https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124&#39;
     seq:
       - id: len_pk
         type: u4
@@ -272,7 +272,7 @@ types:
       - id: pk
         size: len_pk
   key_dsa:
-    doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051'
+    doc-ref: &#39;https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051&#39;
     seq:
       - id: dsa_p
         type: bignum2
@@ -286,9 +286,9 @@ types:
     doc: |
       A integer-prefixed string designed to be read using `sshbuf_get_cstring`
       and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
-      obscure misnomer, as typically "C string" means a null-terminated string.
-    doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181'
-    -webide-representation: '{value}'
+      obscure misnomer, as typically &quot;C string&quot; means a null-terminated string.
+    doc-ref: &#39;https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181&#39;
+    -webide-representation: &#39;{value}&#39;
     seq:
       - id: len
         type: u4

@@ -203,16 +203,16 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: ds_store
-  title: macOS '.DS_Store' format
+  title: macOS &#39;.DS_Store&#39; format
   license: MIT
   ks-version: 0.8
   encoding: UTF-8
   endian: be
 doc: |
-  Apple macOS '.DS_Store' file format.
+  Apple macOS &#39;.DS_Store&#39; file format.
 doc-ref: |
   https://en.wikipedia.org/wiki/.DS_Store
   https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
@@ -236,15 +236,15 @@ types:
   buddy_allocator_header:
     seq:
       - id: magic
-        contents: ["Bud1"]
-        doc: Magic number 'Bud1'.
+        contents: [&quot;Bud1&quot;]
+        doc: Magic number &#39;Bud1&#39;.
       - id: ofs_bookkeeping_info_block
         type: u4
       - id: len_bookkeeping_info_block
         type: u4
       - id: copy_ofs_bookkeeping_info_block
         type: u4
-        doc: Needs to match 'offset_bookkeeping_info_block'.
+        doc: Needs to match &#39;offset_bookkeeping_info_block&#39;.
       - size: 16
         doc: |
           Unused field which might simply be the unused space at the end of the block,
@@ -280,9 +280,9 @@ types:
             type: u4
         instances:
           offset:
-            value: (address_raw & ~_root.block_address_mask) + 4
+            value: (address_raw &amp; ~_root.block_address_mask) + 4
           size:
-            value: 1 << address_raw & _root.block_address_mask
+            value: 1 &lt;&lt; address_raw &amp; _root.block_address_mask
       directory_entry:
         seq:
           - id: len_name
@@ -320,7 +320,7 @@ types:
         seq:
           - id: block_id
             type: u4
-            doc: Block number of the B-tree's root node.
+            doc: Block number of the B-tree&#39;s root node.
           - id: num_internal_nodes
             type: u4
             doc: Number of internal node levels.
@@ -362,7 +362,7 @@ types:
         seq:
           - id: block_id
             type: u4
-            if: mode > 0
+            if: mode &gt; 0
           - id: record
             type: record
         types:
@@ -372,7 +372,7 @@ types:
                 type: ustr
               - id: structure_type
                 type: four_char_code
-                doc: Description of the entry's property.
+                doc: Description of the entry&#39;s property.
               - id: data_type
                 size: 4
                 type: str
@@ -381,14 +381,14 @@ types:
                 type:
                   switch-on: data_type
                   cases:
-                    '"long"': u4
-                    '"shor"': u4
-                    '"bool"': u1
-                    '"blob"': record_blob
-                    '"type"': four_char_code
-                    '"ustr"': ustr
-                    '"comp"': u8
-                    '"dutc"': u8
+                    &#39;&quot;long&quot;&#39;: u4
+                    &#39;&quot;shor&quot;&#39;: u4
+                    &#39;&quot;bool&quot;&#39;: u1
+                    &#39;&quot;blob&quot;&#39;: record_blob
+                    &#39;&quot;type&quot;&#39;: four_char_code
+                    &#39;&quot;ustr&quot;&#39;: ustr
+                    &#39;&quot;comp&quot;&#39;: u8
+                    &#39;&quot;dutc&quot;&#39;: u8
             types:
               record_blob:
                 seq:
@@ -414,13 +414,13 @@ types:
             io: _root._io
             pos: _root.buddy_allocator_body.block_addresses[block_id].offset
             type: block
-            if: mode > 0
+            if: mode &gt; 0
     instances:
       rightmost_block:
         io: _root._io
         pos: _root.buddy_allocator_body.block_addresses[mode].offset
         type: block
-        if: mode > 0
+        if: mode &gt; 0
         doc: Rightmost child block pointer.
 </code></pre>
     </div>

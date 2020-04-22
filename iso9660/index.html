@@ -242,7 +242,7 @@ speed).</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: iso9660
   title: ISO9660 CD filesystem
@@ -266,7 +266,7 @@ types:
       - id: type
         type: u1
       - id: magic
-        contents: "CD001"
+        contents: &quot;CD001&quot;
       - id: version
         type: u1
       - id: vol_desc_boot_record
@@ -286,7 +286,7 @@ types:
         size: 32
         encoding: UTF-8
   vol_desc_primary:
-    doc-ref: 'http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor'
+    doc-ref: &#39;http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor&#39;
     seq:
       - id: unused1
         contents: [0]
@@ -383,7 +383,7 @@ types:
       - id: body
         type: dir_entry_body
         size: len - 1
-        if: len > 0
+        if: len &gt; 0
   dir_entry_body:
     seq:
       - id: len_ext_attr_rec
@@ -419,15 +419,15 @@ types:
         pos: lba_extent.le * _root.sector_size
         size: size_extent.le
         type: dir_entries
-        if: file_flags & 2 != 0
+        if: file_flags &amp; 2 != 0
       extent_as_file:
         io: _root._io
         pos: lba_extent.le * _root.sector_size
         size: size_extent.le
-        if: file_flags & 2 == 0
-  ## AKA "Path Table Entry"
+        if: file_flags &amp; 2 == 0
+  ## AKA &quot;Path Table Entry&quot;
   path_table_le:
-    doc-ref: 'http://wiki.osdev.org/ISO_9660#The_Path_Table'
+    doc-ref: &#39;http://wiki.osdev.org/ISO_9660#The_Path_Table&#39;
     seq:
       - id: entries
         type: path_table_entry_le
@@ -466,7 +466,7 @@ types:
       - id: timezone
         type: u1
   dec_datetime:
-    doc-ref: 'http://wiki.osdev.org/ISO_9660#Date.2Ftime_format'
+    doc-ref: &#39;http://wiki.osdev.org/ISO_9660#Date.2Ftime_format&#39;
     seq:
       - id: year
         type: str

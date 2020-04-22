@@ -221,7 +221,7 @@ for educational / research purposes.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: utf8_string
   title: UTF-8-encoded string
@@ -239,7 +239,7 @@ doc: |
   * maintaining sort order of codepoints if sorted as a byte array
 
   WARNING: For the vast majority of practical purposes of format
-  definitions in Kaitai Struct, you'd likely NOT want to use this and
+  definitions in Kaitai Struct, you&#39;d likely NOT want to use this and
   rather just use `type: str` with `encoding: utf8`. That will use
   native string implementations, which are most likely more efficient
   and will give you native language strings, rather than an array of
@@ -256,24 +256,24 @@ types:
         type: u1
       - id: byte2
         type: u1
-        if: len >= 2
+        if: len &gt;= 2
       - id: byte3
         type: u1
-        if: len >= 3
+        if: len &gt;= 3
       - id: byte4
         type: u1
-        if: len >= 4
+        if: len &gt;= 4
     instances:
       len:
         value: |
-          (byte1 & 0b1000_0000 == 0) ? 1 :
-          (byte1 & 0b1110_0000 == 0b1100_0000) ? 2 :
-          (byte1 & 0b1111_0000 == 0b1110_0000) ? 3 :
-          (byte1 & 0b1111_1000 == 0b1111_0000) ? 4 :
+          (byte1 &amp; 0b1000_0000 == 0) ? 1 :
+          (byte1 &amp; 0b1110_0000 == 0b1100_0000) ? 2 :
+          (byte1 &amp; 0b1111_0000 == 0b1110_0000) ? 3 :
+          (byte1 &amp; 0b1111_1000 == 0b1111_0000) ? 4 :
           -1
       raw1:
         value: |
-          byte1 & (
+          byte1 &amp; (
             len == 1 ? 0b0111_1111 :
             len == 2 ? 0b0001_1111 :
             len == 3 ? 0b0000_1111 :
@@ -281,20 +281,20 @@ types:
             0
           )
       raw2:
-        value: 'byte2 & 0b0011_1111'
-        if: len >= 2
+        value: &#39;byte2 &amp; 0b0011_1111&#39;
+        if: len &gt;= 2
       raw3:
-        value: 'byte3 & 0b0011_1111'
-        if: len >= 3
+        value: &#39;byte3 &amp; 0b0011_1111&#39;
+        if: len &gt;= 3
       raw4:
-        value: 'byte4 & 0b0011_1111'
-        if: len >= 4
+        value: &#39;byte4 &amp; 0b0011_1111&#39;
+        if: len &gt;= 4
       value_as_int:
-        value: >
+        value: &gt;
           len == 1 ? raw1 :
-          len == 2 ? ((raw1 << 6) | raw2) :
-          len == 3 ? ((raw1 << 12) | (raw2 << 6) | raw3) :
-          len == 4 ? ((raw1 << 18) | (raw2 << 12) | (raw3 << 6) | raw4) :
+          len == 2 ? ((raw1 &lt;&lt; 6) | raw2) :
+          len == 3 ? ((raw1 &lt;&lt; 12) | (raw2 &lt;&lt; 6) | raw3) :
+          len == 4 ? ((raw1 &lt;&lt; 18) | (raw2 &lt;&lt; 12) | (raw3 &lt;&lt; 6) | raw4) :
           -1
 </code></pre>
     </div>

@@ -229,7 +229,7 @@ are the fields' default values, etc, etc.</li>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: google_protobuf
   title: Google Protocol Buffers (protobuf)
@@ -249,23 +249,23 @@ doc: |
 
   Protobuf uses semi-self-describing encoding scheme for its
   messages. It means that it is possible to parse overall structure of
-  the message (skipping over fields one can't understand), but to
+  the message (skipping over fields one can&#39;t understand), but to
   fully understand the message, one needs a protocol definition file
   (`.proto`). To be specific:
 
-  * "Keys" in key-value pairs provided in the message are identified
-    only with an integer "field tag". `.proto` file provides info on
+  * &quot;Keys&quot; in key-value pairs provided in the message are identified
+    only with an integer &quot;field tag&quot;. `.proto` file provides info on
     which symbolic field names these field tags map to.
-  * "Keys" also provide something called "wire type". It's not a data
-    type in its common sense (i.e. you can't, for example, distinguish
+  * &quot;Keys&quot; also provide something called &quot;wire type&quot;. It&#39;s not a data
+    type in its common sense (i.e. you can&#39;t, for example, distinguish
     `sint32` vs `uint32` vs some enum, or `string` from `bytes`), but
-    it's enough information to determine how many bytes to
+    it&#39;s enough information to determine how many bytes to
     parse. Interpretation of the value should be done according to the
     type specified in `.proto` file.
-  * There's no direct information on which fields are optional /
+  * There&#39;s no direct information on which fields are optional /
     required, which fields may be repeated or constitute a map, what
     restrictions are placed on fields usage in a single message, what
-    are the fields' default values, etc, etc.
+    are the fields&#39; default values, etc, etc.
 seq:
   - id: pairs
     type: pair
@@ -279,8 +279,8 @@ types:
         type: vlq_base128_le
         doc: |
           Key is a bit-mapped variable-length integer: lower 3 bits
-          are used for "wire type", and everything higher designates
-          an integer "field tag".
+          are used for &quot;wire type&quot;, and everything higher designates
+          an integer &quot;field tag&quot;.
       - id: value
         doc: |
           Value that corresponds to field identified by
@@ -291,24 +291,24 @@ types:
         type:
           switch-on: wire_type
           cases:
-            'wire_types::varint': vlq_base128_le
-            'wire_types::len_delimited': delimited_bytes
-            'wire_types::bit_64': u8le
-            'wire_types::bit_32': u4le
+            &#39;wire_types::varint&#39;: vlq_base128_le
+            &#39;wire_types::len_delimited&#39;: delimited_bytes
+            &#39;wire_types::bit_64&#39;: u8le
+            &#39;wire_types::bit_32&#39;: u4le
     instances:
       wire_type:
-        value: 'key.value & 0b111'
+        value: &#39;key.value &amp; 0b111&#39;
         enum: wire_types
         doc: |
-          "Wire type" is a part of the "key" that carries enough
+          &quot;Wire type&quot; is a part of the &quot;key&quot; that carries enough
           information to parse value from the wire, i.e. read correct
-          amount of bytes, but there's not enough informaton to
-          interprete in unambiguously. For example, one can't clearly
+          amount of bytes, but there&#39;s not enough informaton to
+          interprete in unambiguously. For example, one can&#39;t clearly
           distinguish 64-bit fixed-sized integers from 64-bit floats,
           signed zigzag-encoded varints from regular unsigned varints,
           arbitrary bytes from UTF-8 encoded strings, etc.
       field_tag:
-        value: 'key.value >> 3'
+        value: &#39;key.value &gt;&gt; 3&#39;
         doc: |
           Identifies a field of protocol. One can look up symbolic
           field name in a `.proto` file by this field tag.

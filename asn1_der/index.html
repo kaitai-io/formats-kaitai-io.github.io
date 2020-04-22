@@ -224,7 +224,7 @@ as:</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: asn1_der
   title: ASN.1 DER (Abstract Syntax Notation One, Distinguished Encoding Rules)
@@ -240,21 +240,21 @@ doc: |
   complex objects, such as sequences of other elements.
 
   DER is a subset of BER (Basic Encoding Rules), with an emphasis on
-  being non-ambiguous: there's always exactly one canonical way to
+  being non-ambiguous: there&#39;s always exactly one canonical way to
   encode a data structure defined in terms of ASN.1 using DER.
 
   This spec allows full parsing of format syntax, but to understand
   the semantics, one would typically require a dictionary of Object
   Identifiers (OIDs), to match OID bodies against some human-readable
   list of constants. OIDs are covered by many different standards,
-  so typically it's simpler to use a pre-compiled list of them, such
+  so typically it&#39;s simpler to use a pre-compiled list of them, such
   as:
 
   * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
   * http://oid-info.com/
   * https://www.alvestrand.no/objectid/top.html
 doc-ref: https://www.itu.int/rec/T-REC-X.690-201508-I/en
--webide-representation: 't={type_tag}, b={body}'
+-webide-representation: &#39;t={type_tag}, b={body}&#39;
 seq:
   - id: type_tag
     type: u1
@@ -266,15 +266,15 @@ seq:
     type:
       switch-on: type_tag
       cases:
-        'type_tag::object_id': body_object_id
-        'type_tag::sequence_10': body_sequence
-        'type_tag::sequence_30': body_sequence
-        'type_tag::set': body_sequence
-        'type_tag::utf8string': body_utf8string
-        'type_tag::printable_string': body_printable_string
+        &#39;type_tag::object_id&#39;: body_object_id
+        &#39;type_tag::sequence_10&#39;: body_sequence
+        &#39;type_tag::sequence_30&#39;: body_sequence
+        &#39;type_tag::set&#39;: body_sequence
+        &#39;type_tag::utf8string&#39;: body_utf8string
+        &#39;type_tag::printable_string&#39;: body_printable_string
 types:
   len_encoded:
-    -webide-representation: 'v={result:dec}'
+    -webide-representation: &#39;v={result:dec}&#39;
     seq:
       - id: b1
         type: u1
@@ -286,30 +286,30 @@ types:
         if: b1 == 0x81
     instances:
       result:
-        value: '(b1 == 0x81) ? int1 : ((b1 == 0x82) ? int2 : b1)'
+        value: &#39;(b1 == 0x81) ? int1 : ((b1 == 0x82) ? int2 : b1)&#39;
         -webide-parse-mode: eager
   body_sequence:
-    -webide-representation: '[...]'
+    -webide-representation: &#39;[...]&#39;
     seq:
       - id: entries
         type: asn1_der
         repeat: eos
   body_utf8string:
-    -webide-representation: '{str}'
+    -webide-representation: &#39;{str}&#39;
     seq:
       - id: str
         type: str
         size-eos: true
         encoding: UTF-8
   body_printable_string:
-    -webide-representation: '{str}'
+    -webide-representation: &#39;{str}&#39;
     seq:
       - id: str
         type: str
         size-eos: true
         encoding: ASCII # actually a subset of ASCII
   body_object_id:
-    -webide-representation: '{first:dec}.{second:dec}.{rest}'
+    -webide-representation: &#39;{first:dec}.{second:dec}.{rest}&#39;
     doc-ref: https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier
     seq:
       - id: first_and_second

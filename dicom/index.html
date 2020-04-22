@@ -219,14 +219,14 @@ subtypes to force parsing in particular transfer syntax.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: dicom
   title: Digital Imaging and Communications in Medicine (DICOM) file format
   file-extension: dcm
   license: MIT
   endian: le
-doc-ref: 'http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7'
+doc-ref: &#39;http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7&#39;
 doc: |
   DICOM (Digital Imaging and Communications in Medicine), AKA NEMA
   PS3, AKA ISO 12052:2006, is a file format and network protocol
@@ -250,9 +250,9 @@ types:
       - id: preamble
         size: 128
       - id: magic
-        contents: 'DICM'
+        contents: &#39;DICM&#39;
   t_data_element_explicit:
-    doc-ref: 'http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2'
+    doc-ref: &#39;http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2&#39;
     seq:
       - id: tag_group
         type: u2
@@ -279,7 +279,7 @@ types:
         type: seq_item
         repeat: until
         repeat-until: _.tag_elem == 0xe0dd
-        if: vr == 'SQ' and value_len == 0xffff_ffff
+        if: vr == &#39;SQ&#39; and value_len == 0xffff_ffff
       - id: elements_implicit
         type: t_data_element_implicit
         repeat: eos
@@ -288,29 +288,29 @@ types:
       is_forced_implicit:
         value: tag_group == 0xfffe
       is_long_len:
-        value: >
+        value: &gt;
           is_forced_implicit or
-          vr == 'OB' or
-          vr == 'OD' or
-          vr == 'OF' or
-          vr == 'OL' or
-          vr == 'OW' or
-          vr == 'SQ' or
-          vr == 'UC' or
-          vr == 'UR' or
-          vr == 'UT' or
-          vr == 'UN'
+          vr == &#39;OB&#39; or
+          vr == &#39;OD&#39; or
+          vr == &#39;OF&#39; or
+          vr == &#39;OL&#39; or
+          vr == &#39;OW&#39; or
+          vr == &#39;SQ&#39; or
+          vr == &#39;UC&#39; or
+          vr == &#39;UR&#39; or
+          vr == &#39;UT&#39; or
+          vr == &#39;UN&#39;
 #      p_is_transfer_syntax_change_non_implicit:
-#        # '1.2.840.10008.1.2.1\0' (Explicit VR Little Endian)
+#        # &#39;1.2.840.10008.1.2.1\0&#39; (Explicit VR Little Endian)
 #        # See http://www.dicomlibrary.com/dicom/transfer-syntax/
 #        value: value != [49, 46, 50, 46, 56, 52, 48, 46, 49, 48, 48, 48, 56, 46, 49, 46, 50, 46, 49, 0]
       is_transfer_syntax_change_implicit:
         value: false
       tag:
-        value: 'tag_group << 16 | tag_elem'
+        value: &#39;tag_group &lt;&lt; 16 | tag_elem&#39;
         enum: tags
   t_data_element_implicit:
-    doc-ref: 'http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2'
+    doc-ref: &#39;http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2&#39;
     seq:
       - id: tag_group
         type: u2
@@ -326,7 +326,7 @@ types:
         if: is_long_len and is_forced_explicit
       - id: value_len
         type:
-          switch-on: 'is_forced_explicit ? is_long_len : true'
+          switch-on: &#39;is_forced_explicit ? is_long_len : true&#39;
           cases:
             false: u2
             true: u4
@@ -337,7 +337,7 @@ types:
         type: seq_item
         repeat: until
         repeat-until: _.tag_elem == 0xe0dd
-        if: vr == 'SQ' and value_len == 0xffff_ffff
+        if: vr == &#39;SQ&#39; and value_len == 0xffff_ffff
       - id: elements
         type: t_data_element_explicit
         repeat: eos
@@ -346,23 +346,23 @@ types:
       is_forced_explicit:
         value: tag_group == 0x0002
       is_long_len:
-        value: >
+        value: &gt;
           is_forced_explicit and (
-          vr == 'OB' or
-          vr == 'OD' or
-          vr == 'OF' or
-          vr == 'OL' or
-          vr == 'OW' or
-          vr == 'SQ' or
-          vr == 'UC' or
-          vr == 'UR' or
-          vr == 'UT' or
-          vr == 'UN')
+          vr == &#39;OB&#39; or
+          vr == &#39;OD&#39; or
+          vr == &#39;OF&#39; or
+          vr == &#39;OL&#39; or
+          vr == &#39;OW&#39; or
+          vr == &#39;SQ&#39; or
+          vr == &#39;UC&#39; or
+          vr == &#39;UR&#39; or
+          vr == &#39;UT&#39; or
+          vr == &#39;UN&#39;)
       tag:
-        value: 'tag_group << 16 | tag_elem'
+        value: &#39;tag_group &lt;&lt; 16 | tag_elem&#39;
         enum: tags
       p_is_transfer_syntax_change_explicit:
-        # '1.2.840.10008.1.2.1\0' (Explicit VR Little Endian)
+        # &#39;1.2.840.10008.1.2.1\0&#39; (Explicit VR Little Endian)
         # See http://www.dicomlibrary.com/dicom/transfer-syntax/
         value: value == [49, 46, 50, 46, 56, 52, 48, 46, 49, 48, 48, 48, 56, 46, 49, 46, 50, 46, 49, 0]
       is_transfer_syntax_change_explicit:

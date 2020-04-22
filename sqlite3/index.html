@@ -209,7 +209,7 @@ reached via the links starting from the first page. First page type
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: sqlite3
   title: SQLite3 database file
@@ -230,11 +230,11 @@ doc: |
 
   Each page would be of some type, and generally, they would be
   reached via the links starting from the first page. First page type
-  (`root_page`) is always "btree_page".
+  (`root_page`) is always &quot;btree_page&quot;.
 doc-ref: https://www.sqlite.org/fileformat.html
 seq:
   - id: magic
-    contents: ["SQLite format 3", 0]
+    contents: [&quot;SQLite format 3&quot;, 0]
   - id: len_page_mod
     type: u2
     doc: |
@@ -249,7 +249,7 @@ seq:
     enum: versions
   - id: reserved_space
     type: u1
-    doc: Bytes of unused "reserved" space at the end of each page. Usually 0.
+    doc: Bytes of unused &quot;reserved&quot; space at the end of each page. Usually 0.
   - id: max_payload_frac
     type: u1
     doc: Maximum embedded payload fraction. Must be 64.
@@ -263,7 +263,7 @@ seq:
     type: u4
   - id: num_pages
     type: u4
-    doc: Size of the database file in pages. The "in-header database size".
+    doc: Size of the database file in pages. The &quot;in-header database size&quot;.
   - id: first_freelist_trunk_page
     type: u4
     doc: Page number of the first freelist trunk page.
@@ -287,13 +287,13 @@ seq:
     doc: The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.
   - id: user_version
     type: u4
-    doc: The "user version" as read and set by the user_version pragma.
+    doc: The &quot;user version&quot; as read and set by the user_version pragma.
   - id: is_incremental_vacuum
     type: u4
     doc: True (non-zero) for incremental-vacuum mode. False (zero) otherwise.
   - id: application_id
     type: u4
-    doc: The "Application ID" set by PRAGMA application_id.
+    doc: The &quot;Application ID&quot; set by PRAGMA application_id.
   - id: reserved
     size: 20
   - id: version_valid_for
@@ -304,7 +304,7 @@ seq:
     type: btree_page
 instances:
   len_page:
-    value: 'len_page_mod == 1 ? 0x10000 : len_page_mod'
+    value: &#39;len_page_mod == 1 ? 0x10000 : len_page_mod&#39;
 types:
   btree_page:
     seq:
@@ -340,7 +340,7 @@ types:
             0x0a: cell_index_leaf
             0x02: cell_index_interior
   cell_table_leaf:
-    doc-ref: 'https://www.sqlite.org/fileformat.html#b_tree_pages'
+    doc-ref: &#39;https://www.sqlite.org/fileformat.html#b_tree_pages&#39;
     seq:
       - id: len_payload
         type: vlq_base128_be
@@ -351,14 +351,14 @@ types:
         type: cell_payload
       # TODO: overflow
   cell_table_interior:
-    doc-ref: 'https://www.sqlite.org/fileformat.html#b_tree_pages'
+    doc-ref: &#39;https://www.sqlite.org/fileformat.html#b_tree_pages&#39;
     seq:
       - id: left_child_page
         type: u4
       - id: row_id
         type: vlq_base128_be
   cell_index_leaf:
-    doc-ref: 'https://www.sqlite.org/fileformat.html#b_tree_pages'
+    doc-ref: &#39;https://www.sqlite.org/fileformat.html#b_tree_pages&#39;
     seq:
       - id: len_payload
         type: vlq_base128_be
@@ -367,7 +367,7 @@ types:
         type: cell_payload
       # TODO: overflow
   cell_index_interior:
-    doc-ref: 'https://www.sqlite.org/fileformat.html#b_tree_pages'
+    doc-ref: &#39;https://www.sqlite.org/fileformat.html#b_tree_pages&#39;
     seq:
       - id: left_child_page
         type: u4
@@ -377,7 +377,7 @@ types:
         size: len_payload.value
         type: cell_payload
   cell_payload:
-    doc-ref: 'https://sqlite.org/fileformat2.html#record_format'
+    doc-ref: &#39;https://sqlite.org/fileformat2.html#record_format&#39;
     seq:
       - id: len_header_and_len
         type: vlq_base128_be
@@ -399,12 +399,12 @@ types:
         type: vlq_base128_be
     instances:
       is_blob:
-        value: 'code.value >= 12 and (code.value % 2 == 0)'
+        value: &#39;code.value &gt;= 12 and (code.value % 2 == 0)&#39;
       is_string:
-        value: 'code.value >= 13 and (code.value % 2 == 1)'
+        value: &#39;code.value &gt;= 13 and (code.value % 2 == 1)&#39;
       len_content:
         value: (code.value - 12) / 2
-        if: code.value >= 12
+        if: code.value &gt;= 12
   column_content:
     params:
       - id: ser
@@ -420,7 +420,7 @@ types:
             4: u4
             5: b48
             6: u8
-        if: serial_type.code.value >= 1 and serial_type.code.value <= 6
+        if: serial_type.code.value &gt;= 1 and serial_type.code.value &lt;= 6
       - id: as_float
         type: f8
         if: serial_type.code.value == 7
@@ -434,7 +434,7 @@ types:
 #        if: _root.text_encoding == encodings::utf_8 and serial_type.is_string
     instances:
       serial_type:
-        value: ser.as<serial>
+        value: ser.as&lt;serial&gt;
 enums:
   versions:
     1: legacy

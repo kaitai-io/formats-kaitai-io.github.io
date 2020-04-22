@@ -255,7 +255,7 @@ empty.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: windows_resource_file
   title: Windows resource file
@@ -267,7 +267,7 @@ empty.</p>
   endian: le
 doc: |
   Windows resource file (.res) are binary bundles of
-  "resources". Resource has some sort of ID (numerical or string),
+  &quot;resources&quot;. Resource has some sort of ID (numerical or string),
   type (predefined or user-defined), and raw value. Resource files can
   be seen standalone (as .res file), or embedded inside PE executable
   (.exe, .dll) files.
@@ -280,10 +280,10 @@ doc: |
     cursor images, fonts, various misc bitmaps, and locale-aware
     strings
 
-  Windows provides special API to access "resources" from a binary.
+  Windows provides special API to access &quot;resources&quot; from a binary.
 
   Normally, resources files are created with `rc` compiler: it takes a
-  .rc file (so called "resource-definition script") + all the raw
+  .rc file (so called &quot;resource-definition script&quot;) + all the raw
   resource binary files for input, and outputs .res file. That .res
   file can be linked into an .exe / .dll afterwards using a linker.
 
@@ -350,7 +350,7 @@ types:
           it as enum value, if applicable.
         value: type.as_numeric
         enum: predef_types
-        if: not type.is_string and type.as_numeric <= 0xff
+        if: not type.is_string and type.as_numeric &lt;= 0xff
     enums:
       predef_types:
         # https://msdn.microsoft.com/en-us/library/windows/desktop/ms648009.aspx
@@ -382,12 +382,12 @@ types:
       Resources use a special serialization of names and types: they
       can be either a number or a string.
 
-      Use `is_string` to check which kind we've got here, and then use
+      Use `is_string` to check which kind we&#39;ve got here, and then use
       `as_numeric` or `as_string` to get relevant value.
     seq:
       - id: first
         type: u2
-        if: save_pos1 >= 0
+        if: save_pos1 &gt;= 0
       - id: as_numeric
         type: u2
         if: not is_string
@@ -398,7 +398,7 @@ types:
         if: is_string
       - id: noop
         size: 0
-        if: is_string and save_pos2 >= 0
+        if: is_string and save_pos2 &gt;= 0
     instances:
       # Super dirty hack to save start and end position in a stream to re-read it as string if needed
       save_pos1:

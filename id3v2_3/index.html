@@ -210,7 +210,7 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml"># ID3v2.3.0 Specifications
 # http://id3.org/id3v2.3.0
 
@@ -237,7 +237,7 @@ types:
       - id: frames  
         type: frame
         repeat: until
-        repeat-until: _io.pos + _.size > header.size.value or _.is_invalid
+        repeat-until: _io.pos + _.size &gt; header.size.value or _.is_invalid
       - id: padding
         if: header.flags.flag_headerex
         size: header_ex.padding_size - _io.pos
@@ -248,7 +248,7 @@ types:
     doc-ref: Section 3.1. ID3v2 header
     seq:
       - id: magic
-        contents: 'ID3'
+        contents: &#39;ID3&#39;
       - id: version_major
         type: u1
       - id: version_revision
@@ -324,7 +324,7 @@ types:
             type: b5
     instances:
       is_invalid:
-        value: "id == '\x00\x00\x00\x00'"
+        value: &quot;id == &#39;\x00\x00\x00\x00&#39;&quot;
 
   # Section 6.2. Synchsafe integers
   u1be_synchsafe:
@@ -341,7 +341,7 @@ types:
         type: u1be_synchsafe
     instances:
       value:
-        value: (byte0.value << 7) | byte1.value
+        value: (byte0.value &lt;&lt; 7) | byte1.value
   u4be_synchsafe:
     seq:
       - id: short0
@@ -350,7 +350,7 @@ types:
         type: u2be_synchsafe
     instances:
       value:
-        value: (short0.value << 14) | short1.value
+        value: (short0.value &lt;&lt; 14) | short1.value
 </code></pre>
     </div>
 </section>

@@ -218,7 +218,7 @@ or you can convert images of other formats.</li>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: vdi
   title: VirtualBox Disk Image
@@ -246,15 +246,15 @@ seq:
 
 instances:
   block_discarded:
-    value: "0xfffffffe"
+    value: &quot;0xfffffffe&quot;
   block_unallocated:
-    value: "0xffffffff"
+    value: &quot;0xffffffff&quot;
   blocks_map:
     -orig-id: bmap
     pos: header.blocks_map_offset
     size: header.blocks_map_size
     type: blocks_map
-    doc: >
+    doc: &gt;
       block_index = offset_in_virtual_disk / block_size
       actual_data_offset = blocks_map[block_index]*block_size+metadata_size+offset_in_block
 
@@ -288,9 +288,9 @@ types:
         type: header_main
     instances:
       subheader_size_is_dynamic:
-        value: version.major>=1
+        value: version.major&gt;=1
       header_size:
-        value: '(subheader_size_is_dynamic ? header_size_optional : 336)'
+        value: &#39;(subheader_size_is_dynamic ? header_size_optional : 336)&#39;
 
       blocks_map_size:
         value: ( ( header_main.blocks_in_image * 4 + header_main.geometry.sector_size - 1 ) / header_main.geometry.sector_size ) * header_main.geometry.sector_size
@@ -330,11 +330,11 @@ types:
           - id: blocks_map_offset
             -orig-id: offset_bmap
             type: u4
-            if: _parent.version.major>=1
+            if: _parent.version.major&gt;=1
 
           - id: offset_data
             type: u4
-            if: _parent.version.major>=1
+            if: _parent.version.major&gt;=1
 
           - id: geometry
             type: geometry
@@ -342,7 +342,7 @@ types:
           - id: reserved1
             -orig-id: unused1
             type: u4
-            if: _parent.version.major>=1
+            if: _parent.version.major&gt;=1
 
           - id: disk_size
             type: u8
@@ -350,12 +350,12 @@ types:
           - id: block_data_size
             -orig-id: block_size
             type: u4
-            doc: "Size of block (bytes)."
+            doc: &quot;Size of block (bytes).&quot;
 
           - id: block_metadata_size
             -orig-id: block_extra
             type: u4
-            if: _parent.version.major>=1
+            if: _parent.version.major&gt;=1
 
           - id: blocks_in_image
             type: u4
@@ -374,11 +374,11 @@ types:
 
           - id: uuid_parent
             type: uuid
-            if: _parent.version.major>=1
+            if: _parent.version.major&gt;=1
 
           - id: lchc_geometry
             type: geometry
-            if: _parent.version.major>=1 and _io.pos + 16 <= _io.size
+            if: _parent.version.major&gt;=1 and _io.pos + 16 &lt;= _io.size
 
           #- id: reserved2
           #  -orig_id: unused2
@@ -424,7 +424,7 @@ types:
             type: u4
         instances:
           is_allocated:
-            value: index < _root.block_discarded
+            value: index &lt; _root.block_discarded
           block:
             #io: _root.disk._io
             value: _root.disk.blocks[index]

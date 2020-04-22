@@ -218,7 +218,7 @@ a simple header prepended.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml"># http://demoseen.com/blog/2010-02-20_Python_Marshal_Format.html
 # https://github.com/python/cpython/blob/master/Lib/dis.py
 # https://github.com/python/cpython/blob/master/Lib/opcode.py
@@ -252,7 +252,7 @@ types:
   assembly:
     seq:
       - id: string_magic
-        contents: "s"
+        contents: &quot;s&quot;
       - id: length
         type: u4
       - id: items
@@ -270,8 +270,8 @@ types:
         enum: op_code_enum
       - id: arg
         type: u2
-        if: "op_code.to_i >= op_code_enum::store_name.to_i" # store_name == have_arguments
-    -webide-representation: "{op_code} {arg}"
+        if: &quot;op_code.to_i &gt;= op_code_enum::store_name.to_i&quot; # store_name == have_arguments
+    -webide-representation: &quot;{op_code} {arg}&quot;
     enums:
       op_code_enum:
         0  : stop_code
@@ -345,14 +345,14 @@ types:
         88 : end_finally
         89 : build_class
         90 : store_name           # Index in name list
-        91 : delete_name          # ""
+        91 : delete_name          # &quot;&quot;
         92 : unpack_sequence      # Number of tuple items
         93 : for_iter
         94 : list_append
         95 : store_attr           # Index in name list
-        96 : delete_attr          # ""
-        97 : store_global         # ""
-        98 : delete_global        # ""
+        96 : delete_attr          # &quot;&quot;
+        97 : store_global         # &quot;&quot;
+        98 : delete_global        # &quot;&quot;
         99 : dup_topx             # number of items to duplicate
         100: load_const           # Index in const list
         101: load_name            # Index in name list
@@ -366,29 +366,29 @@ types:
         109: import_from          # Index in name list
         110: jump_forward         # Number of bytes to skip
         111: jump_if_false_or_pop # Target byte offset from beginning of code
-        112: jump_if_true_or_pop  # ""
-        113: jump_absolute        # ""
-        114: pop_jump_if_false    # ""
-        115: pop_jump_if_true     # ""
+        112: jump_if_true_or_pop  # &quot;&quot;
+        113: jump_absolute        # &quot;&quot;
+        114: pop_jump_if_false    # &quot;&quot;
+        115: pop_jump_if_true     # &quot;&quot;
         116: load_global          # Index in name list
         119: continue_loop        # Target address
         120: setup_loop           # Distance to target address
-        121: setup_except         # ""
-        122: setup_finally        # ""
+        121: setup_except         # &quot;&quot;
+        122: setup_finally        # &quot;&quot;
         124: load_fast            # Local variable number
         125: store_fast           # Local variable number
         126: delete_fast          # Local variable number
         130: raise_varargs        # Number of raise arguments (1, 2, or 3)
-        131: call_function        # #args + (#kwargs << 8)
+        131: call_function        # #args + (#kwargs &lt;&lt; 8)
         132: make_function        # Number of args with default values
         133: build_slice          # Number of items
         134: make_closure
         135: load_closure
         136: load_deref
         137: store_deref
-        140: call_function_var    # #args + (#kwargs << 8)
-        141: call_function_kw     # #args + (#kwargs << 8)
-        142: call_function_var_kw # #args + (#kwargs << 8)
+        140: call_function_var    # #args + (#kwargs &lt;&lt; 8)
+        141: call_function_kw     # #args + (#kwargs &lt;&lt; 8)
+        142: call_function_var_kw # #args + (#kwargs &lt;&lt; 8)
         143: setup_with
         145: extended_arg
         146: set_add
@@ -424,7 +424,7 @@ types:
         type: u4
       - id: lnotab
         type: py_object
-    -webide-representation: "{name.value}"
+    -webide-representation: &quot;{name.value}&quot;
     enums:
       flags_enum:
         0x04: has_args
@@ -439,16 +439,16 @@ types:
         type:
           switch-on: type
           cases:
-            "object_type::code_object": code_object
-            "object_type::string":      py_string
-            "object_type::string_ref":  string_ref
-            "object_type::interned":    interned_string
-            "object_type::tuple":       tuple
-            "object_type::int":         u4
-            "object_type::py_false":    py_false
-            "object_type::py_true":     py_true
-            "object_type::none":        py_none
-    -webide-representation: "{type}: {value}"
+            &quot;object_type::code_object&quot;: code_object
+            &quot;object_type::string&quot;:      py_string
+            &quot;object_type::string_ref&quot;:  string_ref
+            &quot;object_type::interned&quot;:    interned_string
+            &quot;object_type::tuple&quot;:       tuple
+            &quot;object_type::int&quot;:         u4
+            &quot;object_type::py_false&quot;:    py_false
+            &quot;object_type::py_true&quot;:     py_true
+            &quot;object_type::none&quot;:        py_none
+    -webide-representation: &quot;{type}: {value}&quot;
     types:
       py_string:
         seq:
@@ -456,7 +456,7 @@ types:
             type: u4
           - id: data
             size: length
-        -webide-representation: "{data}"
+        -webide-representation: &quot;{data}&quot;
       interned_string:
         seq:
           - id: length
@@ -465,12 +465,12 @@ types:
             type: str
             size: length
             encoding: utf-8
-        -webide-representation: "{data}"
+        -webide-representation: &quot;{data}&quot;
       string_ref:
         seq:
           - id: interned_list_index
             type: u4
-        -webide-representation: "#{interned_list_index:dec}"
+        -webide-representation: &quot;#{interned_list_index:dec}&quot;
       unicode_string:
         seq:
           - id: length
@@ -479,7 +479,7 @@ types:
             size: length
             type: str
             encoding: utf-8
-        -webide-representation: "{data}"
+        -webide-representation: &quot;{data}&quot;
       tuple:
         seq:
           - id: count
@@ -488,13 +488,13 @@ types:
             type: py_object
             repeat: expr
             repeat-expr: count
-        -webide-representation: "{count:dec} items"
+        -webide-representation: &quot;{count:dec} items&quot;
       py_none:
-        -webide-representation: "None"
+        -webide-representation: &quot;None&quot;
       py_true:
-        -webide-representation: "true"
+        -webide-representation: &quot;true&quot;
       py_false:
-        -webide-representation: "false"
+        -webide-representation: &quot;false&quot;
     enums:
       object_type:
         40: tuple             # (

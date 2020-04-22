@@ -245,7 +245,7 @@ documented by Adobe.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: swf
   title: Adobe Flash (AKA Shockwave Flash, Macromedia Flash)
@@ -280,7 +280,7 @@ seq:
     enum: compressions
   - id: signature
     -orig-id: Signature
-    contents: "WS"
+    contents: &quot;WS&quot;
   - id: version
     -orig-id: Version
     type: u1
@@ -307,7 +307,7 @@ types:
         type: u2
       - id: file_attributes_tag
         type: tag
-        if: _root.version >= 8
+        if: _root.version &gt;= 8
       - id: tags
         type: tag
         repeat: eos
@@ -319,7 +319,7 @@ types:
         size: num_bytes
     instances:
       num_bits:
-        value: b1 >> 3
+        value: b1 &gt;&gt; 3
       num_bytes:
         value: ((num_bits * 4 - 3) + 7) / 8
   rgb:
@@ -339,12 +339,12 @@ types:
         type:
           switch-on: record_header.tag_type
           cases:
-            'tag_type::define_sound': define_sound_body
-            'tag_type::do_abc': do_abc_body
-            'tag_type::script_limits': script_limits_body
-            'tag_type::symbol_class': symbol_class_body
-            'tag_type::set_background_color': rgb
-            'tag_type::export_assets': symbol_class_body
+            &#39;tag_type::define_sound&#39;: define_sound_body
+            &#39;tag_type::do_abc&#39;: do_abc_body
+            &#39;tag_type::script_limits&#39;: script_limits_body
+            &#39;tag_type::symbol_class&#39;: symbol_class_body
+            &#39;tag_type::set_background_color&#39;: rgb
+            &#39;tag_type::export_assets&#39;: symbol_class_body
   define_sound_body:
     seq:
       - id: id
@@ -421,12 +421,12 @@ types:
         if: small_len == 0x3f
     instances:
       tag_type:
-        value: 'tag_code_and_length >> 6'
+        value: &#39;tag_code_and_length &gt;&gt; 6&#39;
         enum: tag_type
       small_len:
-        value: 'tag_code_and_length & 0b111111'
+        value: &#39;tag_code_and_length &amp; 0b111111&#39;
       len:
-        value: 'small_len == 0x3f ? big_len : small_len'
+        value: &#39;small_len == 0x3f ? big_len : small_len&#39;
 enums:
   compressions:
     0x46: none # F

@@ -224,21 +224,21 @@ empty (contain no file data) they can be omitted.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: tr_dos_image
   file-extension: trd
-  title: "TR-DOS flat-file disk image"
+  title: &quot;TR-DOS flat-file disk image&quot;
   license: CC0-1.0
   endian: le
 doc: |
   .trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
-  headerless and contain consequent "logical tracks", each logical track
+  headerless and contain consequent &quot;logical tracks&quot;, each logical track
   consists of 16 256-byte sectors.
 
   Logical tracks are defined the same way as used by TR-DOS: for single-side
-  floppies it's just a physical track number, for two-side floppies sides are
-  interleaved, i.e. logical_track_num = (physical_track_num << 1) | side
+  floppies it&#39;s just a physical track number, for two-side floppies sides are
+  interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side
 
   So, this format definition is more for TR-DOS filesystem than for .trd files,
   which are formatless.
@@ -266,7 +266,7 @@ types:
   file:
     seq:
       - id: name
-        # It uses custom type due to limitation of streams: there's no way to
+        # It uses custom type due to limitation of streams: there&#39;s no way to
         # extract first byte from byte array directly
         type: filename
         size: 8
@@ -276,9 +276,9 @@ types:
         type:
           switch-on: extension
           cases:
-            0x42: position_and_length_basic # 'B'
-            0x43: position_and_length_code  # 'C'
-            0x23: position_and_length_print # '#'
+            0x42: position_and_length_basic # &#39;B&#39;
+            0x43: position_and_length_code  # &#39;C&#39;
+            0x23: position_and_length_print # &#39;#&#39;
             _: position_and_length_generic
       - id: length_sectors
         type: u1
@@ -315,7 +315,7 @@ types:
         type: u1
       - id: length
         type: u2
-  position_and_length_generic: # used for standard 'D' type and unknown types
+  position_and_length_generic: # used for standard &#39;D&#39; type and unknown types
     seq:
       - id: reserved
         type: u2
@@ -325,7 +325,7 @@ types:
     seq:
       # This is 0x00 at the same position as first character of filename in
       # file entries for convenience. When disk has 128 files, it acts as
-      # "last file" terminator.
+      # &quot;last file&quot; terminator.
       - id: catalog_end
         contents: [0]
       - id: unused
@@ -334,8 +334,8 @@ types:
         type: u1
       - id: first_free_sector_track
         doc: |
-          track number is logical, for double-sided disks it's
-          (physical_track << 1) | side, the same way that tracks are stored
+          track number is logical, for double-sided disks it&#39;s
+          (physical_track &lt;&lt; 1) | side, the same way that tracks are stored
           sequentially in .trd file
         type: u1
       - id: disk_type
@@ -364,9 +364,9 @@ types:
         size: 3
     instances:
       num_tracks:
-        value: "disk_type.to_i & 0x01 != 0 ? 40 : 80"
+        value: &quot;disk_type.to_i &amp; 0x01 != 0 ? 40 : 80&quot;
       num_sides:
-        value: "disk_type.to_i & 0x08 != 0 ? 1 : 2"
+        value: &quot;disk_type.to_i &amp; 0x08 != 0 ? 1 : 2&quot;
   filename:
     seq:
       - id: name

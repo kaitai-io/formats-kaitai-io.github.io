@@ -253,7 +253,7 @@ a machine-readable schema of all other structures used in this file.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: blender_blend
   application: Blender
@@ -287,7 +287,7 @@ seq:
     repeat: eos
 instances:
   sdna_structs:
-    value: 'blocks[blocks.size - 2].body.as<dna1_body>.structs'
+    value: &#39;blocks[blocks.size - 2].body.as&lt;dna1_body&gt;.structs&#39;
 types:
   header:
     seq:
@@ -308,7 +308,7 @@ types:
         doc: Blender version used to save this file
     instances:
       psize:
-        value: 'ptr_size_id == ptr_size::bits_64 ? 8 : 4'
+        value: &#39;ptr_size_id == ptr_size::bits_64 ? 8 : 4&#39;
         doc: Number of bytes that a pointer occupies
   file_block:
     seq:
@@ -334,25 +334,25 @@ types:
         type:
           switch-on: code
           cases:
-            '"DNA1"': dna1_body
+            &#39;&quot;DNA1&quot;&#39;: dna1_body
     instances:
       sdna_struct:
         value: _root.sdna_structs[sdna_index]
         if: sdna_index != 0
   dna1_body:
     doc: |
-      DNA1, also known as "Structure DNA", is a special block in
+      DNA1, also known as &quot;Structure DNA&quot;, is a special block in
       .blend file, which contains machine-readable specifications of
       all other structures used in this .blend file.
 
       Effectively, this block contains:
 
-      * a sequence of "names" (strings which represent field names)
-      * a sequence of "types" (strings which represent type name)
-      * a sequence of "type lengths"
-      * a sequence of "structs" (which describe contents of every
+      * a sequence of &quot;names&quot; (strings which represent field names)
+      * a sequence of &quot;types&quot; (strings which represent type name)
+      * a sequence of &quot;type lengths&quot;
+      * a sequence of &quot;structs&quot; (which describe contents of every
         structure, referring to types and names by index)
-    doc-ref: 'https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA'
+    doc-ref: &#39;https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA&#39;
     seq:
       - id: id
         contents: SDNA

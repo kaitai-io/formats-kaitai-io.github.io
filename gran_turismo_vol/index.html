@@ -210,7 +210,7 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: gran_turismo_vol
   endian: le
@@ -219,7 +219,7 @@ section#format-index .row {
   title: Gran Turismo File System (GTFS)
 seq:
   - id: magic
-    contents: ["GTFS", 0, 0, 0, 0]
+    contents: [&quot;GTFS&quot;, 0, 0, 0, 0]
   - id: num_files
     type: u2
   - id: num_entries
@@ -234,7 +234,7 @@ instances:
   ofs_dir:
     value: offsets[1]
   files:
-    pos: ofs_dir & 0xFFFFF800
+    pos: ofs_dir &amp; 0xFFFFF800
     type: file_info
     repeat: expr
     repeat-expr: _root.num_entries
@@ -255,15 +255,15 @@ types:
         terminator: 0
     instances:
       size:
-        value: '(_root.offsets[offset_idx + 1] & 0xFFFFF800) - _root.offsets[offset_idx]'
+        value: &#39;(_root.offsets[offset_idx + 1] &amp; 0xFFFFF800) - _root.offsets[offset_idx]&#39;
       body:
-        pos: _root.offsets[offset_idx] & 0xFFFFF800
+        pos: _root.offsets[offset_idx] &amp; 0xFFFFF800
         size: size
         if: not is_dir
       is_dir:
-        value: 'flags & 1 != 0'
+        value: &#39;flags &amp; 1 != 0&#39;
       is_last_entry:
-        value: 'flags & 0x80 != 0'
+        value: &#39;flags &amp; 0x80 != 0&#39;
 </code></pre>
     </div>
 </section>

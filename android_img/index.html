@@ -210,7 +210,7 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: android_img
   title: Android Boot Image
@@ -251,13 +251,13 @@ seq:
     encoding: ASCII
   - id: recovery_dtbo
     type: size_offset
-    if: header_version > 0
+    if: header_version &gt; 0
   - id: boot_header_size
     type: u4
-    if: header_version > 0
+    if: header_version &gt; 0
   - id: dtb
     type: load_long
-    if: header_version > 1
+    if: header_version &gt; 1
 instances:
   base:
     value: kernel.addr - 0x00008000
@@ -266,17 +266,17 @@ instances:
     value: kernel.addr - base
     doc: kernel offset from base
   ramdisk_offset:
-    value: 'ramdisk.addr > 0 ? ramdisk.addr - base : 0'
+    value: &#39;ramdisk.addr &gt; 0 ? ramdisk.addr - base : 0&#39;
     doc: ramdisk offset from base
   second_offset:
-    value: 'second.addr > 0 ? second.addr - base : 0'
+    value: &#39;second.addr &gt; 0 ? second.addr - base : 0&#39;
     doc: 2nd bootloader offset from base
   tags_offset:
     value: tags_load - base
     doc: tags offset from base
   dtb_offset:
-    value: 'dtb.addr > 0 ? dtb.addr - base : 0'
-    if: header_version > 1
+    value: &#39;dtb.addr &gt; 0 ? dtb.addr - base : 0&#39;
+    if: header_version &gt; 1
     doc: dtb offset from base
   kernel_img:
     pos: page_size
@@ -284,19 +284,19 @@ instances:
   ramdisk_img:
     pos: ((page_size + kernel.size + page_size - 1) / page_size) * page_size
     size: ramdisk.size
-    if: ramdisk.size > 0
+    if: ramdisk.size &gt; 0
   second_img:
     pos: ((page_size + kernel.size + ramdisk.size + page_size - 1) / page_size) * page_size
     size: second.size
-    if: second.size > 0
+    if: second.size &gt; 0
   recovery_dtbo_img:
     pos: recovery_dtbo.offset
     size: recovery_dtbo.size
-    if: header_version > 0 and recovery_dtbo.size > 0
+    if: header_version &gt; 0 and recovery_dtbo.size &gt; 0
   dtb_img:
     pos: ((page_size + kernel.size + ramdisk.size + second.size + recovery_dtbo.size + page_size - 1) / page_size) * page_size
     size: dtb.size
-    if: header_version > 1 and dtb.size > 0
+    if: header_version &gt; 1 and dtb.size &gt; 0
 types:
   load:
     seq:
@@ -322,15 +322,15 @@ types:
         type: u4
     instances:
       major:
-        value: (version >> 25) & 0x7f
+        value: (version &gt;&gt; 25) &amp; 0x7f
       minor:
-        value: (version >> 18) & 0x7f
+        value: (version &gt;&gt; 18) &amp; 0x7f
       patch:
-        value: (version >> 11) & 0x7f
+        value: (version &gt;&gt; 11) &amp; 0x7f
       year:
-        value: ((version >> 4) & 0x7f) + 2000
+        value: ((version &gt;&gt; 4) &amp; 0x7f) + 2000
       month:
-        value: version & 0xf
+        value: version &amp; 0xf
 </code></pre>
     </div>
 </section>

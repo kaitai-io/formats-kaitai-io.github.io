@@ -184,7 +184,7 @@ decompiler utility.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: gettext_mo
   file-extension: mo
@@ -200,7 +200,7 @@ decompiler utility.</p>
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #  1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 #  2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-# THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 doc: |
   [GNU gettext](https://www.gnu.org/software/gettext/) is a popular
@@ -213,7 +213,7 @@ doc: |
   gettext-enabled software. .mo format is a result of compilation of
   text-based .po files using
   [msgfmt](https://www.gnu.org/software/gettext/manual/html_node/msgfmt-Invocation.html#msgfmt-Invocation)
-  utility. The reverse conversion (.mo -> .po) is also possible using
+  utility. The reverse conversion (.mo -&gt; .po) is also possible using
   [msgunfmt](https://www.gnu.org/software/gettext/manual/html_node/msgunfmt-Invocation.html#msgunfmt-Invocation)
   decompiler utility.
 doc-ref: https://gitlab.com/worr/libintl
@@ -235,7 +235,7 @@ types:
       translation:
         value: _root.mo.translations[idx].str
       next_idx:
-        value: "idx + collision_step - (idx >= _root.mo.num_hashtable_items - collision_step ? _root.mo.num_hashtable_items : 0)"
+        value: &quot;idx + collision_step - (idx &gt;= _root.mo.num_hashtable_items - collision_step ? _root.mo.num_hashtable_items : 0)&quot;
       next:
         pos: 0
         type: hash_lookup_iteration(_root.mo.hashtable_items[next_idx].val, collision_step)
@@ -263,7 +263,7 @@ types:
             e=e.next
           return e.current
         except:
-          raise Exception("Not found "+s+" in the hashtable!")
+          raise Exception(&quot;Not found &quot;+s+&quot; in the hashtable!&quot;)
       
       lookup(t.mo.originals[145].str, t)
     doc-ref: https://gitlab.com/worr/libintl/raw/master/src/lib/libintl/gettext.c
@@ -275,35 +275,35 @@ types:
         doc-ref: https://gitlab.com/worr/libintl/raw/master/src/lib/libintl/strhash.c
         doc: |
           def string_hash(s):
-            s=s.encode("utf-8")
+            s=s.encode(&quot;utf-8&quot;)
             h = 0
             for i in range(len(s)):
-              h = h << 4
+              h = h &lt;&lt; 4
               h += s[i]
-              tmp = h & 0xF0000000
+              tmp = h &amp; 0xF0000000
               if tmp != 0:
                 h ^= tmp
-                h ^= tmp >> 24
+                h ^= tmp &gt;&gt; 24
             return h
     instances:
       collision_step:
-        value: "hash % (_root.mo.num_hashtable_items - 2) + 1"
+        value: &quot;hash % (_root.mo.num_hashtable_items - 2) + 1&quot;
       idx:
-        value: "hash % _root.mo.num_hashtable_items"
+        value: &quot;hash % _root.mo.num_hashtable_items&quot;
       hash_lookup_iteration:
         pos: 0
-        type: "hash_lookup_iteration(_root.mo.hashtable_items[idx].val, collision_step)"
+        type: &quot;hash_lookup_iteration(_root.mo.hashtable_items[idx].val, collision_step)&quot;
       entry:
         pos: 0
-        type: "lookup_iteration(hash_lookup_iteration, query)"
+        type: &quot;lookup_iteration(hash_lookup_iteration, query)&quot;
 
   mo:
     meta:
       endian:
         switch-on: _root.signature
         cases:
-          '[0xde, 0x12, 0x04, 0x95]': le
-          '[0x95, 0x04, 0x12, 0xde]': be
+          &#39;[0xde, 0x12, 0x04, 0x95]&#39;: le
+          &#39;[0x95, 0x04, 0x12, 0xde]&#39;: be
     seq:
         - id: version
           type: version
@@ -344,9 +344,9 @@ types:
             type: u4
         instances:
           major:
-            value: version_raw >> 16
+            value: version_raw &gt;&gt; 16
           minor:
-            value: version_raw & 0xffff
+            value: version_raw &amp; 0xffff
       hashtable_item:
         seq:
           - id: raw_val
@@ -358,10 +358,10 @@ types:
             value: raw_val - 1
             if: raw_val != 0
           is_system_dependent:
-            value: val_1 & mask == 1
+            value: val_1 &amp; mask == 1
             if: raw_val != 0
           val:
-            value: val_1 & ~mask
+            value: val_1 &amp; ~mask
             if: raw_val != 0
       descriptor:
         seq:

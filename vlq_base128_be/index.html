@@ -218,7 +218,7 @@ https://en.wikipedia.org/wiki/Variable-length_quantity</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: vlq_base128_be
   title: Variable length quantity, unsigned integer, base128, big-endian
@@ -227,7 +227,7 @@ https://en.wikipedia.org/wiki/Variable-length_quantity</p>
 doc: |
   A variable-length unsigned integer using base128 encoding. 1-byte groups
   consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
-  "most significant group first", i.e. in "big-endian" manner.
+  &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.
 
   This particular encoding is specified and used in:
 
@@ -246,30 +246,30 @@ seq:
 types:
   group:
     doc: |
-      One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
+      One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.
     seq:
       - id: b
         type: u1
     instances:
       has_next:
-        value: (b & 0b1000_0000) != 0
+        value: (b &amp; 0b1000_0000) != 0
         doc: If true, then we have more bytes to read
       value:
-        value: b & 0b0111_1111
+        value: b &amp; 0b0111_1111
         doc: The 7-bit (base128) numeric value chunk of this group
 instances:
   last:
     value: groups.size - 1
   value:
-    value: >-
+    value: &gt;-
       groups[last].value
-      + (last >= 1 ? (groups[last - 1].value << 7) : 0)
-      + (last >= 2 ? (groups[last - 2].value << 14) : 0)
-      + (last >= 3 ? (groups[last - 3].value << 21) : 0)
-      + (last >= 4 ? (groups[last - 4].value << 28) : 0)
-      + (last >= 5 ? (groups[last - 5].value << 35) : 0)
-      + (last >= 6 ? (groups[last - 6].value << 42) : 0)
-      + (last >= 7 ? (groups[last - 7].value << 49) : 0)
+      + (last &gt;= 1 ? (groups[last - 1].value &lt;&lt; 7) : 0)
+      + (last &gt;= 2 ? (groups[last - 2].value &lt;&lt; 14) : 0)
+      + (last &gt;= 3 ? (groups[last - 3].value &lt;&lt; 21) : 0)
+      + (last &gt;= 4 ? (groups[last - 4].value &lt;&lt; 28) : 0)
+      + (last &gt;= 5 ? (groups[last - 5].value &lt;&lt; 35) : 0)
+      + (last &gt;= 6 ? (groups[last - 6].value &lt;&lt; 42) : 0)
+      + (last &gt;= 7 ? (groups[last - 7].value &lt;&lt; 49) : 0)
     doc: Resulting value as normal integer
 </code></pre>
     </div>

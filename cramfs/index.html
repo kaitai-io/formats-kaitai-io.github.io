@@ -227,7 +227,7 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: cramfs
   xref:
@@ -254,7 +254,7 @@ types:
       - id: future
         type: u4
       - id: signature
-        contents: 'Compressed ROMFS'
+        contents: &#39;Compressed ROMFS&#39;
       - id: fsid
         type: info
       - id: name
@@ -266,15 +266,15 @@ types:
     instances:
       # flags
       flag_fsid_v2:
-        value: (flags >>  0) & 1
+        value: (flags &gt;&gt;  0) &amp; 1
       flag_sorted_dirs:
-        value: (flags >>  1) & 1
+        value: (flags &gt;&gt;  1) &amp; 1
       flag_holes:
-        value: (flags >>  8) & 1
+        value: (flags &gt;&gt;  8) &amp; 1
       flag_wrong_signature:
-        value: (flags >>  9) & 1
+        value: (flags &gt;&gt;  9) &amp; 1
       flag_shifted_root_offset:
-        value: (flags >> 10) & 1
+        value: (flags &gt;&gt; 10) &amp; 1
 
   info:
     seq:
@@ -304,26 +304,26 @@ types:
     instances:
       # -- [mode] --
       type:
-        value: (mode >> 12) & 0b1111
+        value: (mode &gt;&gt; 12) &amp; 0b1111
         enum: file_type
       attr:
-        value: (mode >> 9) & 0b0111
+        value: (mode &gt;&gt; 9) &amp; 0b0111
       perm_u:
-        value: (mode >> 6) & 0b0111
+        value: (mode &gt;&gt; 6) &amp; 0b0111
       perm_g:
-        value: (mode >> 3) & 0b0111
+        value: (mode &gt;&gt; 3) &amp; 0b0111
       perm_o:
-        value: mode & 0b0111
+        value: mode &amp; 0b0111
       # -- [size_gid] --  
       size:
-        value: size_gid & 0xFFFFFF
+        value: size_gid &amp; 0xFFFFFF
       gid:
-        value: size_gid >> 24
+        value: size_gid &gt;&gt; 24
       # -- [namelen_offset] --
       namelen:
-        value: (namelen_offset & 0x3F) << 2
+        value: (namelen_offset &amp; 0x3F) &lt;&lt; 2
       offset:
-        value: ((namelen_offset >> 6) & 0x3FFFFFF) << 2
+        value: ((namelen_offset &gt;&gt; 6) &amp; 0x3FFFFFF) &lt;&lt; 2
       # -- [type dependent data] --
       as_reg_file:
         io: _root._io
@@ -355,7 +355,7 @@ types:
         repeat: expr
         repeat-expr: (_parent.size + _root.page_size - 1) / _root.page_size
 
-      # Correct decoding can't yet be described -- raw data for now.
+      # Correct decoding can&#39;t yet be described -- raw data for now.
       - id: raw_blocks
         size-eos: true
 
@@ -369,7 +369,7 @@ types:
       - id: children
         repeat: eos
         type: inode
-        if: _io.size > 0
+        if: _io.size &gt; 0
 </code></pre>
     </div>
 </section>

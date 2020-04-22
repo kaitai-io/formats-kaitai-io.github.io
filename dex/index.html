@@ -211,7 +211,7 @@ fields, annotations, etc.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: dex
   title: Android Dalvik VM executable (dex)
@@ -312,7 +312,7 @@ instances:
     doc: |
       class definitions list.
 
-      The classes must be ordered such that a given class's superclass and
+      The classes must be ordered such that a given class&#39;s superclass and
       implemented interfaces appear in the list earlier than the referring class.
 
       Furthermore, it is invalid for a definition for the same-named class to
@@ -354,7 +354,7 @@ types:
   header_item:
     seq:
       - id: magic
-        contents: "dex\n"
+        contents: &quot;dex\n&quot;
       - id: version_str
         size: 4
         type: strz
@@ -386,7 +386,7 @@ types:
       - id: link_size
         type: u4
         doc: |
-          size of the link section, or 0 if this file isn't statically linked
+          size of the link section, or 0 if this file isn&#39;t statically linked
       - id: link_off
         type: u4
         doc: |
@@ -399,7 +399,7 @@ types:
         doc: |
           offset from the start of the file to the map item.
           The offset, which must be non-zero, should be to an offset into the data
-          section, and the data should be in the format specified by "map_list" below.
+          section, and the data should be in the format specified by &quot;map_list&quot; below.
       - id: string_ids_size
         type: u4
         doc: |
@@ -479,7 +479,7 @@ types:
         doc: |
           offset from the start of the file to the string data for this item.
           The offset should be to a location in the data section, and the data
-          should be in the format specified by "string_data_item" below.
+          should be in the format specified by &quot;string_data_item&quot; below.
           There is no alignment requirement for the offset.
     types:
       string_data_item:
@@ -490,13 +490,13 @@ types:
             size: utf16_size.value
             type: str
             encoding: ascii
-        -webide-representation: "{data}"
+        -webide-representation: &quot;{data}&quot;
     instances:
       value:
         pos: string_data_off
         type: string_data_item
         -webide-parse-mode: eager
-    -webide-representation: "{value.data} (offs={string_data_off})"
+    -webide-representation: &quot;{value.data} (offs={string_data_off})&quot;
   type_id_item:
     seq:
       - id: descriptor_idx
@@ -508,7 +508,7 @@ types:
       type_name:
         value: _root.string_ids[descriptor_idx].value.data
         -webide-parse-mode: eager
-    -webide-representation: "{type_name}"
+    -webide-representation: &quot;{type_name}&quot;
   proto_id_item:
     seq:
       - id: shorty_idx
@@ -527,7 +527,7 @@ types:
           offset from the start of the file to the list of parameter types for this prototype,
           or 0 if this prototype has no parameters.
           This offset, if non-zero, should be in the data section, and the data
-          there should be in the format specified by "type_list" below.
+          there should be in the format specified by &quot;type_list&quot; below.
           Additionally, there should be no reference to the type void in the list.
     instances:
       shorty_desc:
@@ -542,7 +542,7 @@ types:
       return_type:
         value: _root.type_ids[return_type_idx].type_name
         doc: return type of this prototype
-    -webide-representation: "shorty_idx={shorty_idx} return_type_idx={return_type_idx} parameters_off={parameters_off}"
+    -webide-representation: &quot;shorty_idx={shorty_idx} return_type_idx={return_type_idx} parameters_off={parameters_off}&quot;
   field_id_item:
     seq:
       - id: class_idx
@@ -569,7 +569,7 @@ types:
       field_name:
         value: _root.string_ids[name_idx].value.data
         doc: the name of this field
-    -webide-representation: "class_idx={class_idx} type_idx={type_idx} name_idx={name_idx}"
+    -webide-representation: &quot;class_idx={class_idx} type_idx={type_idx} name_idx={name_idx}&quot;
   method_id_item:
     seq:
       - id: class_idx
@@ -596,7 +596,7 @@ types:
       method_name:
         value: _root.string_ids[name_idx].value.data
         doc: the name of this method
-    -webide-representation: "class_idx={class_idx} proto_idx={proto_idx} name_idx={name_idx}"
+    -webide-representation: &quot;class_idx={class_idx} proto_idx={proto_idx} name_idx={name_idx}&quot;
   class_def_item:
     seq:
       - id: class_idx
@@ -611,7 +611,7 @@ types:
         doc: |
           access flags for the class (public, final, etc.).
 
-          See "access_flags Definitions" for details.
+          See &quot;access_flags Definitions&quot; for details.
       - id: superclass_idx
         type: u4
         doc: |
@@ -626,7 +626,7 @@ types:
           offset from the start of the file to the list of interfaces, or 0 if there are none.
 
           This offset should be in the data section, and the data there should
-          be in the format specified by "type_list" below. Each of the elements
+          be in the format specified by &quot;type_list&quot; below. Each of the elements
           of the list must be a class type (not an array or primitive type),
           and there must not be any duplicates.
       - id: source_file_idx
@@ -645,7 +645,7 @@ types:
           this class, or 0 if there are no annotations on this class.
 
           This offset, if non-zero, should be in the data section, and the data
-          there should be in the format specified by "annotations_directory_item"
+          there should be in the format specified by &quot;annotations_directory_item&quot;
           below,with all items referring to this class as the definer.
       - id: class_data_off
         type: u4
@@ -656,7 +656,7 @@ types:
           (This may be the case, for example, if this class is a marker interface.)
 
           The offset, if non-zero, should be in the data section, and the data
-          there should be in the format specified by "class_data_item" below,
+          there should be in the format specified by &quot;class_data_item&quot; below,
           with all items referring to this class as the definer.
       - id: static_values_off
         type: u4
@@ -666,7 +666,7 @@ types:
           initialized with 0 or null).
 
           This offset should be in the data section, and the data there should
-          be in the format specified by "encoded_array_item" below.
+          be in the format specified by &quot;encoded_array_item&quot; below.
 
           The size of the array must be no larger than the number of static fields
           declared by this class, and the elements correspond to the static fields
@@ -689,7 +689,7 @@ types:
         pos: static_values_off
         type: encoded_array_item
         if: static_values_off != 0
-    -webide-representation: "{access_flags} {type_name}"
+    -webide-representation: &quot;{access_flags} {type_name}&quot;
   encoded_array_item:
     seq:
       - id: value
@@ -754,7 +754,7 @@ types:
             value_type_enum::enum:          u4
             value_type_enum::array:         encoded_array
             value_type_enum::annotation:    encoded_annotation
-    -webide-representation: "{value_type}: {value} (arg={value_arg})"
+    -webide-representation: &quot;{value_type}: {value} (arg={value_arg})&quot;
     enums:
       value_type_enum:
         0x00: byte
@@ -773,7 +773,7 @@ types:
         0x1b: enum
         0x1c: array
         0x1d: annotation
-        0x1e: "null"
+        0x1e: &quot;null&quot;
         0x1f: boolean
   encoded_array:
     seq:
@@ -791,7 +791,7 @@ types:
           offset from the start of the file to call site definition.
 
           The offset should be in the data section, and the data there should
-          be in the format specified by "call_site_item" below.
+          be in the format specified by &quot;call_site_item&quot; below.
   encoded_field:
     seq:
       - id: field_idx_diff
@@ -807,7 +807,7 @@ types:
         doc: |
           access flags for the field (public, final, etc.).
 
-          See "access_flags Definitions" for details.
+          See &quot;access_flags Definitions&quot; for details.
   encoded_method:
     seq:
       - id: method_idx_diff
@@ -823,7 +823,7 @@ types:
         doc: |
           access flags for the field (public, final, etc.).
 
-          See "access_flags Definitions" for details.
+          See &quot;access_flags Definitions&quot; for details.
       - id: code_off
         type: vlq_base128_le
         doc: |
@@ -832,7 +832,7 @@ types:
 
           The offset should be to a location in the data section.
 
-          The format of the data is specified by "code_item" below.
+          The format of the data is specified by &quot;code_item&quot; below.
   class_data_item:
     seq:
       - id: static_fields_size
@@ -909,7 +909,7 @@ types:
         type: u4
         doc: |
           offset from the start of the file to the items in question
-    -webide-representation: "{type}: offs={offset}, size={size}"
+    -webide-representation: &quot;{type}: offs={offset}, size={size}&quot;
     enums:
       map_item_type:
         0x0000: header_item

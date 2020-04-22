@@ -228,7 +228,7 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: dns_packet
   title: DNS (Domain Name Service) packet
@@ -240,24 +240,24 @@ doc: |
   (No support for Auth-Name + Add-Name for simplicity)
 seq:
   - id: transaction_id
-    doc: "ID to keep track of request/responces"
+    doc: &quot;ID to keep track of request/responces&quot;
     type: u2
   - id: flags
     type: packet_flags
   - id: qdcount
-    doc: "How many questions are there"
+    doc: &quot;How many questions are there&quot;
     if: flags.is_opcode_valid
     type: u2
   - id: ancount
-    doc: "Number of resource records answering the question"
+    doc: &quot;Number of resource records answering the question&quot;
     if: flags.is_opcode_valid
     type: u2
   - id: nscount
-    doc: "Number of resource records pointing toward an authority"
+    doc: &quot;Number of resource records pointing toward an authority&quot;
     if: flags.is_opcode_valid
     type: u2
   - id: arcount
-    doc: "Number of resource records holding additional information"
+    doc: &quot;Number of resource records holding additional information&quot;
     if: flags.is_opcode_valid
     type: u2
   - id: queries
@@ -292,37 +292,37 @@ types:
         type: u2
         enum: class_type
       - id: ttl
-        doc: "Time to live (in seconds)"
+        doc: &quot;Time to live (in seconds)&quot;
         type: s4
       - id: rdlength
-        doc: "Length in octets of the following payload"
+        doc: &quot;Length in octets of the following payload&quot;
         type: u2
       - id: ptrdname
         type: domain_name
-        if: "type == type_type::ptr"
+        if: &quot;type == type_type::ptr&quot;
       - id: address
         type: address
-        if: "type == type_type::a"
+        if: &quot;type == type_type::a&quot;
   domain_name:
     seq:
       - id: name
         type: label
         repeat: until
-        doc: "Repeat until the length is 0 or it is a pointer (bit-hack to get around lack of OR operator)"
-        repeat-until: "_.length == 0 or _.length == 0b1100_0000"
+        doc: &quot;Repeat until the length is 0 or it is a pointer (bit-hack to get around lack of OR operator)&quot;
+        repeat-until: &quot;_.length == 0 or _.length == 0b1100_0000&quot;
   label:
     seq:
       - id: length
-        doc: "RFC1035 4.1.4: If the first two bits are raised it's a pointer-offset to a previously defined name"
+        doc: &quot;RFC1035 4.1.4: If the first two bits are raised it&#39;s a pointer-offset to a previously defined name&quot;
         type: u1
       - id: pointer
-        if: "is_pointer"
+        if: &quot;is_pointer&quot;
         type: pointer_struct
       - id: name
-        if: "not is_pointer"
-        doc: "Otherwise its a string the length of the length value"
+        if: &quot;not is_pointer&quot;
+        doc: &quot;Otherwise its a string the length of the length value&quot;
         type: str
-        encoding: "ASCII"
+        encoding: &quot;ASCII&quot;
         size: length
     instances:
       is_pointer:
@@ -330,7 +330,7 @@ types:
   pointer_struct:
     seq:
       - id: value
-        doc: "Read one byte, then offset to that position, read one domain-name and return"
+        doc: &quot;Read one byte, then offset to that position, read one domain-name and return&quot;
         type: u1
     instances:
       contents:
@@ -349,25 +349,25 @@ types:
         type: u2
     instances:
       qr:
-        value: (flag & 0b1000_0000_0000_0000) >> 15
+        value: (flag &amp; 0b1000_0000_0000_0000) &gt;&gt; 15
       opcode:
-        value: (flag & 0b0111_1000_0000_0000) >> 11
+        value: (flag &amp; 0b0111_1000_0000_0000) &gt;&gt; 11
       aa:
-        value: (flag & 0b0000_0100_0000_0000) >> 10
+        value: (flag &amp; 0b0000_0100_0000_0000) &gt;&gt; 10
       tc:
-        value: (flag & 0b0000_0010_0000_0000) >> 9
+        value: (flag &amp; 0b0000_0010_0000_0000) &gt;&gt; 9
       rd:
-        value: (flag & 0b0000_0001_0000_0000) >> 8
+        value: (flag &amp; 0b0000_0001_0000_0000) &gt;&gt; 8
       ra:
-        value: (flag & 0b0000_0000_1000_0000) >> 7
+        value: (flag &amp; 0b0000_0000_1000_0000) &gt;&gt; 7
       z:
-        value: (flag & 0b0000_0000_0100_0000) >> 6
+        value: (flag &amp; 0b0000_0000_0100_0000) &gt;&gt; 6
       ad:
-        value: (flag & 0b0000_0000_0010_0000) >> 5
+        value: (flag &amp; 0b0000_0000_0010_0000) &gt;&gt; 5
       cd:
-        value: (flag & 0b0000_0000_0001_0000) >> 4
+        value: (flag &amp; 0b0000_0000_0001_0000) &gt;&gt; 4
       rcode:
-        value: (flag & 0b0000_0000_0000_1111) >> 0
+        value: (flag &amp; 0b0000_0000_0000_1111) &gt;&gt; 0
       is_opcode_valid:
         value: opcode == 0 or opcode == 1 or opcode == 2
 
@@ -387,7 +387,7 @@ enums:
     7: mb
     8: mg
     9: mr
-    10: "null"
+    10: &quot;null&quot;
     11: wks
     12: ptr
     13: hinfo

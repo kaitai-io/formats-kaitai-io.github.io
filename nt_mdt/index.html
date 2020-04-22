@@ -229,7 +229,7 @@ any of:</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: nt_mdt
   title: NT-MDT data
@@ -269,7 +269,7 @@ seq:
     size: 18
   - id: wrond_doc
     size: 1
-    doc: "documentation specifies 32 bytes long header, but zeroth frame starts at 33th byte in reality"
+    doc: &quot;documentation specifies 32 bytes long header, but zeroth frame starts at 33th byte in reality&quot;
   - id: frames
     size: size
     type: framez
@@ -285,7 +285,7 @@ types:
       - id: frames
         type: frame
         repeat: expr
-        repeat-expr: '_root.last_frame+1'
+        repeat-expr: &#39;_root.last_frame+1&#39;
   title:
     seq:
       - id: title_len
@@ -312,7 +312,7 @@ types:
     seq:
       - id: size
         type: u4
-        doc: "h_sz"
+        doc: &quot;h_sz&quot;
       - id: main
         type: frame_main
         size: size - 4
@@ -338,49 +338,49 @@ types:
             seq:
               - id: year
                 type: u2
-                doc: "h_yea"
+                doc: &quot;h_yea&quot;
               - id: month
                 type: u2
-                doc: "h_mon"
+                doc: &quot;h_mon&quot;
               - id: day
                 type: u2
-                doc: "h_day"
+                doc: &quot;h_day&quot;
           time:
             seq:
               - id: hour
                 type: u2
-                doc: "h_h"
+                doc: &quot;h_h&quot;
               - id: min
                 type: u2
-                doc: "h_m"
+                doc: &quot;h_m&quot;
               - id: sec
                 type: u2
-                doc: "h_s"
+                doc: &quot;h_s&quot;
       frame_main:
         seq:
           - id: type
             type: u2
             enum: frame_type
-            doc: "h_what"
+            doc: &quot;h_what&quot;
           - id: version
             type: version
           - id: date_time
             type: date_time
           - id: var_size
             type: u2
-            doc: "h_am, v6 and older only"
+            doc: &quot;h_am, v6 and older only&quot;
           - id: frame_data
             -orig-id: dataframe
             size-eos: true
             type:
               switch-on: type
               cases:
-                'frame_type::scanned': fd_scanned
-                'frame_type::mda': fd_meta_data
-                'frame_type::spectroscopy': fd_spectroscopy
-                'frame_type::curves': fd_spectroscopy
-                'frame_type::curves_new': fd_curves_new
-            doc: ""
+                &#39;frame_type::scanned&#39;: fd_scanned
+                &#39;frame_type::mda&#39;: fd_meta_data
+                &#39;frame_type::spectroscopy&#39;: fd_spectroscopy
+                &#39;frame_type::curves&#39;: fd_spectroscopy
+                &#39;frame_type::curves_new&#39;: fd_curves_new
+            doc: &quot;&quot;
       dots:
         seq:
           - id: fm_ndots
@@ -388,7 +388,7 @@ types:
           - id: coord_header
             -orig-id: coordheader
             type: dots_header
-            if: fm_ndots > 0
+            if: fm_ndots &gt; 0
           - id: coordinates
             type: dots_data
             repeat: expr
@@ -444,21 +444,21 @@ types:
         seq:
           - id: offset
             type: f4
-            doc: "x_scale->offset = gwy_get_gfloat_le(&p);# r0 (physical units)"
+            doc: &quot;x_scale-&gt;offset = gwy_get_gfloat_le(&amp;p);# r0 (physical units)&quot;
           - id: step
             type: f4
-            doc: >
-              x_scale->step = gwy_get_gfloat_le(&p);
+            doc: &gt;
+              x_scale-&gt;step = gwy_get_gfloat_le(&amp;p);
               r (physical units)
-              x_scale->step = fabs(x_scale->step);
-              if (!x_scale->step) {
-                g_warning("x_scale.step == 0, changing to 1");
-                x_scale->step = 1.0;
+              x_scale-&gt;step = fabs(x_scale-&gt;step);
+              if (!x_scale-&gt;step) {
+                g_warning(&quot;x_scale.step == 0, changing to 1&quot;);
+                x_scale-&gt;step = 1.0;
               }
           - id: unit
-            type: s2 # x_scale->unit = (gint16)gwy_get_guint16_le(&p);
+            type: s2 # x_scale-&gt;unit = (gint16)gwy_get_guint16_le(&amp;p);
             enum: unit
-            doc: "U"
+            doc: &quot;U&quot;
 
       fd_curves_new:
         seq:
@@ -624,19 +624,19 @@ types:
                     type:
                       switch-on: _parent._parent.mesurands[_index].data_type
                       cases:
-                        "data_type::uint8": u1
-                        "data_type::uint16": u2
-                        "data_type::uint32": u4
-                        "data_type::uint64": u8
-                        "data_type::int8": s1
-                        "data_type::int16": s2
-                        "data_type::int32": s4
-                        "data_type::int64": s8
-                        "data_type::float32": f4
-                        "data_type::float64": f8
-                        #"data_type::float48": s8
-                        #"data_type::float80": s8
-                        #"data_type::floatfix": s8
+                        &quot;data_type::uint8&quot;: u1
+                        &quot;data_type::uint16&quot;: u2
+                        &quot;data_type::uint32&quot;: u4
+                        &quot;data_type::uint64&quot;: u8
+                        &quot;data_type::int8&quot;: s1
+                        &quot;data_type::int16&quot;: s2
+                        &quot;data_type::int32&quot;: s4
+                        &quot;data_type::int64&quot;: s8
+                        &quot;data_type::float32&quot;: f4
+                        &quot;data_type::float64&quot;: f8
+                        #&quot;data_type::float48&quot;: s8
+                        #&quot;data_type::float80&quot;: s8
+                        #&quot;data_type::floatfix&quot;: s8
                     repeat: expr
                     repeat-expr: _parent._parent.n_mesurands
           calibration:
@@ -697,40 +697,40 @@ types:
             size: _parent.var_size
           - id: orig_format
             type: u4
-            doc: "s_oem"
+            doc: &quot;s_oem&quot;
             if: false
 
           - id: tune
             type: u4
             enum: lift_mode
-            doc: "z_tune"
+            doc: &quot;z_tune&quot;
             if: false
 
           - id: feedback_gain
             type: f8
-            doc: "s_fbg"
+            doc: &quot;s_fbg&quot;
             if: false
 
           - id: dac_scale
             type: s4
-            doc: "s_s"
+            doc: &quot;s_s&quot;
             if: false
 
           - id: overscan
             type: s4
-            doc: "s_xov (in %)"
+            doc: &quot;s_xov (in %)&quot;
             if: false
 
             #Frame mode stuff
           - id: fm_mode
             type: u2
-            doc: "m_mode"
+            doc: &quot;m_mode&quot;
           - id: fm_xres
             type: u2
-            doc: "m_nx"
+            doc: &quot;m_nx&quot;
           - id: fm_yres
             type: u2
-            doc: "m_ny"
+            doc: &quot;m_ny&quot;
           - id: dots
             type: dots
 
@@ -758,84 +758,84 @@ types:
               - id: channel_index
                 type: u1
                 enum: adc_mode
-                doc: "s_mode"
+                doc: &quot;s_mode&quot;
 
               - id: mode
                 type: u1
                 enum: mode
-                doc: "s_dev"
+                doc: &quot;s_dev&quot;
 
               - id: xres
                 type: u2
-                doc: "s_nx"
+                doc: &quot;s_nx&quot;
               - id: yres
                 type: u2
-                doc: "s_ny"
+                doc: &quot;s_ny&quot;
               - id: ndacq
                 type: u2
-                doc: "Step (DAC)"
+                doc: &quot;Step (DAC)&quot;
               - id: step_length
                 type: f4
-                doc: "s_rs in Angstrom's (Angstrom*gwy_get_gfloat_le(&p))"
+                doc: &quot;s_rs in Angstrom&#39;s (Angstrom*gwy_get_gfloat_le(&amp;p))&quot;
 
               - id: adt
                 type: u2
-                doc: "s_adt"
+                doc: &quot;s_adt&quot;
 
               - id: adc_gain_amp_log10
                 type: u1
-                doc: "s_adc_a"
+                doc: &quot;s_adc_a&quot;
 
               - id: adc_index
                 type: u1
-                doc: "ADC index"
+                doc: &quot;ADC index&quot;
 
                 #XXX: Some fields have different meaning in different versions
               - id: input_signal_or_version
                 type: u1
-                doc: "MDTInputSignal smp_in; s_smp_in (for signal) s_8xx (for version)"
+                doc: &quot;MDTInputSignal smp_in; s_smp_in (for signal) s_8xx (for version)&quot;
 
               - id: substr_plane_order_or_pass_num
                 type: u1
-                doc: "s_spl or z_03"
+                doc: &quot;s_spl or z_03&quot;
 
               - id: scan_dir
                 type: scan_dir
-                doc: "s_xy TODO: interpretation"
+                doc: &quot;s_xy TODO: interpretation&quot;
               - id: power_of_2
                 type: u1
-                doc: "s_2n (bool)"
+                doc: &quot;s_2n (bool)&quot;
 
               - id: velocity
-                type: f4 # frame->velocity = Angstrom*gwy_get_gfloat_le(&p);
-                doc: "s_vel (Angstrom/second)"
+                type: f4 # frame-&gt;velocity = Angstrom*gwy_get_gfloat_le(&amp;p);
+                doc: &quot;s_vel (Angstrom/second)&quot;
 
               - id: setpoint
-                type: f4 # frame->setpoint = Nano*gwy_get_gfloat_le(&p);
-                doc: "s_i0"
+                type: f4 # frame-&gt;setpoint = Nano*gwy_get_gfloat_le(&amp;p);
+                doc: &quot;s_i0&quot;
 
               - id: bias_voltage
-                type: f4 # frame->bias_voltage = gwy_get_gfloat_le(&p);
-                doc: "s_ut"
+                type: f4 # frame-&gt;bias_voltage = gwy_get_gfloat_le(&amp;p);
+                doc: &quot;s_ut&quot;
 
               - id: draw
                 type: u1
-                doc: "s_draw (bool)"
+                doc: &quot;s_draw (bool)&quot;
 
               - id: reserved
                 type: u1
 
               - id: xoff
                 type: s4
-                doc: "s_x00 (in DAC quants)"
+                doc: &quot;s_x00 (in DAC quants)&quot;
 
               - id: yoff
                 type: s4
-                doc: "s_y00 (in DAC quants)"
+                doc: &quot;s_y00 (in DAC quants)&quot;
 
               - id: nl_corr
                 type: u1
-                doc: "s_cor (bool)"
+                doc: &quot;s_cor (bool)&quot;
           dot:
             seq:
               - id: x
@@ -850,13 +850,13 @@ types:
                 type: b1
               - id: bottom
                 type: b1
-                doc: "Bottom - 1 Top - 0"
+                doc: &quot;Bottom - 1 Top - 0&quot;
               - id: left
                 type: b1
-                doc: "Left - 1 Right - 0"
+                doc: &quot;Left - 1 Right - 0&quot;
               - id: horizontal
                 type: b1
-                doc: "Horizontal - 1 Vertical - 0"
+                doc: &quot;Horizontal - 1 Vertical - 0&quot;
         enums:
           mode:
             0: stm
@@ -881,19 +881,19 @@ enums:
 
   data_type:
     0: unknown0
-    '-1': int8
+    &#39;-1&#39;: int8
     1: uint8
-    '-2': int16
+    &#39;-2&#39;: int16
     2: uint16
-    '-4': int32
+    &#39;-4&#39;: int32
     4: uint32
-    '-8': int64
+    &#39;-8&#39;: int64
     8: uint64
-    '-5892': float32
-    '-9990': float48
-    '-13320': float64
-    '-16138': float80
-    '-65544': floatfix
+    &#39;-5892&#39;: float32
+    &#39;-9990&#39;: float48
+    &#39;-13320&#39;: float64
+    &#39;-16138&#39;: float80
+    &#39;-65544&#39;: floatfix
 
 
   xml_scan_location:

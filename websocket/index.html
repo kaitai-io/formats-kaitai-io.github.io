@@ -230,7 +230,7 @@ frames with the <code>fin</code> bit set.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: websocket
   title: WebSocket
@@ -258,7 +258,7 @@ types:
         -orig-id: fin
         type: b1
       - id: reserved
-        -orig-id: 'rsv1, rsv2, rsv3'
+        -orig-id: &#39;rsv1, rsv2, rsv3&#39;
         type: b3
       - id: opcode
         enum: opcode
@@ -279,7 +279,7 @@ types:
     instances:
       len_payload:
         value: |
-          len_payload_primary <= 125 ? len_payload_primary : (
+          len_payload_primary &lt;= 125 ? len_payload_primary : (
             len_payload_primary == 126 ? len_payload_extended_1 : len_payload_extended_2
           )
 
@@ -289,12 +289,12 @@ types:
         type: frame_header
       - id: payload_bytes
         size: header.len_payload
-        if: 'header.opcode != opcode::text'
+        if: &#39;header.opcode != opcode::text&#39;
       - id: payload_text
         size: header.len_payload
         type: str
         encoding: UTF-8
-        if: 'header.opcode == opcode::text'
+        if: &#39;header.opcode == opcode::text&#39;
 
   dataframe:
     seq:
@@ -302,12 +302,12 @@ types:
         type: frame_header
       - id: payload_bytes
         size: header.len_payload
-        if: '_root.initial_frame.header.opcode != opcode::text'
+        if: &#39;_root.initial_frame.header.opcode != opcode::text&#39;
       - id: payload_text
         size: header.len_payload
         type: str
         encoding: UTF-8
-        if: '_root.initial_frame.header.opcode == opcode::text'
+        if: &#39;_root.initial_frame.header.opcode == opcode::text&#39;
     
 enums:
   opcode:

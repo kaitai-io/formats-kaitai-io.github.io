@@ -235,7 +235,7 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: openpgp_message
   title: OpenPGP message
@@ -258,7 +258,7 @@ seq:
    repeat: eos
 types:
   packet:
-    -webide-representation: '{packet_type_old}'
+    -webide-representation: &#39;{packet_type_old}&#39;
     seq:
       - id: one
         type: b1
@@ -367,7 +367,7 @@ types:
       - id: symmetric_encryption_algorithm
         type: u1
         enum: symmetric_key_algorithm
-        if: string_to_key >= 254
+        if: string_to_key &gt;= 254
       - id: secret_key
         size-eos: true
         
@@ -413,19 +413,19 @@ types:
             subpacket_types::embedded_signature: embedded_signature
       
   len_subpacket:
-    -webide-representation: '{len}'
+    -webide-representation: &#39;{len}&#39;
     seq:
       - id: first_octet
         type: u1
       - id: second_octet
         type: u1
-        if: first_octet >= 192 and first_octet < 255
+        if: first_octet &gt;= 192 and first_octet &lt; 255
       - id: scalar
         type: u4
         if: first_octet == 255
     instances:
       len:
-        value: 'first_octet < 192 ? first_octet : ((first_octet >= 192 and first_octet < 255) ? (((first_octet - 192) << 8) + second_octet + 192) : scalar)'
+        value: &#39;first_octet &lt; 192 ? first_octet : ((first_octet &gt;= 192 and first_octet &lt; 255) ? (((first_octet - 192) &lt;&lt; 8) + second_octet + 192) : scalar)&#39;
       
   signature_creation_time:
     seq:

@@ -227,7 +227,7 @@ encoding parameters, and gets result using either <code>as_int</code> or
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: bcd
   title: BCD (Binary Coded Decimals)
@@ -282,24 +282,24 @@ seq:
     repeat-expr: num_digits
 instances:
   as_int:
-    value: 'is_le ? as_int_le : as_int_be'
+    value: &#39;is_le ? as_int_le : as_int_be&#39;
     doc: Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.
   as_int_le:
-    value: >
+    value: &gt;
       digits[0] +
-      (num_digits < 2 ? 0 :
+      (num_digits &lt; 2 ? 0 :
        (digits[1] * 10 +
-        (num_digits < 3 ? 0 :
+        (num_digits &lt; 3 ? 0 :
          (digits[2] * 100 +
-          (num_digits < 4 ? 0 :
+          (num_digits &lt; 4 ? 0 :
            (digits[3] * 1000 +
-            (num_digits < 5 ? 0 :
+            (num_digits &lt; 5 ? 0 :
              (digits[4] * 10000 +
-              (num_digits < 6 ? 0 :
+              (num_digits &lt; 6 ? 0 :
                (digits[5] * 100000 +
-                (num_digits < 7 ? 0 :
+                (num_digits &lt; 7 ? 0 :
                  (digits[6] * 1000000 +
-                  (num_digits < 8 ? 0 :
+                  (num_digits &lt; 8 ? 0 :
                    (digits[7] * 10000000)
                   )
                  )
@@ -319,21 +319,21 @@ instances:
     value: num_digits - 1
     doc: Index of last digit (0-based).
   as_int_be:
-    value: >
+    value: &gt;
       digits[last_idx] +
-      (num_digits < 2 ? 0 :
+      (num_digits &lt; 2 ? 0 :
        (digits[last_idx - 1] * 10 +
-        (num_digits < 3 ? 0 :
+        (num_digits &lt; 3 ? 0 :
          (digits[last_idx - 2] * 100 +
-          (num_digits < 4 ? 0 :
+          (num_digits &lt; 4 ? 0 :
            (digits[last_idx - 3] * 1000 +
-            (num_digits < 5 ? 0 :
+            (num_digits &lt; 5 ? 0 :
              (digits[last_idx - 4] * 10000 +
-              (num_digits < 6 ? 0 :
+              (num_digits &lt; 6 ? 0 :
                (digits[last_idx - 5] * 100000 +
-                (num_digits < 7 ? 0 :
+                (num_digits &lt; 7 ? 0 :
                  (digits[last_idx - 6] * 1000000 +
-                  (num_digits < 8 ? 0 :
+                  (num_digits &lt; 8 ? 0 :
                    (digits[last_idx - 7] * 10000000)
                   )
                  )

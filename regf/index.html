@@ -227,7 +227,7 @@ filesystem with a running Windows OS.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: regf
   title: Windows registry database
@@ -236,7 +236,7 @@ filesystem with a running Windows OS.</p>
   endian: le
 doc: |
   This spec allows to parse files used by Microsoft Windows family of
-  operating systems to store parts of its "registry". "Registry" is a
+  operating systems to store parts of its &quot;registry&quot;. &quot;Registry&quot; is a
   hierarchical database that is used to store system settings (global
   configuration, per-user, per-application configuration, etc).
 
@@ -248,9 +248,9 @@ doc: |
     * `%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat` (localized, Windows 2000, Server 2003 and Windows XP)
     * `%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat` (non-localized, Windows Vista and later)
 
-  Note that one typically can't access files directly on a mounted
+  Note that one typically can&#39;t access files directly on a mounted
   filesystem with a running Windows OS.
-doc-ref: 'https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc'
+doc-ref: &#39;https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc&#39;
 seq:
   - id: header
     type: file_header
@@ -262,7 +262,7 @@ types:
   file_header:
     seq:
       - id: signature
-        contents: "regf"
+        contents: &quot;regf&quot;
       - id: primary_sequence_number # Matches the secondary sequence number if the hive was properly synchronized
         type: u4
       - id: secondary_sequence_number # Matches the primary sequence number if the hive was properly synchronized
@@ -306,7 +306,7 @@ types:
   hive_bin_header:
     seq:
       - id: signature
-        contents: "hbin"
+        contents: &quot;hbin&quot;
       - id: offset
         type: u4
         doc: |
@@ -340,20 +340,20 @@ types:
         type:
           switch-on: identifier
           cases:
-            "'nk'": named_key
-            "'lh'": sub_key_list_lh_lf
-            "'lf'": sub_key_list_lh_lf
-            "'li'": sub_key_list_li
-            "'ri'": sub_key_list_ri
-            "'vk'": sub_key_list_vk
-            "'sk'": sub_key_list_sk
-    -webide-representation: "{identifier}"
+            &quot;&#39;nk&#39;&quot;: named_key
+            &quot;&#39;lh&#39;&quot;: sub_key_list_lh_lf
+            &quot;&#39;lf&#39;&quot;: sub_key_list_lh_lf
+            &quot;&#39;li&#39;&quot;: sub_key_list_li
+            &quot;&#39;ri&#39;&quot;: sub_key_list_ri
+            &quot;&#39;vk&#39;&quot;: sub_key_list_vk
+            &quot;&#39;sk&#39;&quot;: sub_key_list_sk
+    -webide-representation: &quot;{identifier}&quot;
     instances:
       cell_size:
-        value: "(cell_size_raw < 0 ? -1 : +1) * cell_size_raw"
+        value: &quot;(cell_size_raw &lt; 0 ? -1 : +1) * cell_size_raw&quot;
         -webide-parse-mode: eager
       is_allocated:
-        value: "cell_size_raw < 0"
+        value: &quot;cell_size_raw &lt; 0&quot;
         -webide-parse-mode: eager
     types:
       named_key:
@@ -458,7 +458,7 @@ types:
                 type: u4
       sub_key_list_vk:
         seq:
-          - id: value_name_size # If the value name size is 0 the value name is "(default)"
+          - id: value_name_size # If the value name size is 0 the value name is &quot;(default)&quot;
             type: u2
           - id: data_size
             type: u4
@@ -476,7 +476,7 @@ types:
             size: value_name_size
             type: str
             encoding: ascii
-            if: "flags == vk_flags::value_comp_name"
+            if: &quot;flags == vk_flags::value_comp_name&quot;
         enums:
           data_type_enum:
             0x00000000: reg_none # Undefined type
@@ -514,7 +514,7 @@ types:
     seq:
       - id: value
         type: u8
-    -webide-representation: "{value}"
+    -webide-representation: &quot;{value}&quot;
 </code></pre>
     </div>
 </section>

@@ -240,7 +240,7 @@ section#format-index .row {
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: png
   title: PNG (Portable Network Graphics) file
@@ -269,7 +269,7 @@ seq:
   - id: ihdr_len
     contents: [0, 0, 0, 13]
   - id: ihdr_type
-    contents: "IHDR"
+    contents: &quot;IHDR&quot;
   - id: ihdr
     type: ihdr_chunk
   - id: ihdr_crc
@@ -278,7 +278,7 @@ seq:
   - id: chunks
     type: chunk
     repeat: until
-    repeat-until: _.type == "IEND" or _io.eof
+    repeat-until: _.type == &quot;IEND&quot; or _io.eof
 types:
   chunk:
     seq:
@@ -294,26 +294,26 @@ types:
           switch-on: type
           cases:
             # Critical chunks
-            # '"IHDR"': ihdr_chunk
-            '"PLTE"': plte_chunk
+            # &#39;&quot;IHDR&quot;&#39;: ihdr_chunk
+            &#39;&quot;PLTE&quot;&#39;: plte_chunk
             # IDAT = raw
             # IEND = empty, thus raw
 
             # Ancillary chunks
-            '"cHRM"': chrm_chunk
-            '"gAMA"': gama_chunk
+            &#39;&quot;cHRM&quot;&#39;: chrm_chunk
+            &#39;&quot;gAMA&quot;&#39;: gama_chunk
             # iCCP
             # sBIT
-            '"sRGB"': srgb_chunk
-            '"bKGD"': bkgd_chunk
+            &#39;&quot;sRGB&quot;&#39;: srgb_chunk
+            &#39;&quot;bKGD&quot;&#39;: bkgd_chunk
             # hIST
             # tRNS
-            '"pHYs"': phys_chunk
+            &#39;&quot;pHYs&quot;&#39;: phys_chunk
             # sPLT
-            '"tIME"': time_chunk
-            '"iTXt"': international_text_chunk
-            '"tEXt"': text_chunk
-            '"zTXt"': compressed_text_chunk
+            &#39;&quot;tIME&quot;&#39;: time_chunk
+            &#39;&quot;iTXt&quot;&#39;: international_text_chunk
+            &#39;&quot;tEXt&quot;&#39;: text_chunk
+            &#39;&quot;zTXt&quot;&#39;: compressed_text_chunk
       - id: crc
         size: 4
   ihdr_chunk:
@@ -426,7 +426,7 @@ types:
         type: u1
   phys_chunk:
     doc: |
-      "Physical size" chunk stores data that allows to translate
+      &quot;Physical size&quot; chunk stores data that allows to translate
       logical pixels into physical units (meters, etc) and vice-versa.
     doc-ref: https://www.w3.org/TR/PNG/#11pHYs
     seq:
@@ -464,7 +464,7 @@ types:
   international_text_chunk:
     doc: |
       International text chunk effectively allows to store key-value string pairs in
-      PNG container. Both "key" (keyword) and "value" (text) parts are
+      PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are
       given in pre-defined subset of iso8859-1 without control
       characters.
     doc-ref: https://www.w3.org/TR/PNG/#11iTXt
@@ -499,13 +499,13 @@ types:
         encoding: UTF-8
         size-eos: true
         doc: |
-          Text contents ("value" of this key-value pair), written in
+          Text contents (&quot;value&quot; of this key-value pair), written in
           language specified in `language_tag`. Linke breaks are
           allowed.
   text_chunk:
     doc: |
       Text chunk effectively allows to store key-value string pairs in
-      PNG container. Both "key" (keyword) and "value" (text) parts are
+      PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are
       given in pre-defined subset of iso8859-1 without control
       characters.
     doc-ref: https://www.w3.org/TR/PNG/#11tEXt
@@ -521,7 +521,7 @@ types:
   compressed_text_chunk:
     doc: |
       Compressed text chunk effectively allows to store key-value
-      string pairs in PNG container, compressing "value" part (which
+      string pairs in PNG container, compressing &quot;value&quot; part (which
       can be quite lengthy) with zlib compression.
     doc-ref: https://www.w3.org/TR/PNG/#11zTXt
     seq:

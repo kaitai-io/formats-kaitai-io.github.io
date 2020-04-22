@@ -238,7 +238,7 @@ with certain preconfigured arguments and some other options.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: windows_lnk_file
   title: Windows shell link file
@@ -253,11 +253,11 @@ with certain preconfigured arguments and some other options.</p>
   imports:
     - windows_shell_items
 doc: |
-  Windows .lnk files (AKA "shell link" file) are most frequently used
-  in Windows shell to create "shortcuts" to another files, usually for
+  Windows .lnk files (AKA &quot;shell link&quot; file) are most frequently used
+  in Windows shell to create &quot;shortcuts&quot; to another files, usually for
   purposes of running a program from some other directory, sometimes
   with certain preconfigured arguments and some other options.
-doc-ref: 'https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf'
+doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&#39;
 seq:
   - id: header
     type: file_header
@@ -289,14 +289,14 @@ seq:
     if: header.flags.has_icon_location
 types:
   file_header:
-    doc-ref: 'https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.1'
+    doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.1&#39;
     -orig-id: ShellLinkHeader
     seq:
       - id: len_header
         -orig-id: HeaderSize
         contents: [0x4c, 0, 0, 0]
         doc: |
-          Technically, a size of the header, but in reality, it's
+          Technically, a size of the header, but in reality, it&#39;s
           fixed by standard.
       - id: link_clsid
         contents: [0x01, 0x14, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46]
@@ -336,7 +336,7 @@ types:
       - id: reserved
         contents: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   link_flags:
-    doc-ref: 'https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.1.1'
+    doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.1.1&#39;
     seq:
       # Byte #0
       - id: is_unicode
@@ -374,7 +374,7 @@ types:
       - type: b2
   link_target_id_list:
     -orig-id: LinkTargetIDList
-    doc-ref: 'https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.2'
+    doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.2&#39;
     seq:
       - id: len_id_list
         -orig-id: IDListSize          
@@ -385,7 +385,7 @@ types:
         type: windows_shell_items
   link_info:
     -orig-id: LinkInfo
-    doc-ref: 'https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3'
+    doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3&#39;
     seq:
       - id: len_all
         -orig-id: LinkInfoSize
@@ -395,7 +395,7 @@ types:
         type: all
     types:
       all:
-        doc-ref: 'https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3'
+        doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3&#39;
         seq:
           - id: len_header
             -orig-id: LinkInfoHeaderSize
@@ -415,7 +415,7 @@ types:
             terminator: 0
             if: header.flags.has_volume_id_and_local_base_path
       header:
-        doc-ref: 'https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3'
+        doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3&#39;
         seq:
           - id: flags
             -orig-id: LinkInfoFlags
@@ -442,7 +442,7 @@ types:
             if: not _io.eof
       link_info_flags:
         -orig-id: LinkInfoFlags
-        doc-ref: 'https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3'
+        doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3&#39;
         seq:
           - id: reserved1
             type: b6
@@ -456,7 +456,7 @@ types:
             type: b24
       volume_id_spec:
         -orig-id: VolumeID
-        doc-ref: 'https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3.1'
+        doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3.1&#39;
         seq:
           - id: len_all
             -orig-id: VolumeIDSize
@@ -466,7 +466,7 @@ types:
             type: volume_id_body
       volume_id_body:
         -orig-id: VolumeID
-        doc-ref: 'https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3.1'
+        doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3.1&#39;
         seq:
           - id: drive_type
             -orig-id: DriveType

@@ -254,7 +254,7 @@ how to process a certain block type.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: rar
   file-extension: rar
@@ -282,7 +282,7 @@ doc: |
 
   File format essentially consists of a linear sequence of
   blocks. Each block has fixed header and custom body (that depends on
-  block type), so it's possible to skip block even if one doesn't know
+  block type), so it&#39;s possible to skip block even if one doesn&#39;t know
   how to process a certain block type.
 doc-ref: |
   http://acritum.com/winrar/rar-format  
@@ -304,17 +304,17 @@ types:
       RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
       8-byte magic (and pretty different block format) for v5+. This
       type would parse and validate both versions of signature. Note
-      that actually this signature is a valid RAR "block": in theory,
+      that actually this signature is a valid RAR &quot;block&quot;: in theory,
       one can omit signature reading at all, and read this normally,
-      as a block, if exact RAR version is known (and thus it's
+      as a block, if exact RAR version is known (and thus it&#39;s
       possible to choose correct block format).
     seq:
       - id: magic1
         contents:
-          - 'Rar!'
+          - &#39;Rar!&#39;
           - 0x1a
           - 0x07
-        doc: "Fixed part of file's magic signature that doesn't change with RAR version"
+        doc: &quot;Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version&quot;
       - id: version
         type: u1
         doc: |
@@ -350,17 +350,17 @@ types:
         type:
           switch-on: block_type
           cases:
-            'block_types::file_header': block_file_header
+            &#39;block_types::file_header&#39;: block_file_header
       - id: add_body
         size: add_size
         if: has_add
         doc: Additional content in this block
     instances:
       has_add:
-        value: 'flags & 0x8000 != 0'
+        value: &#39;flags &amp; 0x8000 != 0&#39;
         doc: True if block has additional content attached to it
       header_size:
-        value: 'has_add ? 11 : 7'
+        value: &#39;has_add ? 11 : 7&#39;
       body_size:
         value: block_size - header_size
   block_file_header:
@@ -393,15 +393,15 @@ types:
       - id: high_pack_size
         type: u4
         doc: Compressed file size, high 32 bits, only if 64-bit header flag is present
-        if: '_parent.flags & 0x100 != 0'
+        if: &#39;_parent.flags &amp; 0x100 != 0&#39;
       - id: file_name
         size: name_size
       - id: salt
         type: u8
-        if: '_parent.flags & 0x400 != 0'
+        if: &#39;_parent.flags &amp; 0x400 != 0&#39;
 #     - id: ext_time
 #       variable size
-#       if: '_parent.flags & 0x1000 != 0'
+#       if: &#39;_parent.flags &amp; 0x1000 != 0&#39;
   block_v5:
     {}
     # not yet implemented
@@ -413,17 +413,17 @@ types:
         type: u2
     instances:
       year:
-        value: '((date & 0b1111_1110_0000_0000) >> 9) + 1980'
+        value: &#39;((date &amp; 0b1111_1110_0000_0000) &gt;&gt; 9) + 1980&#39;
       month:
-        value: '(date & 0b0000_0001_1110_0000) >> 5'
+        value: &#39;(date &amp; 0b0000_0001_1110_0000) &gt;&gt; 5&#39;
       day:
-        value: 'date & 0b0000_0000_0001_1111'
+        value: &#39;date &amp; 0b0000_0000_0001_1111&#39;
       hours:
-        value: '(time & 0b1111_1000_0000_0000) >> 11'
+        value: &#39;(time &amp; 0b1111_1000_0000_0000) &gt;&gt; 11&#39;
       minutes:
-        value: '(time & 0b0000_0111_1110_0000) >> 5'
+        value: &#39;(time &amp; 0b0000_0111_1110_0000) &gt;&gt; 5&#39;
       seconds:
-        value: '(time & 0b0000_0000_0001_1111) * 2'
+        value: &#39;(time &amp; 0b0000_0000_0001_1111) * 2&#39;
 enums:
   block_types:
     0x72: marker

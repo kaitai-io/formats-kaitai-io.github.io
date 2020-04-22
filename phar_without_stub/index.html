@@ -234,7 +234,7 @@ standard encoding of the system on which the phar was created.</p>
 <section id="format-ksy" class="format">
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
-        
+
         <pre><code class="yaml">meta:
   id: phar_without_stub
   title: PHP phar archive (without stub)
@@ -258,7 +258,7 @@ doc: |
   
   The phar format was originally developed as part of the PEAR library
   PHP_Archive, first released in 2005. Later, a native PHP extension
-  named "phar" was developed, which was first released on PECL in 2007,
+  named &quot;phar&quot; was developed, which was first released on PECL in 2007,
   and is included with PHP 5.3 and later. The phar extension has effectively
   superseded the PHP_Archive library, which has not been updated since 2010.
   The phar extension is also no longer released independently on PECL;
@@ -270,15 +270,15 @@ doc: |
   by this spec. Before parsing a phar using this spec, the stub must be
   removed manually.
   
-  A phar's stub is terminated by the special token `__HALT_COMPILER();`
-  (which may be followed by at most one space, the PHP tag end `?>`,
+  A phar&#39;s stub is terminated by the special token `__HALT_COMPILER();`
+  (which may be followed by at most one space, the PHP tag end `?&gt;`,
   and an optional line terminator). The stub termination sequence is
   immediately followed by the remaining parts of the phar format,
   as described in this spec.
   
   The phar stub usually contains code that loads the phar and runs
   a contained PHP file, but this is not required. A minimal valid phar stub
-  is `<?php __HALT_COMPILER();` - such a stub makes it impossible to execute
+  is `&lt;?php __HALT_COMPILER();` - such a stub makes it impossible to execute
   the phar directly, but still allows loading or manipulating it using the
   phar extension.
   
@@ -288,15 +288,15 @@ doc: |
   depends on the application that created the phar, and on the
   standard encoding of the system on which the phar was created.
 doc-ref:
-  - 'https://www.php.net/manual/en/phar.fileformat.php'
-  - 'https://github.com/php/php-src/tree/master/ext/phar'
-  - 'https://svn.php.net/viewvc/pecl/phar/'
-  - 'https://svn.php.net/viewvc/pear/packages/PHP_Archive/'
+  - &#39;https://www.php.net/manual/en/phar.fileformat.php&#39;
+  - &#39;https://github.com/php/php-src/tree/master/ext/phar&#39;
+  - &#39;https://svn.php.net/viewvc/pecl/phar/&#39;
+  - &#39;https://svn.php.net/viewvc/pear/packages/PHP_Archive/&#39;
 seq:
   - id: manifest
     type: manifest
     doc: |
-      The archive's manifest, containing general metadata about the archive
+      The archive&#39;s manifest, containing general metadata about the archive
       and its files.
   - id: files
     size: manifest.file_entries[_index].len_data_compressed
@@ -304,17 +304,17 @@ seq:
     repeat-expr: manifest.num_files
     doc: |
       The contents of each file in the archive (possibly compressed,
-      as indicated by the file's flags in the manifest). The files are stored
+      as indicated by the file&#39;s flags in the manifest). The files are stored
       in the same order as they appear in the manifest.
   - id: signature
     type: signature
     size-eos: true
     if: manifest.flags.has_signature
     doc: |
-      The archive's signature - a digest of all archive data before
+      The archive&#39;s signature - a digest of all archive data before
       the signature itself.
       
-      Note: Almost all of the available "signature" types are actually hashes,
+      Note: Almost all of the available &quot;signature&quot; types are actually hashes,
       not signatures, and cannot be used to verify that the archive has not
       been tampered with. Only the OpenSSL signature type is a true
       cryptographic signature.
@@ -347,10 +347,10 @@ enums:
         Indicates an OpenSSL signature. Available since API version 1.1.1,
         PHP_Archive 0.12.0 (even though it claims to only support
         API version 1.1.0) and phar extension 1.3.0. This type is not
-        documented in the phar extension's documentation of the phar format.
+        documented in the phar extension&#39;s documentation of the phar format.
         
         Note: In older versions of the phar extension, this value was used
-        for an undocumented and unimplemented "PGP" signature type
+        for an undocumented and unimplemented &quot;PGP&quot; signature type
         (`PHAR_SIG_PGP`).
 types:
   serialized_value:
@@ -370,17 +370,17 @@ types:
         doc: The unparsed flag bits.
     instances:
       permissions:
-        value: value & 0x1ff
+        value: value &amp; 0x1ff
         -orig-id: PHAR_ENT_PERM_MASK
-        doc: The file's permission bits.
+        doc: The file&#39;s permission bits.
       zlib_compressed:
-        value: (value & 0x1000) != 0
+        value: (value &amp; 0x1000) != 0
         -orig-id: PHAR_ENT_COMPRESSED_GZ
-        doc: Whether this file's data is stored using zlib compression.
+        doc: Whether this file&#39;s data is stored using zlib compression.
       bzip2_compressed:
-        value: (value & 0x2000) != 0
+        value: (value &amp; 0x2000) != 0
         -orig-id: PHAR_ENT_COMPRESSED_BZ2
-        doc: Whether this file's data is stored using bzip2 compression.
+        doc: Whether this file&#39;s data is stored using bzip2 compression.
   file_entry:
     seq:
       - id: len_filename
@@ -396,7 +396,7 @@ types:
           Non-empty directories are implied by the files located inside them.)
       - id: len_data_uncompressed
         type: u4
-        doc: The length of the file's data when uncompressed, in bytes.
+        doc: The length of the file&#39;s data when uncompressed, in bytes.
       - id: timestamp
         type: u4
         doc: |
@@ -404,10 +404,10 @@ types:
           Unix timestamp.
       - id: len_data_compressed
         type: u4
-        doc: The length of the file's data when compressed, in bytes.
+        doc: The length of the file&#39;s data when compressed, in bytes.
       - id: crc32
         type: u4
-        doc: The CRC32 checksum of the file's uncompressed data.
+        doc: The CRC32 checksum of the file&#39;s uncompressed data.
       - id: flags
         type: file_flags
         doc: Flags for this file.
@@ -419,7 +419,7 @@ types:
         type: serialized_value
         if: len_metadata != 0
         doc: |
-          Metadata for this file, in the format used by PHP's
+          Metadata for this file, in the format used by PHP&#39;s
           `serialize` function. The meaning of the serialized data is not
           specified further, it may be used to store arbitrary custom data
           about the file.
@@ -475,19 +475,19 @@ types:
         doc: The unparsed flag bits.
     instances:
       any_zlib_compressed:
-        value: (value & 0x1000) != 0
+        value: (value &amp; 0x1000) != 0
         -orig-id: PHAR_HDR_COMPRESSED_GZ
         doc: |
           Whether any of the files in this phar are stored using
           zlib compression.
       any_bzip2_compressed:
-        value: (value & 0x2000) != 0
+        value: (value &amp; 0x2000) != 0
         -orig-id: PHAR_HDR_COMPRESSED_BZ2
         doc: |
           Whether any of the files in this phar are stored using
           bzip2 compression.
       has_signature:
-        value: (value & 0x10000) != 0
+        value: (value &amp; 0x10000) != 0
         -orig-id: PHAR_HDR_SIGNATURE
         doc: Whether this phar contains a signature.
   manifest:
@@ -514,7 +514,7 @@ types:
       - id: alias
         size: len_alias
         doc: |
-          The phar's alias, i. e. the name under which it is loaded into PHP.
+          The phar&#39;s alias, i. e. the name under which it is loaded into PHP.
       - id: len_metadata
         type: u4
         doc: The size of the metadata, in bytes, or 0 if there is none.
@@ -523,7 +523,7 @@ types:
         type: serialized_value
         if: len_metadata != 0
         doc: |
-          Metadata for this phar, in the format used by PHP's
+          Metadata for this phar, in the format used by PHP&#39;s
           `serialize` function. The meaning of the serialized data is not
           specified further, it may be used to store arbitrary custom data
           about the archive.
@@ -544,7 +544,7 @@ types:
         enum: signature_type
         doc: The signature type.
       - id: magic
-        contents: "GBMB"
+        contents: &quot;GBMB&quot;
 </code></pre>
     </div>
 </section>
