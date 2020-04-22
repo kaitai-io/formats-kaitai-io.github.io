@@ -177,7 +177,7 @@ class WindowsEvtLog(KaitaiStruct):
     class CursorRecordBody(KaitaiStruct):
         """
         .. seealso::
-           Source - http://www.forensicswiki.org/wiki/Windows_Event_Log_(EVT)#Cursor_Record
+           Source - http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

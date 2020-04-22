@@ -440,7 +440,7 @@ public class WindowsEvtLog extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="http://www.forensicswiki.org/wiki/Windows_Event_Log_(EVT)#Cursor_Record">Source</a>
+     * @see <a href="http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record">Source</a>
      */
     public static class CursorRecordBody extends KaitaiStruct {
         public static CursorRecordBody fromFile(String fileName) throws IOException {

@@ -305,7 +305,7 @@ var WindowsEvtLog = (function() {
   })();
 
   /**
-   * @see {@link http://www.forensicswiki.org/wiki/Windows_Event_Log_(EVT)#Cursor_Record|Source}
+   * @see {@link http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record|Source}
    */
 
   var CursorRecordBody = WindowsEvtLog.CursorRecordBody = (function() {

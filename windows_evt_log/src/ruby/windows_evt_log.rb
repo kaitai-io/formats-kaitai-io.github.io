@@ -279,7 +279,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
   end
 
   ##
-  # @see http://www.forensicswiki.org/wiki/Windows_Event_Log_(EVT)#Cursor_Record Source
+  # @see http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record Source
   class CursorRecordBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

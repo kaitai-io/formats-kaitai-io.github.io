@@ -420,7 +420,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="http://www.forensicswiki.org/wiki/Windows_Event_Log_(EVT)#Cursor_Record">Source</a>
+        /// Reference: <a href="http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record">Source</a>
         /// </remarks>
         public partial class CursorRecordBody : KaitaiStruct
         {
